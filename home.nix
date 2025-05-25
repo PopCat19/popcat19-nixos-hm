@@ -1,0 +1,159 @@
+# ~/nixos-config/home.nix
+{ pkgs, config, lib, inputs, ... }:
+
+{
+  home.username = "popcat19";
+  home.homeDirectory = "/home/popcat19";
+  home.stateVersion = "24.05";
+
+  home.sessionVariables = {
+    EDITOR = "micro";
+    VISUAL = "$EDITOR"; # or "micro" directly
+  };
+
+  home.packages = with pkgs; [
+    # Terminals, Launchers, Notifications
+    kitty
+    fuzzel
+    # dunst # Managed by services.dunst.enable now
+    # Hyprland specific tools
+    hyprland # Make sure hyprland itself is listed if not using programs.hyprland module
+    hyprpaper
+    swww
+    grim
+    slurp
+    wl-clipboard
+    # cliphist # Managed by programs.cliphist.enable now
+    jq
+    hyprpolkitagent
+    hyprutils
+    hyprshade
+    hyprpanel
+    # Desktop Utilities
+    vesktop
+    zed-editor_git
+    # blueberry # Managed by services.blueman.applet.enable now
+    # udiskie # Managed by services.udiskie.enable now
+    kdePackages.dolphin
+    pavucontrol
+    starship # programs.starship.enable is also below
+    eza
+    pkgs.libsForQt5.qtstyleplugin-kvantum
+    libsForQt5.qt5ct
+    pkgs.rose-pine-kvantum
+    pkgs.themechanger
+    nwg-look
+    kdePackages.ark
+    ddcui
+    # easyeffects # Managed by services.easyeffects.enable now
+    papirus-icon-theme
+    kdePackages.gwenview
+    mpv
+    ollama-rocm
+    audacious
+    audacious-plugins
+    lutris
+    mangohud
+    goverlay
+    scrcpy
+    openrgb-with-all-plugins
+    btop-rocm
+    tree
+    # Add fcitx5 and configtool if you want to configure it via GUI
+    # fcitx5
+    # fcitx5-configtool
+  ];
+
+  # --- Migrated exec-once services ---
+  services.blueman.applet.enable = true;
+  services.udiskie.enable = true;
+  services.network-manager-applet.enable = true; # For the tray icon
+  services.dunst.enable = true; # Watch since hyprpanel might not launch when dunst is already running
+  programs.cliphist.enable = true;
+  services.easyeffects.enable = true;
+
+  i18n.inputMethod = {
+    enabled = "fcitx5";
+    fcitx5.addons = with pkgs; [
+      fcitx5-gtk
+      fcitx5-qt # For Qt apps
+      # fcitx5-rime # Example addon
+      # fcitx5-unikey # Example addon
+    ];
+  };
+  # --- End of migrated exec-once services ---
+
+  home.file.".config/hypr" = {
+    source = ./hypr_config; # Path relative to home.nix
+    recursive = true;
+  };
+
+  programs.fish = {
+    enable = true;
+    shellInit = ''
+      set -Ux NIXOS_CONFIG_DIR $HOME/nixos-config
+      set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0 # Confirm this is still correct
+      set -g fish_greeting "" # Clears the default greeting
+      # Starship init
+      if status is-interactive
+          starship init fish | source
+      end
+    '';
+    shellAbbrs = {
+      ".." = "cd ..";
+      "..." = "cd ../..";
+      ".3" = "cd ../../..";
+      ".4" = "cd ../../../..";
+      ".5" = "cd ../../../../..";
+      mkdir = "mkdir -p";
+      # Abbreviations for your NixOS functions
+      nconf = "nixconf-edit";
+      nixos-ed = "nixconf-edit";
+      fledit = "flake-edit";
+      flake-ed = "flake-edit";
+      flup = "flake-update";
+      flake-up = "flake-update";
+      nrb = "nixos-rebuild-switch";
+      nixos-sw = "nixos-rebuild-switch";
+      nerb = "nixos-edit-rebuild";
+      nixoss = "nixos-edit-rebuild";
+      nup = "nixos-upgrade";
+      nixos-up = "nixos-upgrade";
+      ngit = "nixos-git";
+      # Your eza aliases
+      l = "eza -lh --icons=auto";
+      ls = "eza -1 --icons=auto";
+      ll = "eza -lha --icons=auto --sort=name --group-directories-first";
+      ld = "eza -lhD --icons=auto";
+      lt = "eza --tree --icons=auto";
+    };
+    # plugins = [ # Only if you use a fish plugin manager that HM supports this way
+    #   { name = "starship"; src = pkgs.starship.src; }
+    # ];
+  };
+
+  home.file.".config/fish/functions" = {
+    source = ./fish_functions; # Links your custom functions
+    recursive = true;
+  };
+
+  home.file.".config/fish/themes" = {
+    source = ./fish_themes; # Links your themes
+    recursive = true;
+  };
+
+  programs.starship = {
+    enable = true;
+    # If you have a starship.toml, you can link it:
+    # package = pkgs.starship; # Ensure starship package is used
+    # settings = lib.importTOML ./starship_config/starship.toml; # Create ./starship_config/starship.toml
+  };
+
+  programs.git = {
+    enable = true;
+    userName = "PopCat19";
+    userEmail = "atsuo11111@gmail.com"; # <<< IMPORTANT: Update this email
+  };
+
+  nixpkgs.config.allowUnfree = true;
+}
