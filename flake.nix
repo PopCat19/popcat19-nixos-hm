@@ -45,12 +45,11 @@
         home-manager.nixosModules.home-manager
         {
           home-manager = {
-            useGlobalPkgs = true; # Use nixpkgs from the system
-            useUserPackages = true; # Manage packages in user environment
-            # Pass flake inputs to Home Manager modules (like your home.nix)
+            useGlobalPkgs = true;
+            useUserPackages = true;
             extraSpecialArgs = { inherit inputs; };
-            users.popcat19 = import ./home.nix; # Assuming your username is popcat19
-                                                # and home.nix is in the same directory
+            users.popcat19 = import ./home.nix;
+            backupFileExtension = "hm-bak"; # <--- ADD THIS LINE
           };
         }
       ];

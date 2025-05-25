@@ -65,7 +65,7 @@
   ];
 
   # --- Migrated exec-once services ---
-  services.blueman.applet.enable = true;
+  services.blueman-applet.enable = true;
   services.udiskie.enable = true;
   services.network-manager-applet.enable = true; # For the tray icon
   services.dunst.enable = true; # Watch since hyprpanel might not launch when dunst is already running
@@ -82,12 +82,11 @@
   };
 
   i18n.inputMethod = {
-    enabled = "fcitx5";
+    type = "fcitx5";    // New way
+    enable = true;      // New way
     fcitx5.addons = with pkgs; [
       fcitx5-gtk
-      fcitx5-qt # For Qt apps
-      # fcitx5-rime # Example addon
-      # fcitx5-unikey # Example addon
+      libsForQt5.fcitx5-qt
     ];
   };
   # --- End of migrated exec-once services ---
@@ -163,6 +162,4 @@
     userName = "PopCat19";
     userEmail = "atsuo11111@gmail.com"; # <<< IMPORTANT: Update this email
   };
-
-  nixpkgs.config.allowUnfree = true;
 }
