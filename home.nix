@@ -82,8 +82,8 @@
   };
 
   i18n.inputMethod = {
-    type = "fcitx5";    // New way
-    enable = true;      // New way
+    type = "fcitx5";    # New way
+    enable = true;      # New way
     fcitx5.addons = with pkgs; [
       fcitx5-gtk
       libsForQt5.fcitx5-qt
