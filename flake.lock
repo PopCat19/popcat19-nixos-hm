@@ -161,6 +161,26 @@
         "type": "github"
       }
     },
+    "home-manager_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1748134483,
+        "narHash": "sha256-5PBK1nV8X39K3qUj8B477Aa2RdbLq3m7wRxUKRtggX4=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "c1e671036224089937e111e32ea899f59181c383",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
     "hyprpanel": {
       "inputs": {
         "ags": "ags",
@@ -263,6 +283,7 @@
       "inputs": {
         "aagl": "aagl",
         "chaotic": "chaotic",
+        "home-manager": "home-manager_2",
         "hyprpanel": "hyprpanel",
         "nixpkgs": "nixpkgs_2"
       }

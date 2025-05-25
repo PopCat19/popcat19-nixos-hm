@@ -69,8 +69,17 @@
   services.udiskie.enable = true;
   services.network-manager-applet.enable = true; # For the tray icon
   services.dunst.enable = true; # Watch since hyprpanel might not launch when dunst is already running
-  programs.cliphist.enable = true;
   services.easyeffects.enable = true;
+
+  services.cliphist = { # Add or modify this block
+    enable = true;
+    # You might also need to specify the package if it's not inferred
+    # package = pkgs.cliphist;
+    # Check for options like 'maxEntries' or similar if you want to configure them
+    # settings = {
+    #   max_entries = 100; # Example, check actual option name
+    # };
+  };
 
   i18n.inputMethod = {
     enabled = "fcitx5";
