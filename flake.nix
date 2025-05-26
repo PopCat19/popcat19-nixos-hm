@@ -18,6 +18,10 @@
       url = "github:nix-community/home-manager"; # You can specify a release branch here if desired, e.g., /release-24.05
       inputs.nixpkgs.follows = "nixpkgs"; # Use the same nixpkgs
     };
+
+    rose-pine-hyprcursor = {
+      url = "github:ndom91/rose-pine-hyprcursor";
+    };
   };
 
   outputs = { self, nixpkgs, hyprpanel, aagl, chaotic, home-manager, ... }@inputs: let # Add home-manager here
