@@ -118,21 +118,32 @@
       # Abbreviations for your NixOS functions
       nconf = "nixconf-edit";
       nixos-ed = "nixconf-edit";
+      hconf = "homeconf-edit";
+      home-ed = "homeconf-edit";
       fledit = "flake-edit";
       flake-ed = "flake-edit";
       flup = "flake-update";
       flake-up = "flake-update";
-      nrb = "nixos-rebuild-switch";
-      nixos-sw = "nixos-rebuild-switch";
+      ngit = "nixos-git";
+
+      # === UPDATED/NEW REBUILD ABBREVIATIONS ===
+      # 'nrb' and 'nixos-sw' now point to the intelligent apply function
+      nrb = "nixos-apply-config";        # Short for NixOS ReBuild (now intelligent)
+      nixos-sw = "nixos-apply-config";   # NixOS Switch (now intelligent)
+
+      # 'nerb' and 'nixoss' already use nixos-edit-rebuild, which now calls nixos-apply-config
       nerb = "nixos-edit-rebuild";
       nixoss = "nixos-edit-rebuild";
+      # 'herb' and 'home-sw' already use home-edit-rebuild, which now calls nixos-apply-config
+      herb = "home-edit-rebuild";
+      home-sw = "home-edit-rebuild";
+
+      # 'nup' and 'nixos-up' already use nixos-upgrade, which now calls nixos-apply-config
       nup = "nixos-upgrade";
       nixos-up = "nixos-upgrade";
-      ngit = "nixos-git";
-      hconf = "homeconf-edit";      # Short for home.nix edit
-      home-ed = "homeconf-edit";    # Fuller name for home.nix edit
-      herb = "home-edit-rebuild";   # Short for Home Edit ReBuild
-      home-sw = "home-edit-rebuild"; # Fuller name for home.nix edit & switch
+
+      # If you kept the old simple nixos-rebuild-switch.fish and want an abbr for it:
+      # nrbs = "nixos-rebuild-switch"; # NixOS ReBuild Switch (simple)
       # Your eza aliases
       l = "eza -lh --icons=auto";
       ls = "eza -1 --icons=auto";
