@@ -1,3 +1,4 @@
+# ~/nixos-config/fish_functions/nixos-git.fish
 function nixos-git -d "󰊢 Git operations for NixOS configuration"
   if test (count $argv) -eq 0
     echo "Usage: nixos-git \"💬 Your full commit message\" [then pushes]"
@@ -37,22 +38,30 @@ function nixos-git -d "󰊢 Git operations for NixOS configuration"
     end
   else
     set -l full_commit_message (string join " " $argv)
-    set -l changes_staged false
+    set -l changes_to_commit false # Renamed for clarity
+
     echo "--> 󰊢 Adding all changes to staging (git add .)..."
     git add .
-    if not test -z (git status --porcelain)
-        set changes_staged true
+
+    # Check if there's anything to commit
+    set -l git_status_output (git status --porcelain | string trim)
+    if test -n "$git_status_output" # If output is NOT empty, there are changes
+        set changes_to_commit true
     end
-    if $changes_staged
+
+    if $changes_to_commit
         echo "--> 💬 Committing changes with message: '$full_commit_message' (git commit)..."
         if git commit -m "$full_commit_message"
             echo "--> ✅ Commit successful."
         else
-            echo "==> ⚠️ Git commit failed. (Maybe an empty commit?)"
+            # This might happen if 'git add .' didn't actually stage anything new
+            # despite porcelain output, or if commit hook fails, etc.
+            echo "==> ⚠️ Git commit failed or nothing to commit after add."
         end
     else
         echo "--> ℹ️ No local changes to commit."
     end
+
     echo "--> 󰊢 Pushing to remote (git push)..."
     if git push
        echo "==> ✅ Git push successful."
