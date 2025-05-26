@@ -149,6 +149,8 @@
       ll = "eza -lha --icons=auto --sort=name --group-directories-first";
       ld = "eza -lhD --icons=auto";
       lt = "eza --tree --icons=auto";
+      # open-smart
+      o = "open_smart"; # Or 'op', or whatever you prefer
     };
     # plugins = [ # Only if you use a fish plugin manager that HM supports this way
     #   { name = "starship"; src = pkgs.starship.src; }
