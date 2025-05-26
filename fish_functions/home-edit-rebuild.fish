@@ -1,4 +1,3 @@
-# ~/nixos-config/fish_functions/home-edit-rebuild.fish
-function home-edit-rebuild -d "Edit home.nix, then apply (rebuild/switch/git/rollback)"
+function home-edit-rebuild -d " Edit home.nix, then 🚀 apply"
   homeconf-edit $argv[2..-1] && nixos-apply-config $argv[1]
 end

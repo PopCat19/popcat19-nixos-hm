@@ -120,9 +120,8 @@
       nixos-ed = "nixconf-edit";
       hconf = "homeconf-edit";
       home-ed = "homeconf-edit";
-      fledit = "flake-edit";
-      flake-ed = "flake-edit";
-      flup = "flake-update";
+      flconf = "flake-edit";     # Flake Config
+      flake-ed = "flake-edit";   # Keeping this for muscle memory if you like      flup = "flake-update";
       flake-up = "flake-update";
       ngit = "nixos-git";
 

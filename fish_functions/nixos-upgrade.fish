@@ -1,6 +1,5 @@
-# ~/nixos-config/fish_functions/nixos-upgrade.fish
-function nixos-upgrade -d "Update flake inputs, then apply (rebuild/switch/git/rollback)"
-  echo "==> Starting NixOS system upgrade (flake update + apply)..."
+function nixos-upgrade -d "󰚰 Update flake inputs, then 🚀 apply"
+  echo "󰚰 Starting NixOS system upgrade (flake update + apply)..."
   if flake-update $argv[2..-1]
     nixos-apply-config $argv[1]
   else
