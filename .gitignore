@@ -1,0 +1,2 @@
+# Ignore machine-specific hardware configuration
+hardware-configuration.nix
