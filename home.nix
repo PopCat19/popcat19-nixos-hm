@@ -129,6 +129,10 @@
       nup = "nixos-upgrade";
       nixos-up = "nixos-upgrade";
       ngit = "nixos-git";
+      hconf = "homeconf-edit";      # Short for home.nix edit
+      home-ed = "homeconf-edit";    # Fuller name for home.nix edit
+      herb = "home-edit-rebuild";   # Short for Home Edit ReBuild
+      home-sw = "home-edit-rebuild"; # Fuller name for home.nix edit & switch
       # Your eza aliases
       l = "eza -lh --icons=auto";
       ls = "eza -1 --icons=auto";
