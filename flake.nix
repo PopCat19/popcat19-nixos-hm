@@ -38,9 +38,11 @@
               # URL for the x86_64 Linux binary
               url = "https://github.com/openziti/zrok/releases/download/v${version}/zrok_${version}_linux_amd64.tar.gz";
               # IMPORTANT: Replace this with the hash you got from nix-prefetch-url
-              hash = "sha256-1fwhx2cdksfc44pqvcs84m6ykapghcqbh1b8zjyc3js3cf3ajwgd";
+              sha256 = "1fwhx2cdksfc44pqvcs84m6ykapghcqbh1b8zjyc3js3cf3ajwgd";
             };
-    
+
+            dontUnpack = true; # Tell Nix not to run its default unpackPhase
+
             # We need patchelf to set the interpreter, similar to the nixpkgs version
             nativeBuildInputs = [ prev.patchelf ];
     
@@ -86,7 +88,7 @@
 
       modules = [
         {
-          nixpkgs.overlays = [ inputs.hyprpanel.overlay ];
+          nixpkgs.overlays = [ my-overlays inputs.hyprpanel.overlay ];
           imports = [ aagl.nixosModules.default ];
           nix.settings = aagl.nixConfig;
           programs.anime-game-launcher.enable = true;
