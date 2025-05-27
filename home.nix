@@ -113,6 +113,9 @@
       set -Ux NIXOS_CONFIG_DIR $HOME/nixos-config
       set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0 # Confirm this is still correct
       set -g fish_greeting "" # Clears the default greeting
+      # Prepend $HOME/bin to the PATH if it exists and isn't already there
+      # fish_add_path will prepend by default.
+      fish_add_path $HOME/bin
       # Starship init
       if status is-interactive
           starship init fish | source
