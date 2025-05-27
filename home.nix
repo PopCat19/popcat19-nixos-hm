@@ -63,6 +63,7 @@
     # Add fcitx5 and configtool if you want to configure it via GUI
     # fcitx5
     # fcitx5-configtool
+    zrok
   ];
 
   # --- Migrated exec-once services ---
