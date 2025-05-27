@@ -28,6 +28,57 @@
     system = "x86_64-linux";
     myHostname = "popcat19-nixos0";
 
+    # === Define your custom overlay for zrok ===
+        my-overlays = final: prev: {
+          zrok = prev.stdenv.mkDerivation rec {
+            pname = "zrok";
+            version = "1.0.4"; # The new version you want
+    
+            src = prev.fetchurl {
+              # URL for the x86_64 Linux binary
+              url = "https://github.com/openziti/zrok/releases/download/v${version}/zrok_${version}_linux_amd64.tar.gz";
+              # IMPORTANT: Replace this with the hash you got from nix-prefetch-url
+              hash = "sha256-1fwhx2cdksfc44pqvcs84m6ykapghcqbh1b8zjyc3js3cf3ajwgd";
+            };
+    
+            # We need patchelf to set the interpreter, similar to the nixpkgs version
+            nativeBuildInputs = [ prev.patchelf ];
+    
+            installPhase = ''
+              runHook preInstall
+    
+              # Extract the tarball (fetchurl just downloads it)
+              # The zrok binary is at the root of this tarball
+              tar -xzf $src -C .
+    
+              mkdir -p $out/bin
+              cp ./zrok $out/bin/zrok
+              chmod +x $out/bin/zrok
+    
+              # Set the correct ELF interpreter for NixOS
+              # $NIX_CC is an environment variable available during the build
+              # that points to the compiler wrapper, which has nix-support files.
+              patchelf --set-interpreter "$(< $NIX_CC/nix-support/dynamic-linker)" "$out/bin/zrok"
+    
+              runHook postInstall
+            '';
+    
+            meta = with prev.lib; {
+              description = "Geo-distributed, secure, and highly available sharing built on OpenZiti";
+              homepage = "https://zrok.io/";
+              license = licenses.asl20; # zrok uses Apache License 2.0
+              mainProgram = "zrok";
+              # You are the maintainer of this overlay in your config
+              maintainers = [ maintainers.popcat19 ]; # Or your GitHub username
+              platforms = [ "x86_64-linux" ]; # Define for which platform this binary is
+              sourceProvenance = with sourceTypes; [ binaryNativeCode ]; # It's a pre-compiled binary
+            };
+          };
+    
+          # You could add other package overrides here if needed in the future
+          # another-package = prev.another-package.overrideAttrs (oldAttrs: { ... });
+        };
+
   in {
     nixosConfigurations."${myHostname}" = nixpkgs.lib.nixosSystem {
       inherit system;
