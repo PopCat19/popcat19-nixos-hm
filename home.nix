@@ -66,10 +66,10 @@
   ];
 
   # --- Migrated exec-once services ---
-  services.blueman-applet.enable = true;
+  # services.blueman-applet.enable = true;
   services.udiskie.enable = true;
-  services.network-manager-applet.enable = true; # For the tray icon
-  services.dunst.enable = true; # Watch since hyprpanel might not launch when dunst is already running
+  # services.network-manager-applet.enable = true; # For the tray icon
+  # services.dunst.enable = true; # Watch since hyprpanel might not launch when dunst is already running
   services.easyeffects.enable = true;
 
   services.cliphist = { # Add or modify this block
@@ -80,6 +80,15 @@
     # settings = {
     #   max_entries = 100; # Example, check actual option name
     # };
+  };
+
+  services.ollama = {
+    enable = true;
+    acceleration = "rocm"; # Or "cuda" for NVIDIA, or false for CPU
+    # You can add other options here, like:
+    # host = "0.0.0.0"; # To allow access from other devices on your network
+    # port = 11434;
+    # loadModels = [ "llama3" "mistral" ]; # To preload specific models
   };
 
   i18n.inputMethod = {
