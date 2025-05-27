@@ -166,6 +166,7 @@ users.users.popcat19 = {
     ddcutil
     xdg-utils
     shared-mime-info
+    nodejs
   ];
 
   # HYPRLAND_NOTE: Explicit font configuration for better discovery by applications.
