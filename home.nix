@@ -65,7 +65,6 @@
     # fcitx5-configtool
     zrok
     osu-lazer-bin
-    opentabletdriver
     playerctl
   ];
 
