@@ -64,6 +64,9 @@
     # fcitx5
     # fcitx5-configtool
     zrok
+    osu-lazer-bin
+    opentabletdriver
+    playerctl
   ];
 
   # --- Migrated exec-once services ---
