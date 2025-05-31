@@ -69,6 +69,9 @@
     playerctl
   ];
 
+  services.playerctld.enable = true;
+  services.mpris-proxy.enable = true;
+
   # --- Migrated exec-once services ---
   # services.blueman-applet.enable = true;
   services.udiskie.enable = true;
