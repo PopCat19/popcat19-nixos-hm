@@ -9,6 +9,15 @@
   home.sessionVariables = {
     EDITOR = "micro";
     VISUAL = "$EDITOR"; # or "micro" directly
+    BROWSER = "flatpak run app.zen_browser.zen";
+  };
+
+  # Declaratively set Zen Browser as the default
+  xdg.mimeApps.defaultApplications = {
+    "x-scheme-handler/http" = ["app.zen_browser.zen.desktop"];
+    "x-scheme-handler/https" = ["app.zen_browser.zen.desktop"];
+    "text/html" = ["app.zen_browser.zen.desktop"];
+    "application/xhtml+xml" = ["app.zen_browser.zen.desktop"];
   };
 
   home.packages = with pkgs; [
