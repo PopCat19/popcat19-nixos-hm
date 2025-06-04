@@ -76,6 +76,7 @@
     zrok
     osu-lazer-bin
     playerctl
+    universal-android-debloater
   ];
 
   services.playerctld.enable = true;
