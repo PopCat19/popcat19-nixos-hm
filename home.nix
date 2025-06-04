@@ -77,6 +77,7 @@
     osu-lazer-bin
     playerctl
     universal-android-debloater
+    android-tools
   ];
 
   services.playerctld.enable = true;
