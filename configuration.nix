@@ -22,8 +22,11 @@
   boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.kernelModules = ["i2c-dev"];
     services.udev.extraRules = ''
-          KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
-              '';
+      # Rule for i2c devices
+      KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
+      # Rule for Allwinner FEL mode to allow user access
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="1f3a", ATTRS{idProduct}=="efe8", MODE="0666", GROUP="users"
+    '';
 
   # networking.hostName = "nixos"; # Define your hostname.
   # Pick only one of the below networking options.
