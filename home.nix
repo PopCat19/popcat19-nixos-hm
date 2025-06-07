@@ -78,6 +78,8 @@
     playerctl
     universal-android-debloater
     android-tools
+    sunxi-tools
+    binwalk
   ];
 
   services.playerctld.enable = true;
