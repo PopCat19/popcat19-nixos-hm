@@ -171,6 +171,7 @@ users.users.popcat19 = {
     shared-mime-info
     nodejs
     rocmPackages.rpp
+    usbutils
   ];
 
   # HYPRLAND_NOTE: Explicit font configuration for better discovery by applications.
