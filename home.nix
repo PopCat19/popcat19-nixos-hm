@@ -80,6 +80,7 @@
     android-tools
     sunxi-tools
     binwalk
+    pv
   ];
 
   services.playerctld.enable = true;
