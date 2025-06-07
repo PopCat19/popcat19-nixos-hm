@@ -81,6 +81,7 @@
     sunxi-tools
     binwalk
     pv
+    localsend
   ];
 
   services.playerctld.enable = true;
