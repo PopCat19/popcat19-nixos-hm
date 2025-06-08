@@ -25,18 +25,21 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
         end
     end
     
-    # Set file paths
+    # Set file paths - REMOVE the -l flag to make them global to this function
     if test "$target" = "system"
-        set -l config_file "$NIXOS_CONFIG_DIR/configuration.nix"
-        set -l package_section "environment.systemPackages"
+        set config_file "$NIXOS_CONFIG_DIR/configuration.nix"
+        set package_section "environment.systemPackages"
     else
-        set -l config_file "$NIXOS_CONFIG_DIR/home.nix"
-        set -l package_section "home.packages"
+        set config_file "$NIXOS_CONFIG_DIR/home.nix"
+        set package_section "home.packages"
     end
+    
+    # Debug output (remove after testing)
+    echo "Debug: target=$target, config_file=$config_file, clean_args=$clean_args"
     
     switch $action
         case "list" "ls" "l"
-            _nixpkg_list $config_file $package_section $target
+            _nixpkg_list "$config_file" "$package_section" "$target"
             
         case "add" "a"
             if test (count $clean_args) -eq 0
@@ -44,7 +47,7 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
                 echo "💡 Tip: Use 'nixpkg help' for usage examples."
                 return 1
             end
-            _nixpkg_add $config_file $package_section $clean_args[1] $target
+            _nixpkg_add "$config_file" "$package_section" "$clean_args[1]" "$target"
             if test $status -eq 0; and test $rebuild_flag = true
                 echo "🚀 Rebuilding system..."
                 nixos-apply-config
@@ -56,7 +59,7 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
                 echo "💡 Tip: Use 'nixpkg help' for usage examples."
                 return 1
             end
-            _nixpkg_remove $config_file $package_section $clean_args[1] $target
+            _nixpkg_remove "$config_file" "$package_section" "$clean_args[1]" "$target"
             if test $status -eq 0; and test $rebuild_flag = true
                 echo "🚀 Rebuilding system..."
                 nixos-apply-config
@@ -79,274 +82,4 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
             echo "💡 Use 'nixpkg help' to see available commands."
             return 1
     end
-end
-
-function _nixpkg_list -d "List packages in configuration file"
-    set -l config_file $argv[1]
-    set -l package_section $argv[2]
-    set -l target $argv[3]
-    
-    if not test -f $config_file
-        echo "❌ Error: Configuration file not found: $config_file"
-        return 1
-    end
-    
-    echo "📦 Listing packages in $target configuration:"
-    echo "   File: $config_file"
-    echo ""
-    
-    # Extract package list using awk
-    set -l package_count 0
-    awk -v section="$package_section" '
-    BEGIN { in_packages = 0; depth = 0; count = 0 }
-    $0 ~ section " = with pkgs; \\[" { in_packages = 1; next }
-    in_packages && /\[/ { depth++ }
-    in_packages && /\]/ { 
-        depth--
-        if (depth < 0) { in_packages = 0; next }
-    }
-    in_packages && depth >= 0 {
-        # Remove comments and clean up
-        gsub(/#.*$/, "")
-        gsub(/^[ \t]+/, "")
-        gsub(/[ \t]+$/, "")
-        if ($0 != "" && $0 !~ /^#/ && $0 !~ /^\s*$/) {
-            count++
-            print "  • " $0
-        }
-    }
-    END { print "\n📊 Total packages: " count }
-    ' $config_file
-end
-
-function _nixpkg_add -d "Add package to configuration file"
-    set -l config_file $argv[1]
-    set -l package_section $argv[2]
-    set -l package_name $argv[3]
-    set -l target $argv[4]
-    
-    if not test -f $config_file
-        echo "❌ Error: Configuration file not found: $config_file"
-        return 1
-    end
-    
-    # Check if package already exists
-    if grep -q "^[[:space:]]*$package_name[[:space:]]*\$" $config_file
-        echo "⚠️ Package '$package_name' already exists in $target configuration."
-        return 1
-    end
-    
-    echo "➕ Adding '$package_name' to $target configuration..."
-    echo "   File: $config_file"
-    
-    # Create backup
-    cp $config_file $config_file.bak
-    
-    # Add package using sed
-    sed -i "/^[[:space:]]*$package_section = with pkgs; \[/,/^[[:space:]]*\];/ {
-        /^[[:space:]]*\];/i\\
-    $package_name
-    }" $config_file
-    
-    if test $status -eq 0
-        echo "✅ Successfully added '$package_name' to $target configuration."
-        echo "💾 Backup saved as $config_file.bak"
-        echo "💡 Use 'nixpkg list $target' to verify the addition."
-    else
-        echo "❌ Failed to add package. Restoring backup."
-        mv $config_file.bak $config_file
-        return 1
-    end
-end
-
-function _nixpkg_remove -d "Remove package from configuration file"
-    set -l config_file $argv[1]
-    set -l package_section $argv[2]
-    set -l package_name $argv[3]
-    set -l target $argv[4]
-    
-    if not test -f $config_file
-        echo "❌ Error: Configuration file not found: $config_file"
-        return 1
-    end
-    
-    # Check if package exists
-    if not grep -q "^[[:space:]]*$package_name[[:space:]]*\$" $config_file
-        echo "⚠️ Package '$package_name' not found in $target configuration."
-        echo "💡 Use 'nixpkg list $target' to see available packages."
-        return 1
-    end
-    
-    echo "➖ Removing '$package_name' from $target configuration..."
-    echo "   File: $config_file"
-    
-    # Create backup
-    cp $config_file $config_file.bak
-    
-    # Remove package using sed
-    sed -i "/^[[:space:]]*$package_section = with pkgs; \[/,/^[[:space:]]*\];/ {
-        /^[[:space:]]*$package_name[[:space:]]*\$/d
-    }" $config_file
-    
-    if test $status -eq 0
-        echo "✅ Successfully removed '$package_name' from $target configuration."
-        echo "💾 Backup saved as $config_file.bak"
-        echo "💡 Use 'nixpkg list $target' to verify the removal."
-    else
-        echo "❌ Failed to remove package. Restoring backup."
-        mv $config_file.bak $config_file
-        return 1
-    end
-end
-
-function _nixpkg_help -d "Show help for nixpkg function"
-    echo "📦 nixpkg - NixOS Package Manager"
-    echo "════════════════════════════════════════════════════════════"
-    echo ""
-    echo "🎯 DESCRIPTION:"
-    echo "   Manage packages in your NixOS configuration files (home.nix and configuration.nix)"
-    echo "   Provides a simple interface to list, add, remove, and search for packages."
-    echo ""
-    echo "⚙️  USAGE:"
-    echo "   nixpkg <action> [package] [target] [options]"
-    echo ""
-    echo "📋 ACTIONS:"
-    echo "   list, ls, l          List all packages in configuration"
-    echo "   add, a               Add a package to configuration"
-    echo "   remove, rm, r        Remove a package from configuration"
-    echo "   search, s, find      Search for packages in nixpkgs"
-    echo "   help, h, --help      Show this help message"
-    echo "   manual, man, doc     Show detailed manual"
-    echo ""
-    echo "🎯 TARGETS:"
-    echo "   home, h              Target home.nix (default)"
-    echo "   system, sys, s       Target configuration.nix"
-    echo ""
-    echo "🔧 OPTIONS:"
-    echo "   --rebuild, -r        Rebuild system after making changes"
-    echo ""
-    echo "💡 EXAMPLES:"
-    echo "   nixpkg list                    # List home packages"
-    echo "   nixpkg list system             # List system packages"
-    echo "   nixpkg add firefox             # Add Firefox to home.nix"
-    echo "   nixpkg add vim system -r       # Add vim to system and rebuild"
-    echo "   nixpkg remove htop home        # Remove htop from home.nix"
-    echo "   nixpkg search browser          # Search for browser packages"
-    echo ""
-    echo "🔗 ABBREVIATIONS AVAILABLE:"
-    echo "   pkgls    = nixpkg list"
-    echo "   pkgadd   = nixpkg add"
-    echo "   pkgrm    = nixpkg remove"
-    echo "   pkgs     = nixpkg search"
-    echo "   pkgaddr  = nixpkg add --rebuild"
-    echo "   pkgrmr   = nixpkg remove --rebuild"
-    echo ""
-    echo "ℹ️  For detailed information, use: nixpkg manual"
-end
-
-function _nixpkg_manual -d "Show detailed manual for nixpkg function"
-    echo "📖 nixpkg - Complete Manual"
-    echo "════════════════════════════════════════════════════════════════════════════════"
-    echo ""
-    echo "🔍 OVERVIEW:"
-    echo "   nixpkg is a comprehensive package management tool for NixOS configurations."
-    echo "   It simplifies the process of managing packages across home.nix and"
-    echo "   configuration.nix files by providing intuitive commands for common operations."
-    echo ""
-    echo "📂 FILE TARGETS:"
-    echo "   • HOME TARGET (home.nix):"
-    echo "     - File: \$NIXOS_CONFIG_DIR/home.nix"
-    echo "     - Section: home.packages = with pkgs; ["
-    echo "     - Scope: User-specific packages"
-    echo "     - Default target when none specified"
-    echo ""
-    echo "   • SYSTEM TARGET (configuration.nix):"
-    echo "     - File: \$NIXOS_CONFIG_DIR/configuration.nix"
-    echo "     - Section: environment.systemPackages = with pkgs; ["
-    echo "     - Scope: System-wide packages for all users"
-    echo ""
-    echo "🛠️  DETAILED ACTIONS:"
-    echo ""
-    echo "   📋 LIST (list, ls, l):"
-    echo "      Purpose: Display all packages currently in the configuration"
-    echo "      Syntax:  nixpkg list [target]"
-    echo "      Output:  Bullet-pointed list with package count"
-    echo "      Example: nixpkg list system"
-    echo ""
-    echo "   ➕ ADD (add, a):"
-    echo "      Purpose: Add a new package to the configuration"
-    echo "      Syntax:  nixpkg add <package> [target] [--rebuild]"
-    echo "      Safety:  Creates backup (.bak file) before modification"
-    echo "      Checks:  Prevents duplicate package additions"
-    echo "      Example: nixpkg add firefox home --rebuild"
-    echo ""
-    echo "   ➖ REMOVE (remove, rm, r):"
-    echo "      Purpose: Remove an existing package from configuration"
-    echo "      Syntax:  nixpkg remove <package> [target] [--rebuild]"
-    echo "      Safety:  Creates backup (.bak file) before modification"
-    echo "      Checks:  Verifies package exists before removal"
-    echo "      Example: nixpkg remove htop system -r"
-    echo ""
-    echo "   🔍 SEARCH (search, s, find):"
-    echo "      Purpose: Search nixpkgs repository for available packages"
-    echo "      Syntax:  nixpkg search <term>"
-    echo "      Backend: Uses 'nix search nixpkgs <term>'"
-    echo "      Example: nixpkg search text editor"
-    echo ""
-    echo "🔧 REBUILD INTEGRATION:"
-    echo "   • The --rebuild flag automatically calls nixos-apply-config after changes"
-    echo "   • nixos-apply-config handles the full rebuild process including:"
-    echo "     - Running sudo nixos-rebuild switch"
-    echo "     - Offering git commit on success"
-    echo "     - Offering rollback on failure"
-    echo ""
-    echo "💾 BACKUP SYSTEM:"
-    echo "   • All modifications create .bak files automatically"
-    echo "   • Format: <config-file>.bak (e.g., home.nix.bak)"
-    echo "   • Restored automatically on failure"
-    echo "   • Manual restoration: mv home.nix.bak home.nix"
-    echo ""
-    echo "⚠️  ERROR HANDLING:"
-    echo "   • File existence checks before operations"
-    echo "   • Duplicate addition prevention"
-    echo "   • Missing package removal detection"
-    echo "   • Automatic backup restoration on failure"
-    echo "   • Clear error messages with helpful tips"
-    echo ""
-    echo "🔗 INTEGRATION WITH YOUR SETUP:"
-    echo "   • Uses \$NIXOS_CONFIG_DIR environment variable"
-    echo "   • Integrates with your existing nixos-apply-config function"
-    echo "   • Works with your git workflow (nixos-git function)"
-    echo "   • Compatible with your fish abbreviations"
-    echo ""
-    echo "📈 WORKFLOW EXAMPLES:"
-    echo ""
-    echo "   🎮 Gaming Setup:"
-    echo "     nixpkg add lutris home"
-    echo "     nixpkg add mangohud home"
-    echo "     nixpkg add steam system --rebuild"
-    echo ""
-    echo "   💻 Development Environment:"
-    echo "     nixpkg add git system"
-    echo "     nixpkg add vscode home"
-    echo "     nixpkg add nodejs home --rebuild"
-    echo ""
-    echo "   🧹 Cleanup:"
-    echo "     nixpkg list home | grep unused"
-    echo "     nixpkg remove unused-package home -r"
-    echo ""
-    echo "💡 PRO TIPS:"
-    echo "   • Use abbreviations for faster workflow (pkgadd, pkgrm, etc.)"
-    echo "   • Always list packages first to see current state"
-    echo "   • Use search to find exact package names before adding"
-    echo "   • Consider using --rebuild for immediate testing"
-    echo "   • Check .bak files if something goes wrong"
-    echo ""
-    echo "🆘 TROUBLESHOOTING:"
-    echo "   • If rebuild fails: Check .bak files for restoration"
-    echo "   • If package not found: Use 'nixpkg search <term>' first"
-    echo "   • If file not found: Check \$NIXOS_CONFIG_DIR variable"
-    echo "   • If permission denied: Ensure you can write to config directory"
-    echo ""
-    echo "ℹ️  For quick reference, use: nixpkg help"
 end
