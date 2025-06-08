@@ -178,6 +178,18 @@
       nup = "nixos-upgrade";
       nixos-up = "nixos-upgrade";
 
+      # Package management abbreviations
+      pkgls = "nixpkg list";
+      pkgadd = "nixpkg add";
+      pkgrm = "nixpkg remove";
+      pkgs = "nixpkg search";
+      pkghelp = "nixpkg help";
+      pkgman = "nixpkg manual";
+      
+      # Quick rebuild versions
+      pkgaddr = "nixpkg add --rebuild";
+      pkgrmr = "nixpkg remove --rebuild";
+
       # If you kept the old simple nixos-rebuild-switch.fish and want an abbr for it:
       # nrbs = "nixos-rebuild-switch"; # NixOS ReBuild Switch (simple)
       # Your eza aliases
