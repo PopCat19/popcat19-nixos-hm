@@ -1,31 +1,147 @@
-function nixos-apply-config -d "🚀 Apply NixOS config (rebuild/git/rollback)"
-  echo "🚀 Attempting to apply NixOS configuration..."
-  if sudo nixos-rebuild switch --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME" $argv
-    echo "✅ NixOS rebuild and switch successful."
-    echo ""
-    read -P "💬 Enter commit message (or leave blank to skip git operations): " commit_message
-    if test -n "$commit_message"
-      nixos-git "$commit_message"
-    else
-      echo "ℹ️ Git operations skipped by user."
+# ~/nixos-config/fish_functions/nixos-apply-config.fish
+function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollback. Use 'nixos-apply-config help' for manual."
+    # Show help if help requested
+    if test "$argv[1]" = "help" -o "$argv[1]" = "h" -o "$argv[1]" = "--help" -o "$argv[1]" = "-h"
+        _nixos_apply_help
+        return 0
+    else if test "$argv[1]" = "manual" -o "$argv[1]" = "man" -o "$argv[1]" = "doc"
+        _nixos_apply_manual
+        return 0
     end
-    return 0
-  else
-    echo "❌ NixOS rebuild and switch FAILED."
-    echo ""
-    read -P "󰕌 Rollback to previously working configuration? (y/N): " rollback_choice
-    set -l lower_rollback_choice (string lower "$rollback_choice")
-    if test "$lower_rollback_choice" = "y" -o "$lower_rollback_choice" = "yes"
-      echo "󰕌 Attempting to rollback..."
-      if sudo nixos-rebuild switch --rollback
-        echo "✅ Rollback successful. Switched to previous configuration."
-      else
-        echo "❌ Rollback FAILED. You may need to manually select a previous generation at boot."
-        echo "ℹ️ You can try 'sudo nixos-rebuild boot' to make the previous generation the default for next boot."
-      end
+    
+    echo "🚀 Attempting to apply NixOS configuration..."
+    if sudo nixos-rebuild switch --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME" $argv
+        echo "✅ NixOS rebuild and switch successful."
+        echo ""
+        read -P "💬 Enter commit message (or leave blank to skip git operations): " commit_message
+        if test -n "$commit_message"
+            nixos-git "$commit_message"
+        else
+            echo "ℹ️ Git operations skipped by user."
+        end
+        return 0
     else
-      echo "ℹ️ Rollback skipped by user."
+        echo "❌ NixOS rebuild and switch FAILED."
+        echo ""
+        read -P "󰕌 Rollback to previously working configuration? (y/N): " rollback_choice
+        set -l lower_rollback_choice (string lower "$rollback_choice")
+        if test "$lower_rollback_choice" = "y" -o "$lower_rollback_choice" = "yes"
+            echo "󰕌 Attempting to rollback..."
+            if sudo nixos-rebuild switch --rollback
+                echo "✅ Rollback successful. Switched to previous configuration."
+            else
+                echo "❌ Rollback FAILED. You may need to manually select a previous generation at boot."
+                echo "💡 Try 'sudo nixos-rebuild boot' to make the previous generation default for next boot."
+            end
+        else
+            echo "ℹ️ Rollback skipped by user."
+        end
+        return 1
     end
-    return 1
-  end
+end
+
+function _nixos_apply_help -d "Show help for nixos-apply-config"
+    echo "🚀 nixos-apply-config - Smart NixOS Configuration Applier"
+    echo "════════════════════════════════════════════════════════════"
+    echo ""
+    echo "🎯 DESCRIPTION:"
+    echo "   Intelligently applies NixOS configuration with automatic error handling,"
+    echo "   git integration, and rollback capabilities."
+    echo ""
+    echo "⚙️  USAGE:"
+    echo "   nixos-apply-config [nixos-rebuild-options]"
+    echo "   nixos-apply-config help|manual"
+    echo ""
+    echo "🔄 WORKFLOW:"
+    echo "   1. Runs nixos-rebuild switch with your flake"
+    echo "   2. On SUCCESS: Offers to commit changes to git"
+    echo "   3. On FAILURE: Offers to rollback to previous generation"
+    echo ""
+    echo "💡 EXAMPLES:"
+    echo "   nixos-apply-config                    # Standard rebuild"
+    echo "   nixos-apply-config --show-trace       # Rebuild with detailed errors"
+    echo "   nixos-apply-config --fast             # Skip building substitutes"
+    echo ""
+    echo "🔗 INTEGRATIONS:"
+    echo "   • Uses \$NIXOS_CONFIG_DIR and \$NIXOS_FLAKE_HOSTNAME"
+    echo "   • Calls nixos-git for commit operations"
+    echo "   • Used by nrb, nerb, herb, nup abbreviations"
+    echo ""
+    echo "ℹ️  For detailed information: nixos-apply-config manual"
+end
+
+function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
+    echo "📖 nixos-apply-config - Complete Manual"
+    echo "════════════════════════════════════════════════════════════════════════════════"
+    echo ""
+    echo "🔍 OVERVIEW:"
+    echo "   The core function of your NixOS management workflow. Handles the complete"
+    echo "   process of applying configuration changes with intelligent error handling."
+    echo ""
+    echo "🔄 DETAILED WORKFLOW:"
+    echo ""
+    echo "   1️⃣ REBUILD PHASE:"
+    echo "      • Executes: sudo nixos-rebuild switch --flake \"\$NIXOS_CONFIG_DIR#\$NIXOS_FLAKE_HOSTNAME\""
+    echo "      • Passes through any additional arguments (--show-trace, --fast, etc.)"
+    echo "      • Provides real-time output during build process"
+    echo ""
+    echo "   2️⃣ SUCCESS PHASE:"
+    echo "      • Confirms successful rebuild"
+    echo "      • Prompts for git commit message"
+    echo "      • If message provided: calls nixos-git function"
+    echo "      • If skipped: continues without git operations"
+    echo ""
+    echo "   3️⃣ FAILURE PHASE:"
+    echo "      • Reports build failure"
+    echo "      • Offers rollback to previous working generation"
+    echo "      • If accepted: attempts sudo nixos-rebuild switch --rollback"
+    echo "      • Provides guidance if rollback also fails"
+    echo ""
+    echo "🌐 ENVIRONMENT VARIABLES:"
+    echo "   • NIXOS_CONFIG_DIR: Path to your NixOS configuration directory"
+    echo "   • NIXOS_FLAKE_HOSTNAME: Your system's flake hostname identifier"
+    echo ""
+    echo "🔧 ADVANCED OPTIONS:"
+    echo "   All nixos-rebuild switch options are supported:"
+    echo "   • --show-trace          Show detailed error traces"
+    echo "   • --fast                Skip building substitutes where possible"
+    echo "   • --option <name> <val> Pass option to Nix"
+    echo "   • --impure              Allow impure evaluation"
+    echo "   • --verbose             Increase verbosity"
+    echo ""
+    echo "💡 ERROR SCENARIOS & SOLUTIONS:"
+    echo ""
+    echo "   ❌ Build Failures:"
+    echo "      • Syntax errors in configuration files"
+    echo "      • Missing packages or services"
+    echo "      • Hardware compatibility issues"
+    echo "      → Use --show-trace for detailed error information"
+    echo ""
+    echo "   ❌ Flake Issues:"
+    echo "      • Lock file inconsistencies"
+    echo "      • Input update conflicts"
+    echo "      → Try flake-update first, then reapply"
+    echo ""
+    echo "   ❌ Permission Issues:"
+    echo "      • Insufficient privileges for system changes"
+    echo "      → Ensure sudo access is configured properly"
+    echo ""
+    echo "🔗 INTEGRATION WITH OTHER FUNCTIONS:"
+    echo "   • nixos-edit-rebuild: Edit config → nixos-apply-config"
+    echo "   • home-edit-rebuild: Edit home → nixos-apply-config"
+    echo "   • nixos-upgrade: Update flake → nixos-apply-config"
+    echo "   • nixpkg add --rebuild: Add package → nixos-apply-config"
+    echo ""
+    echo "🎮 ABBREVIATION USAGE:"
+    echo "   nrb         = nixos-apply-config"
+    echo "   nixos-sw    = nixos-apply-config"
+    echo "   nerb        = nixos-edit-rebuild (which calls this)"
+    echo "   herb        = home-edit-rebuild (which calls this)"
+    echo "   nup         = nixos-upgrade (which calls this)"
+    echo ""
+    echo "🆘 TROUBLESHOOTING:"
+    echo "   • Build hangs: Check disk space and memory usage"
+    echo "   • Rollback fails: Select previous generation at boot menu"
+    echo "   • Git issues: Manually run 'nixos-git \"message\"'"
+    echo "   • Flake errors: Check flake.nix syntax and inputs"
 end
