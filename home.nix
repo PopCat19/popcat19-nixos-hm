@@ -82,6 +82,8 @@
     binwalk
     pv
     localsend
+    nautilus
+    nemo
   ];
 
   services.playerctld.enable = true;
