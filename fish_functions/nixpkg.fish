@@ -129,59 +129,69 @@ function _nixpkg_list -d "List packages in configuration file"
     echo "📊 Total packages: $count"
 end
 
-# Replace both the _nixpkg_add and _nixpkg_remove functions with these corrected versions:
+# In ~/nixos-config/fish_functions/nixpkg.fish, replace the _nixpkg_add function with this:
 
-function _nixpkg_add -d "Add package to configuration file"
+function _nixpkg_add -d "Add package to configuration file (appends to the list)"
     set -l config_file $argv[1]
     set -l package_section $argv[2]
     set -l package_name $argv[3]
     set -l target $argv[4]
-    
+
     if not test -f "$config_file"
         echo "❌ Error: Configuration file not found: $config_file"
         return 1
     end
-    
-    # Check if package already exists using simpler approach
+
+    # Check if package already exists
     set -l package_exists false
     while read -l line
-        set clean_line (string trim $line)
+        set clean_line (string trim (string replace -r '#.*$' '' $line))
         if test "$clean_line" = "$package_name"
             set package_exists true
             break
         end
     end < "$config_file"
-    
+
     if test $package_exists = true
         echo "⚠️ Package '$package_name' already exists in $target configuration."
         return 1
     end
-    
-    echo "➕ Adding '$package_name' to $target configuration..."
+
+    echo "➕ Appending '$package_name' to $target configuration..."
     echo "   File: $config_file"
-    
+
     # Create backup
     cp "$config_file" "$config_file.bak"
-    
-    # Find the line with the package section and add after it
+
+    # --- NEW APPEND LOGIC ---
     set -l temp_file (mktemp)
     set -l added false
-    
+    set -l in_packages false
+
     while read -l line
-        echo $line >> $temp_file
-        
-        # If this line contains the package section start, add our package
-        if string match -q "*$package_section = with pkgs; *" $line; and test $added = false
-            echo "    $package_name" >> $temp_file
+        # Check if we are inside the package block and find the closing bracket
+        if test $in_packages = true; and string match -q -r '^\s*\];' $line
+            # We found the end. Add the new package *before* this line.
+            echo "  $package_name" >> $temp_file
             set added true
+            set in_packages false # We're done with this block
+        end
+
+        # Write the original line to the temp file
+        echo $line >> $temp_file
+
+        # Check if we are entering the package block (do this after writing the line)
+        if test $in_packages = false; and string match -q "*$package_section = with pkgs; *" $line
+            set in_packages true
         end
     end < "$config_file"
-    
+    # --- END OF NEW LOGIC ---
+
     # Replace the original file
     mv $temp_file "$config_file"
-    
+
     if test $added = true
-        echo "✅ Successfully added '$package_name' to $target configuration."
+        echo "✅ Successfully appended '$package_name' to $target configuration."
         echo "💾 Backup saved as $config_file.bak"
         echo "💡 Use 'nixpkg list $target' to verify the addition."
     else

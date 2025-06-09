@@ -22,7 +22,6 @@
   };
 
   home.packages = with pkgs; [
-    nemo
     # Terminals, Launchers, Notifications
     kitty
     fuzzel
@@ -83,7 +82,8 @@
     binwalk
     pv
     localsend
-    nautilus
+  nautilus
+  nemo
   ];
 
   services.playerctld.enable = true;
