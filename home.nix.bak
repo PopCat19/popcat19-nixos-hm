@@ -22,6 +22,7 @@
   };
 
   home.packages = with pkgs; [
+    htop
     nemo
     # Terminals, Launchers, Notifications
     kitty
