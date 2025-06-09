@@ -84,6 +84,7 @@
     localsend
   nautilus
   nemo
+  nixos-install-tools
   ];
 
   services.playerctld.enable = true;
