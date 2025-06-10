@@ -85,6 +85,7 @@
   nautilus
   nemo
   nixos-install-tools
+  nixos-generators
   ];
 
   services.playerctld.enable = true;

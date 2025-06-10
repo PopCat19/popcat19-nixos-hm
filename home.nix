@@ -86,6 +86,7 @@
   nemo
   nixos-install-tools
   nixos-generators
+  git-lfs
   ];
 
   services.playerctld.enable = true;
