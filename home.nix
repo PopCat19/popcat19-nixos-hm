@@ -87,6 +87,7 @@
   nixos-install-tools
   nixos-generators
   git-lfs
+  vboot_reference
   ];
 
   services.playerctld.enable = true;
