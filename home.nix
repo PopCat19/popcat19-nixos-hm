@@ -88,6 +88,7 @@
   nixos-generators
   git-lfs
   vboot_reference
+  mangayomi
   ];
 
   services.playerctld.enable = true;
