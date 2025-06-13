@@ -90,6 +90,7 @@
   vboot_reference
   mangayomi
   parted
+  squashfsTools
   ];
 
   services.playerctld.enable = true;

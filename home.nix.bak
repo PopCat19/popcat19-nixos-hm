@@ -89,6 +89,9 @@
   git-lfs
   vboot_reference
   mangayomi
+  parted
+  squashfs
+  squashfsTools
   ];
 
   services.playerctld.enable = true;
