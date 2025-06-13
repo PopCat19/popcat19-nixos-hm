@@ -89,6 +89,7 @@
   git-lfs
   vboot_reference
   mangayomi
+  parted
   ];
 
   services.playerctld.enable = true;
