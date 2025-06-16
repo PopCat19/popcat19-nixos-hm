@@ -24,7 +24,7 @@ uniform float time;
 #define COLOR_DEPTH_ENABLED 0  // Enable color depth reduction
 
 // --- Eris's Aesthetic Additions ---
-#define DEBUG_LENS_DISTORTION 1 // Toggle barrel/pincushion lens distortion
+#define DEBUG_LENS_DISTORTION 0 // Toggle barrel/pincushion lens distortion
 #define DEBUG_FILM_GRAIN 1      // Toggle film grain overlay
 #define DEBUG_NOISE_BAR 1       // Toggle analog rolling noise bar
 #define DEBUG_LIGHT_LEAKS 1     // Toggle photographic light leaks
