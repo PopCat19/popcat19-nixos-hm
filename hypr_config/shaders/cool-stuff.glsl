@@ -12,7 +12,7 @@ uniform float time;
 #define DEBUG_CA       1       // Toggle chromatic aberration effect
 #define DEBUG_BLOOM    1       // Toggle bloom effect
 #define DEBUG_VIGNETTE 0       // Toggle vignette effect
-#define DEBUG_PIXEL   0       // Toggle pixelation effect
+#define DEBUG_PIXEL   1       // Toggle pixelation effect
 #define COLOR_DEPTH_ENABLED 0  // Enable color depth reduction
 #define DEBUG_SCANLINE 0       // Toggle scanline effect
 #define DEBUG_VHS_OVERLAY 1    // Toggle VHS double overlay effect
@@ -21,7 +21,6 @@ uniform float time;
 #define DEBUG_COLOR_TEMP 1     // Toggle color temperature adjustment
 #define DEBUG_VIBRATION 1      // Toggle vertical vibration effect
 #define DEBUG_BITRATE   0       // Toggle bitrate compression artifacts
-#define DEBUG_NOISE    1       // Toggle random variable noise effect
 
 // [Effect Parameters]
 // Bloom Parameters
@@ -81,16 +80,6 @@ uniform float time;
 #define VIBRATION_AMPLITUDE 0.0004 // Strength of vertical vibration
 #define VIBRATION_FREQUENCY 80.0  // Speed of vibration
 
-// Random Variable Noise Parameters
-#define NOISE_INTENSITY     0.05   // Overall noise strength (0.0-1.0)
-#define NOISE_GRAIN_SIZE    512.0  // Size of noise grain pattern
-#define NOISE_ANIMATED      1      // Enable time-based animation
-#define NOISE_SPEED         2.0    // Animation speed multiplier
-#define NOISE_TYPE          0      // 0 = White, 1 = Perlin-like, 2 = Film grain, 3 = Digital
-#define NOISE_MONOCHROME    0      // 0 = Color noise, 1 = Monochrome
-#define NOISE_BLEND_MODE    0      // 0 = Add, 1 = Multiply, 2 = Overlay, 3 = Screen
-#define NOISE_TEMPORAL_COHERENCE 0.8 // Temporal stability (0.0-1.0, higher = less flickering)
-
 // Color Settings
 #define COLOR_DEPTH 16         // Bit depth reducation: 8, 16, or 24
 const float COLOR_TEMPERATURE = 3200.0; // White balance in Kelvin (1000-40000)
@@ -119,108 +108,6 @@ const float PI = 3.14159265359;
 // --- Utility Functions ---
 float random(vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
-}
-
-float random3(vec3 st) {
-    return fract(sin(dot(st.xyz, vec3(12.9898, 78.233, 45.164))) * 43758.5453123);
-}
-
-// Advanced noise functions
-float noise2D(vec2 st) {
-    vec2 i = floor(st);
-    vec2 f = fract(st);
-    
-    float a = random(i);
-    float b = random(i + vec2(1.0, 0.0));
-    float c = random(i + vec2(0.0, 1.0));
-    float d = random(i + vec2(1.0, 1.0));
-    
-    vec2 u = f * f * (3.0 - 2.0 * f); // Smoothstep interpolation
-    
-    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
-}
-
-float filmGrainNoise(vec2 uv, float time) {
-    vec2 grain = uv * NOISE_GRAIN_SIZE;
-    float n1 = random(grain + time * NOISE_SPEED);
-    float n2 = random(grain + time * NOISE_SPEED + 100.0);
-    return mix(n1, n2, 0.5) * 2.0 - 1.0;
-}
-
-float digitalNoise(vec2 uv, float time) {
-    vec2 grid = floor(uv * NOISE_GRAIN_SIZE);
-    float timeStep = floor(time * NOISE_SPEED * 10.0) / 10.0;
-    return step(0.5, random(grid + timeStep)) * 2.0 - 1.0;
-}
-
-// --- Random Variable Noise Function ---
-vec3 applyRandomNoise(vec2 uv, vec3 color, float time) {
-#if DEBUG_NOISE
-    vec3 noise = vec3(0.0);
-    float animTime = NOISE_ANIMATED == 1 ? time * NOISE_SPEED : 0.0;
-    
-    // Generate base noise based on type
-    if (NOISE_TYPE == 0) {
-        // White noise
-        noise.r = random(uv * NOISE_GRAIN_SIZE + animTime) * 2.0 - 1.0;
-        noise.g = random(uv * NOISE_GRAIN_SIZE + animTime + 100.0) * 2.0 - 1.0;
-        noise.b = random(uv * NOISE_GRAIN_SIZE + animTime + 200.0) * 2.0 - 1.0;
-    } else if (NOISE_TYPE == 1) {
-        // Perlin-like noise
-        noise.r = noise2D(uv * NOISE_GRAIN_SIZE + animTime) * 2.0 - 1.0;
-        noise.g = noise2D(uv * NOISE_GRAIN_SIZE + animTime + 100.0) * 2.0 - 1.0;
-        noise.b = noise2D(uv * NOISE_GRAIN_SIZE + animTime + 200.0) * 2.0 - 1.0;
-    } else if (NOISE_TYPE == 2) {
-        // Film grain
-        float grain = filmGrainNoise(uv, animTime);
-        noise = vec3(grain);
-    } else if (NOISE_TYPE == 3) {
-        // Digital noise
-        float digital = digitalNoise(uv, animTime);
-        noise = vec3(digital);
-    }
-    
-    // Apply monochrome if enabled
-    if (NOISE_MONOCHROME == 1) {
-        float mono = (noise.r + noise.g + noise.b) / 3.0;
-        noise = vec3(mono);
-    }
-    
-    // Apply temporal coherence
-    vec3 prevNoise = vec3(
-        random(uv * NOISE_GRAIN_SIZE + (animTime - 0.016) * NOISE_SPEED) * 2.0 - 1.0,
-        random(uv * NOISE_GRAIN_SIZE + (animTime - 0.016) * NOISE_SPEED + 100.0) * 2.0 - 1.0,
-        random(uv * NOISE_GRAIN_SIZE + (animTime - 0.016) * NOISE_SPEED + 200.0) * 2.0 - 1.0
-    );
-    noise = mix(noise, prevNoise, NOISE_TEMPORAL_COHERENCE);
-    
-    // Apply noise intensity
-    noise *= NOISE_INTENSITY;
-    
-    // Apply blend mode
-    if (NOISE_BLEND_MODE == 0) {
-        // Add
-        return color + noise;
-    } else if (NOISE_BLEND_MODE == 1) {
-        // Multiply
-        return color * (1.0 + noise);
-    } else if (NOISE_BLEND_MODE == 2) {
-        // Overlay
-        vec3 overlay = mix(
-            2.0 * color * (noise + 0.5),
-            1.0 - 2.0 * (1.0 - color) * (0.5 - noise),
-            step(0.5, color)
-        );
-        return overlay;
-    } else if (NOISE_BLEND_MODE == 3) {
-        // Screen
-        return 1.0 - (1.0 - color) * (1.0 - noise);
-    }
-    
-    return color;
-#else
-    return color;
-#endif
 }
 
 // --- Color Depth Reduction ---
@@ -517,9 +404,6 @@ void main() {
     #if DEBUG_COLOR_TEMP
         color = mix(color, color * colorTemperatureToRGB(COLOR_TEMPERATURE), COLOR_TEMPERATURE_STRENGTH);
     #endif
-    
-    // Apply random variable noise
-    color = applyRandomNoise(processedUV, color, time);
     
     // Color depth quantization
     color = applyColorDepthReduction(color);
