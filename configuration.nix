@@ -229,8 +229,8 @@ users.users.popcat19 = {
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-  services.openssh.settings.PasswordAuthentication = false;
+  # services.openssh.enable = true;
+  # services.openssh.settings.PasswordAuthentication = false;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
