@@ -241,8 +241,8 @@ users.users.popcat19 = {
   networking.firewall = {
     enable = true;
     trustedInterfaces = [ "lo" ];
-    # allowedTCPPorts = [ ... ]; # Add ports for specific services if needed
-    # allowedUDPPorts = [ ... ];
+    allowedTCPPorts = [ 53317 ]; # Add ports for specific services if needed
+    allowedUDPPorts = [ 53317 ];
   };
 
   # Copy the NixOS configuration file and link it from the resulting system
