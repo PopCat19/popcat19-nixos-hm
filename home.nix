@@ -91,6 +91,7 @@
   mangayomi
   parted
   squashfsTools
+  glances
   ];
 
   services.playerctld.enable = true;

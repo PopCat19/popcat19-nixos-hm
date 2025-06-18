@@ -90,7 +90,6 @@
   vboot_reference
   mangayomi
   parted
-  squashfs
   squashfsTools
   ];
 
