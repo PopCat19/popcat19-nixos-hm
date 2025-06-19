@@ -11,8 +11,8 @@ uniform float time;
 // [Debug Toggles]
 #define DEBUG_CA       1       // Toggle chromatic aberration effect
 #define DEBUG_BLOOM    1       // Toggle bloom effect
-#define DEBUG_VIGNETTE 0       // Toggle vignette effect
-#define DEBUG_PIXEL   1       // Toggle pixelation effect
+#define DEBUG_VIGNETTE 1       // Toggle vignette effect
+#define DEBUG_PIXEL   0       // Toggle pixelation effect
 #define COLOR_DEPTH_ENABLED 0  // Enable color depth reduction
 #define DEBUG_SCANLINE 0       // Toggle scanline effect
 #define DEBUG_VHS_OVERLAY 1    // Toggle VHS double overlay effect
