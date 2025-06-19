@@ -92,6 +92,7 @@
   parted
   squashfsTools
   glances
+  obs-studio
   ];
 
   services.playerctld.enable = true;
