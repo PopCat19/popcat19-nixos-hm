@@ -29,13 +29,8 @@
   gtk = {
     enable = true;
     theme = {
-      name = "Catppuccin-Mocha-Standard-Mauve-Dark";
-      package = pkgs.catppuccin-gtk.override {
-        variant = "mocha";
-        accents = ["mauve"];
-        size = "standard";
-        # tweaks = [ "rimless" "black" ]; # optional
-      };
+      name = "rose-pine-gtk";
+      package = pkgs.rose-pine-gtk-theme;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -84,7 +79,7 @@
     enable = true;
     settings = {
       main = {
-        font = "MPLUSRounded1c_Medium:size=10";
+        font = "MPLUSRounded1c_Medium:size=16";
         layer = "overlay"; # Or "top"
         exit-on-click = true;
         prompt = " "; # No prompt text for clean look
@@ -149,7 +144,6 @@
     pkgs.libsForQt5.qtstyleplugin-kvantum # The Kvantum engine
     pkgs.themechanger # Unsure if this is directly used but kept for consistency
     nwg-look # GTK theme configuration tool
-    pkgs.papirus-icon-theme # Icon theme
     # Other existing packages...
     kdePackages.ark
     ddcui
