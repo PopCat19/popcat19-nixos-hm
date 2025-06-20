@@ -153,8 +153,11 @@
 
   services.syncthing = {
     enable = true;
-    # user = "popcat19";
+    user = "popcat19";
+    group = "users";
     openDefaultPorts = true;
+    dataDir = "/home/popcat19/syncthing";
+    configDir = "/home/popcat19/.config/syncthing";
     
     settings = {
       folders = {
