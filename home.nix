@@ -93,6 +93,8 @@
   squashfsTools
   glances
   obs-studio
+  keepassxc
+  syncthing
   ];
 
   services.playerctld.enable = true;

@@ -92,6 +92,8 @@
   parted
   squashfsTools
   glances
+  obs-studio
+  keepassxc
   ];
 
   services.playerctld.enable = true;
