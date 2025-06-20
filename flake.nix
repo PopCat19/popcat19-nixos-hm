@@ -14,7 +14,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # === Add/Uncomment Home Manager Input ===
     home-manager = {
       url = "github:nix-community/home-manager"; # You can specify a release branch here if desired, e.g., /release-24.05
       inputs.nixpkgs.follows = "nixpkgs"; # Use the same nixpkgs
@@ -23,9 +22,15 @@
     rose-pine-hyprcursor = {
       url = "github:ndom91/rose-pine-hyprcursor";
     };
+
+    # Add Catppuccin themes input
+    catppuccin-nix = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, hyprpanel, aagl, chaotic, home-manager, ... }@inputs: let # Add home-manager here
+  outputs = { self, nixpkgs, hyprpanel, aagl, chaotic, home-manager, catppuccin-nix, ... }@inputs: let # Add home-manager here
     system = "x86_64-linux";
     myHostname = "popcat19-nixos0";
 
@@ -99,7 +104,6 @@
         ./configuration.nix
         chaotic.nixosModules.default
 
-        # === Add Home Manager NixOS Module ===
         home-manager.nixosModules.home-manager
         {
           home-manager = {
@@ -107,7 +111,7 @@
             useUserPackages = true;
             extraSpecialArgs = { inherit inputs system; };
             users.popcat19 = import ./home.nix;
-            backupFileExtension = "backup";
+            backupFileExtension = "bak2";
           };
         }
       ];

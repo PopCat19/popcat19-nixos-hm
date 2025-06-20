@@ -150,6 +150,7 @@
   # services.blueman.enable = true;
   services.flatpak.enable = true;
   services.hardware.openrgb.enable = true;
+  services.udisks2.enable = true;
 
   services.syncthing = {
     enable = true;

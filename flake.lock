@@ -86,6 +86,26 @@
         "type": "github"
       }
     },
+    "catppuccin-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1750153510,
+        "narHash": "sha256-NYHXXJZ9m4fJpKk9tKn/EExX87SqcBcRINOGF7hKRLI=",
+        "owner": "catppuccin",
+        "repo": "nix",
+        "rev": "4e95eaf8a351956d75cc400318579967ca2b6d0f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "catppuccin",
+        "repo": "nix",
+        "type": "github"
+      }
+    },
     "chaotic": {
       "inputs": {
         "flake-schemas": "flake-schemas",
@@ -357,6 +377,7 @@
     "root": {
       "inputs": {
         "aagl": "aagl",
+        "catppuccin-nix": "catppuccin-nix",
         "chaotic": "chaotic",
         "home-manager": "home-manager_2",
         "hyprpanel": "hyprpanel",
