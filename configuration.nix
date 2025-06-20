@@ -3,9 +3,6 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 { config, lib, pkgs, ... }:
-let
-  vaultDir = "/home/popcat19/Passwords";
-in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -130,10 +127,14 @@ in
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-users.users.popcat19 = {
-  isNormalUser = true;
-  extraGroups = [ "wheel" "video" "audio" "networkmanager" "i2c" ];
-};
+  users.users.popcat19 = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "video" "audio" "networkmanager" "i2c" ];
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /home/popcat19 0755 popcat19 users -"
+  ];
 
   programs.firefox.enable = true;
   programs.hyprland.withUWSM = true;
