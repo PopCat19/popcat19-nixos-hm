@@ -74,6 +74,9 @@
     xkb.layout = "us"; # Set keyboard layout to US.
   };
 
+  # Polkit for authentication and theme support
+  security.polkit.enable = true;
+
   # Hyprland Wayland Compositor.
   programs.hyprland = {
     enable = true;
@@ -98,7 +101,19 @@
   };
 
   # Display Manager: SDDM for graphical login.
-  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    settings = {
+      Theme = {
+        CursorTheme = "rose-pine-hyprcursor";
+        CursorSize = "24";
+      };
+    };
+  };
+
+  # Additional services for theme support
+  services.dbus.enable = true;
+  programs.dconf.enable = true;
 
   # **AUDIO CONFIGURATION**
   # Sets up audio server and real-time priorities.
@@ -245,4 +260,7 @@
     font-awesome
     nerd-fonts.jetbrains-mono
   ];
+
+  # Enable fontconfig for better font rendering
+  fonts.fontconfig.enable = true;
 }

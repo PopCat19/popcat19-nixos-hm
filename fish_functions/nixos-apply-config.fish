@@ -1,37 +1,99 @@
 # ~/nixos-config/fish_functions/nixos-apply-config.fish
 function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollback. Use 'nixos-apply-config help' for manual."
-    # Show help if help requested
-    if test "$argv[1]" = "help" -o "$argv[1]" = "h" -o "$argv[1]" = "--help" -o "$argv[1]" = "-h"
-        _nixos_apply_help
-        return 0
-    else if test "$argv[1]" = "manual" -o "$argv[1]" = "man" -o "$argv[1]" = "doc"
-        _nixos_apply_manual
-        return 0
+    # Parse arguments for -m flag
+    set -l commit_message ""
+    set -l rebuild_args
+    set -l i 1
+
+    while test $i -le (count $argv)
+        if test "$argv[$i]" = "-m"
+            if test $i -lt (count $argv)
+                set i (math $i + 1)
+                set commit_message "$argv[$i]"
+            else
+                echo "❌ Error: -m flag requires a commit message"
+                return 1
+            end
+        else if test "$argv[$i]" = "help" -o "$argv[$i]" = "h" -o "$argv[$i]" = "--help" -o "$argv[$i]" = "-h"
+            _nixos_apply_help
+            return 0
+        else if test "$argv[$i]" = "manual" -o "$argv[$i]" = "man" -o "$argv[$i]" = "doc"
+            _nixos_apply_manual
+            return 0
+        else
+            set rebuild_args $rebuild_args "$argv[$i]"
+        end
+        set i (math $i + 1)
     end
-    
+
     echo "🚀 Attempting to apply NixOS configuration..."
-    if sudo nixos-rebuild switch --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME" $argv
+    if sudo nixos-rebuild switch --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME" $rebuild_args
         echo "✅ NixOS rebuild and switch successful."
         echo ""
-        read -P "💬 Enter commit message (or leave blank to skip git operations): " commit_message
+
+        # Handle git operations
         if test -n "$commit_message"
+            echo "💬 Committing changes with message: '$commit_message'"
             nixos-git "$commit_message"
         else
-            echo "ℹ️ Git operations skipped by user."
+            read -P "💬 Enter commit message (or leave blank to skip git operations): " user_commit_message
+            if test -n "$user_commit_message"
+                nixos-git "$user_commit_message"
+            else
+                echo "ℹ️ Git operations skipped by user."
+            end
         end
         return 0
     else
         echo "❌ NixOS rebuild and switch FAILED."
         echo ""
-        read -P "󰕌 Rollback to previously working configuration? (y/N): " rollback_choice
+        read -P "󰕌 Rollback to last git commit? (y/N): " rollback_choice
         set -l lower_rollback_choice (string lower "$rollback_choice")
         if test "$lower_rollback_choice" = "y" -o "$lower_rollback_choice" = "yes"
-            echo "󰕌 Attempting to rollback..."
-            if sudo nixos-rebuild switch --rollback
-                echo "✅ Rollback successful. Switched to previous configuration."
+            echo "󰕌 Attempting to rollback using git..."
+
+            # Change to config directory for git operations
+            pushd $NIXOS_CONFIG_DIR
+
+            if not git rev-parse --is-inside-work-tree >/dev/null 2>&1
+                echo "❌ Error: $NIXOS_CONFIG_DIR is not a git repository."
+                echo "💡 Cannot perform git rollback. Try manual nixos-rebuild switch --rollback"
+                popd
+                return 1
+            end
+
+            # Check if there are uncommitted changes
+            if git diff-index --quiet HEAD --
+                echo "ℹ️ No uncommitted changes detected."
             else
-                echo "❌ Rollback FAILED. You may need to manually select a previous generation at boot."
-                echo "💡 Try 'sudo nixos-rebuild boot' to make the previous generation default for next boot."
+                echo "⚠️ Uncommitted changes detected. Stashing them before rollback..."
+                git stash push -m "Auto-stash before rollback from nixos-apply-config"
+            end
+
+            # Get the current commit hash for reference
+            set -l current_commit (git rev-parse HEAD)
+            echo "📍 Current commit: $current_commit"
+
+            # Reset to HEAD (last commit)
+            if git reset --hard HEAD
+                echo "✅ Git reset successful. Configuration restored to last commit."
+                popd
+
+                # Try to rebuild with the rolled-back configuration
+                echo "🔄 Rebuilding with rolled-back configuration..."
+                if sudo nixos-rebuild switch --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME"
+                    echo "✅ Rollback rebuild successful. System restored to working state."
+                else
+                    echo "❌ Rollback rebuild FAILED. The last commit may also have issues."
+                    echo "💡 You may need to:"
+                    echo "   • Check git log and reset to an earlier working commit"
+                    echo "   • Use nixos-rebuild switch --rollback for generation-based rollback"
+                    echo "   • Select a previous generation at boot menu"
+                end
+            else
+                echo "❌ Git reset FAILED."
+                popd
+                return 1
             end
         else
             echo "ℹ️ Rollback skipped by user."
@@ -49,23 +111,28 @@ function _nixos_apply_help -d "Show help for nixos-apply-config"
     echo "   git integration, and rollback capabilities."
     echo ""
     echo "⚙️  USAGE:"
-    echo "   nixos-apply-config [nixos-rebuild-options]"
+    echo "   nixos-apply-config [options] [nixos-rebuild-options]"
+    echo "   nixos-apply-config -m \"commit message\" [nixos-rebuild-options]"
     echo "   nixos-apply-config help|manual"
+    echo ""
+    echo "🔧 OPTIONS:"
+    echo "   -m \"message\"    Commit message for successful rebuild (skips prompt)"
     echo ""
     echo "🔄 WORKFLOW:"
     echo "   1. Runs nixos-rebuild switch with your flake"
-    echo "   2. On SUCCESS: Offers to commit changes to git"
-    echo "   3. On FAILURE: Offers to rollback to previous generation"
+    echo "   2. On SUCCESS: Commits changes to git (with -m or prompt)"
+    echo "   3. On FAILURE: Offers to rollback using git reset"
     echo ""
     echo "💡 EXAMPLES:"
-    echo "   nixos-apply-config                    # Standard rebuild"
-    echo "   nixos-apply-config --show-trace       # Rebuild with detailed errors"
-    echo "   nixos-apply-config --fast             # Skip building substitutes"
+    echo "   nixos-apply-config                           # Standard rebuild with prompt"
+    echo "   nixos-apply-config -m \"bump flake.lock\"      # Rebuild with commit message"
+    echo "   nixos-apply-config -m \"fix config\" --show-trace  # With rebuild options"
+    echo "   nixos-apply-config --fast                    # Skip substitutes, prompt for commit"
     echo ""
     echo "🔗 INTEGRATIONS:"
     echo "   • Uses \$NIXOS_CONFIG_DIR and \$NIXOS_FLAKE_HOSTNAME"
     echo "   • Calls nixos-git for commit operations"
-    echo "   • Used by nrb, nerb, herb, nup abbreviations"
+    echo "   • Git-based rollback instead of generation rollback"
     echo ""
     echo "ℹ️  For detailed information: nixos-apply-config manual"
 end
@@ -76,55 +143,90 @@ function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
     echo ""
     echo "🔍 OVERVIEW:"
     echo "   The core function of your NixOS management workflow. Handles the complete"
-    echo "   process of applying configuration changes with intelligent error handling."
+    echo "   process of applying configuration changes with intelligent git-based error handling."
     echo ""
     echo "🔄 DETAILED WORKFLOW:"
     echo ""
-    echo "   1️⃣ REBUILD PHASE:"
+    echo "   1️⃣ ARGUMENT PARSING:"
+    echo "      • Scans for -m flag to extract commit message"
+    echo "      • Passes remaining arguments to nixos-rebuild"
+    echo "      • Handles help/manual requests"
+    echo ""
+    echo "   2️⃣ REBUILD PHASE:"
     echo "      • Executes: sudo nixos-rebuild switch --flake \"\$NIXOS_CONFIG_DIR#\$NIXOS_FLAKE_HOSTNAME\""
-    echo "      • Passes through any additional arguments (--show-trace, --fast, etc.)"
+    echo "      • Passes through nixos-rebuild arguments (--show-trace, --fast, etc.)"
     echo "      • Provides real-time output during build process"
     echo ""
-    echo "   2️⃣ SUCCESS PHASE:"
+    echo "   3️⃣ SUCCESS PHASE:"
     echo "      • Confirms successful rebuild"
-    echo "      • Prompts for git commit message"
-    echo "      • If message provided: calls nixos-git function"
-    echo "      • If skipped: continues without git operations"
+    echo "      • If -m provided: Automatically commits with that message"
+    echo "      • If no -m: Prompts for git commit message"
+    echo "      • Calls nixos-git function for git operations"
     echo ""
-    echo "   3️⃣ FAILURE PHASE:"
+    echo "   4️⃣ FAILURE PHASE:"
     echo "      • Reports build failure"
-    echo "      • Offers rollback to previous working generation"
-    echo "      • If accepted: attempts sudo nixos-rebuild switch --rollback"
+    echo "      • Offers git-based rollback to last commit"
+    echo "      • If accepted: stashes changes, resets to HEAD, rebuilds"
     echo "      • Provides guidance if rollback also fails"
+    echo ""
+    echo "🆕 GIT-BASED ROLLBACK:"
+    echo "   Unlike traditional nixos-rebuild --rollback (generation-based), this uses:"
+    echo "   • git stash (preserve uncommitted changes)"
+    echo "   • git reset --hard HEAD (revert to last commit)"
+    echo "   • nixos-rebuild switch (rebuild with clean config)"
+    echo ""
+    echo "   Benefits:"
+    echo "   • Consistent with version control workflow"
+    echo "   • Preserves git history and commit messages"
+    echo "   • Works with any commit, not just generations"
+    echo "   • Integrates with collaborative development"
     echo ""
     echo "🌐 ENVIRONMENT VARIABLES:"
     echo "   • NIXOS_CONFIG_DIR: Path to your NixOS configuration directory"
     echo "   • NIXOS_FLAKE_HOSTNAME: Your system's flake hostname identifier"
     echo ""
     echo "🔧 ADVANCED OPTIONS:"
-    echo "   All nixos-rebuild switch options are supported:"
+    echo "   Commit Message Flag:"
+    echo "   • -m \"message\"    Specify commit message upfront"
+    echo ""
+    echo "   nixos-rebuild Options (all supported):"
     echo "   • --show-trace          Show detailed error traces"
     echo "   • --fast                Skip building substitutes where possible"
     echo "   • --option <name> <val> Pass option to Nix"
     echo "   • --impure              Allow impure evaluation"
     echo "   • --verbose             Increase verbosity"
     echo ""
-    echo "💡 ERROR SCENARIOS & SOLUTIONS:"
+    echo "💡 USAGE PATTERNS:"
+    echo ""
+    echo "   🚀 Quick Changes:"
+    echo "   nixos-apply-config -m \"quick fix\"         # No prompts, fast workflow"
+    echo ""
+    echo "   🔍 Debugging:"
+    echo "   nixos-apply-config --show-trace           # Detailed errors, prompt for commit"
+    echo ""
+    echo "   ⚡ Fast Iteration:"
+    echo "   nixos-apply-config -m \"test change\" --fast  # Skip substitutes, auto-commit"
+    echo ""
+    echo "🆘 ERROR SCENARIOS & SOLUTIONS:"
     echo ""
     echo "   ❌ Build Failures:"
     echo "      • Syntax errors in configuration files"
     echo "      • Missing packages or services"
     echo "      • Hardware compatibility issues"
     echo "      → Use --show-trace for detailed error information"
+    echo "      → Use git rollback to restore working configuration"
     echo ""
-    echo "   ❌ Flake Issues:"
-    echo "      • Lock file inconsistencies"
-    echo "      • Input update conflicts"
-    echo "      → Try flake-update first, then reapply"
+    echo "   ❌ Git Repository Issues:"
+    echo "      • Not a git repository"
+    echo "      • No commits in repository"
+    echo "      → Initialize: cd \$NIXOS_CONFIG_DIR && git init"
+    echo "      → First commit: git add . && git commit -m \"initial config\""
     echo ""
-    echo "   ❌ Permission Issues:"
-    echo "      • Insufficient privileges for system changes"
-    echo "      → Ensure sudo access is configured properly"
+    echo "   ❌ Rollback Failures:"
+    echo "      • Last commit also has issues"
+    echo "      → Check git log for earlier working commits"
+    echo "      → Manual git reset to specific commit"
+    echo "      → Fall back to nixos-rebuild switch --rollback"
     echo ""
     echo "🔗 INTEGRATION WITH OTHER FUNCTIONS:"
     echo "   • nixos-edit-rebuild: Edit config → nixos-apply-config"
@@ -139,9 +241,13 @@ function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
     echo "   herb        = home-edit-rebuild (which calls this)"
     echo "   nup         = nixos-upgrade (which calls this)"
     echo ""
-    echo "🆘 TROUBLESHOOTING:"
-    echo "   • Build hangs: Check disk space and memory usage"
-    echo "   • Rollback fails: Select previous generation at boot menu"
-    echo "   • Git issues: Manually run 'nixos-git \"message\"'"
-    echo "   • Flake errors: Check flake.nix syntax and inputs"
+    echo "🔄 MIGRATION FROM GENERATION-BASED ROLLBACK:"
+    echo "   Previous behavior: nixos-rebuild switch --rollback"
+    echo "   New behavior: git reset --hard HEAD + rebuild"
+    echo ""
+    echo "   Advantages:"
+    echo "   • Works with any git commit, not just NixOS generations"
+    echo "   • Maintains version control consistency"
+    echo "   • Better for collaborative workflows"
+    echo "   • Preserves commit history and messages"
 end

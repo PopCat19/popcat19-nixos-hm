@@ -14,7 +14,7 @@
     EDITOR = "micro"; # Default terminal editor.
     VISUAL = "$EDITOR"; # Visual editor alias.
     BROWSER = "flatpak run app.zen_browser.zen"; # Default web browser.
-    QT_QPA_PLATFORMTHEME = "qt5ct"; # Qt5 platform theme.
+    QT_QPA_PLATFORMTHEME = "qt6ct"; # Qt6 platform theme.
     QT_STYLE_OVERRIDE = "kvantum"; # Qt style override.
     QT_QPA_PLATFORM = "wayland;xcb"; # Qt Wayland and XCB platform.
   };
@@ -50,15 +50,15 @@
       package = inputs.rose-pine-hyprcursor.packages.${system}.default;
     };
     font = {
-      name = "MPLUSRounded1c_Medium 10";
-      package = pkgs.noto-fonts; # Using Noto fonts here, but consider a dedicated font package.
+      name = "Noto Sans 10";
+      package = pkgs.noto-fonts;
     };
   };
 
   # QT Theme Configuration.
   qt = {
     enable = true;
-    platformTheme.name = "qt5ct";
+    platformTheme.name = "qt6ct";
     style.name = "kvantum";
   };
 
@@ -68,12 +68,51 @@
     theme=RosePine
   '';
 
+  # Additional Kvantum theme files
+  home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/RosePine";
+
   # Dconf Settings for GTK theme consistency.
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       gtk-theme = "rose-pine-gtk";
       icon-theme = "Papirus-Dark";
       cursor-theme = "rose-pine-hyprcursor";
+      cursor-size = 24;
+    };
+  };
+
+  # Services for proper theme integration
+  # Manual polkit authentication agent service
+  systemd.user.services.polkit-gnome-authentication-agent-1 = {
+    Unit = {
+      Description = "polkit-gnome-authentication-agent-1";
+      Wants = [ "graphical-session.target" ];
+      WantedBy = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+      Restart = "on-failure";
+      RestartSec = 1;
+      TimeoutStopSec = 10;
+    };
+  };
+
+  # Systemd services for theme initialization
+  systemd.user.services.theme-init = {
+    Unit = {
+      Description = "Initialize theme settings";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'sleep 2 && ${pkgs.dconf}/bin/dconf update'";
+      RemainAfterExit = true;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 
@@ -84,7 +123,7 @@
     enable = true;
     settings = {
       main = {
-        font = "MPLUSRounded1c_Medium:size=16";
+        font = "Noto Sans:size=16";
         layer = "overlay"; # Display as an overlay.
         exit-on-click = true; # Close on click outside.
         prompt = " "; # Empty prompt.
@@ -283,6 +322,7 @@
     libsForQt5.qtstyleplugin-kvantum
     libsForQt5.qt5ct
     qt6ct
+    qt6Packages.qtstyleplugin-kvantum
     rose-pine-kvantum
     themechanger
     nwg-look
@@ -292,6 +332,8 @@
     noto-fonts-cjk-sans
     noto-fonts-emoji
     font-awesome
+    polkit_gnome
+    gsettings-desktop-schemas
     nerd-fonts.jetbrains-mono
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
     inputs.zen-browser.packages."${system}".default
