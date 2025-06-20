@@ -99,6 +99,10 @@
 
   services.playerctld.enable = true;
   services.mpris-proxy.enable = true;
+  services.syncthing = {
+    enable = true;
+    # point syncthing to your vault folder
+  };
 
   # --- Migrated exec-once services ---
   # services.blueman-applet.enable = true;
