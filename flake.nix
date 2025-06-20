@@ -107,7 +107,7 @@
             useUserPackages = true;
             extraSpecialArgs = { inherit inputs system; };
             users.popcat19 = import ./home.nix;
-            backupFileExtension = "hm-bak"; # <--- ADD THIS LINE
+            backupFileExtension = "backup";
           };
         }
       ];
