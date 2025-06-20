@@ -75,7 +75,7 @@
     Comment=Use Rose-Pine for Kvantum
 
     [General]
-    theme=rose-pine
+    theme=rose-pine-rose
   '';
 
   # Fuzzel Configuration
