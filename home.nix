@@ -12,6 +12,7 @@
     BROWSER = "flatpak run app.zen_browser.zen";
     QT_QPA_PLATFORMTHEME = "qt5ct";
     QT_STYLE_OVERRIDE    = "kvantum";
+    QT_QPA_PLATFORM = "wayland;xcb";
   };
 
   # Declaratively set Zen Browser as the default
@@ -64,14 +65,21 @@
     # We ensure kvantum packages are present below.
   };
 
+  # Kvantum configuration
   home.file.".config/Kvantum/kvantum.kvconfig".text = ''
-    [Desktop Entry]
-    Name=kvantum
-    Comment=Use Rose-Pine for Kvantum
-
     [General]
-    theme=rose-pine-rose
+    theme=RosePine
   '';
+  
+  # Dconf settings for GTK (sometimes needed)
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      gtk-theme = "rose-pine-gtk";
+      icon-theme = "Papirus-Dark";
+      cursor-theme = "rose-pine-hyprcursor";
+      # font-name = "MPLUSRounded1c Medium 10";
+    };
+  };
 
   # Fuzzel Configuration
   # This block sets the theme for Fuzzel using colors from Rose Pine.
@@ -140,10 +148,11 @@
     libsForQt5.qtstyleplugin-kvantum
     libsForQt5.qt5ct
     qt6ct # Make sure qt6ct is explicitly listed
-    pkgs.rose-pine-kvantum # The Kvantum theme itself
-    pkgs.libsForQt5.qtstyleplugin-kvantum # The Kvantum engine
-    pkgs.themechanger # Unsure if this is directly used but kept for consistency
+    rose-pine-kvantum # The Kvantum theme itself
+    libsForQt5.qtstyleplugin-kvantum # The Kvantum engine
+    themechanger # Unsure if this is directly used but kept for consistency
     nwg-look # GTK theme configuration tool
+    dconf-editor
     # Other existing packages...
     kdePackages.ark
     ddcui
