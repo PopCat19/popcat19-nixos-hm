@@ -3,6 +3,9 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 { config, lib, pkgs, ... }:
+let
+  vaultDir = "/home/popcat19/Passwords";
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -146,6 +149,26 @@ users.users.popcat19 = {
   # services.blueman.enable = true;
   services.flatpak.enable = true;
   services.hardware.openrgb.enable = true;
+
+  services.syncthing = {
+    enable = true;
+    # user = "popcat19";
+    openDefaultPorts = true;
+    
+    settings = {
+      folders = {
+        "keepass-vault" = {
+          id = "keepass-vault";
+          label = "KeePass Vault";
+          path = "/home/popcat19/Passwords";
+          devices = [ ];
+          type = "sendreceive";
+          rescanIntervalS = 60;
+          ignorePerms = true;
+        };
+      };
+    };
+  };
   
   hardware.i2c.enable = true;
   hardware.i2c.group = "i2c";
@@ -241,8 +264,8 @@ users.users.popcat19 = {
   networking.firewall = {
     enable = true;
     trustedInterfaces = [ "lo" ];
-    allowedTCPPorts = [ 53317 ]; # Add ports for specific services if needed
-    allowedUDPPorts = [ 53317 ];
+    allowedTCPPorts = [ 53317 22000 ]; # Add ports for specific services if needed
+    allowedUDPPorts = [ 53317 21027 ];
   };
 
   # Copy the NixOS configuration file and link it from the resulting system
