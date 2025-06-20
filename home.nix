@@ -232,123 +232,68 @@
   # **INSTALLED PACKAGES**
   # List of packages installed for the user via Home Manager.
   home.packages = with pkgs; [
-    # -------------------------
-    # System & Desktop Utilities
-    # -------------------------
-    kitty                           # Fast, feature-rich, GPU-based terminal emulator.
-    fuzzel                          # Application launcher.
-    jq                              # Command-line JSON processor.
-    hyprpolkitagent                 # Polkit agent for Hyprland.
-    hyprutils                       # Utilities for Hyprland.
-    hyprshade                       # Screen shader utility for Hyprland.
-    hyprpanel                       # Panel for Hyprland.
-
-    # -------------------------
-    # Applications
-    # -------------------------
-    vesktop                         # Discord client with Vencord support.
-    zed-editor_git                  # Modern code editor.
-    kdePackages.dolphin             # KDE file manager.
-    kdePackages.ark                 # Archive manager for KDE.
-    kdePackages.gwenview            # Image viewer for KDE.
-    nautilus                        # GNOME file manager.
-    nemo                            # Cinnamon file manager.
-
-    # -------------------------
-    # Media & Entertainment
-    # -------------------------
-    mpv                             # Highly customizable video player.
-    audacious                       # Lightweight audio player.
-    audacious-plugins               # Plugins for Audacious.
-    obs-studio                      # Screen recording and streaming software.
-
-    # -------------------------
-    # Gaming
-    # -------------------------
-    lutris                          # Open gaming platform.
-    mangohud                        # Vulkan/OpenGL overlay for monitoring.
-    goverlay                        # GUI for MangoHud.
-    osu-lazer-bin                   # Rhythm game client.
-
-    # -------------------------
-    # System Tools & Monitoring
-    # -------------------------
-    pavucontrol                     # PulseAudio Volume Control.
-    playerctl                       # Command-line tool for controlling media players.
-    btop-rocm                       # Resource monitor optimized for ROCm.
-    glances                         # Cross-platform system monitoring tool.
-    tree                            # Displays directory tree.
-    ddcui                           # GUI for DDC/CI display control.
-    openrgb-with-all-plugins        # OpenRGB with all available plugins.
-
-    # -------------------------
-    # Development & Android Tools
-    # -------------------------
-    universal-android-debloater     # Tool for debloating Android devices.
-    android-tools                   # ADB and Fastboot tools.
-    sunxi-tools                     # Tools for Allwinner ARM devices.
-    binwalk                         # Firmware analysis tool.
-    pv                              # Pipe viewer: monitors data progress.
-    git-lfs                         # Git Large File Storage.
-    vboot_reference                 # Chrome OS verified boot tools.
-
-    # -------------------------
-    # File System & Archive Tools
-    # -------------------------
-    parted                          # Disk partitioning tool.
-    squashfsTools                   # Utilities for SquashFS filesystems.
-    nixos-install-tools             # Tools useful for NixOS installation.
-    nixos-generators                # Tools to generate NixOS images.
-
-    # -------------------------
-    # Network & Communication
-    # -------------------------
-    scrcpy                          # Android screen mirroring.
-    localsend                       # Local file sharing utility.
-    zrok                            # Secure tunneling application.
-
-    # -------------------------
-    # Productivity & Utilities
-    # -------------------------
-    keepassxc                       # Cross-platform password manager.
-    mangayomi                       # Manga reader.
-
-    # -------------------------
-    # AI/ML
-    # -------------------------
-    ollama-rocm                     # Local AI model runner with ROCm support.
-
-    # -------------------------
-    # Shell & Terminal Tools
-    # -------------------------
-    starship                        # Cross-shell prompt.
-    eza                             # Modern `ls` replacement.
-
-    # -------------------------
-    # Theming & Appearance
-    # -------------------------
-    libsForQt5.qtstyleplugin-kvantum # Kvantum style plugin for Qt5.
-    libsForQt5.qt5ct                 # Qt5 configuration tool.
-    qt6ct                            # Qt6 configuration tool.
-    rose-pine-kvantum                # Rose Pine theme for Kvantum.
-    themechanger                     # Theme switching utility.
-    nwg-look                         # GTK theme configuration tool.
-    dconf-editor                     # GUI editor for dconf database.
-    papirus-icon-theme               # Papirus icon theme.
-
-    # -------------------------
-    # Fonts
-    # -------------------------
-    noto-fonts                      # Google Noto fonts.
-    noto-fonts-cjk-sans             # CJK fonts for Noto.
-    noto-fonts-emoji                # Emoji fonts for Noto.
-    font-awesome                    # Font Awesome icons.
-    nerd-fonts.jetbrains-mono       # JetBrains Mono Nerd Font.
-
-    # -------------------------
-    # Custom Packages from Inputs
-    # -------------------------
-    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # Rose Pine cursor.
-    inputs.zen-browser.packages."${system}".default             # Zen Browser.
+    kitty
+    fuzzel
+    jq
+    hyprpolkitagent
+    hyprutils
+    hyprshade
+    hyprpanel
+    vesktop
+    zed-editor_git
+    kdePackages.dolphin
+    kdePackages.ark
+    kdePackages.gwenview
+    nautilus
+    nemo
+    mpv
+    audacious
+    audacious-plugins
+    obs-studio
+    lutris
+    mangohud
+    goverlay
+    osu-lazer-bin
+    pavucontrol
+    playerctl
+    btop-rocm
+    glances
+    tree
+    ddcui
+    openrgb-with-all-plugins
+    universal-android-debloater
+    android-tools
+    sunxi-tools
+    binwalk
+    pv
+    git-lfs
+    vboot_reference
+    parted
+    squashfsTools
+    nixos-install-tools
+    nixos-generators
+    scrcpy
+    localsend
+    zrok
+    keepassxc
+    mangayomi
+    ollama-rocm
+    starship
+    eza
+    libsForQt5.qtstyleplugin-kvantum
+    libsForQt5.qt5ct
+    qt6ct
+    rose-pine-kvantum
+    themechanger
+    nwg-look
+    dconf-editor
+    papirus-icon-theme
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-emoji
+    font-awesome
+    nerd-fonts.jetbrains-mono
+    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
+    inputs.zen-browser.packages."${system}".default
   ];
 }

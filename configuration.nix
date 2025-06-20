@@ -219,45 +219,30 @@
   # **SYSTEM PACKAGES**
   # List of packages installed globally on the system.
   environment.systemPackages = with pkgs; [
-    # -------------------------
-    # Essential System Tools
-    # -------------------------
-    vim                             # Terminal text editor.
-    micro                           # Modern terminal text editor.
-    wget                            # Command-line file downloader.
-    curl                            # Tool for transferring data with URLs.
-    git                             # Distributed version control system.
-    gh                              # GitHub CLI.
-
-    # -------------------------
-    # File Management
-    # -------------------------
-    ranger                          # Terminal file manager.
-    superfile                       # Modern terminal file manager.
-    xdg-utils                       # XDG desktop utilities.
-    shared-mime-info                # Shared MIME type database.
-
-    # -------------------------
-    # Hardware Control
-    # -------------------------
-    i2c-tools                       # Utilities for I2C bus.
-    ddcutil                         # Control display settings via DDC/CI.
-    usbutils                        # USB utilities (lsusb, etc.).
-
-    # -------------------------
-    # Development Tools
-    # -------------------------
-    nodejs                          # JavaScript runtime.
-    rocmPackages.rpp                # ROCm packages for AMD GPUs.
+    vim
+    micro
+    wget
+    curl
+    git
+    gh
+    ranger
+    superfile
+    xdg-utils
+    shared-mime-info
+    i2c-tools
+    ddcutil
+    usbutils
+    nodejs
+    rocmPackages.rpp
   ];
 
   # **FONTS CONFIGURATION**
   # Installs system-wide fonts.
   fonts.packages = with pkgs; [
-    noto-fonts                      # Google Noto fonts.
-    noto-fonts-cjk-sans             # CJK language support for Noto fonts.
-    noto-fonts-emoji                # Emoji support for Noto fonts.
-    font-awesome                    # Iconic font and CSS toolkit.
-    nerd-fonts.jetbrains-mono       # JetBrains Mono font patched with Nerd Fonts.
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-emoji
+    font-awesome
+    nerd-fonts.jetbrains-mono
   ];
 }
