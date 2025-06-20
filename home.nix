@@ -10,6 +10,8 @@
     EDITOR = "micro";
     VISUAL = "$EDITOR"; # or "micro" directly
     BROWSER = "flatpak run app.zen_browser.zen";
+    QT_QPA_PLATFORMTHEME = "qt5ct";
+    QT_STYLE_OVERRIDE    = "kvantum";
   };
 
   # Declaratively set Zen Browser as the default
@@ -66,6 +68,15 @@
     # Users will then select 'Rose-Pine' within Kvantum Manager.
     # We ensure kvantum packages are present below.
   };
+
+  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
+    [Desktop Entry]
+    Name=kvantum
+    Comment=Use Rose-Pine for Kvantum
+
+    [General]
+    theme=rose-pine
+  '';
 
   # Fuzzel Configuration
   # This block sets the theme for Fuzzel using colors from Rose Pine.
