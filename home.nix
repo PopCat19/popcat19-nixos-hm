@@ -20,62 +20,60 @@
   };
 
   # **XDG MIME APPLICATIONS**
-  # Configures default applications for specific MIME types.
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "x-scheme-handler/http" = ["app.zen_browser.zen.desktop"];
-      "x-scheme-handler/https" = ["app.zen_browser.zen.desktop"];
-      "text/html" = ["app.zen_browser.zen.desktop"];
-      "application/xhtml+xml" = ["app.zen_browser.zen.desktop"];
-    };
-  };
+  # Disabled to allow manual configuration of default applications.
+  # You can manually edit ~/.config/mimeapps.list to set Zen browser as default.
+  # Example content for mimeapps.list:
+  # [Default Applications]
+  # x-scheme-handler/http=app.zen_browser.zen.desktop
+  # x-scheme-handler/https=app.zen_browser.zen.desktop
+  # text/html=app.zen_browser.zen.desktop
+  # application/xhtml+xml=app.zen_browser.zen.desktop
+  # xdg.mimeApps = {
+  #   enable = true;
+  #   defaultApplications = {
+  #     "x-scheme-handler/http" = ["app.zen_browser.zen.desktop"];
+  #     "x-scheme-handler/https" = ["app.zen_browser.zen.desktop"];
+  #     "text/html" = ["app.zen_browser.zen.desktop"];
+  #     "application/xhtml+xml" = ["app.zen_browser.zen.desktop"];
+  #   };
+  # };
 
   # **THEMING CONFIGURATION**
-  # Sets up GTK, Qt, and cursor themes.
-  # GTK Theme Configuration.
+  # Minimal theming setup - allows manual configuration via nwg-look and kvantum manager.
+  # Only manages Hyprcursor for Hyprland compatibility.
+  #
+  # MANUAL THEMING INSTRUCTIONS:
+  # - Use 'nwg-look' to configure GTK themes, icons, and fonts
+  # - Use 'qt6ct' and kvantum manager for Qt theming
+  # - Kvantum themes are available in ~/.config/Kvantum/ directory
+  # - Available themes: RosePine, Catppuccin variants via packages
+
+  # GTK Theme Configuration - Minimal setup for cursor only.
   gtk = {
     enable = true;
-    theme = {
-      name = "rose-pine-gtk";
-      package = pkgs.rose-pine-gtk-theme;
-    };
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
-    };
     cursorTheme = {
       name = "rose-pine-hyprcursor";
       size = 24;
       package = inputs.rose-pine-hyprcursor.packages.${system}.default;
     };
-    font = {
-      name = "Noto Sans 10";
-      package = pkgs.noto-fonts;
-    };
+    # Theme, icon theme, and font management disabled for manual control
+    # Use nwg-look to configure GTK themes manually
   };
 
-  # QT Theme Configuration.
+  # QT Theme Configuration - Minimal setup for platform theme only.
   qt = {
     enable = true;
     platformTheme.name = "qt6ct";
-    style.name = "kvantum";
+    # Style management disabled for manual control via qt6ct/kvantum
   };
 
-  # Kvantum Configuration file.
-  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
-    [General]
-    theme=RosePine
-  '';
-
-  # Additional Kvantum theme files
+  # Make Kvantum themes available but don't force configuration
+  # Use kvantum manager to configure themes manually
   home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/RosePine";
 
-  # Dconf Settings for GTK theme consistency.
+  # Minimal dconf settings - only for cursor theme consistency in Hyprland
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      gtk-theme = "rose-pine-gtk";
-      icon-theme = "Papirus-Dark";
       cursor-theme = "rose-pine-hyprcursor";
       cursor-size = 24;
     };
@@ -327,7 +325,11 @@
     themechanger
     nwg-look
     dconf-editor
+    # Additional theming packages for manual configuration
+    rose-pine-gtk-theme
+    catppuccin-gtk
     papirus-icon-theme
+    adwaita-icon-theme
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-emoji
