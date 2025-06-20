@@ -2,52 +2,56 @@
 {
   description = "NixOS configuration with custom packages and overlays";
 
+  # **FLAKE INPUTS**
+  # Defines all external flake inputs used in this configuration.
   inputs = {
-    # Core
+    # Core Nixpkgs repository for system packages and modules.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    
-    # System extensions
+
+    # System extensions, offering a wider range of packages.
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    
-    # Gaming
+
+    # Gaming-specific inputs
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs"; # Ensure AAGL uses our Nixpkgs version.
     };
-    
-    # Applications
+
+    # Application-specific inputs
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    
-    # Desktop environment
+
+    # Desktop environment components
     hyprpanel = {
       url = "github:Jas-SinghFSU/HyprPanel";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs"; # Ensure HyprPanel uses our Nixpkgs version.
     };
-    
-    # Home management
+
+    # Home management for user-specific configurations.
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs"; # Ensure Home Manager uses our Nixpkgs version.
     };
-    
-    # Theming
+
+    # Theming related inputs
     rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
     catppuccin-nix = {
       url = "github:catppuccin/nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs"; # Ensure Catppuccin uses our Nixpkgs version.
     };
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
     let
-      # System configuration
+      # **SYSTEM DEFINITIONS**
+      # Basic system parameters for configuration.
       system = "x86_64-linux";
       hostname = "popcat19-nixos0";
       username = "popcat19";
 
-      # Custom overlays
+      # **CUSTOM OVERLAYS**
+      # Overlays to add custom packages or modify existing ones.
       overlays = [
-        # zrok package overlay
+        # zrok package overlay: adds a custom build for the zrok application.
         (final: prev: {
           zrok = prev.stdenv.mkDerivation rec {
             pname = "zrok";
@@ -69,7 +73,7 @@
               cp ./zrok $out/bin/zrok
               chmod +x $out/bin/zrok
 
-              # Set correct ELF interpreter for NixOS
+              # Set correct ELF interpreter for NixOS.
               patchelf --set-interpreter "$(< $NIX_CC/nix-support/dynamic-linker)" "$out/bin/zrok"
 
               runHook postInstall
@@ -86,50 +90,53 @@
             };
           };
         })
-        
-        # Add other overlays here
+
+        # HyprPanel overlay for Hyprland panel components.
         inputs.hyprpanel.overlay
       ];
 
-      # Gaming configuration module
+      # **GAMING CONFIGURATION MODULE**
+      # Integrates AAGL (Anime Game Launcher) for gaming support.
       gamingModule = {
         imports = [ inputs.aagl.nixosModules.default ];
         nix.settings = inputs.aagl.nixConfig;
         programs = {
           anime-game-launcher.enable = true;
-          anime-games-launcher.enable = true;
           honkers-railway-launcher.enable = true;
         };
       };
 
-      # Home Manager configuration
+      # **HOME MANAGER CONFIGURATION MODULE**
+      # Manages user-specific configurations via Home Manager.
       homeManagerModule = {
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
           extraSpecialArgs = { inherit inputs system; };
           users.${username} = import ./home.nix;
-          backupFileExtension = "bak2";
+          backupFileExtension = "bak2"; # Custom backup file extension.
         };
       };
 
     in {
+      # **NIXOS SYSTEM CONFIGURATION**
+      # Defines the primary NixOS system configuration.
       nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs; };
 
         modules = [
-          # Apply overlays
+          # Apply custom overlays defined above.
           { nixpkgs.overlays = overlays; }
-          
-          # Core configuration
+
+          # Core system configuration from configuration.nix.
           ./configuration.nix
-          
-          # External modules
+
+          # External NixOS modules from flake inputs.
           inputs.chaotic.nixosModules.default
           inputs.home-manager.nixosModules.home-manager
-          
-          # Feature modules
+
+          # Feature-specific modules.
           gamingModule
           homeManagerModule
         ];
