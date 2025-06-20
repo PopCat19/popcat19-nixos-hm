@@ -1,241 +1,354 @@
 # ~/nixos-config/home.nix
-{ pkgs, config, lib, inputs, ... }:
+{ pkgs, config, system, lib, inputs, ... }:
 
 {
+  # **BASIC HOME CONFIGURATION**
+  # Sets up basic user home directory parameters.
   home.username = "popcat19";
   home.homeDirectory = "/home/popcat19";
-  home.stateVersion = "24.05";
+  home.stateVersion = "24.05"; # Home Manager state version.
 
+  # **ENVIRONMENT VARIABLES**
+  # Defines user-specific environment variables for various applications.
   home.sessionVariables = {
-    EDITOR = "micro";
-    VISUAL = "$EDITOR"; # or "micro" directly
-    BROWSER = "flatpak run app.zen_browser.zen";
+    EDITOR = "micro"; # Default terminal editor.
+    VISUAL = "$EDITOR"; # Visual editor alias.
+    BROWSER = "flatpak run app.zen_browser.zen"; # Default web browser.
+    QT_QPA_PLATFORMTHEME = "qt5ct"; # Qt5 platform theme.
+    QT_STYLE_OVERRIDE = "kvantum"; # Qt style override.
+    QT_QPA_PLATFORM = "wayland;xcb"; # Qt Wayland and XCB platform.
   };
 
-  # Declaratively set Zen Browser as the default
-  xdg.mimeApps.enable = true;
-  xdg.mimeApps.defaultApplications = {
-    "x-scheme-handler/http" = ["app.zen_browser.zen.desktop"];
-    "x-scheme-handler/https" = ["app.zen_browser.zen.desktop"];
-    "text/html" = ["app.zen_browser.zen.desktop"];
-    "application/xhtml+xml" = ["app.zen_browser.zen.desktop"];
-  };
-
-  home.packages = with pkgs; [
-    # Terminals, Launchers, Notifications
-    kitty
-    fuzzel
-    # dunst # Managed by services.dunst.enable now
-    # Hyprland specific tools
-    hyprland # Make sure hyprland itself is listed if not using programs.hyprland module
-    hyprpaper
-    swww
-    grim
-    slurp
-    wl-clipboard
-    # cliphist # Managed by programs.cliphist.enable now
-    jq
-    hyprpolkitagent
-    hyprutils
-    hyprshade
-    hyprpanel
-    # Desktop Utilities
-    vesktop
-    zed-editor_git
-    # blueberry # Managed by services.blueman.applet.enable now
-    # udiskie # Managed by services.udiskie.enable now
-    kdePackages.dolphin
-    pavucontrol
-    starship # programs.starship.enable is also below
-    eza
-    pkgs.libsForQt5.qtstyleplugin-kvantum
-    libsForQt5.qt5ct
-    pkgs.rose-pine-kvantum
-    pkgs.themechanger
-    nwg-look
-    kdePackages.ark
-    ddcui
-    # easyeffects # Managed by services.easyeffects.enable now
-    papirus-icon-theme
-    kdePackages.gwenview
-    mpv
-    ollama-rocm
-    audacious
-    audacious-plugins
-    lutris
-    mangohud
-    goverlay
-    scrcpy
-    openrgb-with-all-plugins
-    btop-rocm
-    tree
-    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
-    # Add fcitx5 and configtool if you want to configure it via GUI
-    # fcitx5
-    # fcitx5-configtool
-    zrok
-    osu-lazer-bin
-    playerctl
-    universal-android-debloater
-    android-tools
-    sunxi-tools
-    binwalk
-    pv
-    localsend
-  nautilus
-  nemo
-  nixos-install-tools
-  nixos-generators
-  git-lfs
-  vboot_reference
-  mangayomi
-  parted
-  squashfsTools
-  glances
-  obs-studio
-  keepassxc
-  ];
-
-  services.playerctld.enable = true;
-  services.mpris-proxy.enable = true;
-
-  # --- Migrated exec-once services ---
-  # services.blueman-applet.enable = true;
-  services.udiskie.enable = true;
-  # services.network-manager-applet.enable = true; # For the tray icon
-  # services.dunst.enable = true; # Watch since hyprpanel might not launch when dunst is already running
-  services.easyeffects.enable = true;
-
-  services.cliphist = { # Add or modify this block
+  # **XDG MIME APPLICATIONS**
+  # Configures default applications for specific MIME types.
+  xdg.mimeApps = {
     enable = true;
-    # You might also need to specify the package if it's not inferred
-    # package = pkgs.cliphist;
-    # Check for options like 'maxEntries' or similar if you want to configure them
-    # settings = {
-    #   max_entries = 100; # Example, check actual option name
-    # };
+    defaultApplications = {
+      "x-scheme-handler/http" = ["app.zen_browser.zen.desktop"];
+      "x-scheme-handler/https" = ["app.zen_browser.zen.desktop"];
+      "text/html" = ["app.zen_browser.zen.desktop"];
+      "application/xhtml+xml" = ["app.zen_browser.zen.desktop"];
+    };
   };
 
-  services.ollama = {
+  # **THEMING CONFIGURATION**
+  # Sets up GTK, Qt, and cursor themes.
+  # GTK Theme Configuration.
+  gtk = {
     enable = true;
-    acceleration = "rocm"; # Or "cuda" for NVIDIA, or false for CPU
-    # You can add other options here, like:
-    # host = "0.0.0.0"; # To allow access from other devices on your network
-    # port = 11434;
-    # loadModels = [ "llama3" "mistral" ]; # To preload specific models
+    theme = {
+      name = "rose-pine-gtk";
+      package = pkgs.rose-pine-gtk-theme;
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    cursorTheme = {
+      name = "rose-pine-hyprcursor";
+      size = 24;
+      package = inputs.rose-pine-hyprcursor.packages.${system}.default;
+    };
+    font = {
+      name = "MPLUSRounded1c_Medium 10";
+      package = pkgs.noto-fonts; # Using Noto fonts here, but consider a dedicated font package.
+    };
   };
 
-  i18n.inputMethod = {
-    type = "fcitx5";    # New way
-    enable = true;      # New way
-    fcitx5.addons = with pkgs; [
-      fcitx5-gtk
-      libsForQt5.fcitx5-qt
-      fcitx5-mozc
-    ];
-  };
-  # --- End of migrated exec-once services ---
-
-  home.file.".config/hypr" = {
-    source = ./hypr_config; # Path relative to home.nix
-    recursive = true;
+  # QT Theme Configuration.
+  qt = {
+    enable = true;
+    platformTheme.name = "qt5ct";
+    style.name = "kvantum";
   };
 
+  # Kvantum Configuration file.
+  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
+    [General]
+    theme=RosePine
+  '';
+
+  # Dconf Settings for GTK theme consistency.
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      gtk-theme = "rose-pine-gtk";
+      icon-theme = "Papirus-Dark";
+      cursor-theme = "rose-pine-hyprcursor";
+    };
+  };
+
+  # **PROGRAM CONFIGURATIONS**
+  # Configures specific user programs.
+  # Fuzzel Launcher Configuration.
+  programs.fuzzel = {
+    enable = true;
+    settings = {
+      main = {
+        font = "MPLUSRounded1c_Medium:size=16";
+        layer = "overlay"; # Display as an overlay.
+        exit-on-click = true; # Close on click outside.
+        prompt = " "; # Empty prompt.
+      };
+      colors = {
+        background = "191724ee";
+        text = "e0def4ff";
+        match = "eb6f92ff";
+        selection = "26233aff";
+        selection-text = "e0def4ff";
+        border = "ebbcbaee";
+      };
+      border = {
+        radius = 8;
+        width = 2;
+      };
+    };
+  };
+
+  # Fish Shell Configuration.
   programs.fish = {
     enable = true;
     shellInit = ''
       set -Ux NIXOS_CONFIG_DIR $HOME/nixos-config
-      set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0 # Confirm this is still correct
-      set -g fish_greeting "" # Clears the default greeting
-      # Prepend $HOME/bin to the PATH if it exists and isn't already there
-      # fish_add_path will prepend by default.
-      fish_add_path $HOME/bin
-      # Starship init
+      set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0
+      set -g fish_greeting "" # Disable fish greeting.
+      fish_add_path $HOME/bin # Add user's bin directory to PATH.
       if status is-interactive
-          starship init fish | source
+          starship init fish | source # Initialize Starship prompt.
       end
     '';
+    # Custom shell abbreviations for convenience.
     shellAbbrs = {
+      # Navigation shortcuts.
       ".." = "cd ..";
       "..." = "cd ../..";
       ".3" = "cd ../../..";
       ".4" = "cd ../../../..";
       ".5" = "cd ../../../../..";
+
+      # File Operations using eza.
       mkdir = "mkdir -p";
-      # Abbreviations for your NixOS functions
+      l = "eza -lh --icons=auto";
+      ls = "eza -1 --icons=auto";
+      ll = "eza -lha --icons=auto --sort=name --group-directories-first";
+      ld = "eza -lhD --icons=auto";
+      lt = "eza --tree --icons=auto";
+      o = "open_smart"; # Custom function to open files.
+
+      # NixOS Configuration Management.
       nconf = "nixconf-edit";
       nixos-ed = "nixconf-edit";
       hconf = "homeconf-edit";
       home-ed = "homeconf-edit";
-      flconf = "flake-edit";     # Flake Config
-      flake-ed = "flake-edit";   # Keeping this for muscle memory if you like      flup = "flake-update";
+      flconf = "flake-edit";
+      flake-ed = "flake-edit";
+      flup = "flake-update";
       flake-up = "flake-update";
       ngit = "nixos-git";
 
-      # === UPDATED/NEW REBUILD ABBREVIATIONS ===
-      # 'nrb' and 'nixos-sw' now point to the intelligent apply function
-      nrb = "nixos-apply-config";        # Short for NixOS ReBuild (now intelligent)
-      nixos-sw = "nixos-apply-config";   # NixOS Switch (now intelligent)
-
-      # 'nerb' and 'nixoss' already use nixos-edit-rebuild, which now calls nixos-apply-config
+      # NixOS Build and Switch operations.
+      nrb = "nixos-apply-config";
+      nixos-sw = "nixos-apply-config";
       nerb = "nixos-edit-rebuild";
       nixoss = "nixos-edit-rebuild";
-      # 'herb' and 'home-sw' already use home-edit-rebuild, which now calls nixos-apply-config
       herb = "home-edit-rebuild";
       home-sw = "home-edit-rebuild";
-
-      # 'nup' and 'nixos-up' already use nixos-upgrade, which now calls nixos-apply-config
       nup = "nixos-upgrade";
       nixos-up = "nixos-upgrade";
 
-      # Package management abbreviations
+      # Package Management with nixpkg.
       pkgls = "nixpkg list";
       pkgadd = "nixpkg add";
       pkgrm = "nixpkg remove";
       pkgs = "nixpkg search";
       pkghelp = "nixpkg help";
       pkgman = "nixpkg manual";
-      
-      # Quick rebuild versions
       pkgaddr = "nixpkg add --rebuild";
       pkgrmr = "nixpkg remove --rebuild";
-
-      # If you kept the old simple nixos-rebuild-switch.fish and want an abbr for it:
-      # nrbs = "nixos-rebuild-switch"; # NixOS ReBuild Switch (simple)
-      # Your eza aliases
-      l = "eza -lh --icons=auto";
-      ls = "eza -1 --icons=auto";
-      ll = "eza -lha --icons=auto --sort=name --group-directories-first";
-      ld = "eza -lhD --icons=auto";
-      lt = "eza --tree --icons=auto";
-      # open-smart
-      o = "open_smart"; # Or 'op', or whatever you prefer
     };
-    # plugins = [ # Only if you use a fish plugin manager that HM supports this way
-    #   { name = "starship"; src = pkgs.starship.src; }
-    # ];
+  };
+
+  # Starship Prompt: a cross-shell prompt.
+  programs.starship.enable = true;
+
+  # Git Configuration for user details.
+  programs.git = {
+    enable = true;
+    userName = "PopCat19";
+    userEmail = "atsuo11111@gmail.com";
+  };
+
+  # **INPUT METHOD CONFIGURATION**
+  # Configures Fcitx5 for input methods.
+  i18n.inputMethod = {
+    type = "fcitx5";
+    enable = true;
+    fcitx5.addons = with pkgs; [
+      fcitx5-gtk # GTK module.
+      libsForQt5.fcitx5-qt # Qt module.
+      fcitx5-mozc # Mozc input method engine for Japanese.
+    ];
+  };
+
+  # **FILE CONFIGURATIONS**
+  # Manages symlinks for configuration files.
+  home.file.".config/hypr" = {
+    source = ./hypr_config;
+    recursive = true;
   };
 
   home.file.".config/fish/functions" = {
-    source = ./fish_functions; # Links your custom functions
+    source = ./fish_functions;
     recursive = true;
   };
 
   home.file.".config/fish/themes" = {
-    source = ./fish_themes; # Links your themes
+    source = ./fish_themes;
     recursive = true;
   };
 
-  programs.starship = {
-    enable = true;
-    # If you have a starship.toml, you can link it:
-    # package = pkgs.starship; # Ensure starship package is used
-    # settings = lib.importTOML ./starship_config/starship.toml; # Create ./starship_config/starship.toml
+  # **SYSTEM SERVICES**
+  # Enables user-level services.
+  services = {
+    # Media Control services.
+    playerctld.enable = true; # D-Bus interface for media players.
+    mpris-proxy.enable = true; # MPRIS proxy for media players.
+
+    # Storage Management.
+    udiskie.enable = true; # Automount removable media.
+
+    # Audio Effects.
+    easyeffects.enable = true; # Audio effects for PipeWire.
+
+    # Clipboard Management.
+    cliphist.enable = true; # Clipboard history manager.
+
+    # AI/ML Services.
+    ollama = {
+      enable = true;
+      acceleration = "rocm"; # Enable ROCm acceleration for Ollama.
+    };
   };
 
-  programs.git = {
-    enable = true;
-    userName = "PopCat19";
-    userEmail = "atsuo11111@gmail.com"; # <<< IMPORTANT: Update this email
-  };
+  # **INSTALLED PACKAGES**
+  # List of packages installed for the user via Home Manager.
+  home.packages = with pkgs; [
+    # -------------------------
+    # System & Desktop Utilities
+    # -------------------------
+    kitty                           # Fast, feature-rich, GPU-based terminal emulator.
+    fuzzel                          # Application launcher.
+    jq                              # Command-line JSON processor.
+    hyprpolkitagent                 # Polkit agent for Hyprland.
+    hyprutils                       # Utilities for Hyprland.
+    hyprshade                       # Screen shader utility for Hyprland.
+    hyprpanel                       # Panel for Hyprland.
+
+    # -------------------------
+    # Applications
+    # -------------------------
+    vesktop                         # Discord client with Vencord support.
+    zed-editor_git                  # Modern code editor.
+    kdePackages.dolphin             # KDE file manager.
+    kdePackages.ark                 # Archive manager for KDE.
+    kdePackages.gwenview            # Image viewer for KDE.
+    nautilus                        # GNOME file manager.
+    nemo                            # Cinnamon file manager.
+
+    # -------------------------
+    # Media & Entertainment
+    # -------------------------
+    mpv                             # Highly customizable video player.
+    audacious                       # Lightweight audio player.
+    audacious-plugins               # Plugins for Audacious.
+    obs-studio                      # Screen recording and streaming software.
+
+    # -------------------------
+    # Gaming
+    # -------------------------
+    lutris                          # Open gaming platform.
+    mangohud                        # Vulkan/OpenGL overlay for monitoring.
+    goverlay                        # GUI for MangoHud.
+    osu-lazer-bin                   # Rhythm game client.
+
+    # -------------------------
+    # System Tools & Monitoring
+    # -------------------------
+    pavucontrol                     # PulseAudio Volume Control.
+    playerctl                       # Command-line tool for controlling media players.
+    btop-rocm                       # Resource monitor optimized for ROCm.
+    glances                         # Cross-platform system monitoring tool.
+    tree                            # Displays directory tree.
+    ddcui                           # GUI for DDC/CI display control.
+    openrgb-with-all-plugins        # OpenRGB with all available plugins.
+
+    # -------------------------
+    # Development & Android Tools
+    # -------------------------
+    universal-android-debloater     # Tool for debloating Android devices.
+    android-tools                   # ADB and Fastboot tools.
+    sunxi-tools                     # Tools for Allwinner ARM devices.
+    binwalk                         # Firmware analysis tool.
+    pv                              # Pipe viewer: monitors data progress.
+    git-lfs                         # Git Large File Storage.
+    vboot_reference                 # Chrome OS verified boot tools.
+
+    # -------------------------
+    # File System & Archive Tools
+    # -------------------------
+    parted                          # Disk partitioning tool.
+    squashfsTools                   # Utilities for SquashFS filesystems.
+    nixos-install-tools             # Tools useful for NixOS installation.
+    nixos-generators                # Tools to generate NixOS images.
+
+    # -------------------------
+    # Network & Communication
+    # -------------------------
+    scrcpy                          # Android screen mirroring.
+    localsend                       # Local file sharing utility.
+    zrok                            # Secure tunneling application.
+
+    # -------------------------
+    # Productivity & Utilities
+    # -------------------------
+    keepassxc                       # Cross-platform password manager.
+    mangayomi                       # Manga reader.
+
+    # -------------------------
+    # AI/ML
+    # -------------------------
+    ollama-rocm                     # Local AI model runner with ROCm support.
+
+    # -------------------------
+    # Shell & Terminal Tools
+    # -------------------------
+    starship                        # Cross-shell prompt.
+    eza                             # Modern `ls` replacement.
+
+    # -------------------------
+    # Theming & Appearance
+    # -------------------------
+    libsForQt5.qtstyleplugin-kvantum # Kvantum style plugin for Qt5.
+    libsForQt5.qt5ct                 # Qt5 configuration tool.
+    qt6ct                            # Qt6 configuration tool.
+    rose-pine-kvantum                # Rose Pine theme for Kvantum.
+    themechanger                     # Theme switching utility.
+    nwg-look                         # GTK theme configuration tool.
+    dconf-editor                     # GUI editor for dconf database.
+    papirus-icon-theme               # Papirus icon theme.
+
+    # -------------------------
+    # Fonts
+    # -------------------------
+    noto-fonts                      # Google Noto fonts.
+    noto-fonts-cjk-sans             # CJK fonts for Noto.
+    noto-fonts-emoji                # Emoji fonts for Noto.
+    font-awesome                    # Font Awesome icons.
+    nerd-fonts.jetbrains-mono       # JetBrains Mono Nerd Font.
+
+    # -------------------------
+    # Custom Packages from Inputs
+    # -------------------------
+    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # Rose Pine cursor.
+    inputs.zen-browser.packages."${system}".default             # Zen Browser.
+  ];
 }
