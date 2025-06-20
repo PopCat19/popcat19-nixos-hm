@@ -1,5 +1,5 @@
 # ~/nixos-config/home.nix
-{ pkgs, config, lib, inputs, ... }:
+{ pkgs, config, system, lib, inputs, ... }:
 
 {
   home.username = "popcat19";
@@ -95,6 +95,7 @@
   obs-studio
   keepassxc
   syncthing
+  inputs.zen-browser.packages."${system}".default
   ];
 
   services.playerctld.enable = true;

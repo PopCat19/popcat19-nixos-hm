@@ -7,6 +7,7 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable"; # IMPORTANT
     aagl.url = "github:ezKEa/aagl-gtk-on-nix";
     aagl.inputs.nixpkgs.follows = "nixpkgs";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     hyprpanel = {
       url = "github:Jas-SinghFSU/HyprPanel";
@@ -104,7 +105,7 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            extraSpecialArgs = { inherit inputs; };
+            extraSpecialArgs = { inherit inputs system; };
             users.popcat19 = import ./home.nix;
             backupFileExtension = "hm-bak"; # <--- ADD THIS LINE
           };
