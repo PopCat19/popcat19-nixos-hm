@@ -25,13 +25,32 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
         end
     end
 
-    # Set file paths
+    # Determine configuration files and package section based on target
     if test "$target" = "system"
         set config_file    "$NIXOS_CONFIG_DIR/configuration.nix"
         set package_section "environment.systemPackages"
     else
-        set config_file    "$NIXOS_CONFIG_DIR/home.nix"
-        set package_section "home.packages"
+        # For home target, check priority order: home-packages.nix > home.nix
+        set config_file ""
+        set package_section ""
+
+        # Check for home-packages.nix first (highest priority)
+        if test -f "$NIXOS_CONFIG_DIR/home-packages.nix"
+            set config_file "$NIXOS_CONFIG_DIR/home-packages.nix"
+            set package_section "home.packages"
+        # Check for other home-*.nix files
+        else if test -n (find "$NIXOS_CONFIG_DIR" -name "home-*.nix" -type f 2>/dev/null | head -1)
+            set config_file (find "$NIXOS_CONFIG_DIR" -name "home-*.nix" -type f | head -1)
+            set package_section "home.packages"
+        # Fall back to home.nix
+        else if test -f "$NIXOS_CONFIG_DIR/home.nix"
+            set config_file "$NIXOS_CONFIG_DIR/home.nix"
+            set package_section "home.packages"
+        else
+            echo "❌ Error: No home configuration files found."
+            echo "💡 Expected files: home-packages.nix, home-*.nix, or home.nix"
+            return 1
+        end
     end
 
     switch $action
@@ -69,6 +88,8 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
         end
         echo "🔍 Searching for packages containing '$clean_args[1]'..."
         nix search nixpkgs $clean_args[1]
+    case "files" "f" "info"
+        _nixpkg_show_files "$target"
     case "manual" "man" "doc"
         _nixpkg_manual
     case "*"
@@ -76,6 +97,69 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
         echo "💡 Use 'nixpkg help' to see available commands."
         return 1
     end
+end
+
+function _nixpkg_show_files -d "Show which configuration files are being used"
+    set -l target $argv[1]
+
+    echo "📁 Configuration File Information:"
+    echo "════════════════════════════════════════════════════════════"
+    echo ""
+
+    if test "$target" = "system"
+        echo "🖥️  SYSTEM TARGET:"
+        echo "    Primary file: $NIXOS_CONFIG_DIR/configuration.nix"
+        if test -f "$NIXOS_CONFIG_DIR/configuration.nix"
+            echo "    Status: ✅ Found"
+        else
+            echo "    Status: ❌ Not found"
+        end
+    else
+        echo "🏠 HOME TARGET (Priority Order):"
+
+        # Check home-packages.nix (highest priority)
+        echo "    1. home-packages.nix (highest priority)"
+        if test -f "$NIXOS_CONFIG_DIR/home-packages.nix"
+            echo "       Status: ✅ Found - USING THIS FILE"
+            echo "       Path: $NIXOS_CONFIG_DIR/home-packages.nix"
+        else
+            echo "       Status: ⚠️  Not found"
+        end
+
+        # Check other home-*.nix files
+        echo "    2. Other home-*.nix files (secondary priority)"
+        set -l other_home_files (find "$NIXOS_CONFIG_DIR" -name "home-*.nix" -not -name "home-packages.nix" -type f 2>/dev/null)
+        if test (count $other_home_files) -gt 0
+            for file in $other_home_files
+                set -l basename (basename "$file")
+                if test -f "$NIXOS_CONFIG_DIR/home-packages.nix"
+                    echo "       $basename: ✅ Found (available but not used)"
+                else
+                    echo "       $basename: ✅ Found - USING THIS FILE"
+                    echo "       Path: $file"
+                    break
+                end
+            end
+        else
+            echo "       Status: ⚠️  None found"
+        end
+
+        # Check home.nix (fallback)
+        echo "    3. home.nix (fallback)"
+        if test -f "$NIXOS_CONFIG_DIR/home.nix"
+            if test -f "$NIXOS_CONFIG_DIR/home-packages.nix"; or test -n "$other_home_files"
+                echo "       Status: ✅ Found (available but not used)"
+            else
+                echo "       Status: ✅ Found - USING THIS FILE"
+                echo "       Path: $NIXOS_CONFIG_DIR/home.nix"
+            end
+        else
+            echo "       Status: ❌ Not found"
+        end
+    end
+
+    echo ""
+    echo "💡 Use 'nixpkg list' to see packages in the active configuration file."
 end
 
 function _nixpkg_list -d "List packages in configuration file"
@@ -92,38 +176,82 @@ function _nixpkg_list -d "List packages in configuration file"
     echo "    File: $config_file"
     echo ""
 
-    # Use a simpler approach – just grep for the packages section and clean up
+    # Handle different file structures
     set -l in_packages false
     set -l count       0
+    set -l brace_count 0
 
     while read -l line
-        # Check if we're entering the packages section
-        if string match -q "*$package_section = with pkgs; *" $line
+        # Look for different package section patterns
+        if string match -q "*$package_section = with pkgs; \[*" $line
             set in_packages true
             continue
+        else if string match -q "*$package_section = import*" $line
+            # Handle import-style package definitions
+            echo "  ℹ️  Packages imported from external file"
+            set -l import_file (string replace -r '.*import\s+([./\w-]+\.nix).*' '$1' $line)
+            if test -f "$NIXOS_CONFIG_DIR/$import_file"
+                echo "  📁 Import file: $import_file"
+                _nixpkg_list_import_file "$NIXOS_CONFIG_DIR/$import_file"
+            end
+            return 0
         end
 
-        # Check if we're exiting the packages section
-        if test $in_packages = true; and string match -q "*];*" $line
-            set in_packages false
-            continue
-        end
-
-        # If we're in the packages section, extract package names
+        # Handle package list extraction
         if test $in_packages = true
-            # Remove leading/trailing whitespace and comments
+            # Count braces for nested structures
+            set brace_count (math $brace_count + (string length (string replace -a -r '[^\[]' '' $line)))
+            set brace_count (math $brace_count - (string length (string replace -a -r '[^\]]' '' $line)))
+
+            # Check if we're exiting the packages section
+            if test $brace_count -le 0; and string match -q "*];*" $line
+                set in_packages false
+                continue
+            end
+
+            # Extract package names
             set clean_line (string trim $line | string replace -r '#.*$' '')
 
-            # Skip empty lines
-            if test -n "$clean_line"
-                set count (math $count + 1)
-                echo "  • $clean_line"
+            # Skip empty lines and lines with only punctuation
+            if test -n "$clean_line"; and not string match -q -r '^\s*[\[\],;]+\s*$' "$clean_line"
+                # Clean up package names (remove trailing punctuation)
+                set clean_line (string replace -r '[\s,;]*$' '' $clean_line)
+                if test -n "$clean_line"
+                    set count (math $count + 1)
+                    echo "  • $clean_line"
+                end
             end
         end
     end < "$config_file"
 
     echo ""
     echo "📊 Total packages: $count"
+end
+
+function _nixpkg_list_import_file -d "List packages from imported file"
+    set -l import_file $argv[1]
+
+    if not test -f "$import_file"
+        echo "  ❌ Import file not found: $import_file"
+        return 1
+    end
+
+    set -l count 0
+    while read -l line
+        set clean_line (string trim $line | string replace -r '#.*$' '')
+        if test -n "$clean_line"; and not string match -q -r '^\s*[\{\}\[\],;]+\s*$' "$clean_line"
+            # Skip common nix keywords and structural elements
+            if not string match -q -r '^\s*(with|pkgs|inputs|system|inherit|\{|\}|\[|\]|;|,)\s*' "$clean_line"
+                set clean_line (string replace -r '[\s,;]*$' '' $clean_line)
+                if test -n "$clean_line"
+                    set count (math $count + 1)
+                    echo "    • $clean_line"
+                end
+            end
+        end
+    end < "$import_file"
+
+    echo "    📊 Imported packages: $count"
 end
 
 function _nixpkg_add -d "Add package to configuration file (appends to the list)"
@@ -140,8 +268,7 @@ function _nixpkg_add -d "Add package to configuration file (appends to the list)
     # Check if package already exists
     set -l package_exists false
     while read -l line
-        set clean_line \
-            (string trim (string replace -r '#.*$' '' $line))
+        set clean_line (string trim (string replace -r '#.*$' '' $line))
         if test "$clean_line" = "$package_name"
             set package_exists true
             break
@@ -153,43 +280,56 @@ function _nixpkg_add -d "Add package to configuration file (appends to the list)
         return 1
     end
 
-    echo "➕ Appending '$package_name' to $target configuration..."
+    echo "➕ Adding '$package_name' to $target configuration..."
     echo "    File: $config_file"
 
     # Create backup
     cp "$config_file" "$config_file.bak"
 
-    # --- NEW APPEND LOGIC ---
+    # Handle different file structures
     set -l temp_file  (mktemp)
     set -l added      false
     set -l in_packages false
+    set -l brace_count 0
 
     while read -l line
-        # Check if we are inside the package block and find the closing bracket
-        if test $in_packages = true; and string match -q -r '^\s*\];' $line
-            # We found the end. Add the new package *before* this line.
-            # Extract indentation from the closing bracket line to match existing style
-            set -l indent (string replace -r '\];.*$' '' $line)
-            echo "$indent$package_name" >> $temp_file
-            set added true
-            set in_packages false  # We're done with this block
-        end
-
-        # Write the original line to the temp file
-        echo $line >> $temp_file
-
-        # Check if we are entering the package block (after writing the line)
-        if test $in_packages = false; and string match -q "*$package_section = with pkgs; *" $line
+        # Check for different package section patterns
+        if string match -q "*$package_section = with pkgs; \[*" $line
             set in_packages true
+            set brace_count 1
+        else if string match -q "*$package_section = import*" $line
+            echo "❌ Error: Cannot add packages to imported file structure."
+            echo "💡 Please edit the imported file directly or use 'nixpkg files' to see structure."
+            rm $temp_file
+            mv "$config_file.bak" "$config_file"
+            return 1
         end
+
+        # Handle package list insertion
+        if test $in_packages = true
+            # Count braces for nested structures
+            set brace_count (math $brace_count + (string length (string replace -a -r '[^\[]' '' $line)))
+            set brace_count (math $brace_count - (string length (string replace -a -r '[^\]]' '' $line)))
+
+            # Check if we're at the end of the packages section
+            if test $brace_count -le 0; and string match -q -r '^\s*\];' $line
+                # Add the new package before the closing bracket
+                set -l indent (string replace -r '\];.*$' '' $line)
+                echo "$indent$package_name" >> $temp_file
+                set added true
+                set in_packages false
+            end
+        end
+
+        # Write the original line
+        echo $line >> $temp_file
     end < "$config_file"
-    # --- END OF NEW LOGIC ---
 
     # Replace the original file
     mv $temp_file "$config_file"
 
     if test $added = true
-        echo "✅ Successfully appended '$package_name' to $target configuration."
+        echo "✅ Successfully added '$package_name' to $target configuration."
         echo "💾 Backup saved as $config_file.bak"
         echo "💡 Use 'nixpkg list $target' to verify the addition."
     else
@@ -210,7 +350,7 @@ function _nixpkg_remove -d "Remove package from configuration file"
         return 1
     end
 
-    # Check if package exists using simpler approach
+    # Check if package exists
     set -l package_found false
     while read -l line
         set clean_line (string trim $line)
@@ -265,8 +405,8 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "════════════════════════════════════════════════════════════"
     echo ""
     echo "🎯 DESCRIPTION:"
-    echo "    Manage packages in your NixOS configuration files (home.nix and configuration.nix)"
-    echo "    Provides a simple interface to list, add, remove, and search for packages."
+    echo "    Manage packages in your NixOS configuration files with intelligent file detection."
+    echo "    Supports multi-file configurations including home-packages.nix, home-*.nix, and home.nix."
     echo ""
     echo "⚙️  USAGE:"
     echo "    nixpkg <action> [package] [target] [options]"
@@ -276,22 +416,25 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "    add, a               Add a package to configuration"
     echo "    remove, rm, r        Remove a package from configuration"
     echo "    search, s, find      Search for packages in nixpkgs"
+    echo "    files, f, info       Show which configuration files are being used"
     echo "    help, h, --help      Show this help message"
     echo "    manual, man, doc     Show detailed manual"
     echo ""
     echo "🎯 TARGETS:"
-    echo "    home, h              Target home.nix (default)"
+    echo "    home, h              Target home configuration (default)"
+    echo "                         Priority: home-packages.nix > home-*.nix > home.nix"
     echo "    system, sys, s       Target configuration.nix"
     echo ""
     echo "🔧 OPTIONS:"
     echo "    --rebuild, -r        Rebuild system after making changes"
     echo ""
     echo "💡 EXAMPLES:"
-    echo "    nixpkg list                    # List home packages"
+    echo "    nixpkg files                   # Show configuration file structure"
+    echo "    nixpkg list                    # List home packages (auto-detects file)"
     echo "    nixpkg list system             # List system packages"
-    echo "    nixpkg add firefox             # Add Firefox to home.nix"
+    echo "    nixpkg add firefox             # Add Firefox to highest priority home file"
     echo "    nixpkg add vim system -r       # Add vim to system and rebuild"
-    echo "    nixpkg remove htop home        # Remove htop from home.nix"
+    echo "    nixpkg remove htop home        # Remove htop from home configuration"
     echo "    nixpkg search browser          # Search for browser packages"
     echo ""
     echo "🔗 ABBREVIATIONS AVAILABLE:"
@@ -301,6 +444,7 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "    pkgs     = nixpkg search"
     echo "    pkgaddr  = nixpkg add --rebuild"
     echo "    pkgrmr   = nixpkg remove --rebuild"
+    echo "    pkgfiles = nixpkg files"
     echo ""
     echo "ℹ️  For detailed information, use: nixpkg manual"
 end
@@ -311,34 +455,47 @@ function _nixpkg_manual -d "Show detailed manual for nixpkg function"
     echo ""
     echo "🔍 OVERVIEW:"
     echo "    nixpkg is a comprehensive package management tool for NixOS configurations."
-    echo "    It simplifies the process of managing packages across home.nix and"
-    echo "    configuration.nix files by providing intuitive commands for common operations."
+    echo "    It intelligently handles multi-file configurations with automatic file detection"
+    echo "    and priority-based selection for home configurations."
     echo ""
-    echo "📂 FILE TARGETS:"
-    echo "    • HOME TARGET (home.nix):"
-    echo "      - File: \$NIXOS_CONFIG_DIR/home.nix"
-    echo "      - Section: home.packages = with pkgs; ["
-    echo "      - Scope: User-specific packages"
-    echo "      - Default target when none specified"
+    echo "📂 FILE TARGETS & PRIORITY:"
     echo ""
-    echo "    • SYSTEM TARGET (configuration.nix):"
+    echo "    🖥️  SYSTEM TARGET (configuration.nix):"
     echo "      - File: \$NIXOS_CONFIG_DIR/configuration.nix"
     echo "      - Section: environment.systemPackages = with pkgs; ["
     echo "      - Scope: System-wide packages for all users"
+    echo ""
+    echo "    🏠 HOME TARGET (Priority Order):"
+    echo "      1. home-packages.nix (HIGHEST PRIORITY)"
+    echo "         - File: \$NIXOS_CONFIG_DIR/home-packages.nix"
+    echo "         - Section: home.packages = with pkgs; ["
+    echo "         - Purpose: Dedicated package management file"
+    echo ""
+    echo "      2. Other home-*.nix files (SECONDARY PRIORITY)"
+    echo "         - Files: Any file matching home-*.nix pattern"
+    echo "         - Examples: home-theme.nix, home-screenshot.nix, etc."
+    echo "         - Used only if home-packages.nix doesn't exist"
+    echo ""
+    echo "      3. home.nix (FALLBACK)"
+    echo "         - File: \$NIXOS_CONFIG_DIR/home.nix"
+    echo "         - Section: home.packages = with pkgs; ["
+    echo "         - Used only if no other home-*.nix files exist"
     echo ""
     echo "🛠️  DETAILED ACTIONS:"
     echo ""
     echo "    📋 LIST (list, ls, l):"
     echo "        Purpose: Display all packages currently in the configuration"
     echo "        Syntax:  nixpkg list [target]"
+    echo "        Features: Auto-detects file structure, handles imports"
     echo "        Output:  Bullet-pointed list with package count"
-    echo "        Example: nixpkg list system"
+    echo "        Example: nixpkg list home"
     echo ""
     echo "    ➕ ADD (add, a):"
     echo "        Purpose: Add a new package to the configuration"
     echo "        Syntax:  nixpkg add <package> [target] [--rebuild]"
     echo "        Safety:  Creates backup (.bak file) before modification"
     echo "        Checks:  Prevents duplicate package additions"
+    echo "        Smart:   Uses highest priority available file"
     echo "        Example: nixpkg add firefox home --rebuild"
     echo ""
     echo "    ➖ REMOVE (remove, rm, r):"
@@ -346,7 +503,8 @@ function _nixpkg_manual -d "Show detailed manual for nixpkg function"
     echo "        Syntax:  nixpkg remove <package> [target] [--rebuild]"
     echo "        Safety:  Creates backup (.bak file) before modification"
     echo "        Checks:  Verifies package exists before removal"
-    echo "        Example: nixpkg remove htop system -r"
+    echo "        Smart:   Searches across all applicable files"
+    echo "        Example: nixpkg remove htop home -r"
     echo ""
     echo "    🔍 SEARCH (search, s, find):"
     echo "        Purpose: Search nixpkgs repository for available packages"
@@ -354,33 +512,24 @@ function _nixpkg_manual -d "Show detailed manual for nixpkg function"
     echo "        Backend: Uses 'nix search nixpkgs <term>'"
     echo "        Example: nixpkg search text editor"
     echo ""
-    echo "🔧 REBUILD INTEGRATION:"
-    echo "    • The --rebuild flag automatically calls nixos-apply-config after changes"
-    echo "    • nixos-apply-config handles the full rebuild process including:"
-    echo "      - Running sudo nixos-rebuild switch"
-    echo "      - Offering git commit on success"
-    echo "      - Offering rollback on failure"
+    echo "    📁 FILES (files, f, info):"
+    echo "        Purpose: Show which configuration files are being used"
+    echo "        Syntax:  nixpkg files [target]"
+    echo "        Output:  Priority order, file status, active file"
+    echo "        Example: nixpkg files home"
     echo ""
-    echo "💾 BACKUP SYSTEM:"
-    echo "    • All modifications create .bak files automatically"
-    echo "    • Format: <config-file>.bak (e.g., home.nix.bak)"
-    echo "    • Restored automatically on failure"
-    echo "    • Manual restoration: mv home.nix.bak home.nix"
-    echo ""
-    echo "⚠️  ERROR HANDLING:"
-    echo "    • File existence checks before operations"
-    echo "    • Duplicate addition prevention"
-    echo "    • Missing package removal detection"
-    echo "    • Automatic backup restoration on failure"
-    echo "    • Clear error messages with helpful tips"
-    echo ""
-    echo "🔗 INTEGRATION WITH YOUR SETUP:"
-    echo "    • Uses \$NIXOS_CONFIG_DIR environment variable"
-    echo "    • Integrates with your existing nixos-apply-config function"
-    echo "    • Works with your git workflow (nixos-git function)"
-    echo "    • Compatible with your fish abbreviations"
+    echo "🔧 INTELLIGENT FEATURES:"
+    echo "    • Automatic file detection and priority handling"
+    echo "    • Support for import-style package definitions"
+    echo "    • Backup system with automatic restoration on failure"
+    echo "    • Duplicate prevention and existence checking"
+    echo "    • Multi-file configuration support"
     echo ""
     echo "📈 WORKFLOW EXAMPLES:"
+    echo ""
+    echo "    🔍 Check Current Setup:"
+    echo "      nixpkg files home          # See which files are available"
+    echo "      nixpkg list home           # See current packages"
     echo ""
     echo "    🎮 Gaming Setup:"
     echo "      nixpkg add lutris home"
@@ -392,22 +541,18 @@ function _nixpkg_manual -d "Show detailed manual for nixpkg function"
     echo "      nixpkg add vscode home"
     echo "      nixpkg add nodejs home --rebuild"
     echo ""
-    echo "    🧹 Cleanup:"
-    echo "      nixpkg list home | grep unused"
-    echo "      nixpkg remove unused-package home -r"
-    echo ""
     echo "💡 PRO TIPS:"
+    echo "    • Use 'nixpkg files' first to understand your configuration structure"
+    echo "    • home-packages.nix is the preferred location for user packages"
     echo "    • Use abbreviations for faster workflow (pkgadd, pkgrm, etc.)"
-    echo "    • Always list packages first to see current state"
+    echo "    • Always check 'nixpkg list' to see current state"
     echo "    • Use search to find exact package names before adding"
-    echo "    • Consider using --rebuild for immediate testing"
-    echo "    • Check .bak files if something goes wrong"
     echo ""
     echo "🆘 TROUBLESHOOTING:"
-    echo "    • If rebuild fails: Check .bak files for restoration"
-    echo "    • If package not found: Use 'nixpkg search <term>' first"
-    echo "    • If file not found: Check \$NIXOS_CONFIG_DIR variable"
-    echo "    • If permission denied: Ensure you can write to config directory"
+    echo "    • File structure issues: Use 'nixpkg files' to diagnose"
+    echo "    • Package not found: Use 'nixpkg search <term>' first"
+    echo "    • Import errors: Cannot modify imported package files directly"
+    echo "    • Permission issues: Check write access to config directory"
     echo ""
     echo "ℹ️  For quick reference, use: nixpkg help"
 end
