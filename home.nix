@@ -1669,16 +1669,19 @@
   home.file.".local/bin/update-thumbnails".text = ''
     #!/usr/bin/env bash
 
-    # Update GDK pixbuf loaders
-    gdk-pixbuf-query-loaders --update-cache
-
     # Clear thumbnail cache
     rm -rf ~/.cache/thumbnails/*
 
-    # Regenerate thumbnails for common directories
+    # Update desktop database
+    update-desktop-database ~/.local/share/applications 2>/dev/null || true
+
+    # Update MIME database
+    update-mime-database ~/.local/share/mime 2>/dev/null || true
+
+    # Regenerate thumbnails for common directories by touching files
     find ~/Pictures ~/Downloads ~/Videos ~/Music -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.gif" -o -name "*.webp" -o -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec touch {} \; 2>/dev/null || true
 
-    echo "Thumbnail cache updated"
+    echo "Thumbnail cache cleared and databases updated"
   '';
 
   home.file.".local/bin/update-thumbnails".executable = true;
