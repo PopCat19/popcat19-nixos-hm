@@ -52,8 +52,6 @@ with pkgs; [
   hyprpanel                          # Panel for Hyprland
 
   # ─── GAMING AND PERFORMANCE ───
-  mangohud                           # Gaming performance overlay (configured above)
-  goverlay                           # MangoHud configuration GUI
   obs-studio                         # Screen recording and streaming
   lutris                             # Gaming platform
   osu-lazer-bin                      # Rhythm game
