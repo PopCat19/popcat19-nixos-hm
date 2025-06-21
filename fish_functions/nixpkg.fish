@@ -2,6 +2,7 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
     set -l action        $argv[1]
     set -l rebuild_flag  false
     set -l rebuild_args  ""        # additional args for nixos-apply-config
+    set -l dry_run_flag  false     # dry-run mode
     set -l target        "home"    # default to home
     set -l home_file_spec ""       # specific home file (e.g., "theme", "screenshot")
 
@@ -21,6 +22,11 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
         case "--fast" "--skip"
             set rebuild_flag true
             set rebuild_args "--fast"
+        case "-rs"
+            set rebuild_flag true
+            set rebuild_args "--fast"
+        case "--dry"
+            set dry_run_flag true
         case "system" "sys" "s"
             set target "system"
         case "home" "h"
@@ -101,6 +107,15 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
             echo "💡 Tip: Use 'nixpkg help' for usage examples."
             return 1
         end
+        if test $dry_run_flag = true
+            echo "🔍 Dry-run mode: Would add '$clean_args[1]' to $target configuration"
+            echo "    Target file: $config_file"
+            echo "    Package section: $package_section"
+            if test -n "$home_file_spec"
+                echo "    Home file spec: $home_file_spec"
+            end
+            return 0
+        end
         _nixpkg_add "$config_file" "$package_section" \
             "$clean_args[1]" "$target" "$home_file_spec"
         if test $status -eq 0; and test $rebuild_flag = true
@@ -116,6 +131,15 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
             echo "❌ Error: No package specified to remove."
             echo "💡 Tip: Use 'nixpkg help' for usage examples."
             return 1
+        end
+        if test $dry_run_flag = true
+            echo "🔍 Dry-run mode: Would remove '$clean_args[1]' from $target configuration"
+            echo "    Target file: $config_file"
+            echo "    Package section: $package_section"
+            if test -n "$home_file_spec"
+                echo "    Home file spec: $home_file_spec"
+            end
+            return 0
         end
         _nixpkg_remove "$config_file" "$package_section" \
             "$clean_args[1]" "$target" "$home_file_spec"
@@ -857,6 +881,8 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "🔧 OPTIONS:"
     echo "    --rebuild, -r        Rebuild system after making changes"
     echo "    --fast, --skip       Rebuild system and skip git operations"
+    echo "    -rs                  Rebuild system and skip git operations (shorthand)"
+    echo "    --dry                Dry-run mode (show what would be done without doing it)"
     echo ""
     echo "💡 EXAMPLES:"
     echo "    nixpkg files                   # Show configuration file structure"
@@ -867,6 +893,8 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "    nixpkg add firefox theme       # Add to home-theme.nix"
     echo "    nixpkg add vim system -r       # Add vim to system and rebuild"
     echo "    nixpkg add firefox theme --fast # Add to theme and rebuild (skip git)"
+    echo "    nixpkg add gimp theme -rs      # Add to theme, rebuild, skip git (shorthand)"
+    echo "    nixpkg add htop theme --dry    # Show what would be added (dry-run)"
     echo "    nixpkg remove htop screenshot  # Remove from home-screenshot.nix"
     echo "    nixpkg search browser          # Search for browser packages"
     echo ""

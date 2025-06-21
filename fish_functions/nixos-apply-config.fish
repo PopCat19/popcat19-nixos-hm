@@ -3,6 +3,7 @@ function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollbac
     # Parse arguments for -m flag and skip options
     set -l commit_message ""
     set -l skip_git false
+    set -l dry_run false
     set -l rebuild_args
     set -l i 1
 
@@ -21,15 +22,34 @@ function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollbac
         else if test "$argv[$i]" = "manual" -o "$argv[$i]" = "man" -o "$argv[$i]" = "doc"
             _nixos_apply_manual
             return 0
-        else if test "$argv[$i]" = "--fast" -o "$argv[$i]" = "--skip"
+        else if test "$argv[$i]" = "--fast" -o "$argv[$i]" = "--skip" -o "$argv[$i]" = "-rs"
             set skip_git true
+        else if test "$argv[$i]" = "--dry"
+            set dry_run true
         else
             set rebuild_args $rebuild_args "$argv[$i]"
         end
         set i (math $i + 1)
     end
 
-    echo "🚀 Attempting to apply NixOS configuration..."
+    if test $dry_run = true
+        echo "🔍 Dry-run mode: Checking configuration without applying changes..."
+        echo "    Command that would be executed:"
+        echo "    sudo nixos-rebuild switch --flake \"$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME\" $rebuild_args"
+        echo ""
+        echo "🧪 Running configuration check..."
+        if nix build --dry-run "$NIXOS_CONFIG_DIR#nixosConfigurations.$NIXOS_FLAKE_HOSTNAME.config.system.build.toplevel"
+            echo "✅ Configuration check passed. No issues found."
+            echo "💡 Use nixos-apply-config without --dry to apply changes."
+            return 0
+        else
+            echo "❌ Configuration check failed. Fix errors before applying."
+            return 1
+        end
+    else
+        echo "🚀 Attempting to apply NixOS configuration..."
+    end
+
     if sudo nixos-rebuild switch --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME" $rebuild_args
         echo "✅ NixOS rebuild and switch successful."
         echo ""
@@ -123,6 +143,8 @@ function _nixos_apply_help -d "Show help for nixos-apply-config"
     echo "🔧 OPTIONS:"
     echo "   -m \"message\"    Commit message for successful rebuild (skips prompt)"
     echo "   --fast, --skip   Skip git operations entirely (no commit, no prompt)"
+    echo "   -rs              Skip git operations (shorthand for --fast)"
+    echo "   --dry            Dry-run mode (check configuration without applying)"
     echo ""
     echo "🔄 WORKFLOW:"
     echo "   1. Runs nixos-rebuild switch with your flake"
@@ -134,7 +156,9 @@ function _nixos_apply_help -d "Show help for nixos-apply-config"
     echo "   nixos-apply-config -m \"bump flake.lock\"      # Rebuild with commit message"
     echo "   nixos-apply-config -m \"fix config\" --show-trace  # With rebuild options"
     echo "   nixos-apply-config --fast                    # Skip git operations entirely"
-    echo "   nixos-apply-config --skip --show-trace       # Skip git, show build traces"
+    echo "   nixos-apply-config -rs --show-trace          # Skip git (shorthand) + traces"
+    echo "   nixos-apply-config --dry                     # Check configuration only"
+    echo "   nixos-apply-config --dry --show-trace        # Dry-run with detailed traces"
     echo ""
     echo "🔗 INTEGRATIONS:"
     echo "   • Uses \$NIXOS_CONFIG_DIR and \$NIXOS_FLAKE_HOSTNAME"
@@ -199,6 +223,10 @@ function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
     echo "   Git Skip Flags:"
     echo "   • --fast           Skip all git operations (no commit, no prompt)"
     echo "   • --skip           Skip all git operations (alias for --fast)"
+    echo "   • -rs              Skip all git operations (shorthand)"
+    echo ""
+    echo "   Dry-run Flag:"
+    echo "   • --dry            Check configuration without applying changes"
     echo ""
     echo "   nixos-rebuild Options (all supported):"
     echo "   • --show-trace          Show detailed error traces"
@@ -217,7 +245,11 @@ function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
     echo ""
     echo "   ⚡ Fast Mode (Skip Git):"
     echo "   nixos-apply-config --fast                 # Just rebuild, no git operations"
-    echo "   nixos-apply-config --skip --show-trace    # Skip git, show detailed traces"
+    echo "   nixos-apply-config -rs --show-trace       # Skip git (shorthand) + traces"
+    echo ""
+    echo "   🔍 Dry-run Mode:"
+    echo "   nixos-apply-config --dry                  # Check config without applying"
+    echo "   nixos-apply-config --dry --show-trace     # Dry-run with detailed traces"
     echo ""
     echo "   🔍 Debug Mode:"
     echo "   nixos-apply-config -m \"test change\" --show-trace  # Show traces, auto-commit"
