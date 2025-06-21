@@ -1537,7 +1537,7 @@
     PreviewSize=32
 
     [IconsMode]
-    PreviewSize=128
+    PreviewSize=64
   '';
 
   # KDE thumbnail configuration for better thumbnail support
