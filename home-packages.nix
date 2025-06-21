@@ -10,6 +10,10 @@ with pkgs; [
   fuzzel                             # Application launcher (configured above)
   micro                              # Text editor (configured below)
 
+  # ─── WEB BROWSERS ───
+  inputs.zen-browser.packages."${system}".default # Zen browser (flake input)
+  firefox                            # Firefox browser (moved from system-level)
+
   # ─── FILE MANAGERS ───
   kdePackages.dolphin                # Primary file manager (KDE, themed via kdeglobals)
   nautilus                           # GNOME file manager (backup)
@@ -25,15 +29,19 @@ with pkgs; [
   # ─── ARCHIVE MANAGEMENT ───
   kdePackages.ark                    # Archive manager (used in MIME associations)
 
-  # ─── WEB BROWSER ───
-  inputs.zen-browser.packages."${system}".default # Zen browser (flake input)
-
   # ─── DEVELOPMENT TOOLS ───
+  java                               # Java runtime environment (moved from system-level)
+  nodejs                             # Node.js runtime (moved from system-level)
+  gh                                 # GitHub CLI (moved from system-level)
   git-lfs                            # Git Large File Storage
   jq                                 # JSON processor (used in screenshot scripts)
   tree                               # Directory tree display
   eza                                # Modern ls replacement (used in fish abbrs)
   starship                           # Shell prompt (configured above)
+
+  # ─── FILE MANAGERS (ADDITIONAL) ───
+  ranger                             # Terminal file manager (moved from system-level)
+  superfile                          # Modern terminal file manager (moved from system-level)
 
   # ─── SCREENSHOT AND GRAPHICS TOOLS ───
   grim                               # Wayland screenshot utility (used in scripts)

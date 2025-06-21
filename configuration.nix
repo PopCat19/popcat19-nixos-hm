@@ -198,13 +198,13 @@
   # **PROGRAMS & APPLICATIONS**
   # Enables and configures various applications and program settings.
   programs = {
-    # Browsers.
-    firefox.enable = true;
+    # Browsers moved to user-level (home-manager)
+    # firefox.enable = true;
 
-    # Shells.
+    # Shells (must stay system-level for login shell)
     fish.enable = true;
 
-    # Gaming related programs.
+    # Gaming related programs (system-level for hardware access)
     gamemode.enable = true; # GameMode for performance optimization.
     steam = {
       enable = true;
@@ -214,8 +214,8 @@
       localNetworkGameTransfers.openFirewall = true; # Open ports for local game transfers.
     };
 
-    # Development tools.
-    java.enable = true; # Java runtime environment.
+    # Development tools moved to user-level (home-packages.nix)
+    # java.enable = true;
   };
 
   # **PACKAGE MANAGEMENT**
@@ -245,37 +245,28 @@
   # **SYSTEM PACKAGES**
   # List of packages installed globally on the system.
   environment.systemPackages = with pkgs; [
+    # Core system tools (must stay system-level)
     vim
     micro
     wget
     curl
     git
-    gh
-    ranger
-    superfile
     xdg-utils
     shared-mime-info
+
+    # Hardware tools (require system-level access)
     i2c-tools
     ddcutil
     usbutils
-    nodejs
     rocmPackages.rpp
-    # Screenshot tools
-    grim
-    slurp
-    wl-clipboard
-    # File manager packages
-    kdePackages.dolphin
-    nemo
-    # Thumbnail generation
-    ffmpegthumbnailer
-    poppler_utils
-    libgsf
-    webp-pixbuf-loader
-    # KDE thumbnail generators
-    kdePackages.kdegraphics-thumbnailers
-    kdePackages.kimageformats
-    kdePackages.kio-extras
+
+    # User applications moved to home-packages.nix:
+    # - gh (GitHub CLI)
+    # - ranger, superfile (file managers)
+    # - nodejs (development tool)
+    # - grim, slurp, wl-clipboard (screenshot tools)
+    # - kdePackages.dolphin, nemo (file managers)
+    # - All thumbnail generation packages
   ];
 
   # **FONTS CONFIGURATION**
@@ -291,9 +282,9 @@
     # Google Fonts moved to user-level (home-theme.nix) for testing
     # google-fonts
 
-    # Essential fonts
-    font-awesome
-    nerd-fonts.jetbrains-mono
+    # Essential fonts moved to user-level (home-theme.nix)
+    # font-awesome - now in home-theme.nix
+    # nerd-fonts.jetbrains-mono - now in home-theme.nix
   ];
 
   # **FONTS FONTCONFIG**
