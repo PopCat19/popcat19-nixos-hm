@@ -1,92 +1,113 @@
 # LLM Note: NixOS Config Testing & Troubleshooting
 
-## Key Commands for Testing and Troubleshooting
+> Always use sequential-thinking MCP. Search if needed. Prefer diff if possible.
 
-### Streamlined Package Management & Rebuild
-```bash
-fish -c "nixpkg add <package> -rdm '<short-commit>'"
+## Streamlined Commands
+
+### Package Management (Recommended)
 ```
-- **RECOMMENDED**: Dry-run test, then rebuild with commit message if successful
-- Fully automated workflow: add package → test → rebuild → commit
-- Replace `<package>` with package name and `<short-commit>` with description
-
-### Alternative: Direct Rebuild (for confident changes)
-```bash
-fish -c "nixpkg add <package> -rm '<short-commit>'"
+fish -c "nixpkg add <package> -rdm 'Add <package> for <purpose>'"
 ```
-- Skip dry-run, rebuild immediately with commit message
-- Use when you're confident the package addition will work
+- Fully automated: add package → dry-run test → rebuild → commit
+- Automatic rollback if configuration fails
+- Replace <package> with package name, <purpose> with brief description
 
-### Traditional Rebuild (if needed)
-```bash
-fish -c "nixos-apply-config -m '<short-commit>'"
+### Configuration Changes
 ```
-- Use this for manual configuration changes not done through nixpkg
-- Replace `<short-commit>` with a brief description of changes
-
-### Package Resolution
-```bash
-nix search nixpkgs <package>
+fish -c "nixos-apply-config -dm 'Config update description'"
 ```
-- Search for packages in nixpkgs to resolve dependency errors
-- Replace `<package>` with the package name you're looking for
+- For manual configuration file edits
+- Dry-run test then rebuild with commit message
 
-### Hyprland Configuration Errors
-```bash
-hyprctl configerrors
+### Package Search
 ```
-- Check for Hyprland configuration errors
-- Run this if experiencing window manager issues
-
-### Repository Structure Overview
-```bash
-tree -L 4
+fish -c "nix search nixpkgs <package>"
 ```
-- Display repository tree structure (4 levels deep)
-- Useful for understanding project layout during troubleshooting
+- Find correct package names for installation
 
-## Streamlined Workflow (Recommended)
+### Hyprland Issues
+```
+fish -c "hyprctl configerrors"
+```
+- Check window manager configuration errors
 
-### For Package Operations
-1. **Single Command Package Management**:
-   ```bash
-   fish -c "nixpkg add <package> -rdm 'add <package> for <purpose>'"
-   ```
-   - This automatically: adds package → tests config → rebuilds → commits
-   - No manual git operations needed
-   - Automatic rollback if configuration fails
+### Repository Structure
+```
+fish -c "tree -L 4"
+```
+- View project structure for troubleshooting
 
-2. **Multiple Package Categories**:
-   ```bash
-   fish -c "nixpkg add firefox theme -rdm 'Add Firefox to theme config'"
-   fish -c "nixpkg add flameshot screenshot -rdm 'Add screenshot tool'"
-   ```
+## Workflow Examples
 
-### For Manual Configuration Changes
-1. Make configuration changes with Sequential Thinking MCP
-2. Check repo structure with `tree -L 4`
-3. **IMPORTANT: Add new files/dirs to git** with `git add .` (required for flake compatibility)
-4. **Test build first** with `fish -c "nix build --dry-run .#nixosConfigurations.popcat19-nixos0.config.system.build.toplevel"` (no sudo required)
-5. **Only after dry-run succeeds**, rebuild with `fish -c "nixos-apply-config -m '<short-commit>'"`
-
-### Troubleshooting
-1. If package operations fail, use `nix search` to find correct package names
-2. Check Hyprland issues with `hyprctl configerrors`
-3. Use `nixpkg files` to see available configuration files
-4. Use `nixpkg list all` to see all packages across configurations
-
-## Workflow Comparison
-
-**Old Multi-Step Process:**
-```bash
-# Manual editing of nix files
-git add .
-nix build --dry-run .#nixosConfigurations.popcat19-nixos0.config.system.build.toplevel
-fish -c "nixos-apply-config -m '<short-commit>'"
+### Single Package
+```
+fish -c "nixpkg add firefox -rdm 'Add Firefox browser'"
 ```
 
-**New Streamlined Process:**
-```bash
-fish -c "nixpkg add <package> -rdm '<short-commit>'"
-# Done! Everything automated with safety checks
+### Category-Specific Packages
 ```
+fish -c "nixpkg add flameshot screenshot -rdm 'Add screenshot tool'"
+fish -c "nixpkg add papirus-icon-theme theme -rdm 'Update icon theme'"
+```
+
+### Remove Packages
+```
+fish -c "nixpkg remove htop -rdm 'Remove htop utility'"
+```
+
+### Manual Config Changes
+```
+# Edit config files manually first, then:
+fish -c "git add ."
+fish -c "nixos-apply-config -dm 'Manual configuration update'"
+```
+
+## Flag Reference
+
+### nixpkg flags
+- `-rdm "msg"` - Dry-run → rebuild → commit (recommended)
+- `-rm "msg"` - Direct rebuild → commit (skip dry-run)
+- `-d` - Dry-run test only (no rebuild)
+
+### nixos-apply-config flags
+- `-dm "msg"` - Dry-run → rebuild → commit
+- `-m "msg"` - Direct rebuild → commit
+- `-d` - Dry-run test only
+
+## Troubleshooting
+
+### Package Not Found
+```
+fish -c "nix search nixpkgs <partial-name>"
+```
+
+### Build Failures
+- Check error output for missing dependencies
+- Use `fish -c "nixpkg files"` to see available config files
+- Use `fish -c "nixpkg list all"` to see all current packages
+
+### Hyprland Issues
+```
+fish -c "hyprctl configerrors"
+```
+
+### Git Issues
+- Ensure new files are added: `fish -c "git add ."`
+- Check status: `fish -c "git status"`
+
+## Old vs New Workflow
+
+### Before (Multi-step)
+```
+# Manual config editing
+fish -c "git add ."
+fish -c "nix build --dry-run .#nixosConfigurations.popcat19-nixos0.config.system.build.toplevel"
+fish -c "nixos-apply-config -m 'commit message'"
+```
+
+### Now (Single command)
+```
+fish -c "nixpkg add <package> -rdm 'commit message'"
+```
+
+All steps automated with safety checks and automatic rollback on failure.
