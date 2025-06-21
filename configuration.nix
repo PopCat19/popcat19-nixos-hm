@@ -137,6 +137,7 @@
   users.users.popcat19 = {
     isNormalUser = true;
     extraGroups = [ "wheel" "video" "audio" "networkmanager" "i2c" ]; # Add user to necessary groups.
+    shell = pkgs.fish; # Set Fish as default shell.
   };
 
   systemd.tmpfiles.rules = [

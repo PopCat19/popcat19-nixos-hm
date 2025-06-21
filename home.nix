@@ -168,9 +168,16 @@
     enable = true;
     font = {
       name = "CaskaydiaCove Nerd Font Mono";
-      size = 9;
+      size = 12;
     };
     settings = {
+      # Shell
+      shell = "fish";
+      shell_integration = "enabled";
+
+      # Window behavior
+      confirm_os_window_close = 0;
+
       # Cursor
       cursor_shape = "block";
       cursor_blink_interval = 0.5;
