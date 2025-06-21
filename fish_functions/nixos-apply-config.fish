@@ -4,6 +4,7 @@ function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollbac
     set -l commit_message ""
     set -l skip_git false
     set -l dry_run false
+    set -l chain_rebuild false
     set -l rebuild_args
     set -l i 1
 
@@ -26,6 +27,16 @@ function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollbac
             set skip_git true
         else if test "$argv[$i]" = "--dry" -o "$argv[$i]" = "-d"
             set dry_run true
+        else if test "$argv[$i]" = "-rdm"
+            if test $i -lt (count $argv)
+                set i (math $i + 1)
+                set commit_message "$argv[$i]"
+                set dry_run true
+                set chain_rebuild true
+            else
+                echo "❌ Error: -rdm flag requires a commit message"
+                return 1
+            end
         else
             set rebuild_args $rebuild_args "$argv[$i]"
         end
@@ -40,8 +51,23 @@ function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollbac
         echo "🧪 Running configuration check..."
         if nix build --dry-run "$NIXOS_CONFIG_DIR#nixosConfigurations.$NIXOS_FLAKE_HOSTNAME.config.system.build.toplevel"
             echo "✅ Configuration check passed. No issues found."
-            echo "💡 Use nixos-apply-config without --dry to apply changes."
-            return 0
+            if test $chain_rebuild = true
+                echo "🚀 Auto-proceeding with rebuild (dry-run succeeded)..."
+                echo "🚀 Attempting to apply NixOS configuration..."
+                if sudo nixos-rebuild switch --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME" $rebuild_args
+                    echo "✅ NixOS rebuild and switch successful."
+                    echo ""
+                    echo "💬 Committing changes with message: '$commit_message'"
+                    nixos-git "$commit_message"
+                    return 0
+                else
+                    echo "❌ NixOS rebuild and switch FAILED."
+                    return 1
+                end
+            else
+                echo "💡 Use nixos-apply-config without --dry to apply changes."
+                return 0
+            end
         else
             echo "❌ Configuration check failed. Fix errors before applying."
             return 1
@@ -145,6 +171,7 @@ function _nixos_apply_help -d "Show help for nixos-apply-config"
     echo "   --fast, --skip   Skip git operations entirely (no commit, no prompt)"
     echo "   -rs              Skip git operations (shorthand for --fast)"
     echo "   --dry, -d        Dry-run mode (check configuration without applying)"
+    echo "   -rdm \"message\"   Dry-run then rebuild with commit message if successful"
     echo ""
     echo "🔄 WORKFLOW:"
     echo "   1. Runs nixos-rebuild switch with your flake"
@@ -159,6 +186,7 @@ function _nixos_apply_help -d "Show help for nixos-apply-config"
     echo "   nixos-apply-config -rs --show-trace          # Skip git (shorthand) + traces"
     echo "   nixos-apply-config -d                        # Check configuration only"
     echo "   nixos-apply-config -d --show-trace           # Dry-run with detailed traces"
+    echo "   nixos-apply-config -rdm \"Config update\"      # Dry-run then rebuild with message"
     echo ""
     echo "🔗 INTEGRATIONS:"
     echo "   • Uses \$NIXOS_CONFIG_DIR and \$NIXOS_FLAKE_HOSTNAME"
@@ -225,8 +253,9 @@ function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
     echo "   • --skip           Skip all git operations (alias for --fast)"
     echo "   • -rs              Skip all git operations (shorthand)"
     echo ""
-    echo "   Dry-run Flag:"
+    echo "   Dry-run Flags:"
     echo "   • --dry, -d        Check configuration without applying changes"
+    echo "   • -rdm \"message\"   Dry-run then rebuild with commit message if successful"
     echo ""
     echo "   nixos-rebuild Options (all supported):"
     echo "   • --show-trace          Show detailed error traces"
@@ -250,6 +279,7 @@ function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
     echo "   🔍 Dry-run Mode:"
     echo "   nixos-apply-config -d                     # Check config without applying"
     echo "   nixos-apply-config -d --show-trace        # Dry-run with detailed traces"
+    echo "   nixos-apply-config -rdm \"Update config\"  # Dry-run then rebuild with message"
     echo ""
     echo "   🔍 Debug Mode:"
     echo "   nixos-apply-config -m \"test change\" --show-trace  # Show traces, auto-commit"

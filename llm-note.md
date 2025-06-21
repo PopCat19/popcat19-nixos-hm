@@ -4,7 +4,7 @@
 
 ### Streamlined Package Management & Rebuild
 ```bash
-nixpkg add <package> -rdm "<short-commit>"
+fish -c "nixpkg add <package> -rdm '<short-commit>'"
 ```
 - **RECOMMENDED**: Dry-run test, then rebuild with commit message if successful
 - Fully automated workflow: add package → test → rebuild → commit
@@ -12,14 +12,14 @@ nixpkg add <package> -rdm "<short-commit>"
 
 ### Alternative: Direct Rebuild (for confident changes)
 ```bash
-nixpkg add <package> -rm "<short-commit>"
+fish -c "nixpkg add <package> -rm '<short-commit>'"
 ```
 - Skip dry-run, rebuild immediately with commit message
 - Use when you're confident the package addition will work
 
 ### Traditional Rebuild (if needed)
 ```bash
-fish -c 'nixos-apply-config -m "<short-commit>"'
+fish -c "nixos-apply-config -m '<short-commit>'"
 ```
 - Use this for manual configuration changes not done through nixpkg
 - Replace `<short-commit>` with a brief description of changes
