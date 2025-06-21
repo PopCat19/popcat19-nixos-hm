@@ -113,6 +113,7 @@ with pkgs; [
   # ─── SYSTEM INTEGRATION ───
   libnotify                          # Desktop notifications
   zenity                             # Dialog boxes for scripts
+  dunst                              # Notification daemon
 
   # ─── UTILITIES ───
   fastfetch                          # System information display

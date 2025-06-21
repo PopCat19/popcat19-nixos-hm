@@ -40,7 +40,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
+  outputs = { self, nixpkgs, hyprpanel, home-manager, ... }@inputs:
     let
       # **SYSTEM DEFINITIONS**
       # Basic system parameters for configuration.

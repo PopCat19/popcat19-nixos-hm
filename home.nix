@@ -29,6 +29,7 @@
     ./home-theme.nix
     ./home-screenshot.nix
     ./home-mangohud.nix
+    ./home-hyprpanel.nix
   ];
 
   # **XDG MIME APPLICATIONS**

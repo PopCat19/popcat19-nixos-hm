@@ -102,3 +102,38 @@ fish -c "hyprctl configerrors"
 - Check status: `fish -c "git status"`
 
 All steps automated with safety checks and automatic rollback on failure.
+
+## HyprPanel Configuration
+
+### Apply HyprPanel Config
+```
+fish -c "git add ."
+fish -c "nixos-apply-config -dm 'Apply HyprPanel configuration'"
+```
+- Applies the Rose Pine themed HyprPanel setup
+- Includes bar layouts, notifications, dashboard shortcuts
+- Integrates with existing kitty terminal and theming
+
+### HyprPanel Commands
+```
+fish -c "hyprpanel"                    # Start HyprPanel
+fish -c "hyprpanel q"                  # Quit HyprPanel  
+fish -c "hyprpanel toggleWindow settings-dialog"  # Toggle settings
+fish -c "hyprpanel 'vol +5'"           # Volume up
+fish -c "hyprpanel 'vol -5'"           # Volume down
+```
+
+### HyprPanel Features Enabled
+- **Dashboard**: System stats, shortcuts, directories, power menu
+- **Bar Layout**: Workspaces, window title, media, volume, network, bluetooth, battery, clock
+- **Rose Pine Theme**: Matches existing system theme colors
+- **Notifications**: Top-right positioning with Rose Pine styling
+- **Weather**: Clock menu integration (add API key to config)
+- **Screenshots**: Dashboard shortcut for grimblast
+- **Color Picker**: Dashboard shortcut for hyprpicker
+
+### Customization
+- Edit `nixos-config/home-hyprpanel.nix` for settings changes
+- Weather requires OpenWeatherMap API key in `menus.clock.weather.key`
+- Shortcuts can be modified in `menus.dashboard.shortcuts` section
+- Colors follow Rose Pine palette defined in override section
