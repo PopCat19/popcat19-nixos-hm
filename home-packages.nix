@@ -30,7 +30,7 @@ with pkgs; [
   kdePackages.ark                    # Archive manager (used in MIME associations)
 
   # ─── DEVELOPMENT TOOLS ───
-  java                               # Java runtime environment (moved from system-level)
+  jdk                                # Java Development Kit (moved from system-level)
   nodejs                             # Node.js runtime (moved from system-level)
   git-lfs                            # Git Large File Storage
   jq                                 # JSON processor (used in screenshot scripts)
