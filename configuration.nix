@@ -266,14 +266,25 @@
     noto-fonts-emoji
     noto-fonts-extra
 
-    # M+ fonts for Japanese
-    mplus-outline-fonts.githubRelease
+    # Google Fonts including M PLUS Rounded 1c
+    google-fonts
 
-    # Other essential fonts
+    # Essential fonts
     font-awesome
     nerd-fonts.jetbrains-mono
   ];
 
-  # Enable fontconfig for better font rendering
-  fonts.fontconfig.enable = true;
+  # **FONTS FONTCONFIG**
+  # Configure default system fonts with Rounded Mplus 1c as primary
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts = {
+      serif = [ "Rounded Mplus 1c" "Noto Serif" ];
+      sansSerif = [ "Rounded Mplus 1c" "Noto Sans" ];
+      monospace = [ "JetBrainsMono Nerd Font" "Noto Sans Mono" ];
+      emoji = [ "Noto Color Emoji" ];
+    };
+  };
+
+
 }

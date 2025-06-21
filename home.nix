@@ -74,7 +74,7 @@
       package = pkgs.rose-pine-gtk-theme-full;
     };
     font = {
-      name = "CaskaydiaCove Nerd Font";
+      name = "Rounded Mplus 1c Medium";
       size = 11;
     };
 
@@ -219,8 +219,8 @@
       style=kvantum
 
       [Fonts]
-      fixed="CaskaydiaCove Nerd Font,11,-1,5,50,0,0,0,0,0"
-      general="CaskaydiaCove Nerd Font,11,-1,5,50,0,0,0,0,0"
+      fixed="JetBrainsMono Nerd Font,11,-1,5,50,0,0,0,0,0"
+      general="Rounded Mplus 1c Medium,11,-1,5,50,0,0,0,0,0"
 
       [Interface]
       activate_item_on_single_click=1
@@ -246,9 +246,9 @@
       cursor-size = 24;
       gtk-theme = "Rose-Pine-Main-BL";
       icon-theme = "Rose-Pine";
-      font-name = "CaskaydiaCove Nerd Font 11";
-      document-font-name = "CaskaydiaCove Nerd Font 11";
-      monospace-font-name = "CaskaydiaCove Nerd Font Mono 11";
+      font-name = "Rounded Mplus 1c Medium 11";
+      document-font-name = "Rounded Mplus 1c Medium 11";
+      monospace-font-name = "JetBrainsMono Nerd Font 11";
       color-scheme = "prefer-dark";
     };
     "org/gnome/desktop/wm/preferences" = {
@@ -298,7 +298,7 @@
   programs.kitty = {
     enable = true;
     font = {
-      name = "CaskaydiaCove Nerd Font Mono";
+      name = "JetBrainsMono Nerd Font";
       size = 11;
     };
     settings = {
@@ -385,7 +385,7 @@
     enable = true;
     settings = {
       main = {
-        font = "JetBrainsMono Nerd Font:size=14";
+        font = "Rounded Mplus 1c Medium:size=14";
         layer = "overlay"; # Display as an overlay.
         exit-on-click = true; # Close on click outside.
         prompt = "  "; # Unicode search icon with space.
@@ -684,11 +684,11 @@
     # Use mouse wheel to go to prev or next page
     WheelForPaging=True
     # Font
-    Font="CaskaydiaCove Nerd Font 11"
+    Font="Rounded Mplus 1c Medium 11"
     # Menu Font
-    MenuFont="CaskaydiaCove Nerd Font 11"
+    MenuFont="Rounded Mplus 1c Medium 11"
     # Tray Font
-    TrayFont="CaskaydiaCove Nerd Font Bold 11"
+    TrayFont="Rounded Mplus 1c Bold 11"
     # Tray Label Outline Color
     TrayOutlineColor=#000000
     # Tray Label Text Color
