@@ -17,6 +17,12 @@
     QT_QPA_PLATFORMTHEME = "qt6ct"; # Qt6 platform theme.
     QT_STYLE_OVERRIDE = "kvantum"; # Qt style override.
     QT_QPA_PLATFORM = "wayland;xcb"; # Qt Wayland and XCB platform.
+
+    # GTK theming environment variables
+    GTK_THEME = "rose-pine-gtk-theme"; # Force GTK theme
+    GDK_BACKEND = "wayland,x11,*"; # GTK backend preference
+    XCURSOR_THEME = "rose-pine-hyprcursor"; # X11 cursor theme
+    XCURSOR_SIZE = "24"; # Cursor size
   };
 
   # Add local bin to PATH
@@ -70,6 +76,22 @@
     font = {
       name = "CaskaydiaCove Nerd Font";
       size = 11;
+    };
+
+    # GTK3 specific settings
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+      gtk-decoration-layout = "appmenu:minimize,maximize,close";
+      gtk-enable-animations = true;
+      gtk-primary-button-warps-slider = false;
+    };
+
+    # GTK4 specific settings
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+      gtk-decoration-layout = "appmenu:minimize,maximize,close";
+      gtk-enable-animations = true;
+      gtk-primary-button-warps-slider = false;
     };
   };
 
@@ -220,6 +242,15 @@
     "org/gnome/desktop/interface" = {
       cursor-theme = "rose-pine-hyprcursor";
       cursor-size = 24;
+      gtk-theme = "rose-pine-gtk-theme";
+      icon-theme = "Papirus-Dark";
+      font-name = "CaskaydiaCove Nerd Font 11";
+      document-font-name = "CaskaydiaCove Nerd Font 11";
+      monospace-font-name = "CaskaydiaCove Nerd Font Mono 11";
+      color-scheme = "prefer-dark";
+    };
+    "org/gnome/desktop/wm/preferences" = {
+      theme = "rose-pine-gtk-theme";
     };
   };
 
@@ -641,6 +672,9 @@
   # **INSTALLED PACKAGES**
   # List of packages installed for the user via Home Manager.
   home.packages = with pkgs; [
+    # GTK theme management
+    nwg-look
+    dconf-editor
     kitty
     fuzzel
     jq
@@ -730,6 +764,47 @@
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
     inputs.zen-browser.packages."${system}".default
   ];
+
+  # Additional GTK theme files for better consistency
+  home.file.".config/gtk-3.0/bookmarks".text = ''
+    file:///home/${config.home.username}/Documents
+    file:///home/${config.home.username}/Downloads
+    file:///home/${config.home.username}/Pictures
+    file:///home/${config.home.username}/Videos
+    file:///home/${config.home.username}/Music
+  '';
+
+  # Rose Pine specific GTK CSS overrides (only for GTK3 to avoid conflicts)
+  home.file.".config/gtk-3.0/gtk.css".text = ''
+    /* Rose Pine GTK theme customizations */
+    @define-color rose_pine_base #191724;
+    @define-color rose_pine_surface #1f1d2e;
+    @define-color rose_pine_overlay #26233a;
+    @define-color rose_pine_muted #6e6a86;
+    @define-color rose_pine_subtle #908caa;
+    @define-color rose_pine_text #e0def4;
+    @define-color rose_pine_love #eb6f92;
+    @define-color rose_pine_gold #f6c177;
+    @define-color rose_pine_rose #ebbcba;
+    @define-color rose_pine_pine #31748f;
+    @define-color rose_pine_foam #9ccfd8;
+    @define-color rose_pine_iris #c4a7e7;
+
+    /* Ensure consistent theming for applications */
+    * {
+      outline-color: @rose_pine_iris;
+    }
+
+    .nautilus-window notebook > header.top tabs tab {
+      background: @rose_pine_surface;
+      color: @rose_pine_text;
+    }
+
+    .nautilus-window notebook > header.top tabs tab:checked {
+      background: @rose_pine_overlay;
+      color: @rose_pine_rose;
+    }
+  '';
 
   # Micro text editor configuration
   programs.micro = {
