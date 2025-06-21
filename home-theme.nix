@@ -395,7 +395,62 @@
   # ═══════════════════════════════════════════════════════════════════════════════
   # These packages provide theming components, tools, and dependencies
 
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # 🔤 FONT CONFIGURATION SYSTEM
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # Centralized font management for consistent typography across all applications.
+  # This section includes font packages, application-specific font settings, and
+  # system-wide font configuration through fontconfig.
+  #
+  # FONT HIERARCHY:
+  # 1. System UI: Rounded Mplus 1c Medium (GTK/Qt applications)
+  # 2. Monospace: JetBrainsMono Nerd Font (terminals, code editors)
+  # 3. Fallbacks: Noto fonts for comprehensive Unicode support
+
+  # ─── APPLICATION FONT CONFIGURATIONS ───
+
+  # Kitty terminal font configuration
+  programs.kitty.font = {
+    name = "JetBrainsMono Nerd Font";
+    size = 11;
+  };
+
+  # Fuzzel application launcher font configuration
+  programs.fuzzel.settings.main.font = "Rounded Mplus 1c Medium:size=14";
+
+  # ─── SYSTEM FONT CONFIGURATION ───
+
+  # Fontconfig configuration for system-wide font fallbacks and aliases
+  home.file.".config/fontconfig/fonts.conf".text = ''
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+    <fontconfig>
+      <alias>
+        <family>sans-serif</family>
+        <prefer>
+          <family>Rounded Mplus 1c Medium</family>
+        </prefer>
+      </alias>
+      <alias>
+        <family>Rounded Mplus 1c Medium</family>
+        <default>
+          <family>sans-serif</family>
+        </default>
+      </alias>
+    </fontconfig>
+  '';
+
   home.packages = with pkgs; [
+    # ─── FONT PACKAGES ───
+    # Core fonts for the theme system - these provide comprehensive typography
+    # support across all applications and languages
+    nerd-fonts.jetbrains-mono          # Programming font with icons (used in Kitty, terminals)
+    nerd-fonts.caskaydia-cove          # Alternative programming font option
+    nerd-fonts.fantasque-sans-mono     # Another programming font option
+    noto-fonts                         # Comprehensive Unicode support
+    noto-fonts-cjk-sans               # CJK (Chinese/Japanese/Korean) support
+    noto-fonts-emoji                   # Emoji support
+    font-awesome                       # Icon font for UI elements
     # ─── THEME MANAGEMENT TOOLS ───
     nwg-look                           # GTK theme configuration GUI
     dconf-editor                       # dconf settings editor

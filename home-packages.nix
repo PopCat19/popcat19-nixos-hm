@@ -10,15 +10,6 @@ with pkgs; [
   fuzzel                             # Application launcher (configured above)
   micro                              # Text editor (configured below)
 
-  # ─── FONTS ───
-  nerd-fonts.jetbrains-mono          # Programming font with icons (used in Kitty)
-  nerd-fonts.caskaydia-cove          # Alternative programming font
-  nerd-fonts.fantasque-sans-mono     # Another programming font option
-  noto-fonts                         # Comprehensive Unicode support
-  noto-fonts-cjk-sans               # CJK (Chinese/Japanese/Korean) support
-  noto-fonts-emoji                   # Emoji support
-  font-awesome                       # Icon font
-
   # ─── FILE MANAGERS ───
   kdePackages.dolphin                # Primary file manager (KDE, themed via kdeglobals)
   nautilus                           # GNOME file manager (backup)

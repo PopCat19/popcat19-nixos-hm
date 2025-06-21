@@ -124,10 +124,6 @@
   # Kitty Terminal Configuration with Rose Pine theme
   programs.kitty = {
     enable = true;
-    font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 11;
-    };
     settings = {
       # Shell
       shell = "fish";
@@ -212,7 +208,6 @@
     enable = true;
     settings = {
       main = {
-        font = "Rounded Mplus 1c Medium:size=14";
         layer = "overlay"; # Display as an overlay.
         exit-on-click = true; # Close on click outside.
         prompt = "  "; # Unicode search icon with space.
@@ -545,27 +540,7 @@
   home.file.".local/share/fcitx5/themes/rose-pine-dawn".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-dawn";
   home.file.".local/share/fcitx5/themes/rose-pine-moon".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-moon";
 
-  # Fontconfig alias to ensure GTK finds the Medium weight
-  home.file.".config/fontconfig/fonts.conf".text = ''
-    <?xml version="1.0"?>
-    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-    <fontconfig>
-      <alias>
-        <family>sans-serif</family>
-        <prefer>
-          <family>Rounded Mplus 1c Medium</family>
-        </prefer>
-      </alias>
-      <alias>
-        <family>Rounded Mplus 1c Medium</family>
-        <default>
-          <family>sans-serif</family>
-        </default>
-      </alias>
-    </fontconfig>
-  '';
-
-  # **FONTS CONFIGURATION**
+  # **CONFIGURATION FILE MANAGEMENT**
   # Manages symlinks for configuration files.
   home.file.".config/hypr" = {
     source = ./hypr_config;
