@@ -142,6 +142,8 @@
 
   systemd.tmpfiles.rules = [
     "d /home/popcat19 0755 popcat19 users -" # Ensure user home directory exists with correct permissions.
+    "d /home/popcat19/Videos 0755 popcat19 users -" # Create Videos directory
+    "d /home/popcat19/Music 0755 popcat19 users -" # Create Music directory
   ];
 
   # **SYSTEM SERVICES**
@@ -230,6 +232,14 @@
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";           # Hint for Electron apps to use Wayland.
     WLR_NO_HARDWARE_CURSORS = "1";  # Cursor compatibility for Wayland compositors.
+    # Thumbnail generation support
+    GST_PLUGIN_SYSTEM_PATH_1_0 = "/run/current-system/sw/lib/gstreamer-1.0";
+    # GTK thumbnail support
+    GDK_PIXBUF_MODULE_FILE = "/run/current-system/sw/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache";
+    # Default applications
+    TERMINAL = "kitty";
+    EDITOR = "micro";
+    VISUAL = "micro";
   };
 
   # **SYSTEM PACKAGES**
@@ -254,6 +264,18 @@
     grim
     slurp
     wl-clipboard
+    # File manager packages
+    kdePackages.dolphin
+    nemo
+    # Thumbnail generation
+    ffmpegthumbnailer
+    poppler_utils
+    libgsf
+    webp-pixbuf-loader
+    # KDE thumbnail generators
+    kdePackages.kdegraphics-thumbnailers
+    kdePackages.kimageformats
+    kdePackages.kio-extras
   ];
 
   # **FONTS CONFIGURATION**

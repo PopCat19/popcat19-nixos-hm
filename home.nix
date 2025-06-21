@@ -35,17 +35,66 @@
   # [Default Applications]
   # x-scheme-handler/http=app.zen_browser.zen.desktop
   # x-scheme-handler/https=app.zen_browser.zen.desktop
-  # text/html=app.zen_browser.zen.desktop
-  # application/xhtml+xml=app.zen_browser.zen.desktop
-  # xdg.mimeApps = {
-  #   enable = true;
-  #   defaultApplications = {
-  #     "x-scheme-handler/http" = ["app.zen_browser.zen.desktop"];
-  #     "x-scheme-handler/https" = ["app.zen_browser.zen.desktop"];
-  #     "text/html" = ["app.zen_browser.zen.desktop"];
-  #     "application/xhtml+xml" = ["app.zen_browser.zen.desktop"];
-  #   };
-  # };
+  # XDG MIME Applications Configuration
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      # Web browsers
+      "x-scheme-handler/http" = ["zen.desktop"];
+      "x-scheme-handler/https" = ["zen.desktop"];
+      "text/html" = ["zen.desktop"];
+      "application/xhtml+xml" = ["zen.desktop"];
+
+      # Terminal
+      "application/x-terminal-emulator" = ["kitty.desktop"];
+      "x-scheme-handler/terminal" = ["kitty.desktop"];
+
+      # Text files
+      "text/plain" = ["micro.desktop"];
+      "text/x-readme" = ["micro.desktop"];
+      "text/x-log" = ["micro.desktop"];
+      "application/json" = ["micro.desktop"];
+      "text/x-python" = ["micro.desktop"];
+      "text/x-shellscript" = ["micro.desktop"];
+      "text/x-script" = ["micro.desktop"];
+
+      # Images
+      "image/jpeg" = ["org.kde.gwenview.desktop"];
+      "image/png" = ["org.kde.gwenview.desktop"];
+      "image/gif" = ["org.kde.gwenview.desktop"];
+      "image/webp" = ["org.kde.gwenview.desktop"];
+      "image/svg+xml" = ["org.kde.gwenview.desktop"];
+
+      # Videos
+      "video/mp4" = ["mpv.desktop"];
+      "video/mkv" = ["mpv.desktop"];
+      "video/avi" = ["mpv.desktop"];
+      "video/webm" = ["mpv.desktop"];
+      "video/x-matroska" = ["mpv.desktop"];
+
+      # Audio
+      "audio/mpeg" = ["mpv.desktop"];
+      "audio/ogg" = ["mpv.desktop"];
+      "audio/wav" = ["mpv.desktop"];
+      "audio/flac" = ["mpv.desktop"];
+
+      # Archives
+      "application/zip" = ["org.kde.ark.desktop"];
+      "application/x-tar" = ["org.kde.ark.desktop"];
+      "application/x-compressed-tar" = ["org.kde.ark.desktop"];
+      "application/x-7z-compressed" = ["org.kde.ark.desktop"];
+
+      # File manager
+      "inode/directory" = ["org.kde.dolphin.desktop"];
+
+      # PDF
+      "application/pdf" = ["org.kde.okular.desktop"];
+    };
+    associations.added = {
+      "application/x-terminal-emulator" = ["kitty.desktop"];
+      "x-scheme-handler/terminal" = ["kitty.desktop"];
+    };
+  };
 
   # **THEMING CONFIGURATION**
   # Minimal theming setup - allows manual configuration via nwg-look and kvantum manager.
@@ -215,6 +264,35 @@
 
       [Icons]
       Theme=Papirus-Dark
+
+      [General]
+      TerminalApplication=kitty
+      TerminalService=kitty.desktop
+
+      [KFileDialog Settings]
+      Allow Expansion=false
+      Automatically select filename extension=true
+      Breadcrumb Navigation=true
+      Decoration position=2
+      LocationCombo Completionmode=5
+      PathCombo Completionmode=5
+      Show Bookmarks=false
+      Show Full Path=false
+      Show Inline Previews=true
+      Show Preview=false
+      Show Speedbar=true
+      Show hidden files=false
+      Sort by=Name
+      Sort directories first=true
+      Sort hidden files last=false
+      Sort reversed=false
+      Speedbar Width=138
+      View Style=DetailTree
+
+      [PreviewSettings]
+      Plugins=appimagethumbnail,audiothumbnail,blenderthumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,fontthumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,mobithumbnail,opendocumentthumbnail,gsthumbnail,rawthumbnail,svgthumbnail,textthumbnail,ffmpegthumbs
+      MaximumSize=10485760
+      EnableRemoteFolderThumbnail=false
     '';
     force = true;
   };
@@ -250,7 +328,7 @@
     '';
   };
 
-  # Minimal dconf settings - only for cursor theme consistency in Hyprland
+  # Comprehensive dconf settings for theme consistency and thumbnails
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       cursor-theme = "rose-pine-hyprcursor";
@@ -264,6 +342,23 @@
     };
     "org/gnome/desktop/wm/preferences" = {
       theme = "Rose-Pine-Main-BL";
+    };
+    "org/gnome/desktop/thumbnailers" = {
+      disable-all = false;
+    };
+    "org/gnome/nautilus/preferences" = {
+      show-image-thumbnails = "always";
+      thumbnail-limit = 10;
+      show-directory-item-counts = "always";
+    };
+    "org/nemo/preferences" = {
+      show-image-thumbnails = true;
+      thumbnail-limit = 10485760;
+      show-thumbnails = true;
+    };
+    "org/gnome/desktop/privacy" = {
+      remember-recent-files = true;
+      recent-files-max-age = 30;
     };
   };
 
@@ -385,9 +480,9 @@
       color15 = "#e0def4";
 
       # Theme tweaks
-      background_opacity = "0.95";
+      background_opacity = "0.85";
       dynamic_background_opacity = "yes";
-      background_blur = 1;
+      background_blur = 20;
     };
   };
 
@@ -1313,15 +1408,25 @@
     ollama-rocm
     starship
     eza
-    libsForQt5.qtstyleplugin-kvantum
     libsForQt5.qt5ct
     qt6ct
-    qt6Packages.qtstyleplugin-kvantum
     rose-pine-kvantum
     rose-pine-gtk-theme-full
     themechanger
     nwg-look
     dconf-editor
+    # Essential applications
+    kdePackages.okular
+    micro
+    # Thumbnail generation
+    ffmpegthumbnailer
+    poppler_utils
+    libgsf
+    webp-pixbuf-loader
+    # KDE thumbnail generators
+    kdePackages.kdegraphics-thumbnailers
+    kdePackages.kimageformats
+    kdePackages.kio-extras
     # Additional theming packages for manual configuration
     catppuccin-gtk
     papirus-icon-theme
@@ -1339,11 +1444,14 @@
 
   # Additional GTK theme files for better consistency
   home.file.".config/gtk-3.0/bookmarks".text = ''
-    file:///home/${config.home.username}/Documents
-    file:///home/${config.home.username}/Downloads
-    file:///home/${config.home.username}/Pictures
-    file:///home/${config.home.username}/Videos
-    file:///home/${config.home.username}/Music
+    file:///home/${config.home.username}/Documents Documents
+    file:///home/${config.home.username}/Downloads Downloads
+    file:///home/${config.home.username}/Pictures Pictures
+    file:///home/${config.home.username}/Videos Videos
+    file:///home/${config.home.username}/Music Music
+    file:///home/${config.home.username}/syncthing-shared syncthing-shared
+    file:///home/${config.home.username}/Desktop Desktop
+    trash:/// Trash
   '';
 
   # Dolphin file manager bookmarks
@@ -1351,6 +1459,9 @@
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE xbel PUBLIC "+//IDN python.org//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://www.python.org/topics/xml/dtds/xbel-1.0.dtd">
     <xbel version="1.0">
+     <bookmark href="file:///home/${config.home.username}">
+      <title>Home</title>
+     </bookmark>
      <bookmark href="file:///home/${config.home.username}/Documents">
       <title>Documents</title>
      </bookmark>
@@ -1366,10 +1477,226 @@
      <bookmark href="file:///home/${config.home.username}/Music">
       <title>Music</title>
      </bookmark>
+     <bookmark href="file:///home/${config.home.username}/syncthing-shared">
+      <title>syncthing-shared</title>
+     </bookmark>
+     <bookmark href="file:///home/${config.home.username}/Desktop">
+      <title>Desktop</title>
+     </bookmark>
+     <bookmark href="trash:/">
+      <title>Trash</title>
+     </bookmark>
     </xbel>
   '';
 
 
+  # Dolphin configuration with enhanced thumbnails and better opacity
+  home.file.".config/dolphinrc".text = ''
+    [General]
+    BrowseThroughArchives=true
+    EditableUrl=false
+    GlobalViewProps=false
+    HomeUrl=file:///home/${config.home.username}
+    ModifiedStartupSettings=true
+    OpenExternallyCalledFolderInNewTab=false
+    RememberOpenedTabs=true
+    ShowFullPath=false
+    ShowFullPathInTitlebar=false
+    ShowSpaceInfo=false
+    ShowZoomSlider=true
+    SortingChoice=CaseSensitiveSorting
+    SplitView=false
+    UseTabForSwitchingSplitView=false
+    Version=202
+    ViewPropsTimestamp=2024,1,1,0,0,0
+
+    [KFileDialog Settings]
+    Places Icons Auto-resize=false
+    Places Icons Static Size=22
+
+    [MainWindow]
+    MenuBar=Disabled
+    ToolBarsMovable=Disabled
+
+    [PlacesPanel]
+    IconSize=22
+
+    [PreviewSettings]
+    Plugins=appimagethumbnail,audiothumbnail,blenderthumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,fontthumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,mobithumbnail,opendocumentthumbnail,gsthumbnail,rawthumbnail,svgthumbnail,textthumbnail,ffmpegthumbs
+    MaximumSize=10485760
+    EnableRemoteFolderThumbnail=false
+    MaximumRemoteSize=0
+
+    [DesktopIcons]
+    Size=48
+
+    [CompactMode]
+    PreviewSize=32
+
+    [DetailsMode]
+    PreviewSize=32
+
+    [IconsMode]
+    PreviewSize=128
+  '';
+
+  # KDE thumbnail configuration for better thumbnail support
+  home.file.".config/kservices5/ServiceMenus/konsole.desktop".text = ''
+    [Desktop Entry]
+    Type=Service
+    ServiceTypes=KonqPopupMenu/Plugin
+    MimeType=inode/directory;
+    Actions=konsole_here;
+
+    [Desktop Action konsole_here]
+    Name=Open Terminal Here
+    Icon=utilities-terminal
+    Exec=kitty --working-directory %f
+  '';
+
+  # Create directory for syncthing-shared
+  home.activation.createSyncthingDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p $HOME/syncthing-shared
+  '';
+
+  # Additional desktop files for better integration
+  home.file.".local/share/applications/kitty.desktop".text = ''
+    [Desktop Entry]
+    Version=1.0
+    Type=Application
+    Name=Kitty
+    GenericName=Terminal
+    Comment=A modern, hackable, featureful, OpenGL-based terminal emulator
+    TryExec=kitty
+    Exec=kitty
+    Icon=kitty
+    Categories=System;TerminalEmulator;
+    StartupNotify=true
+    MimeType=application/x-terminal-emulator;x-scheme-handler/terminal;
+  '';
+
+  home.file.".local/share/applications/micro.desktop".text = ''
+    [Desktop Entry]
+    Version=1.0
+    Type=Application
+    Name=Micro
+    GenericName=Text Editor
+    Comment=A modern and intuitive terminal-based text editor
+    TryExec=micro
+    Exec=micro %F
+    Icon=text-editor
+    Categories=Utility;TextEditor;Development;
+    StartupNotify=false
+    MimeType=text/plain;text/x-readme;text/x-log;application/json;text/x-python;text/x-shellscript;text/x-script;
+    Terminal=true
+  '';
+
+  # Nemo file manager configuration with Rose Pine theme and kitty terminal
+  home.file.".config/nemo/nemo.conf".text = ''
+    [preferences]
+    default-folder-viewer=list-view
+    show-hidden-files=false
+    show-location-entry=false
+    start-with-dual-pane=false
+    inherit-folder-viewer=true
+    ignore-view-metadata=false
+    default-sort-order=name
+    default-sort-type=ascending
+    size-prefixes=base-10
+    quick-renames-with-pause-in-between=true
+    show-compact-view-icon-toolbar=false
+    show-compact-view-icon-toolbar-icons-small=false
+    show-compact-view-text-beside-icons=false
+    show-full-path-titles=true
+    show-new-folder-icon-toolbar=true
+    show-open-in-terminal-toolbar=true
+    show-reload-icon-toolbar=true
+    show-search-icon-toolbar=true
+    show-edit-icon-toolbar=false
+    show-home-icon-toolbar=true
+    show-computer-icon-toolbar=false
+    show-up-icon-toolbar=true
+    terminal-command=kitty
+    close-device-view-on-device-eject=true
+    thumbnail-limit=10485760
+    executable-text-activation=ask
+    show-image-thumbnails=true
+    show-thumbnails=true
+
+    [window-state]
+    geometry=800x600+0+0
+    maximized=false
+    sidebar-width=200
+    start-with-sidebar=true
+    start-with-status-bar=true
+    start-with-toolbar=true
+    sidebar-bookmark-breakpoint=5
+
+    [list-view]
+    default-zoom-level=standard
+    default-visible-columns=name,size,type,date_modified
+    default-column-order=name,size,type,date_modified
+
+    [icon-view]
+    default-zoom-level=standard
+
+    [compact-view]
+    default-zoom-level=standard
+  '';
+
+  # Nemo actions for better context menu integration
+  home.file.".local/share/nemo/actions/open-in-kitty.nemo_action".text = ''
+    [Nemo Action]
+    Name=Open in Terminal
+    Comment=Open a terminal in this location
+    Exec=kitty --working-directory %f
+    Icon-Name=utilities-terminal
+    Selection=None
+    Extensions=dir;
+  '';
+
+  home.file.".local/share/nemo/actions/edit-as-root.nemo_action".text = ''
+    [Nemo Action]
+    Name=Edit as Root
+    Comment=Edit this file with root privileges
+    Exec=pkexec micro %F
+    Icon-Name=accessories-text-editor
+    Selection=S
+    Extensions=any;
+  '';
+
+  # Thumbnail cache update script
+  home.file.".local/bin/update-thumbnails".text = ''
+    #!/usr/bin/env bash
+
+    # Update GDK pixbuf loaders
+    gdk-pixbuf-query-loaders --update-cache
+
+    # Clear thumbnail cache
+    rm -rf ~/.cache/thumbnails/*
+
+    # Regenerate thumbnails for common directories
+    find ~/Pictures ~/Downloads ~/Videos ~/Music -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.gif" -o -name "*.webp" -o -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec touch {} \; 2>/dev/null || true
+
+    echo "Thumbnail cache updated"
+  '';
+
+  home.file.".local/bin/update-thumbnails".executable = true;
+
+  # KDE Service Menu for terminal integration
+  home.file.".local/share/kio/servicemenus/open-terminal-here.desktop".text = ''
+    [Desktop Entry]
+    Type=Service
+    ServiceTypes=KonqPopupMenu/Plugin
+    MimeType=inode/directory;
+    Actions=openTerminalHere;
+
+    [Desktop Action openTerminalHere]
+    Name=Open Terminal Here
+    Name[en_US]=Open Terminal Here
+    Icon=utilities-terminal
+    Exec=kitty --working-directory %f
+  '';
 
   # Micro text editor configuration
   programs.micro = {
@@ -1379,11 +1706,11 @@
       mkparents = true;
       softwrap = true;
       wordwrap = true;
-      tabsize = 2;
+      tabsize = 4;
       autoclose = true;
       autoindent = true;
       autosave = 5;
-      clipboard = "external";
+      clipboard = "terminal";
       cursorline = true;
       diffgutter = true;
       ignorecase = true;
@@ -1393,5 +1720,30 @@
       syntax = true;
       tabstospaces = true;
     };
+  };
+
+  # Systemd user service for thumbnail cache updates
+  systemd.user.services.thumbnail-update = {
+    Unit = {
+      Description = "Update thumbnail cache on login";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${config.home.homeDirectory}/.local/bin/update-thumbnails";
+      RemainAfterExit = true;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
+  # Additional environment variables for better integration
+  home.sessionVariables = {
+    TERMINAL = "kitty";
+    FILE_MANAGER = "dolphin";
+    # Ensure thumbnails work properly
+    WEBKIT_DISABLE_COMPOSITING_MODE = "1";
   };
 }
