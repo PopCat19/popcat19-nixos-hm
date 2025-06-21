@@ -19,6 +19,9 @@
     QT_QPA_PLATFORM = "wayland;xcb"; # Qt Wayland and XCB platform.
   };
 
+  # Add local bin to PATH
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
   # **XDG MIME APPLICATIONS**
   # Disabled to allow manual configuration of default applications.
   # You can manually edit ~/.config/mimeapps.list to set Zen browser as default.
@@ -116,27 +119,150 @@
 
   # **PROGRAM CONFIGURATIONS**
   # Configures specific user programs.
-  # Fuzzel Launcher Configuration.
+
+  # Kitty Terminal Configuration with Rose Pine theme
+  programs.kitty = {
+    enable = true;
+    font = {
+      name = "JetBrainsMono Nerd Font";
+      size = 12;
+    };
+    settings = {
+      # Cursor
+      cursor_shape = "block";
+      cursor_blink_interval = 0.5;
+      cursor_stop_blinking_after = 15.0;
+
+      # Scrollback
+      scrollback_lines = 10000;
+
+      # Mouse
+      mouse_hide_wait = 3.0;
+      url_color = "#c4a7e7";
+      url_style = "curly";
+      detect_urls = "yes";
+
+      # Performance
+      repaint_delay = 10;
+      input_delay = 3;
+      sync_to_monitor = "yes";
+
+      # Audio
+      enable_audio_bell = "no";
+      visual_bell_duration = 0.0;
+
+      # Window
+      remember_window_size = "yes";
+      window_border_width = 0.5;
+      window_margin_width = 0;
+      window_padding_width = 4;
+      active_border_color = "#ebbcba";
+      inactive_border_color = "#26233a";
+
+      # Tab bar
+      tab_bar_edge = "bottom";
+      tab_bar_style = "powerline";
+      tab_powerline_style = "angled";
+      active_tab_foreground = "#e0def4";
+      active_tab_background = "#26233a";
+      inactive_tab_foreground = "#908caa";
+      inactive_tab_background = "#191724";
+
+      # Rose Pine colors
+      foreground = "#e0def4";
+      background = "#191724";
+      selection_foreground = "#e0def4";
+      selection_background = "#403d52";
+
+      # Terminal colors
+      color0 = "#26233a";
+      color1 = "#eb6f92";
+      color2 = "#9ccfd8";
+      color3 = "#f6c177";
+      color4 = "#31748f";
+      color5 = "#c4a7e7";
+      color6 = "#ebbcba";
+      color7 = "#e0def4";
+      color8 = "#6e6a86";
+      color9 = "#eb6f92";
+      color10 = "#9ccfd8";
+      color11 = "#f6c177";
+      color12 = "#31748f";
+      color13 = "#c4a7e7";
+      color14 = "#ebbcba";
+      color15 = "#e0def4";
+
+      # Theme tweaks
+      background_opacity = "0.95";
+      dynamic_background_opacity = "yes";
+      background_blur = 1;
+    };
+  };
+
+  # Fuzzel Launcher Configuration - Enhanced with Rose Pine theme and QoL features.
   programs.fuzzel = {
     enable = true;
     settings = {
       main = {
-        font = "Noto Sans:size=16";
+        font = "JetBrainsMono Nerd Font:size=14";
         layer = "overlay"; # Display as an overlay.
         exit-on-click = true; # Close on click outside.
-        prompt = " "; # Empty prompt.
+        prompt = "  "; # Unicode search icon with space.
+        placeholder = "Search applications...";
+        width = 50; # Width in characters.
+        lines = 12; # Number of lines to display.
+        horizontal-pad = 20; # Horizontal padding.
+        vertical-pad = 12; # Vertical padding.
+        inner-pad = 8; # Padding between border and content.
+        image-size-ratio = 0.8; # Size ratio for application icons.
+        show-actions = true; # Show application actions.
+        terminal = "kitty"; # Terminal for launching terminal applications.
+        launch-prefix = ""; # Prefix for launching applications.
+        filter-desktop = true; # Filter desktop files.
+        icon-theme = "Papirus-Dark"; # Icon theme to use.
+        icons-enabled = true; # Enable application icons.
+        fields = "name,generic,comment,categories,filename,keywords"; # Search fields.
+        password-character = "*"; # Character for password fields.
+        tab-cycles = true; # Tab cycles through results.
+        match-mode = "fzf"; # Use fuzzy matching algorithm.
+        sort-result = true; # Sort search results.
+        list-executables-in-path = false; # Don't list PATH executables.
       };
       colors = {
-        background = "191724ee";
-        text = "e0def4ff";
-        match = "eb6f92ff";
-        selection = "26233aff";
-        selection-text = "e0def4ff";
-        border = "ebbcbaee";
+        background = "191724f0"; # Rose Pine base with higher opacity.
+        text = "e0def4ff"; # Rose Pine text.
+        match = "eb6f92ff"; # Rose Pine love (red) for matches.
+        selection = "403d52ff"; # Rose Pine highlight medium for selection.
+        selection-text = "e0def4ff"; # Rose Pine text for selected.
+        selection-match = "f6c177ff"; # Rose Pine gold for selected matches.
+        border = "ebbcbaff"; # Rose Pine rose for border.
+        placeholder = "908caaff"; # Rose Pine subtle for placeholder.
       };
       border = {
-        radius = 8;
-        width = 2;
+        radius = 12; # Rounded corners.
+        width = 2; # Border width.
+      };
+      key-bindings = {
+        cancel = "Escape Control+c Control+g";
+        execute = "Return KP_Enter Control+m";
+        execute-or-next = "Tab";
+        cursor-left = "Left Control+b";
+        cursor-left-word = "Control+Left Mod1+b";
+        cursor-right = "Right Control+f";
+        cursor-right-word = "Control+Right Mod1+f";
+        cursor-home = "Home Control+a";
+        cursor-end = "End Control+e";
+        delete-prev = "BackSpace Control+h";
+        delete-prev-word = "Mod1+BackSpace Control+w";
+        delete-next = "Delete Control+d";
+        delete-next-word = "Mod1+d";
+        delete-line = "Control+k";
+        prev = "Up Control+p";
+        next = "Down Control+n";
+        page-up = "Page_Up Control+v";
+        page-down = "Page_Down Mod1+v";
+        first = "Control+Home";
+        last = "Control+End";
       };
     };
   };
@@ -243,6 +369,17 @@
     recursive = true;
   };
 
+  # Screenshot scripts - temporarily disabled for build
+  # home.file.".local/bin/screenshot-full" = {
+  #   source = ./scripts/screenshot-full.sh;
+  #   executable = true;
+  # };
+
+  # home.file.".local/bin/screenshot-region" = {
+  #   source = ./scripts/screenshot-region.sh;
+  #   executable = true;
+  # };
+
   # **SYSTEM SERVICES**
   # Enables user-level services.
   services = {
@@ -272,6 +409,14 @@
     kitty
     fuzzel
     jq
+    # Screenshot utilities
+    grim
+    slurp
+    wl-clipboard
+    swappy
+    satty
+    libnotify
+    zenity
     hyprpolkitagent
     hyprutils
     hyprshade
