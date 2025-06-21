@@ -76,6 +76,7 @@
       echo ""
       echo "📁 Directory Structure:"
       screenshot_dir="$HOME/Pictures/Screenshots"
+    flameshot
       if [[ -d "$screenshot_dir" ]]; then
           echo "  ✅ Screenshot directory: $screenshot_dir"
           echo "  📊 Screenshot count: $(find "$screenshot_dir" -name "*.png" 2>/dev/null | wc -l)"

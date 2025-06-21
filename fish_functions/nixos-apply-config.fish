@@ -1,7 +1,8 @@
 # ~/nixos-config/fish_functions/nixos-apply-config.fish
 function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollback. Use 'nixos-apply-config help' for manual."
-    # Parse arguments for -m flag
+    # Parse arguments for -m flag and skip options
     set -l commit_message ""
+    set -l skip_git false
     set -l rebuild_args
     set -l i 1
 
@@ -20,6 +21,8 @@ function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollbac
         else if test "$argv[$i]" = "manual" -o "$argv[$i]" = "man" -o "$argv[$i]" = "doc"
             _nixos_apply_manual
             return 0
+        else if test "$argv[$i]" = "--fast" -o "$argv[$i]" = "--skip"
+            set skip_git true
         else
             set rebuild_args $rebuild_args "$argv[$i]"
         end
@@ -32,7 +35,9 @@ function nixos-apply-config -d "🚀 Apply NixOS config with rebuild/git/rollbac
         echo ""
 
         # Handle git operations
-        if test -n "$commit_message"
+        if test $skip_git = true
+            echo "⚡ Git operations skipped (--fast/--skip flag used)."
+        else if test -n "$commit_message"
             echo "💬 Committing changes with message: '$commit_message'"
             nixos-git "$commit_message"
         else
@@ -117,6 +122,7 @@ function _nixos_apply_help -d "Show help for nixos-apply-config"
     echo ""
     echo "🔧 OPTIONS:"
     echo "   -m \"message\"    Commit message for successful rebuild (skips prompt)"
+    echo "   --fast, --skip   Skip git operations entirely (no commit, no prompt)"
     echo ""
     echo "🔄 WORKFLOW:"
     echo "   1. Runs nixos-rebuild switch with your flake"
@@ -127,7 +133,8 @@ function _nixos_apply_help -d "Show help for nixos-apply-config"
     echo "   nixos-apply-config                           # Standard rebuild with prompt"
     echo "   nixos-apply-config -m \"bump flake.lock\"      # Rebuild with commit message"
     echo "   nixos-apply-config -m \"fix config\" --show-trace  # With rebuild options"
-    echo "   nixos-apply-config --fast                    # Skip substitutes, prompt for commit"
+    echo "   nixos-apply-config --fast                    # Skip git operations entirely"
+    echo "   nixos-apply-config --skip --show-trace       # Skip git, show build traces"
     echo ""
     echo "🔗 INTEGRATIONS:"
     echo "   • Uses \$NIXOS_CONFIG_DIR and \$NIXOS_FLAKE_HOSTNAME"
@@ -189,12 +196,16 @@ function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
     echo "   Commit Message Flag:"
     echo "   • -m \"message\"    Specify commit message upfront"
     echo ""
+    echo "   Git Skip Flags:"
+    echo "   • --fast           Skip all git operations (no commit, no prompt)"
+    echo "   • --skip           Skip all git operations (alias for --fast)"
+    echo ""
     echo "   nixos-rebuild Options (all supported):"
     echo "   • --show-trace          Show detailed error traces"
-    echo "   • --fast                Skip building substitutes where possible"
+    echo "   • --verbose             Increase verbosity"
     echo "   • --option <name> <val> Pass option to Nix"
     echo "   • --impure              Allow impure evaluation"
-    echo "   • --verbose             Increase verbosity"
+    echo "   • --keep-going          Continue after build failures"
     echo ""
     echo "💡 USAGE PATTERNS:"
     echo ""
@@ -204,8 +215,12 @@ function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
     echo "   🔍 Debugging:"
     echo "   nixos-apply-config --show-trace           # Detailed errors, prompt for commit"
     echo ""
-    echo "   ⚡ Fast Iteration:"
-    echo "   nixos-apply-config -m \"test change\" --fast  # Skip substitutes, auto-commit"
+    echo "   ⚡ Fast Mode (Skip Git):"
+    echo "   nixos-apply-config --fast                 # Just rebuild, no git operations"
+    echo "   nixos-apply-config --skip --show-trace    # Skip git, show detailed traces"
+    echo ""
+    echo "   🔍 Debug Mode:"
+    echo "   nixos-apply-config -m \"test change\" --show-trace  # Show traces, auto-commit"
     echo ""
     echo "🆘 ERROR SCENARIOS & SOLUTIONS:"
     echo ""
@@ -240,6 +255,13 @@ function _nixos_apply_manual -d "Show detailed manual for nixos-apply-config"
     echo "   nerb        = nixos-edit-rebuild (which calls this)"
     echo "   herb        = home-edit-rebuild (which calls this)"
     echo "   nup         = nixos-upgrade (which calls this)"
+    echo ""
+    echo "⚡ GIT SKIP MODES:"
+    echo "   --fast/--skip flags bypass all git operations for rapid iteration:"
+    echo "   • No commit prompts or operations"
+    echo "   • Useful for testing changes without cluttering git history"
+    echo "   • Still offers rollback capability on build failures"
+    echo "   • Recommended for experimental configurations"
     echo ""
     echo "🔄 MIGRATION FROM GENERATION-BASED ROLLBACK:"
     echo "   Previous behavior: nixos-rebuild switch --rollback"

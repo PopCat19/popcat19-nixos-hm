@@ -452,6 +452,7 @@
     # instead of system-level configuration.nix
     # Core font packages - moving from system-level to user-level for better control
     google-fonts                       # Google Fonts collection (includes Rounded Mplus 1c Medium)
+    btop
     nerd-fonts.jetbrains-mono          # Programming font with icons (used in Kitty, terminals)
     nerd-fonts.caskaydia-cove          # Alternative programming font option
     nerd-fonts.fantasque-sans-mono     # Another programming font option
