@@ -51,7 +51,7 @@
   # - Kvantum themes are available in ~/.config/Kvantum/ directory
   # - Available themes: RosePine, Catppuccin variants via packages
 
-  # GTK Theme Configuration - Minimal setup for cursor only.
+  # GTK Theme Configuration - Rose Pine themed.
   gtk = {
     enable = true;
     cursorTheme = {
@@ -59,20 +59,63 @@
       size = 24;
       package = inputs.rose-pine-hyprcursor.packages.${system}.default;
     };
-    # Theme, icon theme, and font management disabled for manual control
-    # Use nwg-look to configure GTK themes manually
+    theme = {
+      name = "rose-pine-gtk-theme";
+      package = pkgs.rose-pine-gtk-theme;
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    font = {
+      name = "CaskaydiaCove Nerd Font";
+      size = 11;
+    };
   };
 
-  # QT Theme Configuration - Minimal setup for platform theme only.
+  # QT Theme Configuration - Rose Pine themed.
   qt = {
     enable = true;
     platformTheme.name = "qt6ct";
-    # Style management disabled for manual control via qt6ct/kvantum
+    style = {
+      name = "kvantum";
+      package = pkgs.libsForQt5.qtstyleplugin-kvantum;
+    };
   };
 
-  # Make Kvantum themes available but don't force configuration
-  # Use kvantum manager to configure themes manually
+  # Kvantum theme configuration
   home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/RosePine";
+
+  # Qt6ct configuration for Rose Pine
+  home.file.".config/qt6ct/qt6ct.conf" = {
+    text = ''
+      [Appearance]
+      color_scheme_path=/home/popcat19/.config/Kvantum/RosePine/RosePine.kvconfig
+      custom_palette=false
+      icon_theme=Papirus-Dark
+      standard_dialogs=default
+      style=kvantum
+
+      [Fonts]
+      fixed="CaskaydiaCove Nerd Font,11,-1,5,50,0,0,0,0,0"
+      general="CaskaydiaCove Nerd Font,11,-1,5,50,0,0,0,0,0"
+
+      [Interface]
+      activate_item_on_single_click=1
+      buttonbox_layout=0
+      cursor_flash_time=1000
+      dialog_buttons_have_icons=1
+      double_click_interval=400
+      gui_effects=@Invalid()
+      keyboard_scheme=2
+      menus_have_icons=true
+      show_shortcuts_in_context_menus=true
+      stylesheets=@Invalid()
+      toolbutton_style=4
+      underline_shortcut=1
+      wheel_scroll_lines=3
+    '';
+  };
 
   # Minimal dconf settings - only for cursor theme consistency in Hyprland
   dconf.settings = {
@@ -124,8 +167,8 @@
   programs.kitty = {
     enable = true;
     font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 10;
+      name = "CaskaydiaCove Nerd Font Mono";
+      size = 9;
     };
     settings = {
       # Cursor
@@ -155,7 +198,7 @@
       remember_window_size = "yes";
       window_border_width = 0.5;
       window_margin_width = 0;
-      window_padding_width = 4;
+      window_padding_width = 25;
       active_border_color = "#ebbcba";
       inactive_border_color = "#26233a";
 
@@ -382,6 +425,80 @@
   #   recursive = true;
   # };
 
+  # Micro editor colorscheme - temporarily disabled for build
+  # home.file.".config/micro/colorschemes/rose-pine.micro" = {
+  #   source = ./micro_config/rose-pine.micro;
+  # };
+
+  # MangoHud configuration with Rose Pine theme
+  home.file.".config/MangoHud/MangoHud.conf" = {
+    text = ''
+      ################### Declarative MangoHud Configuration ###################
+      legacy_layout=false
+
+      background_alpha=0.0
+      round_corners=0
+      background_color=191724
+      font_file=
+      font_size=14
+      text_color=e0def4
+      position=middle-left
+      toggle_hud=Shift_R+F12
+      hud_compact
+      pci_dev=0:12:00.0
+      table_columns=2
+
+      gpu_text=
+      gpu_stats
+      gpu_load_change
+      gpu_load_value=50,90
+      gpu_load_color=e0def4,f6c177,eb6f92
+      gpu_voltage
+      gpu_core_clock
+      gpu_temp
+      gpu_mem_temp
+      gpu_junction_temp
+      gpu_fan
+      gpu_power
+      gpu_color=9ccfd8
+
+      cpu_text=
+      cpu_stats
+      cpu_load_change
+      cpu_load_value=50,90
+      cpu_load_color=e0def4,f6c177,eb6f92
+      cpu_mhz
+      cpu_temp
+      cpu_color=31748f
+
+      vram
+      vram_color=c4a7e7
+      ram
+      ram_color=c4a7e7
+      battery
+      battery_color=9ccfd8
+
+      fps
+      fps_metrics=avg,0.01
+      frame_timing
+      frametime_color=ebbcba
+      throttling_status_graph
+      fps_limit_method=early
+      toggle_fps_limit=none
+      fps_limit=0
+      fps_color_change
+      fps_color=eb6f92,f6c177,9ccfd8
+      fps_value=60,90
+
+      af=8
+      output_folder=/home/popcat19
+      log_duration=30
+      autostart_log=0
+      log_interval=100
+      toggle_logging=Shift_L+F2
+    '';
+  };
+
   # Screenshot scripts - temporarily disabled for build
   # home.file.".local/bin/screenshot-full" = {
   #   source = ./scripts/screenshot-full.sh;
@@ -423,6 +540,15 @@
     fuzzel
     jq
     fastfetch
+    # Fonts
+    nerd-fonts.caskaydia-cove
+    nerd-fonts.fantasque-sans-mono
+    # Gaming and monitoring
+    mangohud
+    goverlay
+    # Additional theme packages
+    kdePackages.breeze-icons
+    catppuccin-cursors
     # Screenshot utilities
     grim
     slurp
@@ -447,8 +573,6 @@
     audacious-plugins
     obs-studio
     lutris
-    mangohud
-    goverlay
     osu-lazer-bin
     pavucontrol
     playerctl
@@ -499,4 +623,28 @@
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
     inputs.zen-browser.packages."${system}".default
   ];
+
+  # Micro text editor configuration
+  programs.micro = {
+    enable = true;
+    settings = {
+      colorscheme = "catppuccin-mocha";
+      mkparents = true;
+      softwrap = true;
+      wordwrap = true;
+      tabsize = 2;
+      autoclose = true;
+      autoindent = true;
+      autosave = 5;
+      clipboard = "external";
+      cursorline = true;
+      diffgutter = true;
+      ignorecase = true;
+      scrollbar = true;
+      smartpaste = true;
+      statusline = true;
+      syntax = true;
+      tabstospaces = true;
+    };
+  };
 }
