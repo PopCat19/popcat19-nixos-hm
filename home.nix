@@ -85,36 +85,7 @@
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
     };
-    gtk3.extraCss = ''
-      /* Rose Pine GTK3 theme customizations */
-      @define-color rose_pine_base #191724;
-      @define-color rose_pine_surface #1f1d2e;
-      @define-color rose_pine_overlay #26233a;
-      @define-color rose_pine_muted #6e6a86;
-      @define-color rose_pine_subtle #908caa;
-      @define-color rose_pine_text #e0def4;
-      @define-color rose_pine_love #eb6f92;
-      @define-color rose_pine_gold #f6c177;
-      @define-color rose_pine_rose #ebbcba;
-      @define-color rose_pine_pine #31748f;
-      @define-color rose_pine_foam #9ccfd8;
-      @define-color rose_pine_iris #c4a7e7;
 
-      /* Ensure consistent theming for applications */
-      * {
-        outline-color: @rose_pine_iris;
-      }
-
-      .nautilus-window notebook > header.top tabs tab {
-        background: @rose_pine_surface;
-        color: @rose_pine_text;
-      }
-
-      .nautilus-window notebook > header.top tabs tab:checked {
-        background: @rose_pine_overlay;
-        color: @rose_pine_rose;
-      }
-    '';
 
     # GTK4 specific settings
     gtk4.extraConfig = {
@@ -123,42 +94,7 @@
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
     };
-    gtk4.extraCss = ''
-      /* Rose Pine GTK4 theme customizations */
-      @define-color rose_pine_base #191724;
-      @define-color rose_pine_surface #1f1d2e;
-      @define-color rose_pine_overlay #26233a;
-      @define-color rose_pine_muted #6e6a86;
-      @define-color rose_pine_subtle #908caa;
-      @define-color rose_pine_text #e0def4;
-      @define-color rose_pine_love #eb6f92;
-      @define-color rose_pine_gold #f6c177;
-      @define-color rose_pine_rose #ebbcba;
-      @define-color rose_pine_pine #31748f;
-      @define-color rose_pine_foam #9ccfd8;
-      @define-color rose_pine_iris #c4a7e7;
 
-      /* Ensure consistent theming for applications */
-      * {
-        outline-color: @rose_pine_iris;
-      }
-
-      /* GTK4 specific selectors for Nautilus and other apps */
-      tabbar tab {
-        background: @rose_pine_surface;
-        color: @rose_pine_text;
-      }
-
-      tabbar tab:checked {
-        background: @rose_pine_overlay;
-        color: @rose_pine_rose;
-      }
-
-      window.background {
-        background-color: @rose_pine_base;
-        color: @rose_pine_text;
-      }
-    '';
   };
 
   # QT Theme Configuration - Rose Pine themed.
@@ -776,6 +712,11 @@
     # Show preedit in application
     ShowPreeditInApplication=False
   '';
+
+  # Manually link fcitx5 rose pine themes to user directory
+  home.file.".local/share/fcitx5/themes/rose-pine".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine";
+  home.file.".local/share/fcitx5/themes/rose-pine-dawn".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-dawn";
+  home.file.".local/share/fcitx5/themes/rose-pine-moon".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-moon";
 
   # **FONTS CONFIGURATION**
   # Manages symlinks for configuration files.
