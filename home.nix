@@ -76,7 +76,6 @@
   # QT Theme Configuration - Rose Pine themed.
   qt = {
     enable = true;
-    platformTheme.name = "qt6ct";
     style = {
       name = "kvantum";
       package = pkgs.libsForQt5.qtstyleplugin-kvantum;
@@ -84,13 +83,112 @@
   };
 
   # Kvantum theme configuration
-  home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/RosePine";
+  home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/themes/rose-pine-rose";
+
+  # Kvantum configuration with application-specific overrides
+  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
+    [General]
+    theme=rose-pine-rose
+
+    [Applications]
+    dolphin=rose-pine-rose
+    ark=rose-pine-rose
+    gwenview=rose-pine-rose
+    systemsettings=rose-pine-rose
+    kate=rose-pine-rose
+    kwrite=rose-pine-rose
+  '';
+
+  # Critical: kdeglobals configuration for KDE applications like Dolphin
+  home.file.".config/kdeglobals" = {
+    text = ''
+      [ColorScheme]
+      Name=RosePine
+
+      [Colors:Button]
+      BackgroundAlternate=49,46,77
+      BackgroundNormal=49,46,77
+      DecorationFocus=156,207,216
+      DecorationHover=156,207,216
+      ForegroundActive=224,222,244
+      ForegroundInactive=144,140,170
+      ForegroundLink=156,207,216
+      ForegroundNegative=235,111,146
+      ForegroundNeutral=246,193,119
+      ForegroundNormal=224,222,244
+      ForegroundPositive=156,207,216
+      ForegroundVisited=196,167,231
+
+      [Colors:Selection]
+      BackgroundAlternate=156,207,216
+      BackgroundNormal=156,207,216
+      DecorationFocus=156,207,216
+      DecorationHover=156,207,216
+      ForegroundActive=25,23,36
+      ForegroundInactive=25,23,36
+      ForegroundLink=25,23,36
+      ForegroundNegative=25,23,36
+      ForegroundNeutral=25,23,36
+      ForegroundNormal=25,23,36
+      ForegroundPositive=25,23,36
+      ForegroundVisited=25,23,36
+
+      [Colors:View]
+      BackgroundAlternate=31,29,46
+      BackgroundNormal=25,23,36
+      DecorationFocus=156,207,216
+      DecorationHover=156,207,216
+      ForegroundActive=224,222,244
+      ForegroundInactive=144,140,170
+      ForegroundLink=156,207,216
+      ForegroundNegative=235,111,146
+      ForegroundNeutral=246,193,119
+      ForegroundNormal=224,222,244
+      ForegroundPositive=156,207,216
+      ForegroundVisited=196,167,231
+
+      [Colors:Window]
+      BackgroundAlternate=49,46,77
+      BackgroundNormal=25,23,36
+      DecorationFocus=156,207,216
+      DecorationHover=156,207,216
+      ForegroundActive=224,222,244
+      ForegroundInactive=144,140,170
+      ForegroundLink=156,207,216
+      ForegroundNegative=235,111,146
+      ForegroundNeutral=246,193,119
+      ForegroundNormal=224,222,244
+      ForegroundPositive=156,207,216
+      ForegroundVisited=196,167,231
+
+      [General]
+      ColorScheme=RosePine
+      Name=Rose Pine
+      shadeSortColumn=true
+
+      [KDE]
+      contrast=4
+      widgetStyle=kvantum
+
+      [WM]
+      activeBackground=49,46,77
+      activeForeground=224,222,244
+      inactiveBackground=25,23,36
+      inactiveForeground=144,140,170
+      activeBlend=156,207,216
+      inactiveBlend=110,106,134
+
+      [Icons]
+      Theme=Papirus-Dark
+    '';
+    force = true;
+  };
 
   # Qt6ct configuration for Rose Pine
   home.file.".config/qt6ct/qt6ct.conf" = {
     text = ''
       [Appearance]
-      color_scheme_path=/home/popcat19/.config/Kvantum/RosePine/RosePine.kvconfig
+      color_scheme_path=/home/popcat19/.config/Kvantum/RosePine/rose-pine-rose.kvconfig
       custom_palette=false
       icon_theme=Papirus-Dark
       standard_dialogs=default
@@ -572,6 +670,9 @@
     kdePackages.dolphin
     kdePackages.ark
     kdePackages.gwenview
+    # KDE theming packages
+    libsForQt5.qtstyleplugin-kvantum
+    kdePackages.qtstyleplugin-kvantum
     nautilus
     nemo
     mpv
