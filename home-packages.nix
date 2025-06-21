@@ -10,18 +10,6 @@ with pkgs; [
   fuzzel                             # Application launcher (configured above)
   micro                              # Text editor (configured below)
 
-  # ─── THEME MANAGEMENT TOOLS ───
-  nwg-look                           # GTK theme configuration GUI
-  dconf-editor                       # dconf settings editor
-  libsForQt5.qt5ct                   # Qt5 configuration tool
-  qt6ct                              # Qt6 configuration tool (used in environment vars)
-  themechanger                       # Theme switching utility
-
-  # ─── ROSE PINE THEME PACKAGES ───
-  rose-pine-kvantum                  # Kvantum Rose Pine themes
-  rose-pine-gtk-theme-full           # Complete Rose Pine GTK theme (custom package)
-  inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # Rose Pine cursors
-
   # ─── FONTS ───
   nerd-fonts.jetbrains-mono          # Programming font with icons (used in Kitty)
   nerd-fonts.caskaydia-cove          # Alternative programming font
@@ -131,16 +119,7 @@ with pkgs; [
   kdePackages.kimageformats          # Additional image format support
   kdePackages.kio-extras             # KDE I/O plugins
 
-  # ─── ADDITIONAL THEME PACKAGES ───
-  # These provide alternative themes and ensure broad compatibility
-  catppuccin-gtk                     # Alternative theme option
-  catppuccin-cursors                 # Alternative cursor theme
-  papirus-icon-theme                 # Icon theme (used throughout config)
-  adwaita-icon-theme                 # Fallback icon theme
-
   # ─── SYSTEM INTEGRATION ───
-  polkit_gnome                       # GNOME polkit agent (used by systemd service)
-  gsettings-desktop-schemas          # GSettings schemas for desktop integration
   libnotify                          # Desktop notifications (used in screenshot scripts)
   zenity                             # Dialog boxes for scripts
 
