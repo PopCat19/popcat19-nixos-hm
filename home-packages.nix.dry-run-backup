@@ -7,6 +7,7 @@
 with pkgs; [
   # ─── CORE DESKTOP APPLICATIONS ───
   kitty                              # Terminal emulator (configured above)
+    htop
   fuzzel                             # Application launcher (configured above)
   micro                              # Text editor (configured below)
 
