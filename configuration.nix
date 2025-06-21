@@ -288,8 +288,8 @@
     noto-fonts-emoji
     noto-fonts-extra
 
-    # Google Fonts including M PLUS Rounded 1c
-    google-fonts
+    # Google Fonts moved to user-level (home-theme.nix) for testing
+    # google-fonts
 
     # Essential fonts
     font-awesome

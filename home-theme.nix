@@ -407,8 +407,8 @@
   # 2. Monospace: JetBrainsMono Nerd Font (terminals, code editors) - from nerd-fonts.jetbrains-mono
   # 3. Fallbacks: Noto fonts for comprehensive Unicode support - from noto-fonts packages
   #
-  # IMPORTANT: Rounded Mplus 1c requires google-fonts to be installed at the system level
-  # in configuration.nix fonts.packages. This is NOT available as a standalone nixpkgs package.
+  # TESTING: Moving google-fonts from system-level to user-level for better control
+  # Rounded Mplus 1c comes from the google-fonts package (testing user-level installation)
 
   # ─── APPLICATION FONT CONFIGURATIONS ───
 
@@ -448,8 +448,10 @@
     # Core fonts for the theme system - these provide comprehensive typography
     # support across all applications and languages
     #
-    # NOTE: Rounded Mplus 1c Medium is NOT included here - it comes from google-fonts
-    # which must be installed at the system level in configuration.nix
+    # NOTE: Testing user-level font management - google-fonts now included here
+    # instead of system-level configuration.nix
+    # Core font packages - moving from system-level to user-level for better control
+    google-fonts                       # Google Fonts collection (includes Rounded Mplus 1c Medium)
     nerd-fonts.jetbrains-mono          # Programming font with icons (used in Kitty, terminals)
     nerd-fonts.caskaydia-cove          # Alternative programming font option
     nerd-fonts.fantasque-sans-mono     # Another programming font option
@@ -726,10 +728,10 @@
           echo "4. Check Home Manager rebuild: home-manager switch"
           echo ""
           echo -e "''${YELLOW}Font troubleshooting:''${NC}"
-          echo "• Rounded Mplus 1c requires google-fonts in configuration.nix"
+          echo "• TESTING: google-fonts moved to user-level (home-theme.nix)"
           echo "• JetBrainsMono requires nerd-fonts.jetbrains-mono in home-theme.nix"
           echo "• Run 'fc-list | grep -i \"mplus\"' to verify font installation"
-          echo "• Check fonts.packages in /etc/nixos/configuration.nix"
+          echo "• Check both home-theme.nix and /etc/nixos/configuration.nix for fonts"
           echo ""
           echo -e "''${YELLOW}Manual theme tools:''${NC}"
           echo " kvantummanager - Kvantum theme manager"
