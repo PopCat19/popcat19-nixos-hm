@@ -27,6 +27,7 @@
     grim                               # Wayland screenshot utility (primary capture tool)
     slurp                              # Region selection for screenshots with visual feedback
     wl-clipboard                       # Wayland clipboard utilities (for automatic copy)
+    grimblast                          # Hyprland screenshot utility with freeze support
 
     # ─── SCREENSHOT ENHANCEMENT TOOLS ───
     swappy                             # Screenshot annotation tool (optional editing)
@@ -266,59 +267,54 @@
           return 0
       }
 
-      # Function to create still-image frame for region selection
-      create_still_frame() {
-          local temp_screenshot="$TEMP_DIR/still_frame.png"
-
-          mkdir -p "$TEMP_DIR"
-
-          # Take temporary screenshot for still frame
-          echo "Creating still-image frame..."
-          grim "$temp_screenshot"
-
-          if [[ ! -f "$temp_screenshot" ]]; then
-              echo "Error: Failed to create still-image frame"
-              return 1
-          fi
-
-          echo "$temp_screenshot"
-      }
-
-      # Function to take region screenshot with still-image frame
-      take_region_screenshot() {
+      # Function to take region screenshot with grimblast freeze
+      take_region_screenshot_with_freeze() {
           local filename="screenshot_region_''${TIMESTAMP}.png"
           local filepath="''${SCREENSHOT_DIR}/''${filename}"
 
           echo "Taking region screenshot with still-image frame..."
+          echo "🎯 Region Selection Active:"
+          echo "   • Drag to select area"
+          echo "   • ESC to cancel"
+          echo "   • Click to cancel"
+          echo "   • Space + drag to move selection"
 
-          # Save current hyprshade state
-          SAVED_SHADER=$(get_hyprshade_state)
+          # Use grimblast with freeze for still-image frame effect
+          if command -v grimblast &> /dev/null; then
+              if grimblast --notify --freeze save area "$filepath" 2>/dev/null; then
+                  echo "Region screenshot saved to: $filepath"
 
-          # Disable hyprshade for cleaner selection
-          manage_hyprshade "off"
+                  # Copy to clipboard and notify
+                  copy_to_clipboard "$filepath"
+                  notify_user "Screenshot" "Region screenshot saved to Pictures/Screenshots" "$filepath"
 
-          # Small delay to ensure hyprshade is fully disabled
-          sleep 0.1
-
-          # Create still-image frame
-          local still_frame
-          still_frame=$(create_still_frame)
-
-          if [[ -z "$still_frame" ]]; then
-              echo "Error: Failed to create still-image frame"
-              return 1
+                  return 0
+              else
+                  echo "Screenshot cancelled - no region selected"
+                  return 1
+              fi
+          else
+              echo "Warning: grimblast not found, falling back to grim+slurp without freeze"
+              return 2
           fi
+      }
+
+      # Function to take region screenshot with fallback method
+      take_region_screenshot_fallback() {
+          local filename="screenshot_region_''${TIMESTAMP}.png"
+          local filepath="''${SCREENSHOT_DIR}/''${filename}"
+
+          echo "Taking region screenshot (fallback mode)..."
 
           # Get current monitor for slurp constraint
           local current_monitor
           current_monitor=$(get_current_monitor)
 
-          # Use slurp to select region with still-image frame
-          # User can exit selection with ESC key or mouse click
+          # Use slurp to select region (no trap to avoid ESC interference)
           echo "🎯 Region Selection Active:"
           echo "   • Drag to select area"
           echo "   • ESC to cancel"
-          echo "   • Click to cancel (depending on slurp version)"
+          echo "   • Click to cancel"
           echo "   • Space + drag to move selection"
 
           local region
@@ -330,8 +326,8 @@
           fi
 
           if [[ -n "$region" ]]; then
-              # Take screenshot of selected region using the still frame
-              grim -g "$region" "$still_frame" "$filepath"
+              # Take screenshot of selected region
+              grim -g "$region" "$filepath"
               echo "Region screenshot saved to: $filepath"
 
               # Copy to clipboard and notify
@@ -345,10 +341,52 @@
           fi
       }
 
+      # Function to take region screenshot with still-image frame
+      take_region_screenshot() {
+          # Save current hyprshade state
+          SAVED_SHADER=$(get_hyprshade_state)
+
+          # Disable hyprshade for cleaner selection
+          manage_hyprshade "off"
+
+          # Small delay to ensure hyprshade is fully disabled
+          sleep 0.1
+
+          # Try grimblast first for freeze functionality
+          if take_region_screenshot_with_freeze; then
+              # Restore hyprshade
+              if [[ -n "$SAVED_SHADER" ]]; then
+                  manage_hyprshade "restore" "$SAVED_SHADER"
+              fi
+              return 0
+          elif [[ $? -eq 2 ]]; then
+              # Grimblast not available, use fallback
+              if take_region_screenshot_fallback; then
+                  # Restore hyprshade
+                  if [[ -n "$SAVED_SHADER" ]]; then
+                      manage_hyprshade "restore" "$SAVED_SHADER"
+                  fi
+                  return 0
+              else
+                  # Restore hyprshade on failure
+                  if [[ -n "$SAVED_SHADER" ]]; then
+                      manage_hyprshade "restore" "$SAVED_SHADER"
+                  fi
+                  return 1
+              fi
+          else
+              # Grimblast failed (user cancelled)
+              # Restore hyprshade
+              if [[ -n "$SAVED_SHADER" ]]; then
+                  manage_hyprshade "restore" "$SAVED_SHADER"
+              fi
+              return 1
+          fi
+      }
+
       # ─── MAIN SCRIPT LOGIC ───
 
-      # Set trap for cleanup
-      trap cleanup EXIT INT TERM
+      # Note: No trap set to avoid interfering with slurp's ESC handling
 
       # Ensure screenshot directory exists
       mkdir -p "$SCREENSHOT_DIR"
@@ -383,7 +421,7 @@
               echo "  • Desktop notifications"
               echo "  • Optional hyprshade integration"
               echo "  • Monitor-aware capture"
-              echo "  • Still-image frame for region selection"
+              echo "  • Still-image frame for region selection (grimblast)"
               echo ""
               echo "Region Selection Controls:"
               echo "  • ESC key - Cancel selection and exit"
@@ -393,6 +431,11 @@
               exit 1
               ;;
       esac
+
+      # Manual cleanup since no trap is set
+      if [[ -d "$TEMP_DIR" ]]; then
+          rm -rf "$TEMP_DIR"
+      fi
     '';
   };
 
