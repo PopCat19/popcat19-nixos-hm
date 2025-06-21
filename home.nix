@@ -70,8 +70,8 @@
       package = pkgs.rose-pine-gtk-theme-full;
     };
     iconTheme = {
-      name = "Rose-Pine";
-      package = pkgs.rose-pine-gtk-theme-full;
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
     };
     font = {
       name = "Rounded Mplus 1c Medium";
@@ -94,6 +94,17 @@
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
     };
+    # Force Medium weight for GTK applications
+    gtk3.extraCss = ''
+      * {
+        font-family: "Rounded Mplus 1c Medium";
+      }
+    '';
+    gtk4.extraCss = ''
+      * {
+        font-family: "Rounded Mplus 1c Medium";
+      }
+    '';
 
   };
 
@@ -245,7 +256,7 @@
       cursor-theme = "rose-pine-hyprcursor";
       cursor-size = 24;
       gtk-theme = "Rose-Pine-Main-BL";
-      icon-theme = "Rose-Pine";
+      icon-theme = "Papirus-Dark";
       font-name = "Rounded Mplus 1c Medium 11";
       document-font-name = "Rounded Mplus 1c Medium 11";
       monospace-font-name = "JetBrainsMono Nerd Font 11";
@@ -688,7 +699,7 @@
     # Menu Font
     MenuFont="Rounded Mplus 1c Medium 11"
     # Tray Font
-    TrayFont="Rounded Mplus 1c Bold 11"
+    TrayFont="Rounded Mplus 1c Medium 11"
     # Tray Label Outline Color
     TrayOutlineColor=#000000
     # Tray Label Text Color
@@ -717,6 +728,26 @@
   home.file.".local/share/fcitx5/themes/rose-pine".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine";
   home.file.".local/share/fcitx5/themes/rose-pine-dawn".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-dawn";
   home.file.".local/share/fcitx5/themes/rose-pine-moon".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-moon";
+
+  # Fontconfig alias to ensure GTK finds the Medium weight
+  home.file.".config/fontconfig/fonts.conf".text = ''
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+    <fontconfig>
+      <alias>
+        <family>sans-serif</family>
+        <prefer>
+          <family>Rounded Mplus 1c Medium</family>
+        </prefer>
+      </alias>
+      <alias>
+        <family>Rounded Mplus 1c Medium</family>
+        <default>
+          <family>sans-serif</family>
+        </default>
+      </alias>
+    </fontconfig>
+  '';
 
   # **FONTS CONFIGURATION**
   # Manages symlinks for configuration files.

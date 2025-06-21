@@ -279,8 +279,8 @@
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      serif = [ "Rounded Mplus 1c" "Noto Serif" ];
-      sansSerif = [ "Rounded Mplus 1c" "Noto Sans" ];
+      serif = [ "Rounded Mplus 1c Medium" "Noto Serif" ];
+      sansSerif = [ "Rounded Mplus 1c Medium" "Noto Sans" ];
       monospace = [ "JetBrainsMono Nerd Font" "Noto Sans Mono" ];
       emoji = [ "Noto Color Emoji" ];
     };
