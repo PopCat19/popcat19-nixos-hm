@@ -137,6 +137,12 @@
       # • Clipboard integration: Automatically copies to clipboard
       # • Notifications: Desktop notifications for user feedback
       # • Proper cleanup: Removes temporary files and restores state
+      #
+      # REGION SELECTION CONTROLS:
+      # • ESC key: Cancel region selection and exit
+      # • Mouse click: Cancel selection (behavior depends on slurp implementation)
+      # • Hold and drag: Select region
+      # • Space + drag: Move existing selection instead of resizing
       # ═══════════════════════════════════════════════════════════════════════════════
 
       set -euo pipefail
@@ -308,6 +314,13 @@
           current_monitor=$(get_current_monitor)
 
           # Use slurp to select region with still-image frame
+          # User can exit selection with ESC key or mouse click
+          echo "🎯 Region Selection Active:"
+          echo "   • Drag to select area"
+          echo "   • ESC to cancel"
+          echo "   • Click to cancel (depending on slurp version)"
+          echo "   • Space + drag to move selection"
+
           local region
           if [[ -n "$current_monitor" ]]; then
               # Try with monitor constraint first, fallback to unconstrained
@@ -371,6 +384,12 @@
               echo "  • Optional hyprshade integration"
               echo "  • Monitor-aware capture"
               echo "  • Still-image frame for region selection"
+              echo ""
+              echo "Region Selection Controls:"
+              echo "  • ESC key - Cancel selection and exit"
+              echo "  • Mouse click - Cancel selection"
+              echo "  • Drag - Select area"
+              echo "  • Space + drag - Move selection"
               exit 1
               ;;
       esac
