@@ -19,7 +19,7 @@
     QT_QPA_PLATFORM = "wayland;xcb"; # Qt Wayland and XCB platform.
 
     # GTK theming environment variables
-    GTK_THEME = "Rosepine-Dark"; # Force GTK theme
+    GTK_THEME = "rose-pine-gtk-theme"; # Force GTK theme
     GDK_BACKEND = "wayland,x11,*"; # GTK backend preference
     XCURSOR_THEME = "rose-pine-hyprcursor"; # X11 cursor theme
     XCURSOR_SIZE = "24"; # Cursor size
@@ -66,7 +66,8 @@
       package = inputs.rose-pine-hyprcursor.packages.${system}.default;
     };
     theme = {
-      name = "Rosepine-Dark";
+      name = "rose-pine-gtk-theme";
+      package = pkgs.rose-pine-gtk-theme;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -84,6 +85,36 @@
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
     };
+    gtk3.extraCss = ''
+      /* Rose Pine GTK3 theme customizations */
+      @define-color rose_pine_base #191724;
+      @define-color rose_pine_surface #1f1d2e;
+      @define-color rose_pine_overlay #26233a;
+      @define-color rose_pine_muted #6e6a86;
+      @define-color rose_pine_subtle #908caa;
+      @define-color rose_pine_text #e0def4;
+      @define-color rose_pine_love #eb6f92;
+      @define-color rose_pine_gold #f6c177;
+      @define-color rose_pine_rose #ebbcba;
+      @define-color rose_pine_pine #31748f;
+      @define-color rose_pine_foam #9ccfd8;
+      @define-color rose_pine_iris #c4a7e7;
+
+      /* Ensure consistent theming for applications */
+      * {
+        outline-color: @rose_pine_iris;
+      }
+
+      .nautilus-window notebook > header.top tabs tab {
+        background: @rose_pine_surface;
+        color: @rose_pine_text;
+      }
+
+      .nautilus-window notebook > header.top tabs tab:checked {
+        background: @rose_pine_overlay;
+        color: @rose_pine_rose;
+      }
+    '';
 
     # GTK4 specific settings
     gtk4.extraConfig = {
@@ -92,6 +123,42 @@
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
     };
+    gtk4.extraCss = ''
+      /* Rose Pine GTK4 theme customizations */
+      @define-color rose_pine_base #191724;
+      @define-color rose_pine_surface #1f1d2e;
+      @define-color rose_pine_overlay #26233a;
+      @define-color rose_pine_muted #6e6a86;
+      @define-color rose_pine_subtle #908caa;
+      @define-color rose_pine_text #e0def4;
+      @define-color rose_pine_love #eb6f92;
+      @define-color rose_pine_gold #f6c177;
+      @define-color rose_pine_rose #ebbcba;
+      @define-color rose_pine_pine #31748f;
+      @define-color rose_pine_foam #9ccfd8;
+      @define-color rose_pine_iris #c4a7e7;
+
+      /* Ensure consistent theming for applications */
+      * {
+        outline-color: @rose_pine_iris;
+      }
+
+      /* GTK4 specific selectors for Nautilus and other apps */
+      tabbar tab {
+        background: @rose_pine_surface;
+        color: @rose_pine_text;
+      }
+
+      tabbar tab:checked {
+        background: @rose_pine_overlay;
+        color: @rose_pine_rose;
+      }
+
+      window.background {
+        background-color: @rose_pine_base;
+        color: @rose_pine_text;
+      }
+    '';
   };
 
   # QT Theme Configuration - Rose Pine themed.
@@ -124,7 +191,7 @@
   home.file.".config/kdeglobals" = {
     text = ''
       [ColorScheme]
-      Name=RosePine
+      Name=rose-pine-gtk-theme
 
       [Colors:Button]
       BackgroundAlternate=49,46,77
@@ -183,7 +250,7 @@
       ForegroundVisited=196,167,231
 
       [General]
-      ColorScheme=RosePine
+      ColorScheme=rose-pine-gtk-theme
       Name=Rose Pine
       shadeSortColumn=true
 
@@ -241,7 +308,7 @@
     "org/gnome/desktop/interface" = {
       cursor-theme = "rose-pine-hyprcursor";
       cursor-size = 24;
-      gtk-theme = "Rosepine-Dark";
+      gtk-theme = "rose-pine-gtk-theme";
       icon-theme = "Papirus-Dark";
       font-name = "CaskaydiaCove Nerd Font 11";
       document-font-name = "CaskaydiaCove Nerd Font 11";
@@ -249,7 +316,7 @@
       color-scheme = "prefer-dark";
     };
     "org/gnome/desktop/wm/preferences" = {
-      theme = "Rosepine-Dark";
+      theme = "rose-pine-gtk-theme";
     };
   };
 
@@ -304,7 +371,7 @@
       shell_integration = "enabled";
 
       # Window behavior
-      confirm_os_window_close = 0;
+      confirm_os_window_close = 1;
 
       # Cursor
       cursor_shape = "block";
@@ -332,15 +399,15 @@
       # Window
       remember_window_size = "yes";
       window_border_width = 0.5;
-      window_margin_width = 0;
-      window_padding_width = 25;
+      window_margin_width = 8;
+      window_padding_width = 12;
       active_border_color = "#ebbcba";
       inactive_border_color = "#26233a";
 
       # Tab bar
       tab_bar_edge = "bottom";
-      tab_bar_style = "powerline";
-      tab_powerline_style = "angled";
+      tab_bar_style = "separator";
+      tab_separator = " ┇ ";
       active_tab_foreground = "#e0def4";
       active_tab_background = "#26233a";
       inactive_tab_foreground = "#908caa";
@@ -513,8 +580,144 @@
     };
   };
 
-  # Starship Prompt: a cross-shell prompt.
-  programs.starship.enable = true;
+  # Starship Prompt: a cross-shell prompt with Rose Pine theme.
+  programs.starship = {
+    enable = true;
+    settings = {
+      format = "$all$character";
+
+      palette = "rose_pine";
+
+      palettes.rose_pine = {
+        base = "#191724";
+        surface = "#1f1d2e";
+        overlay = "#26233a";
+        muted = "#6e6a86";
+        subtle = "#908caa";
+        text = "#e0def4";
+        love = "#eb6f92";
+        gold = "#f6c177";
+        rose = "#ebbcba";
+        pine = "#31748f";
+        foam = "#9ccfd8";
+        iris = "#c4a7e7";
+        highlight_low = "#21202e";
+        highlight_med = "#403d52";
+        highlight_high = "#524f67";
+      };
+
+      character = {
+        success_symbol = "[❯](bold foam)";
+        error_symbol = "[❯](bold love)";
+        vimcmd_symbol = "[❮](bold iris)";
+      };
+
+      directory = {
+        style = "bold iris";
+        truncation_length = 3;
+        truncate_to_repo = false;
+        format = "[$path]($style)[$read_only]($read_only_style) ";
+        read_only = " 󰌾";
+        read_only_style = "love";
+      };
+
+      git_branch = {
+        format = "[$symbol$branch(:$remote_branch)]($style) ";
+        symbol = " ";
+        style = "bold pine";
+      };
+
+      git_status = {
+        format = "([\\[$all_status$ahead_behind\\]]($style) )";
+        style = "bold rose";
+        conflicted = "=";
+        ahead = "⇡\${count}";
+        behind = "⇣\${count}";
+        diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
+        up_to_date = "";
+        untracked = "?\${count}";
+        stashed = "$\${count}";
+        modified = "!\${count}";
+        staged = "+\${count}";
+        renamed = "»\${count}";
+        deleted = "✘\${count}";
+      };
+
+      cmd_duration = {
+        format = "[$duration]($style) ";
+        style = "bold gold";
+        min_time = 2000;
+      };
+
+      hostname = {
+        ssh_only = true;
+        format = "[$hostname]($style) in ";
+        style = "bold foam";
+      };
+
+      username = {
+        show_always = false;
+        format = "[$user]($style)@";
+        style_user = "bold text";
+        style_root = "bold love";
+      };
+
+      package = {
+        format = "[$symbol$version]($style) ";
+        symbol = "📦 ";
+        style = "bold rose";
+      };
+
+      nodejs = {
+        format = "[$symbol($version)]($style) ";
+        symbol = " ";
+        style = "bold pine";
+      };
+
+      python = {
+        format = "[\${symbol}\${pyenv_prefix}(\${version})(\\($virtualenv\\))]($style) ";
+        symbol = " ";
+        style = "bold gold";
+      };
+
+      rust = {
+        format = "[$symbol($version)]($style) ";
+        symbol = " ";
+        style = "bold love";
+      };
+
+      nix_shell = {
+        format = "[$symbol$state(\\($name\\))]($style) ";
+        symbol = " ";
+        style = "bold iris";
+        impure_msg = "[impure](bold love)";
+        pure_msg = "[pure](bold foam)";
+      };
+
+      memory_usage = {
+        disabled = false;
+        threshold = 70;
+        format = "[$symbol\${ram}(\${swap})]($style) ";
+        symbol = "🐏 ";
+        style = "bold subtle";
+      };
+
+      time = {
+        disabled = false;
+        format = "[$time]($style) ";
+        style = "bold muted";
+        time_format = "%T";
+        utc_time_offset = "local";
+      };
+
+      status = {
+        disabled = false;
+        format = "[$symbol$status]($style) ";
+        symbol = "✖ ";
+        style = "bold love";
+      };
+    };
+  };
 
   # Git Configuration for user details.
   programs.git = {
@@ -555,9 +758,9 @@
 
 
   # Micro editor colorscheme - temporarily disabled for build
-  # home.file.".config/micro/colorschemes/rose-pine.micro" = {
-  #   source = ./micro_config/rose-pine.micro;
-  # };
+  home.file.".config/micro/colorschemes/rose-pine.micro" = {
+    source = ./micro_config/rose-pine.micro;
+  };
 
   # MangoHud configuration with Rose Pine theme
   home.file.".config/MangoHud/MangoHud.conf" = {
@@ -777,6 +980,16 @@
           fi
       }
 
+      # Cleanup function to restore hyprshade on exit
+      cleanup() {
+          if [[ -n "''${SAVED_SHADER:-}" ]]; then
+              manage_hyprshade "restore" "$SAVED_SHADER"
+          fi
+      }
+
+      # Set trap to restore hyprshade on script exit (including ESC/SIGINT)
+      trap cleanup EXIT INT TERM
+
       # Take region screenshot using grim + slurp (Wayland screenshot tools)
       if command -v grim &> /dev/null && command -v slurp &> /dev/null; then
           # Get current monitor for slurp constraint
@@ -798,11 +1011,6 @@
           if [[ -n "$REGION" ]]; then
               grim -g "$REGION" "$FILEPATH"
 
-              # Restore shader if it was active
-              if [[ -n "$SAVED_SHADER" ]]; then
-                  manage_hyprshade "restore" "$SAVED_SHADER"
-              fi
-
               echo "Region screenshot saved to: $FILEPATH"
 
               # Copy to clipboard if wl-copy is available
@@ -818,10 +1026,6 @@
                   notify-send "Screenshot" "Region screenshot saved to Pictures/Screenshots" -i "$FILEPATH"
               fi
           else
-              # Restore shader even if cancelled
-              if [[ -n "$SAVED_SHADER" ]]; then
-                  manage_hyprshade "restore" "$SAVED_SHADER"
-              fi
               echo "Screenshot cancelled - no region selected"
               exit 0
           fi
@@ -900,7 +1104,7 @@
 
           # Check kdeglobals
           if [[ -f "$HOME/.config/kdeglobals" ]]; then
-              if grep -q "Name=RosePine" "$HOME/.config/kdeglobals" 2>/dev/null; then
+              if grep -q "ColorScheme=rose-pine-gtk-theme" "$HOME/.config/kdeglobals" 2>/dev/null; then
                   echo -e "''${GREEN} kdeglobals: Rose Pine configured''${NC}"
               else
                   echo -e "''${YELLOW} kdeglobals: exists but may not be Rose Pine''${NC}"
@@ -979,6 +1183,7 @@
           echo -e "''${PURPLE} Summary''${NC}"
           echo ""
           echo "Your system is configured for Rose Pine theming with:"
+          echo " Rose Pine GTK theme (rose-pine-gtk-theme) for GTK applications"
           echo " Rose Pine Kvantum theme for Qt applications"
           echo " KDE kdeglobals for Dolphin and KDE apps"
           echo " Qt6ct for Qt6 application theming"
@@ -1102,6 +1307,7 @@
     qt6ct
     qt6Packages.qtstyleplugin-kvantum
     rose-pine-kvantum
+    rose-pine-gtk-theme
     themechanger
     nwg-look
     dconf-editor
@@ -1129,43 +1335,36 @@
     file:///home/${config.home.username}/Music
   '';
 
-  # Rose Pine specific GTK CSS overrides (only for GTK3 to avoid conflicts)
-  home.file.".config/gtk-3.0/gtk.css".text = ''
-    /* Rose Pine GTK theme customizations */
-    @define-color rose_pine_base #191724;
-    @define-color rose_pine_surface #1f1d2e;
-    @define-color rose_pine_overlay #26233a;
-    @define-color rose_pine_muted #6e6a86;
-    @define-color rose_pine_subtle #908caa;
-    @define-color rose_pine_text #e0def4;
-    @define-color rose_pine_love #eb6f92;
-    @define-color rose_pine_gold #f6c177;
-    @define-color rose_pine_rose #ebbcba;
-    @define-color rose_pine_pine #31748f;
-    @define-color rose_pine_foam #9ccfd8;
-    @define-color rose_pine_iris #c4a7e7;
-
-    /* Ensure consistent theming for applications */
-    * {
-      outline-color: @rose_pine_iris;
-    }
-
-    .nautilus-window notebook > header.top tabs tab {
-      background: @rose_pine_surface;
-      color: @rose_pine_text;
-    }
-
-    .nautilus-window notebook > header.top tabs tab:checked {
-      background: @rose_pine_overlay;
-      color: @rose_pine_rose;
-    }
+  # Dolphin file manager bookmarks
+  home.file.".local/share/user-places.xbel".text = ''
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE xbel PUBLIC "+//IDN python.org//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://www.python.org/topics/xml/dtds/xbel-1.0.dtd">
+    <xbel version="1.0">
+     <bookmark href="file:///home/${config.home.username}/Documents">
+      <title>Documents</title>
+     </bookmark>
+     <bookmark href="file:///home/${config.home.username}/Downloads">
+      <title>Downloads</title>
+     </bookmark>
+     <bookmark href="file:///home/${config.home.username}/Pictures">
+      <title>Pictures</title>
+     </bookmark>
+     <bookmark href="file:///home/${config.home.username}/Videos">
+      <title>Videos</title>
+     </bookmark>
+     <bookmark href="file:///home/${config.home.username}/Music">
+      <title>Music</title>
+     </bookmark>
+    </xbel>
   '';
+
+
 
   # Micro text editor configuration
   programs.micro = {
     enable = true;
     settings = {
-      colorscheme = "catppuccin-mocha";
+      colorscheme = "rose-pine";
       mkparents = true;
       softwrap = true;
       wordwrap = true;

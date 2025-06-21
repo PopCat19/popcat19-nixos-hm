@@ -168,7 +168,9 @@ function _nixpkg_add -d "Add package to configuration file (appends to the list)
         # Check if we are inside the package block and find the closing bracket
         if test $in_packages = true; and string match -q -r '^\s*\];' $line
             # We found the end. Add the new package *before* this line.
-            echo "    $package_name" >> $temp_file
+            # Extract indentation from the closing bracket line to match existing style
+            set -l indent (string replace -r '\];.*$' '' $line)
+            echo "$indent$package_name" >> $temp_file
             set added true
             set in_packages false  # We're done with this block
         end
