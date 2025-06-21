@@ -388,24 +388,7 @@
     };
   };
 
-  # ─── THEME INITIALIZATION SERVICE ───
-  # Ensures themes are properly loaded and applied at session start
-  # Runs our theme checker to verify everything is working
-  systemd.user.services.theme-init = {
-    Unit = {
-      Description = "Initialize desktop themes";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${config.home.homeDirectory}/.local/bin/check-rose-pine-theme";
-      RemainAfterExit = true;
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
+
 
   # ═══════════════════════════════════════════════════════════════════════════════
   # 📦 THEME-RELATED PACKAGES
