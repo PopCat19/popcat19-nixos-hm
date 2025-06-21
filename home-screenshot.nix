@@ -512,12 +512,16 @@
               fi
               take_region_screenshot
               ;;
+          "test-hyprshade")
+              test_hyprshade_restoration
+              ;;
           *)
-              echo "Usage: screenshot [full|region]"
+              echo "Usage: screenshot [full|region|test-hyprshade]"
               echo ""
               echo "Commands:"
               echo "  full    - Take full screenshot of current monitor"
               echo "  region  - Take region screenshot with still-image frame"
+              echo "  test-hyprshade - Test hyprshade restoration functionality"
               echo ""
               echo "Features:"
               echo "  • Automatic clipboard copy"
@@ -535,9 +539,6 @@
               echo "Testing Commands:"
               echo "  screenshot test-hyprshade - Test hyprshade restoration"
               exit 1
-              ;;
-          "test-hyprshade")
-              test_hyprshade_restoration
               ;;
       esac
 
