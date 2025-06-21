@@ -469,6 +469,7 @@
     libsForQt5.qt5ct                   # Qt5 configuration tool
     qt6ct                              # Qt6 configuration tool (used in environment vars)
     themechanger                       # Theme switching utility
+    kdePackages.qtstyleplugin-kvantum  # Qt style plugin for Kvantum themes
 
     # ─── ROSE PINE THEME PACKAGES ───
     rose-pine-kvantum                  # Kvantum Rose Pine themes
