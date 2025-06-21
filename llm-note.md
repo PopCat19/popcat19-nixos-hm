@@ -4,9 +4,10 @@
 
 ## Streamlined Commands
 
-### Package Management (Recommended)
+### Package Management
 ```
-fish -c "nixpkg add <package> -rdm 'Add <package> for <purpose>'"
+fish -c "git add ."
+fish -c "nixpkg add <package> -rdm 'add <package> for <purpose>'"
 ```
 - Fully automated: add package → dry-run test → rebuild → commit
 - Automatic rollback if configuration fails
@@ -14,6 +15,7 @@ fish -c "nixpkg add <package> -rdm 'Add <package> for <purpose>'"
 
 ### Configuration Changes
 ```
+fish -c "git add ."
 fish -c "nixos-apply-config -dm 'Config update description'"
 ```
 - For manual configuration file edits
@@ -41,18 +43,22 @@ fish -c "tree -L 4"
 
 ### Single Package
 ```
-fish -c "nixpkg add firefox -rdm 'Add Firefox browser'"
+fish -c "git add ."
+fish -c "nixpkg add firefox -rdm 'add Firefox browser'"
 ```
 
 ### Category-Specific Packages
 ```
-fish -c "nixpkg add flameshot screenshot -rdm 'Add screenshot tool'"
-fish -c "nixpkg add papirus-icon-theme theme -rdm 'Update icon theme'"
+fish -c "git add ."
+fish -c "nixpkg add flameshot screenshot -rdm 'add screenshot tool'"
+fish -c "git add ."
+fish -c "nixpkg add papirus-icon-theme theme -rdm 'update icon theme'"
 ```
 
 ### Remove Packages
 ```
-fish -c "nixpkg remove htop -rdm 'Remove htop utility'"
+fish -c "git add ."
+fish -c "nixpkg remove htop -rdm 'remove htop utility'"
 ```
 
 ### Manual Config Changes
@@ -76,9 +82,9 @@ fish -c "nixos-apply-config -dm 'Manual configuration update'"
 
 ## Troubleshooting
 
-### Package Not Found
+### Search Package
 ```
-fish -c "nix search nixpkgs <partial-name>"
+fish -c "nixpkg search '<partial-name>'"
 ```
 
 ### Build Failures
@@ -94,20 +100,5 @@ fish -c "hyprctl configerrors"
 ### Git Issues
 - Ensure new files are added: `fish -c "git add ."`
 - Check status: `fish -c "git status"`
-
-## Old vs New Workflow
-
-### Before (Multi-step)
-```
-# Manual config editing
-fish -c "git add ."
-fish -c "nix build --dry-run .#nixosConfigurations.popcat19-nixos0.config.system.build.toplevel"
-fish -c "nixos-apply-config -m 'commit message'"
-```
-
-### Now (Single command)
-```
-fish -c "nixpkg add <package> -rdm 'commit message'"
-```
 
 All steps automated with safety checks and automatic rollback on failure.
