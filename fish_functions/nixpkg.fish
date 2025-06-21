@@ -1,22 +1,32 @@
-function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config files. Use 'nixpkg help' for manual."
+function nixpkg -d "🔧 NixOS Configuration Manager: packages, rebuilds, and system management. Consider renaming to 'nixctl' or 'nixcfg'."
     set -l action        $argv[1]
     set -l rebuild_flag  false
     set -l rebuild_args  ""        # additional args for nixos-apply-config
     set -l dry_run_flag  false     # dry-run mode
+    set -l chain_rebuild false     # if dry succeeds, proceed with rebuild
+    set -l commit_message ""       # commit message for rebuild
     set -l target        "home"    # default to home
     set -l home_file_spec ""       # specific home file (e.g., "theme", "screenshot")
 
-    # Show help if no arguments or help requested
-    if test (count $argv) -eq 0; or test "$action" = "help" -o "$action" = "h" -o \
-        "$action" = "--help" -o "$action" = "-h"
+    # Show help if no arguments or help requested anywhere
+    if test (count $argv) -eq 0
         _nixpkg_help
         return 0
     end
 
+    # Check for help flags in any position
+    for arg in $argv
+        if test "$arg" = "help" -o "$arg" = "h" -o "$arg" = "--help" -o "$arg" = "-h"
+            _nixpkg_help
+            return 0
+        end
+    end
+
     # Parse arguments for --rebuild flag, target, and home file specification
     set -l clean_args
-    for arg in $argv[2..-1]
-        switch $arg
+    set -l i 2
+    while test $i -le (count $argv)
+        switch $argv[$i]
         case "--rebuild" "-r"
             set rebuild_flag true
         case "--fast" "--skip"
@@ -25,8 +35,36 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
         case "-rs"
             set rebuild_flag true
             set rebuild_args "--fast"
-        case "--dry"
+        case "--dry" "-d"
             set dry_run_flag true
+        case "-rd"
+            set dry_run_flag true
+            set chain_rebuild true
+        case "-rsd"
+            set dry_run_flag true
+            set chain_rebuild true
+            set rebuild_args "--fast"
+        case "-rm"
+            if test $i -lt (count $argv)
+                set i (math $i + 1)
+                set commit_message "$argv[$i]"
+                set rebuild_flag true
+            else
+                echo "❌ Error: -rm flag requires a commit message"
+                return 1
+            end
+        case "-rdm"
+            if test $i -lt (count $argv)
+                set i (math $i + 1)
+                set commit_message "$argv[$i]"
+                set dry_run_flag true
+                set chain_rebuild true
+                set rebuild_flag true
+            else
+                echo "❌ Error: -rdm flag requires a commit message"
+                return 1
+            end
+
         case "system" "sys" "s"
             set target "system"
         case "home" "h"
@@ -36,17 +74,25 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
             if test "$action" = "list" -o "$action" = "ls" -o "$action" = "l"
                 set home_file_spec "all"
             else
-                set -a clean_args $arg
+                set -a clean_args $argv[$i]
             end
         case "*"
             # Check if this might be a home file specification
             if test "$target" = "home"; and test -z "$home_file_spec"; and \
-               test -f "$NIXOS_CONFIG_DIR/home-$arg.nix"
-                set home_file_spec $arg
+               test -f "$NIXOS_CONFIG_DIR/home-$argv[$i].nix"
+                set home_file_spec $argv[$i]
             else
-                set -a clean_args $arg
+                set -a clean_args $argv[$i]
             end
         end
+        set i (math $i + 1)
+    end
+
+    # Validate flag combinations
+    if test -n "$commit_message"; and test "$rebuild_args" = "--fast"
+        echo "❌ Error: Cannot combine commit message flags (-rm, -rdm) with skip-git flags (-rs, -rsd)"
+        echo "💡 Commit message implies git operations, while skip flags avoid them"
+        return 1
     end
 
     # Determine configuration files and package section based on target
@@ -128,18 +174,46 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
                 if sudo nixos-rebuild dry-run --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME"
                     echo ""
                     echo "✅ Dry-run successful! Configuration would work with this package."
-                    echo "💡 Run without --dry to apply changes permanently."
-                    set -l exit_code 0
+
+                    # Check if auto-rebuild is requested
+                    if test $chain_rebuild = true
+                        echo "🚀 Auto-proceeding with rebuild (dry-run succeeded)..."
+
+                        # The package is already added temporarily, just proceed with rebuild
+                        echo "🚀 Rebuilding system..."
+                        if test -n "$commit_message"
+                            nixos-apply-config -m "$commit_message"
+                        else if test -n "$rebuild_args"
+                            nixos-apply-config $rebuild_args
+                        else
+                            nixos-apply-config
+                        end
+                        set -l rebuild_exit $status
+
+                        # If rebuild succeeded, keep the changes, otherwise restore
+                        if test $rebuild_exit -eq 0
+                            rm -f "$temp_backup"
+                            echo "✅ Changes applied and system rebuilt successfully."
+                        else
+                            mv "$temp_backup" "$config_file"
+                            echo "❌ Rebuild failed, changes reverted."
+                        end
+                        return $rebuild_exit
+                    else
+                        echo "💡 Run without --dry to apply changes permanently."
+                        # Restore original file
+                        mv "$temp_backup" "$config_file"
+                        echo "🔄 Original configuration restored."
+                        return 0
+                    end
                 else
                     echo ""
                     echo "❌ Dry-run failed! This package would cause configuration issues."
-                    set -l exit_code 1
+                    # Restore original file
+                    mv "$temp_backup" "$config_file"
+                    echo "🔄 Original configuration restored."
+                    return 1
                 end
-
-                # Restore original file
-                mv "$temp_backup" "$config_file"
-                echo "🔄 Original configuration restored."
-                return $exit_code
             else
                 # Restore original file on add failure
                 mv "$temp_backup" "$config_file"
@@ -151,7 +225,9 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
             "$clean_args[1]" "$target" "$home_file_spec"
         if test $status -eq 0; and test $rebuild_flag = true
             echo "🚀 Rebuilding system..."
-            if test -n "$rebuild_args"
+            if test -n "$commit_message"
+                nixos-apply-config -m "$commit_message"
+            else if test -n "$rebuild_args"
                 nixos-apply-config $rebuild_args
             else
                 nixos-apply-config
@@ -184,18 +260,46 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
                 if sudo nixos-rebuild dry-run --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME"
                     echo ""
                     echo "✅ Dry-run successful! Configuration would work without this package."
-                    echo "💡 Run without --dry to apply changes permanently."
-                    set -l exit_code 0
+
+                    # Check if auto-rebuild is requested
+                    if test $chain_rebuild = true
+                        echo "🚀 Auto-proceeding with rebuild (dry-run succeeded)..."
+
+                        # The package is already removed temporarily, just proceed with rebuild
+                        echo "🚀 Rebuilding system..."
+                        if test -n "$commit_message"
+                            nixos-apply-config -m "$commit_message"
+                        else if test -n "$rebuild_args"
+                            nixos-apply-config $rebuild_args
+                        else
+                            nixos-apply-config
+                        end
+                        set -l rebuild_exit $status
+
+                        # If rebuild succeeded, keep the changes, otherwise restore
+                        if test $rebuild_exit -eq 0
+                            rm -f "$temp_backup"
+                            echo "✅ Changes applied and system rebuilt successfully."
+                        else
+                            mv "$temp_backup" "$config_file"
+                            echo "❌ Rebuild failed, changes reverted."
+                        end
+                        return $rebuild_exit
+                    else
+                        echo "💡 Run without --dry to apply changes permanently."
+                        # Restore original file
+                        mv "$temp_backup" "$config_file"
+                        echo "🔄 Original configuration restored."
+                        return 0
+                    end
                 else
                     echo ""
                     echo "❌ Dry-run failed! Removing this package would cause configuration issues."
-                    set -l exit_code 1
+                    # Restore original file
+                    mv "$temp_backup" "$config_file"
+                    echo "🔄 Original configuration restored."
+                    return 1
                 end
-
-                # Restore original file
-                mv "$temp_backup" "$config_file"
-                echo "🔄 Original configuration restored."
-                return $exit_code
             else
                 # Restore original file on remove failure
                 mv "$temp_backup" "$config_file"
@@ -207,7 +311,9 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
             "$clean_args[1]" "$target" "$home_file_spec"
         if test $status -eq 0; and test $rebuild_flag = true
             echo "🚀 Rebuilding system..."
-            if test -n "$rebuild_args"
+            if test -n "$commit_message"
+                nixos-apply-config -m "$commit_message"
+            else if test -n "$rebuild_args"
                 nixos-apply-config $rebuild_args
             else
                 nixos-apply-config
@@ -223,6 +329,16 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
         nix search nixpkgs $clean_args[1]
     case "files" "f" "info"
         _nixpkg_show_files "$target"
+    case "rebuild" "apply" "switch"
+        # Direct nixos-apply-config functionality
+        echo "🚀 Applying NixOS configuration..."
+        if test -n "$commit_message"
+            nixos-apply-config -m "$commit_message"
+        else if test -n "$rebuild_args"
+            nixos-apply-config $rebuild_args
+        else
+            nixos-apply-config
+        end
     case "manual" "man" "doc"
         _nixpkg_manual
     case "*"
@@ -915,12 +1031,13 @@ function _nixpkg_remove -d "Remove package from configuration file"
 end
 
 function _nixpkg_help -d "Show help for nixpkg function"
-    echo "📦 nixpkg - NixOS Package Manager"
+    echo "🔧 nixpkg - NixOS Configuration Manager"
     echo "════════════════════════════════════════════════════════════"
     echo ""
     echo "🎯 DESCRIPTION:"
-    echo "    Manage packages in your NixOS configuration files with intelligent file detection."
-    echo "    Supports multi-file configurations including home-packages.nix and home-*.nix files."
+    echo "    Comprehensive NixOS configuration management tool combining package operations"
+    echo "    and system rebuilds. Supports multi-file configurations and intelligent workflows."
+    echo "    NOTE: Consider renaming to 'nixctl' or 'nixcfg' for better clarity."
     echo ""
     echo "⚙️  USAGE:"
     echo "    nixpkg <action> [package] [target] [file-spec] [options]"
@@ -931,6 +1048,7 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "    remove, rm, r        Remove a package from configuration"
     echo "    search, s, find      Search for packages in nixpkgs"
     echo "    files, f, info       Show which configuration files are being used"
+    echo "    rebuild, apply, switch Apply NixOS configuration (nixos-apply-config functionality)"
     echo "    help, h, --help      Show this help message"
     echo "    manual, man, doc     Show detailed manual"
     echo ""
@@ -940,11 +1058,15 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "    all                  List packages from ALL home files (list only)"
     echo "    <name>               Target home-<name>.nix (e.g., theme, screenshot)"
     echo ""
-    echo "🔧 OPTIONS:"
-    echo "    --rebuild, -r        Rebuild system after making changes"
+    echo "🔧 REBUILD & WORKFLOW OPTIONS:"
+    echo "    --rebuild, -r        Rebuild system after making changes (interactive)"
     echo "    --fast, --skip       Rebuild system and skip git operations"
     echo "    -rs                  Rebuild system and skip git operations (shorthand)"
-    echo "    --dry                Dry-run mode (test changes temporarily with nixos-rebuild --dry-run)"
+    echo "    --dry, -d            Dry-run mode (test changes temporarily with nixos-rebuild dry-run)"
+    echo "    -rd                  Dry-run then rebuild if successful (interactive)"
+    echo "    -rsd                 Dry-run then rebuild with git skip if successful"
+    echo "    -rm \"message\"        Rebuild system with commit message (non-interactive)"
+    echo "    -rdm \"message\"       Dry-run then rebuild with commit message if successful (streamlined)"
     echo ""
     echo "💡 EXAMPLES:"
     echo "    nixpkg files                   # Show configuration file structure"
@@ -956,9 +1078,16 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "    nixpkg add vim system -r       # Add vim to system and rebuild"
     echo "    nixpkg add firefox theme --fast # Add to theme and rebuild (skip git)"
     echo "    nixpkg add gimp theme -rs      # Add to theme, rebuild, skip git (shorthand)"
-    echo "    nixpkg add htop theme --dry    # Test adding package with nixos-rebuild dry-run"
+    echo "    nixpkg add htop theme -d       # Test adding package with nixos-rebuild dry-run"
+    echo "    nixpkg add htop theme -rd      # Test then rebuild if successful"
+    echo "    nixpkg add htop theme -rsd     # Test then rebuild with git skip if successful"
+    echo "    nixpkg add htop theme -rm \"Add htop\"  # Rebuild with commit message"
+    echo "    nixpkg add htop theme -rdm \"Add htop\" # Test then rebuild with commit message"
     echo "    nixpkg remove htop screenshot  # Remove from home-screenshot.nix"
     echo "    nixpkg search browser          # Search for browser packages"
+    echo "    nixpkg rebuild                 # Apply NixOS configuration"
+    echo "    nixpkg apply -rs               # Apply configuration and skip git"
+    echo "    nixpkg apply -rm \"Config update\"    # Apply with commit message"
     echo ""
     echo "🔗 ABBREVIATIONS AVAILABLE:"
     echo "    pkgls    = nixpkg list"
@@ -1059,6 +1188,28 @@ function _nixpkg_manual -d "Show detailed manual for nixpkg function"
     echo "    • Backup system with automatic restoration on failure"
     echo "    • Intelligent duplicate prevention"
     echo "    • Cross-file package search and management"
+    echo "    • Streamlined rebuild workflow with commit message integration"
+    echo "    • Git-aware dry-run testing with automatic rollback"
+    echo ""
+    echo "🚀 STREAMLINED WORKFLOW FLAGS:"
+    echo "    The -rdm and -rm flags provide fully automated workflows:"
+    echo ""
+    echo "    -rdm \"commit message\" (RECOMMENDED):"
+    echo "      1. Add/remove package to configuration"
+    echo "      2. Run nixos-rebuild dry-run to test"
+    echo "      3. If test passes, rebuild and commit with message"
+    echo "      4. If test fails, revert changes automatically"
+    echo "      → Perfect for automated/LLM workflows"
+    echo ""
+    echo "    -rm \"commit message\" (DIRECT):"
+    echo "      1. Add/remove package to configuration"
+    echo "      2. Rebuild and commit with message immediately"
+    echo "      → For when you're confident the change will work"
+    echo ""
+    echo "    Examples of streamlined workflow:"
+    echo "      nixpkg add firefox -rdm \"Add Firefox browser\""
+    echo "      nixpkg add vim theme -rdm \"Add vim to theme config\""
+    echo "      nixpkg remove htop -rdm \"Remove htop utility\""
     echo ""
     echo "🆘 TROUBLESHOOTING:"
     echo "    • Use 'nixpkg files' to see available home-*.nix files"
