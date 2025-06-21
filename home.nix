@@ -125,7 +125,7 @@
     enable = true;
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 12;
+      size = 10;
     };
     settings = {
       # Cursor
@@ -273,7 +273,14 @@
     shellInit = ''
       set -Ux NIXOS_CONFIG_DIR $HOME/nixos-config
       set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0
-      set -g fish_greeting "" # Disable fish greeting.
+      set -g fish_greeting "" # Disable default fish greeting.
+
+      # Custom greeting with fastfetch
+      function fish_greeting
+          if command -v fastfetch >/dev/null 2>&1
+              fastfetch
+          end
+      end
       fish_add_path $HOME/bin # Add user's bin directory to PATH.
       if status is-interactive
           starship init fish | source # Initialize Starship prompt.
@@ -369,6 +376,12 @@
     recursive = true;
   };
 
+  # Fastfetch config - temporarily disabled for build
+  # home.file.".config/fastfetch" = {
+  #   source = ./fastfetch_config;
+  #   recursive = true;
+  # };
+
   # Screenshot scripts - temporarily disabled for build
   # home.file.".local/bin/screenshot-full" = {
   #   source = ./scripts/screenshot-full.sh;
@@ -409,6 +422,7 @@
     kitty
     fuzzel
     jq
+    fastfetch
     # Screenshot utilities
     grim
     slurp
