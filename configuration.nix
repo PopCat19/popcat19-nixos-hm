@@ -253,15 +253,30 @@
   ];
 
   # **FONTS CONFIGURATION**
-  # Installs system-wide fonts.
+  # Installs system-wide fonts with comprehensive CJK support.
   fonts.packages = with pkgs; [
+    # Core Noto fonts family
     noto-fonts
     noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
     noto-fonts-emoji
+    noto-fonts-extra
+
+    # M+ fonts for Japanese
+    mplus-outline-fonts.githubRelease
+
+    # Other essential fonts
     font-awesome
     nerd-fonts.jetbrains-mono
   ];
 
   # Enable fontconfig for better font rendering
-  fonts.fontconfig.enable = true;
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts = {
+      serif = [ "Noto Serif" "Noto Serif CJK JP" ];
+      sansSerif = [ "Noto Sans" "Noto Sans CJK JP" ];
+      monospace = [ "JetBrainsMono Nerd Font" ];
+    };
+  };
 }
