@@ -100,9 +100,19 @@
       echo "🧪 Basic Functionality Test:"
       if command -v grim >/dev/null 2>&1 && command -v slurp >/dev/null 2>&1; then
           echo "  ✅ Screenshot system ready"
-          echo "  💡 Usage: screenshot [full|region]"
+          echo "  💡 Usage: screenshot [full|region|test-hyprshade]"
       else
           echo "  ❌ Screenshot system not ready - missing core tools"
+      fi
+
+      # Test hyprshade restoration functionality
+      echo ""
+      echo "🧪 Hyprshade Restoration Test:"
+      if command -v hyprshade >/dev/null 2>&1; then
+          echo "  ✅ hyprshade available - restoration test available"
+          echo "  💡 Run: screenshot test-hyprshade"
+      else
+          echo "  ⚠️  hyprshade not available - restoration not needed"
       fi
 
       echo ""
@@ -152,6 +162,7 @@
       SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
       TEMP_DIR="/tmp/screenshot-$$"
       TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+      GLOBAL_SAVED_SHADER=""  # Global variable for hyprshade state
 
       # ─── UTILITY FUNCTIONS ───
 
@@ -199,17 +210,52 @@
           esac
       }
 
-      # Function to send notification
+      # Function to send notification with optional action
       notify_user() {
           local title="$1"
           local message="$2"
           local icon="''${3:-}"
+          local filepath="''${4:-}"
 
           if command -v notify-send &> /dev/null; then
-              if [[ -n "$icon" ]] && [[ -f "$icon" ]]; then
-                  notify-send "$title" "$message" -i "$icon"
+              if [[ -n "$filepath" ]] && [[ -f "$filepath" ]]; then
+                  # Enhanced notification with action to copy full path
+                  if [[ -n "$icon" ]] && [[ -f "$icon" ]]; then
+                      notify-send "$title" "$message" -i "$icon" \
+                          --action="copy_path=Copy Path" \
+                          --action="open_folder=Open Folder" | while read action; do
+                          case "$action" in
+                              "copy_path")
+                                  echo "$filepath" | wl-copy
+                                  notify-send "Path Copied" "Full path copied to clipboard"
+                                  ;;
+                              "open_folder")
+                                  xdg-open "$(dirname "$filepath")"
+                                  ;;
+                          esac
+                      done &
+                  else
+                      notify-send "$title" "$message" \
+                          --action="copy_path=Copy Path" \
+                          --action="open_folder=Open Folder" | while read action; do
+                          case "$action" in
+                              "copy_path")
+                                  echo "$filepath" | wl-copy
+                                  notify-send "Path Copied" "Full path copied to clipboard"
+                                  ;;
+                              "open_folder")
+                                  xdg-open "$(dirname "$filepath")"
+                                  ;;
+                          esac
+                      done &
+                  fi
               else
-                  notify-send "$title" "$message"
+                  # Fallback for notifications without file path actions
+                  if [[ -n "$icon" ]] && [[ -f "$icon" ]]; then
+                      notify-send "$title" "$message" -i "$icon"
+                  else
+                      notify-send "$title" "$message"
+                  fi
               fi
           fi
       }
@@ -262,7 +308,7 @@
 
           # Copy to clipboard and notify
           copy_to_clipboard "$filepath"
-          notify_user "Screenshot" "Full screenshot saved to Pictures/Screenshots" "$filepath"
+          notify_user "Screenshot" "Full screenshot saved to Pictures/Screenshots" "$filepath" "$filepath"
 
           return 0
       }
@@ -281,16 +327,20 @@
 
           # Use grimblast with freeze for still-image frame effect
           if command -v grimblast &> /dev/null; then
-              if grimblast --notify --freeze save area "$filepath" 2>/dev/null; then
+              if grimblast --freeze save area "$filepath" 2>/dev/null; then
                   echo "Region screenshot saved to: $filepath"
 
-                  # Copy to clipboard and notify
+                  # Copy to clipboard and notify with actions
                   copy_to_clipboard "$filepath"
-                  notify_user "Screenshot" "Region screenshot saved to Pictures/Screenshots" "$filepath"
+                  notify_user "Screenshot" "Region screenshot saved to Pictures/Screenshots" "$filepath" "$filepath"
 
                   return 0
               else
                   echo "Screenshot cancelled - no region selected"
+                  # Restore hyprshade on cancellation
+                  if [[ -n "$GLOBAL_SAVED_SHADER" ]]; then
+                      manage_hyprshade "restore" "$GLOBAL_SAVED_SHADER"
+                  fi
                   return 1
               fi
           else
@@ -330,9 +380,9 @@
               grim -g "$region" "$filepath"
               echo "Region screenshot saved to: $filepath"
 
-              # Copy to clipboard and notify
+              # Copy to clipboard and notify with actions
               copy_to_clipboard "$filepath"
-              notify_user "Screenshot" "Region screenshot saved to Pictures/Screenshots" "$filepath"
+              notify_user "Screenshot" "Region screenshot saved to Pictures/Screenshots" "$filepath" "$filepath"
 
               return 0
           else
@@ -343,8 +393,9 @@
 
       # Function to take region screenshot with still-image frame
       take_region_screenshot() {
-          # Save current hyprshade state
-          SAVED_SHADER=$(get_hyprshade_state)
+          # Save current hyprshade state globally
+          GLOBAL_SAVED_SHADER=$(get_hyprshade_state)
+          echo "Saved hyprshade state: '$GLOBAL_SAVED_SHADER'"
 
           # Disable hyprshade for cleaner selection
           manage_hyprshade "off"
@@ -355,31 +406,83 @@
           # Try grimblast first for freeze functionality
           if take_region_screenshot_with_freeze; then
               # Restore hyprshade
-              if [[ -n "$SAVED_SHADER" ]]; then
-                  manage_hyprshade "restore" "$SAVED_SHADER"
+              if [[ -n "$GLOBAL_SAVED_SHADER" ]]; then
+                  echo "Restoring hyprshade state: '$GLOBAL_SAVED_SHADER'"
+                  manage_hyprshade "restore" "$GLOBAL_SAVED_SHADER"
               fi
               return 0
           elif [[ $? -eq 2 ]]; then
               # Grimblast not available, use fallback
               if take_region_screenshot_fallback; then
                   # Restore hyprshade
-                  if [[ -n "$SAVED_SHADER" ]]; then
-                      manage_hyprshade "restore" "$SAVED_SHADER"
+                  if [[ -n "$GLOBAL_SAVED_SHADER" ]]; then
+                      echo "Restoring hyprshade state: '$GLOBAL_SAVED_SHADER'"
+                      manage_hyprshade "restore" "$GLOBAL_SAVED_SHADER"
                   fi
                   return 0
               else
                   # Restore hyprshade on failure
-                  if [[ -n "$SAVED_SHADER" ]]; then
-                      manage_hyprshade "restore" "$SAVED_SHADER"
+                  if [[ -n "$GLOBAL_SAVED_SHADER" ]]; then
+                      echo "Restoring hyprshade state: '$GLOBAL_SAVED_SHADER'"
+                      manage_hyprshade "restore" "$GLOBAL_SAVED_SHADER"
                   fi
                   return 1
               fi
           else
-              # Grimblast failed (user cancelled)
-              # Restore hyprshade
-              if [[ -n "$SAVED_SHADER" ]]; then
-                  manage_hyprshade "restore" "$SAVED_SHADER"
-              fi
+              # Grimblast failed (user cancelled) - hyprshade already restored in function
+              return 1
+          fi
+      }
+
+      # Function to test hyprshade restoration
+      test_hyprshade_restoration() {
+          echo "🧪 Testing hyprshade restoration..."
+
+          # Check if hyprshade is available
+          if ! command -v hyprshade &> /dev/null; then
+              echo "⚠️  hyprshade not found - skipping restoration test"
+              return 0
+          fi
+
+          # Get initial state
+          local initial_state
+          initial_state=$(get_hyprshade_state)
+          echo "Initial hyprshade state: '$initial_state'"
+
+          # Simulate the screenshot workflow
+          echo "Simulating region screenshot workflow..."
+
+          # Save state (like in region screenshot)
+          GLOBAL_SAVED_SHADER="$initial_state"
+
+          # Turn off hyprshade
+          echo "Disabling hyprshade..."
+          manage_hyprshade "off"
+          sleep 0.5
+
+          local current_state
+          current_state=$(get_hyprshade_state)
+          echo "State after disable: '$current_state'"
+
+          # Restore hyprshade
+          echo "Restoring hyprshade..."
+          if [[ -n "$GLOBAL_SAVED_SHADER" ]]; then
+              manage_hyprshade "restore" "$GLOBAL_SAVED_SHADER"
+          fi
+          sleep 0.5
+
+          local final_state
+          final_state=$(get_hyprshade_state)
+          echo "Final hyprshade state: '$final_state'"
+
+          # Verify restoration
+          if [[ "$initial_state" == "$final_state" ]]; then
+              echo "✅ Hyprshade restoration test PASSED"
+              return 0
+          else
+              echo "❌ Hyprshade restoration test FAILED"
+              echo "   Expected: '$initial_state'"
+              echo "   Got: '$final_state'"
               return 1
           fi
       }
@@ -428,7 +531,13 @@
               echo "  • Mouse click - Cancel selection"
               echo "  • Drag - Select area"
               echo "  • Space + drag - Move selection"
+              echo ""
+              echo "Testing Commands:"
+              echo "  screenshot test-hyprshade - Test hyprshade restoration"
               exit 1
+              ;;
+          "test-hyprshade")
+              test_hyprshade_restoration
               ;;
       esac
 
