@@ -33,7 +33,7 @@ with pkgs; [
   jdk                                # Java Development Kit (moved from system-level)
   nodejs                             # Node.js runtime (moved from system-level)
   git-lfs                            # Git Large File Storage
-  jq                                 # JSON processor (used in screenshot scripts)
+  jq                                 # JSON processor
   tree                               # Directory tree display
   eza                                # Modern ls replacement (used in fish abbrs)
   starship                           # Shell prompt (configured above)
@@ -42,18 +42,13 @@ with pkgs; [
   ranger                             # Terminal file manager (moved from system-level)
   superfile                          # Modern terminal file manager (moved from system-level)
 
-  # ─── SCREENSHOT AND GRAPHICS TOOLS ───
-  grim                               # Wayland screenshot utility (used in scripts)
-  slurp                              # Region selection for screenshots (used in scripts)
-  wl-clipboard                       # Wayland clipboard utilities (used in scripts)
-  swappy                             # Screenshot annotation tool
-  satty                              # Another screenshot annotation tool
+  # ─── GRAPHICS TOOLS ───
   hyprpicker                         # Color picker for Hyprland
 
   # ─── HYPRLAND ECOSYSTEM ───
   hyprpolkitagent                    # Polkit agent for Hyprland
   hyprutils                          # Hyprland utilities
-  hyprshade                          # Screen shader manager (used in screenshot scripts)
+  hyprshade                          # Screen shader manager
   hyprpanel                          # Panel for Hyprland
 
   # ─── GAMING AND PERFORMANCE ───
@@ -118,7 +113,7 @@ with pkgs; [
   kdePackages.kio-extras             # KDE I/O plugins
 
   # ─── SYSTEM INTEGRATION ───
-  libnotify                          # Desktop notifications (used in screenshot scripts)
+  libnotify                          # Desktop notifications
   zenity                             # Dialog boxes for scripts
 
   # ─── UTILITIES ───
