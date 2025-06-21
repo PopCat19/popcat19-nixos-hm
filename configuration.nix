@@ -251,6 +251,7 @@
     wget
     curl
     git
+    gh                                 # GitHub CLI (needed for git operations)
     xdg-utils
     shared-mime-info
 
@@ -261,7 +262,6 @@
     rocmPackages.rpp
 
     # User applications moved to home-packages.nix:
-    # - gh (GitHub CLI)
     # - ranger, superfile (file managers)
     # - nodejs (development tool)
     # - grim, slurp, wl-clipboard (screenshot tools)

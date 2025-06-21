@@ -32,7 +32,6 @@ with pkgs; [
   # ─── DEVELOPMENT TOOLS ───
   java                               # Java runtime environment (moved from system-level)
   nodejs                             # Node.js runtime (moved from system-level)
-  gh                                 # GitHub CLI (moved from system-level)
   git-lfs                            # Git Large File Storage
   jq                                 # JSON processor (used in screenshot scripts)
   tree                               # Directory tree display
