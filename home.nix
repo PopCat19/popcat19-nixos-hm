@@ -555,11 +555,11 @@
     recursive = true;
   };
 
-  # Fastfetch config - temporarily disabled for build
-  # home.file.".config/fastfetch" = {
-  #   source = ./fastfetch_config;
-  #   recursive = true;
-  # };
+  # Fastfetch config - Rose Pine themed from hydenix
+  home.file.".config/fastfetch" = {
+    source = ./fastfetch_config;
+    recursive = true;
+  };
 
   # Micro editor colorscheme - temporarily disabled for build
   # home.file.".config/micro/colorschemes/rose-pine.micro" = {
