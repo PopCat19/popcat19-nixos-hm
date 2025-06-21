@@ -547,7 +547,6 @@
     mangohud
     goverlay
     # Additional theme packages
-    kdePackages.breeze-icons
     catppuccin-cursors
     # Screenshot utilities
     grim
