@@ -108,13 +108,44 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
             return 1
         end
         if test $dry_run_flag = true
-            echo "🔍 Dry-run mode: Would add '$clean_args[1]' to $target configuration"
+            echo "🔍 Dry-run mode: Testing addition of '$clean_args[1]' to $target configuration"
             echo "    Target file: $config_file"
-            echo "    Package section: $package_section"
             if test -n "$home_file_spec"
                 echo "    Home file spec: $home_file_spec"
             end
-            return 0
+            echo ""
+
+            # Create temporary backup for dry-run
+            set -l temp_backup "$config_file.dry-run-backup"
+            cp "$config_file" "$temp_backup"
+
+            echo "🧪 Temporarily adding package and testing configuration..."
+            if _nixpkg_add "$config_file" "$package_section" "$clean_args[1]" "$target" "$home_file_spec"
+                echo "✅ Package temporarily added. Testing with nixos-rebuild --dry-run..."
+                echo ""
+
+                # Test with nixos-rebuild dry-run
+                if sudo nixos-rebuild dry-run --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME"
+                    echo ""
+                    echo "✅ Dry-run successful! Configuration would work with this package."
+                    echo "💡 Run without --dry to apply changes permanently."
+                    set -l exit_code 0
+                else
+                    echo ""
+                    echo "❌ Dry-run failed! This package would cause configuration issues."
+                    set -l exit_code 1
+                end
+
+                # Restore original file
+                mv "$temp_backup" "$config_file"
+                echo "🔄 Original configuration restored."
+                return $exit_code
+            else
+                # Restore original file on add failure
+                mv "$temp_backup" "$config_file"
+                echo "❌ Failed to temporarily add package."
+                return 1
+            end
         end
         _nixpkg_add "$config_file" "$package_section" \
             "$clean_args[1]" "$target" "$home_file_spec"
@@ -133,13 +164,44 @@ function nixpkg -d "📦 Manage NixOS packages: list/add/remove from config file
             return 1
         end
         if test $dry_run_flag = true
-            echo "🔍 Dry-run mode: Would remove '$clean_args[1]' from $target configuration"
+            echo "🔍 Dry-run mode: Testing removal of '$clean_args[1]' from $target configuration"
             echo "    Target file: $config_file"
-            echo "    Package section: $package_section"
             if test -n "$home_file_spec"
                 echo "    Home file spec: $home_file_spec"
             end
-            return 0
+            echo ""
+
+            # Create temporary backup for dry-run
+            set -l temp_backup "$config_file.dry-run-backup"
+            cp "$config_file" "$temp_backup"
+
+            echo "🧪 Temporarily removing package and testing configuration..."
+            if _nixpkg_remove "$config_file" "$package_section" "$clean_args[1]" "$target" "$home_file_spec"
+                echo "✅ Package temporarily removed. Testing with nixos-rebuild --dry-run..."
+                echo ""
+
+                # Test with nixos-rebuild dry-run
+                if sudo nixos-rebuild dry-run --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME"
+                    echo ""
+                    echo "✅ Dry-run successful! Configuration would work without this package."
+                    echo "💡 Run without --dry to apply changes permanently."
+                    set -l exit_code 0
+                else
+                    echo ""
+                    echo "❌ Dry-run failed! Removing this package would cause configuration issues."
+                    set -l exit_code 1
+                end
+
+                # Restore original file
+                mv "$temp_backup" "$config_file"
+                echo "🔄 Original configuration restored."
+                return $exit_code
+            else
+                # Restore original file on remove failure
+                mv "$temp_backup" "$config_file"
+                echo "❌ Failed to temporarily remove package (package may not exist)."
+                return 1
+            end
         end
         _nixpkg_remove "$config_file" "$package_section" \
             "$clean_args[1]" "$target" "$home_file_spec"
@@ -882,7 +944,7 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "    --rebuild, -r        Rebuild system after making changes"
     echo "    --fast, --skip       Rebuild system and skip git operations"
     echo "    -rs                  Rebuild system and skip git operations (shorthand)"
-    echo "    --dry                Dry-run mode (show what would be done without doing it)"
+    echo "    --dry                Dry-run mode (test changes temporarily with nixos-rebuild --dry-run)"
     echo ""
     echo "💡 EXAMPLES:"
     echo "    nixpkg files                   # Show configuration file structure"
@@ -894,7 +956,7 @@ function _nixpkg_help -d "Show help for nixpkg function"
     echo "    nixpkg add vim system -r       # Add vim to system and rebuild"
     echo "    nixpkg add firefox theme --fast # Add to theme and rebuild (skip git)"
     echo "    nixpkg add gimp theme -rs      # Add to theme, rebuild, skip git (shorthand)"
-    echo "    nixpkg add htop theme --dry    # Show what would be added (dry-run)"
+    echo "    nixpkg add htop theme --dry    # Test adding package with nixos-rebuild dry-run"
     echo "    nixpkg remove htop screenshot  # Remove from home-screenshot.nix"
     echo "    nixpkg search browser          # Search for browser packages"
     echo ""
