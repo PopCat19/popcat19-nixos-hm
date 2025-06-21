@@ -50,7 +50,7 @@ tree -L 4
 ### For Package Operations
 1. **Single Command Package Management**:
    ```bash
-   nixpkg add <package> -rdm "Add <package> for <purpose>"
+   fish -c "nixpkg add <package> -rdm 'add <package> for <purpose>'"
    ```
    - This automatically: adds package → tests config → rebuilds → commits
    - No manual git operations needed
@@ -58,8 +58,8 @@ tree -L 4
 
 2. **Multiple Package Categories**:
    ```bash
-   nixpkg add firefox theme -rdm "Add Firefox to theme config"
-   nixpkg add flameshot screenshot -rdm "Add screenshot tool"
+   fish -c "nixpkg add firefox theme -rdm 'Add Firefox to theme config'"
+   fish -c "nixpkg add flameshot screenshot -rdm 'Add screenshot tool'"
    ```
 
 ### For Manual Configuration Changes
@@ -67,7 +67,7 @@ tree -L 4
 2. Check repo structure with `tree -L 4`
 3. **IMPORTANT: Add new files/dirs to git** with `git add .` (required for flake compatibility)
 4. **Test build first** with `fish -c "nix build --dry-run .#nixosConfigurations.popcat19-nixos0.config.system.build.toplevel"` (no sudo required)
-5. **Only after dry-run succeeds**, rebuild with `fish -c 'nixos-apply-config -m "<short-commit>"'`
+5. **Only after dry-run succeeds**, rebuild with `fish -c "nixos-apply-config -m '<short-commit>'"`
 
 ### Troubleshooting
 1. If package operations fail, use `nix search` to find correct package names
@@ -82,11 +82,11 @@ tree -L 4
 # Manual editing of nix files
 git add .
 nix build --dry-run .#nixosConfigurations.popcat19-nixos0.config.system.build.toplevel
-fish -c 'nixos-apply-config -m "commit message"'
+fish -c "nixos-apply-config -m '<short-commit>'"
 ```
 
 **New Streamlined Process:**
 ```bash
-nixpkg add <package> -rdm "commit message"
+fish -c "nixpkg add <package> -rdm '<short-commit>'"
 # Done! Everything automated with safety checks
 ```
