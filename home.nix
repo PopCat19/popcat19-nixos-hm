@@ -19,7 +19,7 @@
     QT_QPA_PLATFORM = "wayland;xcb"; # Qt Wayland and XCB platform.
 
     # GTK theming environment variables
-    GTK_THEME = "rose-pine-gtk-theme"; # Force GTK theme
+    GTK_THEME = "Rosepine-Dark"; # Force GTK theme
     GDK_BACKEND = "wayland,x11,*"; # GTK backend preference
     XCURSOR_THEME = "rose-pine-hyprcursor"; # X11 cursor theme
     XCURSOR_SIZE = "24"; # Cursor size
@@ -66,8 +66,7 @@
       package = inputs.rose-pine-hyprcursor.packages.${system}.default;
     };
     theme = {
-      name = "rose-pine-gtk-theme";
-      package = pkgs.rose-pine-gtk-theme;
+      name = "Rosepine-Dark";
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -242,7 +241,7 @@
     "org/gnome/desktop/interface" = {
       cursor-theme = "rose-pine-hyprcursor";
       cursor-size = 24;
-      gtk-theme = "rose-pine-gtk-theme";
+      gtk-theme = "Rosepine-Dark";
       icon-theme = "Papirus-Dark";
       font-name = "CaskaydiaCove Nerd Font 11";
       document-font-name = "CaskaydiaCove Nerd Font 11";
@@ -250,7 +249,7 @@
       color-scheme = "prefer-dark";
     };
     "org/gnome/desktop/wm/preferences" = {
-      theme = "rose-pine-gtk-theme";
+      theme = "Rosepine-Dark";
     };
   };
 
@@ -750,7 +749,6 @@
     nwg-look
     dconf-editor
     # Additional theming packages for manual configuration
-    rose-pine-gtk-theme
     catppuccin-gtk
     papirus-icon-theme
     adwaita-icon-theme

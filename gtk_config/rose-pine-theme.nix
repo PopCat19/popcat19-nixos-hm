@@ -1,31 +1,26 @@
-{ config, lib, pkgs, inputs, system, ... }:
+{ config, lib, pkgs, ... }:
 
 {
-  # Comprehensive Rose Pine GTK Theme Configuration
-  # This module provides complete Rose Pine theming for GTK applications
-  # inspired by hydenix's theming approach
-
-  # GTK Theme Configuration - Rose Pine themed
+  # GTK Theme Configuration - Using existing Rosepine-Dark theme
   gtk = {
     enable = true;
 
-    # Cursor theme with Rose Pine hyprcursor
-    cursorTheme = {
-      name = "rose-pine-hyprcursor";
-      size = 24;
-      package = inputs.rose-pine-hyprcursor.packages.${system}.default;
-    };
-
-    # Main GTK theme
+    # Use the existing Rosepine-Dark theme that's already available
     theme = {
-      name = "rose-pine-gtk-theme";
-      package = pkgs.rose-pine-gtk-theme;
+      name = "Rosepine-Dark";
     };
 
     # Icon theme - Papirus with dark variant
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
+    };
+
+    # Cursor theme
+    cursorTheme = {
+      name = "Adwaita";
+      size = 24;
+      package = pkgs.adwaita-icon-theme;
     };
 
     # Font configuration
@@ -36,10 +31,10 @@
 
     # GTK2 configuration
     gtk2.extraConfig = ''
-      gtk-theme-name="rose-pine-gtk-theme"
+      gtk-theme-name="Rosepine-Dark"
       gtk-icon-theme-name="Papirus-Dark"
       gtk-font-name="CaskaydiaCove Nerd Font 11"
-      gtk-cursor-theme-name="rose-pine-hyprcursor"
+      gtk-cursor-theme-name="Adwaita"
       gtk-cursor-theme-size=24
       gtk-toolbar-style=GTK_TOOLBAR_BOTH_HORIZ
       gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR
@@ -78,139 +73,16 @@
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
     };
-
-    # GTK3 CSS customizations for Rose Pine
-    gtk3.extraCss = ''
-      /* Rose Pine GTK3 Customizations */
-      @define-color rose_pine_base #191724;
-      @define-color rose_pine_surface #1f1d2e;
-      @define-color rose_pine_overlay #26233a;
-      @define-color rose_pine_muted #6e6a86;
-      @define-color rose_pine_subtle #908caa;
-      @define-color rose_pine_text #e0def4;
-      @define-color rose_pine_love #eb6f92;
-      @define-color rose_pine_gold #f6c177;
-      @define-color rose_pine_rose #ebbcba;
-      @define-color rose_pine_pine #31748f;
-      @define-color rose_pine_foam #9ccfd8;
-      @define-color rose_pine_iris #c4a7e7;
-
-      /* Window decorations */
-      .titlebar {
-        background: @rose_pine_surface;
-        color: @rose_pine_text;
-      }
-
-      /* Buttons */
-      button {
-        background: @rose_pine_overlay;
-        color: @rose_pine_text;
-        border: 1px solid @rose_pine_muted;
-      }
-
-      button:hover {
-        background: @rose_pine_muted;
-        color: @rose_pine_text;
-      }
-
-      button:active {
-        background: @rose_pine_love;
-        color: @rose_pine_base;
-      }
-
-      /* Entry fields */
-      entry {
-        background: @rose_pine_surface;
-        color: @rose_pine_text;
-        border: 1px solid @rose_pine_muted;
-      }
-
-      entry:focus {
-        border-color: @rose_pine_foam;
-      }
-
-      /* Scrollbars */
-      scrollbar {
-        background: @rose_pine_overlay;
-      }
-
-      scrollbar slider {
-        background: @rose_pine_muted;
-        border-radius: 8px;
-      }
-
-      scrollbar slider:hover {
-        background: @rose_pine_subtle;
-      }
-    '';
-
-    # GTK4 CSS customizations for Rose Pine
-    gtk4.extraCss = ''
-      /* Rose Pine GTK4 Customizations */
-      @define-color rose_pine_base #191724;
-      @define-color rose_pine_surface #1f1d2e;
-      @define-color rose_pine_overlay #26233a;
-      @define-color rose_pine_muted #6e6a86;
-      @define-color rose_pine_subtle #908caa;
-      @define-color rose_pine_text #e0def4;
-      @define-color rose_pine_love #eb6f92;
-      @define-color rose_pine_gold #f6c177;
-      @define-color rose_pine_rose #ebbcba;
-      @define-color rose_pine_pine #31748f;
-      @define-color rose_pine_foam #9ccfd8;
-      @define-color rose_pine_iris #c4a7e7;
-
-      /* Window styling */
-      window {
-        background: @rose_pine_base;
-        color: @rose_pine_text;
-      }
-
-      /* Header bars */
-      headerbar {
-        background: @rose_pine_surface;
-        color: @rose_pine_text;
-      }
-
-      /* Buttons */
-      button {
-        background: @rose_pine_overlay;
-        color: @rose_pine_text;
-        border: 1px solid @rose_pine_muted;
-        border-radius: 6px;
-      }
-
-      button:hover {
-        background: @rose_pine_muted;
-      }
-
-      button:active {
-        background: @rose_pine_love;
-        color: @rose_pine_base;
-      }
-
-      /* Entry fields */
-      entry {
-        background: @rose_pine_surface;
-        color: @rose_pine_text;
-        border: 1px solid @rose_pine_muted;
-        border-radius: 6px;
-      }
-
-      entry:focus {
-        border-color: @rose_pine_foam;
-        box-shadow: 0 0 0 2px alpha(@rose_pine_foam, 0.3);
-      }
-    '';
   };
 
-  # QT Theme Configuration - Rose Pine themed
+  # QT Theme Configuration
   qt = {
     enable = true;
     style = {
-      name = "kvantum";
-      package = pkgs.libsForQt5.qtstyleplugin-kvantum;
+      name = "adwaita-dark";
+      package = pkgs.adwaita-qt;
     };
+    platformTheme = "gnome";
   };
 
   # Additional theming packages
@@ -220,142 +92,22 @@
     gtk4
     glib
     gsettings-desktop-schemas
-    gnome-settings-daemon
     nwg-look
 
-    # Icon and cursor themes
+    # Icon themes
     adwaita-icon-theme
     papirus-icon-theme
-    rose-pine-gtk-theme
 
     # Qt theming
-    libsForQt5.qtstyleplugin-kvantum
-    qt6Packages.qtstyleplugin-kvantum
-    rose-pine-kvantum
+    adwaita-qt
+    qt5.qttools
+    qt6Packages.qt6ct
 
     # Additional utilities
     dconf-editor
-    gnome-tweaks
   ];
 
-  # Kvantum theme configuration
-  home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/themes/rose-pine-rose";
-
-  # Kvantum configuration with application-specific overrides
-  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
-    [General]
-    theme=rose-pine-rose
-
-    [Applications]
-    dolphin=rose-pine-rose
-    ark=rose-pine-rose
-    gwenview=rose-pine-rose
-    systemsettings=rose-pine-rose
-    kate=rose-pine-rose
-    kwrite=rose-pine-rose
-    konsole=rose-pine-rose
-    yakuake=rose-pine-rose
-    okular=rose-pine-rose
-    spectacle=rose-pine-rose
-    kdeconnect-app=rose-pine-rose
-    plasma-systemmonitor=rose-pine-rose
-  '';
-
-  # Critical: kdeglobals configuration for KDE applications
-  home.file.".config/kdeglobals" = {
-    text = ''
-      [ColorScheme]
-      Name=RosePine
-
-      [Colors:Button]
-      BackgroundAlternate=49,46,77
-      BackgroundNormal=49,46,77
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=224,222,244
-      ForegroundInactive=144,140,170
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
-
-      [Colors:Selection]
-      BackgroundAlternate=156,207,216
-      BackgroundNormal=156,207,216
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=25,23,36
-      ForegroundInactive=25,23,36
-      ForegroundLink=25,23,36
-      ForegroundNegative=25,23,36
-      ForegroundNeutral=25,23,36
-      ForegroundNormal=25,23,36
-      ForegroundPositive=25,23,36
-      ForegroundVisited=25,23,36
-
-      [Colors:Tooltip]
-      BackgroundAlternate=31,29,46
-      BackgroundNormal=31,29,46
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=224,222,244
-      ForegroundInactive=144,140,170
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
-
-      [Colors:View]
-      BackgroundAlternate=31,29,46
-      BackgroundNormal=25,23,36
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=224,222,244
-      ForegroundInactive=110,106,134
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
-
-      [Colors:Window]
-      BackgroundAlternate=31,29,46
-      BackgroundNormal=25,23,36
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=224,222,244
-      ForegroundInactive=144,140,170
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
-
-      [General]
-      ColorScheme=RosePine
-      Name=Rose Pine
-      shadeSortColumn=true
-
-      [KDE]
-      contrast=4
-
-      [WM]
-      activeBackground=49,46,77
-      activeForeground=224,222,244
-      inactiveBackground=38,35,58
-      inactiveForeground=144,140,170
-    '';
-    force = true;
-    mutable = true;
-  };
-
-  # GTK bookmarks for file manager (with Rose Pine friendly paths)
+  # GTK bookmarks for file manager
   home.file.".config/gtk-3.0/bookmarks".text = ''
     file:///home/${config.home.username}/Documents Documents
     file:///home/${config.home.username}/Downloads Downloads
@@ -369,9 +121,9 @@
   home.file.".config/nwg-look/config" = {
     text = ''
       {
-        "gtk-theme": "rose-pine-gtk-theme",
+        "gtk-theme": "Rosepine-Dark",
         "icon-theme": "Papirus-Dark",
-        "cursor-theme": "rose-pine-hyprcursor",
+        "cursor-theme": "Adwaita",
         "cursor-size": 24,
         "font-name": "CaskaydiaCove Nerd Font 11",
         "prefer-dark": true,
@@ -392,9 +144,9 @@
   # X11 settings daemon configuration for legacy applications
   home.file.".config/xsettingsd/xsettingsd.conf" = {
     text = ''
-      Net/ThemeName "rose-pine-gtk-theme"
+      Net/ThemeName "Rosepine-Dark"
       Net/IconThemeName "Papirus-Dark"
-      Gtk/CursorThemeName "rose-pine-hyprcursor"
+      Gtk/CursorThemeName "Adwaita"
       Gtk/CursorThemeSize 24
       Net/SoundThemeName "default"
       Net/EnableEventSounds 1
@@ -428,9 +180,9 @@
   # GSettings (dconf) configuration for GTK applications
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      gtk-theme = "rose-pine-gtk-theme";
+      gtk-theme = "Rosepine-Dark";
       icon-theme = "Papirus-Dark";
-      cursor-theme = "rose-pine-hyprcursor";
+      cursor-theme = "Adwaita";
       cursor-size = 24;
       font-name = "CaskaydiaCove Nerd Font 11";
       color-scheme = "prefer-dark";
@@ -440,7 +192,7 @@
 
     "org/gnome/desktop/wm/preferences" = {
       button-layout = "appmenu:minimize,maximize,close";
-      theme = "rose-pine-gtk-theme";
+      theme = "Rosepine-Dark";
     };
 
     "org/gtk/settings/file-chooser" = {
@@ -449,23 +201,23 @@
       show-size-column = true;
       show-type-column = true;
       sidebar-width = 170;
-      window-position = mkTuple [ 300 300 ];
-      window-size = mkTuple [ 1000 600 ];
+      window-position = lib.hm.gvariant.mkTuple [ 300 300 ];
+      window-size = lib.hm.gvariant.mkTuple [ 1000 600 ];
     };
   };
 
   # Session variables for consistent theming
   home.sessionVariables = {
     # GTK theming
-    GTK_THEME = "rose-pine-gtk-theme";
+    GTK_THEME = "Rosepine-Dark";
     GTK2_RC_FILES = "${config.home.homeDirectory}/.gtkrc-2.0";
 
     # Qt theming
-    QT_STYLE_OVERRIDE = "kvantum";
-    QT_QPA_PLATFORMTHEME = "qt6ct";
+    QT_STYLE_OVERRIDE = "adwaita-dark";
+    QT_QPA_PLATFORMTHEME = "gnome";
 
     # Cursor theming
-    XCURSOR_THEME = "rose-pine-hyprcursor";
+    XCURSOR_THEME = "Adwaita";
     XCURSOR_SIZE = "24";
 
     # General theming
