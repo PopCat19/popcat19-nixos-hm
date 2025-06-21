@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Fullscreen Screenshot Script for Hyprland
-# Supports both regular and hyprshade modes
+# Captures screenshot of the monitor where the mouse cursor is currently located
 
 set -euo pipefail
 
@@ -14,30 +14,40 @@ FILEPATH="${SCREENSHOT_DIR}/${FILENAME}"
 # Create screenshots directory if it doesn't exist
 mkdir -p "$SCREENSHOT_DIR"
 
-# Check if hyprshade argument is provided
-HYPRSHADE_MODE=false
-if [[ "${1:-}" == "--hyprshade" ]] || [[ "${1:-}" == "-s" ]]; then
-    HYPRSHADE_MODE=true
-fi
+# Function to get current monitor info based on mouse cursor position
+get_current_monitor() {
+    # Get mouse cursor position
+    local cursor_pos
+    cursor_pos=$(hyprctl cursorpos | tr -d ' ')
 
-# Function to take screenshot
+    # Parse cursor coordinates
+    local cursor_x cursor_y
+    cursor_x=$(echo "$cursor_pos" | cut -d',' -f1)
+    cursor_y=$(echo "$cursor_pos" | cut -d',' -f2)
+
+    # Get monitor information and find which monitor contains the cursor
+    hyprctl monitors -j | jq -r --argjson cx "$cursor_x" --argjson cy "$cursor_y" '
+        .[] |
+        select(
+            $cx >= .x and $cx < (.x + .width) and
+            $cy >= .y and $cy < (.y + .height)
+        ) |
+        "\(.x),\(.y) \(.width)x\(.height)"
+    '
+}
+
+# Function to take screenshot of current monitor
 take_screenshot() {
-    if $HYPRSHADE_MODE; then
-        # Temporarily disable hyprshade for clean screenshot
-        if command -v hyprshade >/dev/null 2>&1; then
-            hyprshade off
-            sleep 0.2  # Brief pause to ensure shader is disabled
-            grim "$FILEPATH"
-            sleep 0.1
-            hyprshade auto  # Re-enable auto mode
-        else
-            echo "Warning: hyprshade not found, taking regular screenshot"
-            grim "$FILEPATH"
-        fi
-    else
-        # Regular screenshot with current display state
-        grim "$FILEPATH"
+    local monitor_geometry
+    monitor_geometry=$(get_current_monitor)
+
+    if [[ -z "$monitor_geometry" ]]; then
+        echo "Error: Could not determine current monitor" >&2
+        return 1
     fi
+
+    echo "Capturing monitor: $monitor_geometry"
+    grim -g "$monitor_geometry" "$FILEPATH"
 }
 
 # Take the screenshot
@@ -47,11 +57,7 @@ if take_screenshot; then
 
     # Show notification
     if command -v notify-send >/dev/null 2>&1; then
-        if $HYPRSHADE_MODE; then
-            notify-send "Screenshot" "Fullscreen captured (hyprshade disabled)\nSaved: $FILENAME\nCopied to clipboard" -i "$FILEPATH" -t 3000
-        else
-            notify-send "Screenshot" "Fullscreen captured\nSaved: $FILENAME\nCopied to clipboard" -i "$FILEPATH" -t 3000
-        fi
+        notify-send "Screenshot" "Current monitor captured\nSaved: $FILENAME\nCopied to clipboard" -i "$FILEPATH" -t 3000
     fi
 
     echo "Screenshot saved: $FILEPATH"

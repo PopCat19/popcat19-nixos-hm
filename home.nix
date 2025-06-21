@@ -453,11 +453,9 @@
       set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0
       set -g fish_greeting "" # Disable default fish greeting.
 
-      # Custom greeting with fastfetch
+      # Custom greeting disabled - fastfetch removed
       function fish_greeting
-          if command -v fastfetch >/dev/null 2>&1
-              fastfetch
-          end
+          # Empty greeting
       end
       fish_add_path $HOME/bin # Add user's bin directory to PATH.
       if status is-interactive
@@ -554,11 +552,7 @@
     recursive = true;
   };
 
-  # Fastfetch config - Rose Pine themed from hydenix
-  home.file.".config/fastfetch" = {
-    source = ./fastfetch_config;
-    recursive = true;
-  };
+
 
   # Micro editor colorscheme - temporarily disabled for build
   # home.file.".config/micro/colorschemes/rose-pine.micro" = {
@@ -634,16 +628,16 @@
     '';
   };
 
-  # Screenshot scripts - temporarily disabled for build
-  # home.file.".local/bin/screenshot-full" = {
-  #   source = ./scripts/screenshot-full.sh;
-  #   executable = true;
-  # };
+  # Screenshot scripts
+  home.file.".local/bin/screenshot-full" = {
+    source = ./scripts/screenshot-full.sh;
+    executable = true;
+  };
 
-  # home.file.".local/bin/screenshot-region" = {
-  #   source = ./scripts/screenshot-region.sh;
-  #   executable = true;
-  # };
+  home.file.".local/bin/screenshot-region" = {
+    source = ./scripts/screenshot-region.sh;
+    executable = true;
+  };
 
   # **SYSTEM SERVICES**
   # Enables user-level services.
@@ -694,6 +688,7 @@
     satty
     libnotify
     zenity
+    hyprpicker
     hyprpolkitagent
     hyprutils
     hyprshade
