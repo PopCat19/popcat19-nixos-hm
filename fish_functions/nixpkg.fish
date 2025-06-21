@@ -181,6 +181,12 @@ function _nixpkg_list -d "List packages in configuration file"
     set -l count       0
     set -l brace_count 0
 
+    # Check if this is a function-style file (like home-packages.nix)
+    set -l is_function_file false
+    if string match -q "*home-packages.nix" $config_file
+        set is_function_file true
+    end
+
     while read -l line
         # Look for different package section patterns
         if string match -q "*$package_section = with pkgs; \[*" $line
@@ -195,6 +201,11 @@ function _nixpkg_list -d "List packages in configuration file"
                 _nixpkg_list_import_file "$NIXOS_CONFIG_DIR/$import_file"
             end
             return 0
+        else if test $is_function_file = true; and string match -q "*with pkgs; [*" $line
+            # Handle function-style package files (home-packages.nix)
+            set in_packages true
+            set brace_count 1
+            continue
         end
 
         # Handle package list extraction
@@ -204,7 +215,7 @@ function _nixpkg_list -d "List packages in configuration file"
             set brace_count (math $brace_count - (string length (string replace -a -r '[^\]]' '' $line)))
 
             # Check if we're exiting the packages section
-            if test $brace_count -le 0; and string match -q "*];*" $line
+            if test $brace_count -le 0; and string match -q "*]*" $line
                 set in_packages false
                 continue
             end
@@ -212,13 +223,19 @@ function _nixpkg_list -d "List packages in configuration file"
             # Extract package names
             set clean_line (string trim $line | string replace -r '#.*$' '')
 
-            # Skip empty lines and lines with only punctuation
+            # Skip empty lines, comments, and lines with only punctuation
             if test -n "$clean_line"; and not string match -q -r '^\s*[\[\],;]+\s*$' "$clean_line"
-                # Clean up package names (remove trailing punctuation)
-                set clean_line (string replace -r '[\s,;]*$' '' $clean_line)
-                if test -n "$clean_line"
-                    set count (math $count + 1)
-                    echo "  • $clean_line"
+                # Skip comment-only lines and section headers
+                if not string match -q -r '^\s*#' "$clean_line"
+                    # Clean up package names (remove trailing comments and punctuation)
+                    set clean_line (string replace -r '\s*#.*$' '' $clean_line)
+                    set clean_line (string trim $clean_line)
+                    set clean_line (string replace -r '[\s,;]*$' '' $clean_line)
+                    # Skip nix structural elements after cleaning
+                    if test -n "$clean_line"; and not string match -q -r '^\s*(with|pkgs|inputs|system|{|\})\s*$' "$clean_line"
+                        set count (math $count + 1)
+                        echo "  • $clean_line"
+                    end
                 end
             end
         end
@@ -303,6 +320,10 @@ function _nixpkg_add -d "Add package to configuration file (appends to the list)
             rm $temp_file
             mv "$config_file.bak" "$config_file"
             return 1
+        else if string match -q "*home-packages.nix" $config_file; and string match -q "*with pkgs; [*" $line
+            # Handle function-style package files
+            set in_packages true
+            set brace_count 1
         end
 
         # Handle package list insertion
@@ -312,9 +333,9 @@ function _nixpkg_add -d "Add package to configuration file (appends to the list)
             set brace_count (math $brace_count - (string length (string replace -a -r '[^\]]' '' $line)))
 
             # Check if we're at the end of the packages section
-            if test $brace_count -le 0; and string match -q -r '^\s*\];' $line
+            if test $brace_count -le 0; and string match -q -r '^\s*\]' $line
                 # Add the new package before the closing bracket
-                set -l indent (string replace -r '\];.*$' '' $line)
+                set -l indent (string replace -r '\].*$' '' $line)
                 echo "$indent$package_name" >> $temp_file
                 set added true
                 set in_packages false
