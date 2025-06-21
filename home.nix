@@ -19,7 +19,7 @@
     QT_QPA_PLATFORM = "wayland;xcb"; # Qt Wayland and XCB platform.
 
     # GTK theming environment variables
-    GTK_THEME = "rose-pine-gtk-theme"; # Force GTK theme
+    GTK_THEME = "Rose-Pine-Main-BL-GS"; # Force GTK theme
     GDK_BACKEND = "wayland,x11,*"; # GTK backend preference
     XCURSOR_THEME = "rose-pine-hyprcursor"; # X11 cursor theme
     XCURSOR_SIZE = "24"; # Cursor size
@@ -66,12 +66,12 @@
       package = inputs.rose-pine-hyprcursor.packages.${system}.default;
     };
     theme = {
-      name = "rose-pine";
-      package = pkgs.rose-pine-gtk-theme;
+      name = "Rose-Pine-Main-BL-GS";
+      package = pkgs.rose-pine-gtk-theme-full;
     };
     iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
+      name = "Rose-Pine";
+      package = pkgs.rose-pine-gtk-theme-full;
     };
     font = {
       name = "CaskaydiaCove Nerd Font";
@@ -191,7 +191,7 @@
   home.file.".config/kdeglobals" = {
     text = ''
       [ColorScheme]
-      Name=rose-pine-gtk-theme
+      Name=Rose-Pine-Main-BL-GS
 
       [Colors:Button]
       BackgroundAlternate=49,46,77
@@ -250,7 +250,7 @@
       ForegroundVisited=196,167,231
 
       [General]
-      ColorScheme=rose-pine-gtk-theme
+      ColorScheme=Rose-Pine-Main-BL-GS
       Name=Rose Pine
       shadeSortColumn=true
 
@@ -308,15 +308,15 @@
     "org/gnome/desktop/interface" = {
       cursor-theme = "rose-pine-hyprcursor";
       cursor-size = 24;
-      gtk-theme = "rose-pine";
-      icon-theme = "Papirus-Dark";
+      gtk-theme = "Rose-Pine-Main-BL-GS";
+      icon-theme = "Rose-Pine";
       font-name = "CaskaydiaCove Nerd Font 11";
       document-font-name = "CaskaydiaCove Nerd Font 11";
       monospace-font-name = "CaskaydiaCove Nerd Font Mono 11";
       color-scheme = "prefer-dark";
     };
     "org/gnome/desktop/wm/preferences" = {
-      theme = "rose-pine";
+      theme = "Rose-Pine-Main-BL-GS";
     };
   };
 
@@ -735,6 +735,7 @@
       fcitx5-gtk # GTK module.
       libsForQt5.fcitx5-qt # Qt module.
       fcitx5-mozc # Mozc input method engine for Japanese.
+      fcitx5-rose-pine # Rose Pine theme for fcitx5.
     ];
   };
 
@@ -1104,7 +1105,7 @@
 
           # Check kdeglobals
           if [[ -f "$HOME/.config/kdeglobals" ]]; then
-              if grep -q "ColorScheme=rose-pine-gtk-theme" "$HOME/.config/kdeglobals" 2>/dev/null; then
+              if grep -q "ColorScheme=Rose-Pine-Main-BL-GS" "$HOME/.config/kdeglobals" 2>/dev/null; then
                   echo -e "''${GREEN} kdeglobals: Rose Pine configured''${NC}"
               else
                   echo -e "''${YELLOW} kdeglobals: exists but may not be Rose Pine''${NC}"
@@ -1183,7 +1184,7 @@
           echo -e "''${PURPLE} Summary''${NC}"
           echo ""
           echo "Your system is configured for Rose Pine theming with:"
-          echo " Rose Pine GTK theme (rose-pine-gtk-theme) for GTK applications"
+          echo " Rose Pine GTK theme (Rose-Pine-Main-BL-GS) for GTK applications"
           echo " Rose Pine Kvantum theme for Qt applications"
           echo " KDE kdeglobals for Dolphin and KDE apps"
           echo " Qt6ct for Qt6 application theming"
@@ -1307,7 +1308,7 @@
     qt6ct
     qt6Packages.qtstyleplugin-kvantum
     rose-pine-kvantum
-    rose-pine-gtk-theme
+    rose-pine-gtk-theme-full
     themechanger
     nwg-look
     dconf-editor

@@ -51,8 +51,12 @@
       # **CUSTOM OVERLAYS**
       # Overlays to add custom packages or modify existing ones.
       overlays = [
-        # zrok package overlay: adds a custom build for the zrok application.
+        # Custom packages overlay
         (final: prev: {
+          # Rose Pine GTK theme from Fausto-Korpsvart with better styling
+          rose-pine-gtk-theme-full = prev.callPackage ./pkgs/rose-pine-gtk-theme-full.nix {};
+
+          # zrok package overlay: adds a custom build for the zrok application.
           zrok = prev.stdenv.mkDerivation rec {
             pname = "zrok";
             version = "1.0.4";
