@@ -66,7 +66,7 @@
       package = inputs.rose-pine-hyprcursor.packages.${system}.default;
     };
     theme = {
-      name = "rose-pine-gtk-theme";
+      name = "rose-pine";
       package = pkgs.rose-pine-gtk-theme;
     };
     iconTheme = {
@@ -308,7 +308,7 @@
     "org/gnome/desktop/interface" = {
       cursor-theme = "rose-pine-hyprcursor";
       cursor-size = 24;
-      gtk-theme = "rose-pine-gtk-theme";
+      gtk-theme = "rose-pine";
       icon-theme = "Papirus-Dark";
       font-name = "CaskaydiaCove Nerd Font 11";
       document-font-name = "CaskaydiaCove Nerd Font 11";
@@ -316,7 +316,7 @@
       color-scheme = "prefer-dark";
     };
     "org/gnome/desktop/wm/preferences" = {
-      theme = "rose-pine-gtk-theme";
+      theme = "rose-pine";
     };
   };
 
