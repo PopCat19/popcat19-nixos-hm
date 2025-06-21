@@ -7,11 +7,12 @@ Complete NixOS configuration with Rose Pine theme integration across Kitty termi
 
 ### 🖥️ Kitty Terminal with Rose Pine Theme
 - **Full Rose Pine color scheme** with proper contrast ratios
-- **JetBrainsMono Nerd Font** for optimal readability and icon support
+- **JetBrainsMono Nerd Font** size 10 for optimal readability and icon support
 - **Optimized performance settings** (repaint delay, input delay)
 - **Translucent background** (0.95 opacity) with blur effects
 - **Tab management** with Rose Pine themed tab bar
 - **Comprehensive keybindings** for terminal workflow
+- **Fastfetch greeting** displays system info on terminal startup
 
 ### 🚀 Enhanced Fuzzel Launcher
 - **Rose Pine theme integration** with proper color mapping
@@ -33,6 +34,17 @@ Complete NixOS configuration with Rose Pine theme integration across Kitty termi
 - **Desktop notifications** with preview
 - **Screenshot editing** support (satty/swappy)
 - **Organized storage** in `~/Pictures/Screenshots/`
+
+### 📊 Fastfetch System Information
+- **Beautiful system info display** with NixOS logo
+- **Custom Fish shell greeting** replaces default fish greeting
+- **Rose Pine themed colors** for consistent visual experience
+- **Comprehensive system stats**:
+  - OS, kernel, uptime, packages
+  - Desktop environment and window manager
+  - Hardware info (CPU, GPU, memory, disk)
+  - Network information and display setup
+  - Theme and font information
 
 ## 🎨 Rose Pine Color Palette
 
@@ -59,7 +71,7 @@ Complete NixOS configuration with Rose Pine theme integration across Kitty termi
 - **Fish environment variables** properly configured
 
 ### Package Management
-All screenshot utilities and dependencies are managed through Home Manager:
+All utilities and dependencies are managed through Home Manager:
 ```nix
 # Screenshot utilities
 grim          # Wayland screenshot capture
@@ -69,6 +81,9 @@ swappy        # Screenshot annotation
 satty         # Advanced screenshot editor
 libnotify     # Desktop notifications
 zenity        # Dialog boxes
+
+# System information
+fastfetch     # System info display tool
 ```
 
 ## 🎯 Usage Instructions
@@ -90,16 +105,23 @@ zenity        # Dialog boxes
    - Precise control over capture area
 
 ### Kitty Terminal Features
-- **Font scaling**: `Ctrl+Plus/Minus` to adjust font size
+- **Font scaling**: `Ctrl+Plus/Minus` to adjust font size (default: 10)
 - **Tab management**: `Ctrl+Shift+T` for new tab
 - **Window management**: `Ctrl+Shift+Enter` for new window
 - **Copy/Paste**: `Ctrl+Shift+C/V` for clipboard operations
+- **System info greeting**: Fastfetch displays on new terminal sessions
 
 ### Fuzzel Launcher
 - **Launch**: Press `Super+A`
 - **Search**: Type application name or keywords
 - **Navigation**: Arrow keys or vim-style navigation
 - **Execute**: Enter to launch, Tab for alternatives
+
+### Fastfetch Display
+- **Automatic greeting**: Shows system info when opening new terminal
+- **Custom configuration**: Rose Pine themed with comprehensive stats
+- **Manual execution**: Run `fastfetch` anytime for system overview
+- **Fish integration**: Replaces default fish greeting message
 
 ## 📁 File Structure
 
@@ -114,6 +136,8 @@ nixos-config/
 ├── scripts/
 │   ├── screenshot-full.sh    # Full screen capture script
 │   └── screenshot-region.sh  # Region selection script
+├── fastfetch_config/
+│   └── config.jsonc          # Fastfetch configuration with Rose Pine theme
 └── fish_functions/           # Custom Fish shell functions
 ```
 
@@ -159,6 +183,19 @@ mv ~/.local/bin/screenshot-full.sh ~/.local/bin/screenshot-full
 mv ~/.local/bin/screenshot-region.sh ~/.local/bin/screenshot-region
 ```
 
+### Fastfetch Configuration
+Manual setup for custom fastfetch config:
+```bash
+# Copy fastfetch config
+mkdir -p ~/.config/fastfetch
+cp ~/nixos-config/fastfetch_config/config.jsonc ~/.config/fastfetch/
+
+# Test fastfetch display
+fastfetch
+
+# Restart terminal to see fish greeting
+```
+
 ### Theme Verification
 After rebuild, verify theme application:
 ```bash
@@ -170,6 +207,9 @@ cat ~/.config/fuzzel/fuzzel.ini
 
 # Test screenshot functionality
 ~/.local/bin/screenshot-full
+
+# Test fastfetch greeting
+fish -c 'fish_greeting'
 ```
 
 ## 🔍 Troubleshooting
@@ -183,6 +223,12 @@ cat ~/.config/fuzzel/fuzzel.ini
 - **Kitty theme not applied**: Check symlink in `~/.config/kitty/`
 - **Fuzzel colors wrong**: Verify fuzzel.ini generation
 - **Font not rendering**: Ensure JetBrainsMono Nerd Font is installed
+
+### Fastfetch Issues
+- **No greeting in terminal**: Check fish configuration reload
+- **Config not found**: Verify `~/.config/fastfetch/config.jsonc` exists
+- **Wrong colors**: Ensure fastfetch config uses Rose Pine theme
+- **Package not available**: Verify fastfetch is in home.packages
 
 ### Build Issues
 - **Flake check fails**: Ensure all file paths are correct
@@ -202,7 +248,12 @@ Update screenshot keybindings in:
 
 ### Font Modifications
 Change fonts in:
-- `home.nix` - Kitty and Fuzzel font settings
+- `home.nix` - Kitty and Fuzzel font settings (currently size 10)
+
+### Fastfetch Customization
+Modify system info display:
+- `fastfetch_config/config.jsonc` - Add/remove modules, change colors
+- Fish greeting function in `home.nix` shellInit section
 
 ## 📋 Dependencies
 
@@ -218,6 +269,7 @@ Change fonts in:
 - **libnotify** - Desktop notifications
 - **hyprshade** - Shader management
 - **satty/swappy** - Screenshot editing
+- **fastfetch** - System information display
 
 ## 🔗 Integration Notes
 
@@ -225,6 +277,8 @@ Change fonts in:
 - Environment variables set for config paths
 - Custom functions work with new hostname
 - Abbreviations support screenshot workflow
+- Custom fastfetch greeting function replaces default fish greeting
+- Automatic system info display on terminal startup
 
 ### Hyprland Integration
 - Keybindings configured for all screenshot modes
@@ -241,4 +295,6 @@ Change fonts in:
 **Configuration Version**: June 2025  
 **System**: NixOS 25.11 with Hyprland  
 **Theme**: Rose Pine (complete integration)  
-**Hostname**: popcat19-nixos0
+**Hostname**: popcat19-nixos0  
+**Terminal**: Kitty with fastfetch greeting (font size 10)  
+**System Info**: Fastfetch with custom Rose Pine configuration
