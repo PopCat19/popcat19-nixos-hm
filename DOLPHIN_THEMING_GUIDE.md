@@ -1,151 +1,82 @@
-# 🐬 Dolphin Theming Guide for Hyprland + NixOS
+# 🐬 Dolphin Rose Pine Theming Guide for Hyprland + NixOS
 
-Complete guide to fix Dolphin theming issues in Hyprland with Rose Pine and Catppuccin themes.
+Complete guide to enable Rose Pine theming for Dolphin file manager in Hyprland.
 
 ## 🎯 Problem Solved
 
 **Issue**: Dolphin file manager doesn't respect Rose Pine theming even when Kvantum is configured
 **Root Cause**: Dolphin primarily reads `kdeglobals` for theming, not just Kvantum configuration
-**Solution**: Comprehensive theming setup with proper `kdeglobals` management
+**Solution**: Comprehensive Rose Pine theming setup with proper `kdeglobals` management
 
-## 🎨 Available Themes
+## 🌹 Rose Pine Theme
 
-Your system now supports two beautiful themes:
-
-### 1. **🌹 Rose Pine** (Primary)
+Your system is now configured with the beautiful Rose Pine theme:
 - Soothing pine-inspired colors
 - Perfect for extended coding sessions
 - Easy on the eyes
-
-### 2. **🐱 Catppuccin Frappe** (Fallback)
-- Cool, pastel color palette with blue accents
-- Excellent contrast and readability
-- Alternative when Rose Pine isn't available
-
-## 🚀 Quick Theme Switching
-
-Use these simple commands in your terminal:
-
-```bash
-# Switch to Rose Pine theme
-theme-rose
-
-# Switch to Catppuccin Frappe theme  
-theme-cat
-
-# Check current theme status
-theme-status
-
-# Manual script usage
-~/nixos-config/scripts/switch-kde-theme.sh rosepine
-~/nixos-config/scripts/switch-kde-theme.sh catppuccin
-~/nixos-config/scripts/switch-kde-theme.sh status
-```
+- Consistent across all KDE/Qt applications
 
 ## 🔧 What Was Fixed
 
 ### 1. **Added Missing kdeglobals Configuration**
 The key missing piece! Dolphin reads this file for color schemes:
 - Location: `~/.config/kdeglobals`
-- Contains KDE-specific color definitions
-- Managed through Home Manager
+- Contains KDE-specific Rose Pine color definitions
+- Managed through Home Manager with `force = true`
 
 ### 2. **Enhanced Package Configuration**
 Added essential packages to `home.nix`:
 ```nix
-catppuccin-kvantum                  # Catppuccin Kvantum themes
-catppuccin-kde                      # KDE-specific Catppuccin theme
+rose-pine-kvantum                   # Rose Pine Kvantum themes
 libsForQt5.qtstyleplugin-kvantum   # Qt5 Kvantum support
 kdePackages.qtstyleplugin-kvantum  # Qt6 Kvantum support
 ```
 
 ### 3. **Application-Specific Overrides**
-Configured Kvantum to apply themes to specific applications:
+Configured Kvantum to apply Rose Pine to specific applications:
 ```ini
 [Applications]
 dolphin=rose-pine-rose
 ark=rose-pine-rose  
 gwenview=rose-pine-rose
 systemsettings=rose-pine-rose
+kate=rose-pine-rose
+kwrite=rose-pine-rose
 ```
 
 ### 4. **Comprehensive Configuration Files**
 - **kdeglobals**: KDE global settings (most important for Dolphin)
-- **kvantum.kvconfig**: Kvantum theme selection
-- **qt6ct.conf**: Qt6 application theming
+- **kvantum.kvconfig**: Kvantum theme selection (`rose-pine-rose`)
+- **qt6ct.conf**: Qt6 application theming with Kvantum style
 
 ## 📱 Themed Applications
 
-All these applications now properly support theming:
+All these applications now properly display Rose Pine theming:
 - 📁 **Dolphin** (file manager) ← Main target!
 - 🗜️ **Ark** (archive manager)
 - 🖼️ **Gwenview** (image viewer)
 - ⚙️ **System Settings**
 - 📝 **Kate** (text editor)
 - 🔧 **KWrite** (simple editor)
-- 🖥️ **Konsole** (terminal)
+- 🖥️ **All other Qt/KDE applications**
 
-## 🛠️ Implementation Steps
+## 🚀 Quick Status Check
 
-### 1. **Update Home Manager Configuration**
-The enhanced `home.nix` now includes:
-- Proper kdeglobals management
-- Application-specific Kvantum configuration
-- Additional required packages
+Use this command to verify your theming setup:
 
-### 2. **Rebuild Your System**
 ```bash
-home-manager switch
+~/nixos-config/scripts/check-rose-pine-theme.sh
 ```
 
-### 3. **Apply Theme**
-```bash
-theme-rose  # For Rose Pine
-# or
-theme-cat   # For Catppuccin
-```
+This will check:
+- ✅ Environment variables
+- ✅ Theme files existence
+- ✅ Configuration files
+- ✅ Available applications
 
-### 4. **Verify Setup**
-```bash
-theme-status  # Check configuration
-```
+## 🛠️ Implementation Details
 
-## 🐛 Troubleshooting
-
-### Theme Not Applying to Dolphin?
-
-1. **Check Environment Variables**:
-```bash
-echo $QT_QPA_PLATFORMTHEME  # Should be: qt6ct
-echo $QT_STYLE_OVERRIDE     # Should be: kvantum
-```
-
-2. **Verify Theme Files Exist**:
-```bash
-ls ~/.config/Kvantum/
-# Should show: RosePine, Catppuccin-Frappe directories
-```
-
-3. **Force Application Restart**:
-```bash
-pkill dolphin && dolphin &
-```
-
-4. **Check Configuration Files**:
-```bash
-~/nixos-config/scripts/switch-kde-theme.sh check
-```
-
-### Still Having Issues?
-
-1. **Log out and back in** to reload environment variables
-2. **Restart Hyprland** for complete session reload
-3. **Use the manual tools**:
-   - `kvantummanager` for fine-tuning
-   - `qt6ct` for Qt-specific settings
-
-## ⚡ Environment Variables
-
+### **Environment Variables**
 Your system is configured with these critical variables:
 ```bash
 export QT_QPA_PLATFORMTHEME="qt6ct"
@@ -153,91 +84,143 @@ export QT_STYLE_OVERRIDE="kvantum"
 export QT_QPA_PLATFORM="wayland;xcb"
 ```
 
-These are automatically set by your Home Manager configuration.
+### **Key Configuration Files**
+
+1. **kdeglobals** (`~/.config/kdeglobals`):
+   - Contains Rose Pine color scheme
+   - Used by Dolphin and all KDE applications
+   - Managed by Home Manager
+
+2. **Kvantum Config** (`~/.config/Kvantum/kvantum.kvconfig`):
+   ```ini
+   [General]
+   theme=rose-pine-rose
+
+   [Applications]
+   dolphin=rose-pine-rose
+   ```
+
+3. **Qt6ct Config** (`~/.config/qt6ct/qt6ct.conf`):
+   - Points to Rose Pine Kvantum theme
+   - Sets Kvantum as the Qt style
+   - Configures Papirus-Dark icons
+
+## 🐛 Troubleshooting
+
+### Theme Not Applying to Dolphin?
+
+1. **Check Status**:
+   ```bash
+   ~/nixos-config/scripts/check-rose-pine-theme.sh
+   ```
+
+2. **Verify Environment Variables**:
+   ```bash
+   echo $QT_QPA_PLATFORMTHEME  # Should be: qt6ct
+   echo $QT_STYLE_OVERRIDE     # Should be: kvantum
+   ```
+
+3. **Force Application Restart**:
+   ```bash
+   pkill dolphin && dolphin &
+   ```
+
+4. **Check Theme Files**:
+   ```bash
+   ls ~/.config/Kvantum/RosePine/
+   # Should show: rose-pine-rose.kvconfig, rose-pine-rose.svg
+   ```
+
+### Still Having Issues?
+
+1. **Logout and back in** to reload environment variables
+2. **Restart Hyprland** for complete session reload
+3. **Rebuild Home Manager**:
+   ```bash
+   fish -c "nixos-apply-config"
+   ```
+4. **Use manual tools**:
+   - `kvantummanager` for Kvantum theme management
+   - `qt6ct` for Qt-specific settings
 
 ## 📦 Key Packages
 
-Essential packages for theming:
-- `rose-pine-kvantum` - Rose Pine theme files
-- `catppuccin-kvantum` - Catppuccin Kvantum theme files
-- `catppuccin-kde` - Catppuccin KDE theme files  
+Essential packages for Rose Pine theming:
+- `rose-pine-kvantum` - Rose Pine theme files from upstream
 - `libsForQt5.qtstyleplugin-kvantum` - Qt5 Kvantum support
 - `kdePackages.qtstyleplugin-kvantum` - Qt6 Kvantum support
 - `qt6ct` - Qt6 configuration tool
 
-## 🎨 Customization
+## 🎨 Manual Customization
 
-### Creating Custom Themes
-1. Copy existing theme:
+### **Using Kvantum Manager**
 ```bash
-cp -r ~/.config/Kvantum/RosePine ~/.config/Kvantum/MyTheme
+kvantummanager
 ```
+- Select Rose Pine variants
+- Adjust transparency and blur
+- Fine-tune colors
+- Configure per-application settings
 
-2. Edit theme files in the new directory
-3. Update configuration:
+### **Using Qt6ct**
 ```bash
-# Edit ~/.config/Kvantum/kvantum.kvconfig
-[General]
-theme=MyTheme
-
-[Applications]
-dolphin=MyTheme
+qt6ct
 ```
-
-## 🔄 Advanced Usage
-
-### Per-Application Theming
-Edit `~/.config/Kvantum/kvantum.kvconfig`:
-```ini
-[Applications]
-dolphin=rose-pine-rose
-ark=catppuccin-frappe-blue
-gwenview=rose-pine-rose
-```
-
-### Theme Testing
-```bash
-# Test current setup
-~/nixos-config/scripts/switch-kde-theme.sh test
-
-# Check environment
-~/nixos-config/scripts/switch-kde-theme.sh check
-```
-
-## 📋 Quick Reference
-
-| Command | Action |
-|---------|--------|
-| `theme-rose` | Switch to Rose Pine |
-| `theme-cat` | Switch to Catppuccin Frappe |
-| `theme-status` | Show current theme |
-| `kvantummanager` | Open theme manager GUI |
-| `qt6ct` | Open Qt6 settings |
+- Verify Kvantum style is selected
+- Check icon theme (should be Papirus-Dark)
+- Adjust fonts if needed
 
 ## ✅ Success Indicators
 
 When everything is working correctly:
-- ✅ Dolphin shows Rose Pine/Catppuccin Frappe colors
-- ✅ File browser background matches theme
+- ✅ Dolphin shows Rose Pine dark background
+- ✅ File browser uses Rose Pine color scheme
 - ✅ Buttons and menus are properly themed
-- ✅ Selection colors are theme-appropriate
+- ✅ Selection colors are Rose Pine blue/teal
 - ✅ Other KDE apps match the theme
+- ✅ Status checker shows all green checkmarks
+
+## 🔧 Technical Notes
+
+### **Why This Solution Works**
+
+1. **kdeglobals Priority**: KDE applications like Dolphin read kdeglobals first for color schemes
+2. **Kvantum Integration**: Provides the actual styling engine and SVG-based themes
+3. **Qt6ct Bridge**: Ensures Qt6 applications use Kvantum as their style
+4. **Home Manager Management**: Keeps configuration in sync with system rebuilds
+
+### **File Locations**
+- Theme files: `~/.config/Kvantum/RosePine/`
+- Kvantum config: `~/.config/Kvantum/kvantum.kvconfig`
+- KDE colors: `~/.config/kdeglobals`
+- Qt6 settings: `~/.config/qt6ct/qt6ct.conf`
 
 ## 🚨 Emergency Reset
 
 If theming breaks completely:
 ```bash
-# Restore backups (automatic backups are created)
-cd ~/.config
-ls *.bak.*  # List available backups
+# Remove theme configurations (they'll be recreated by Home Manager)
+rm ~/.config/kdeglobals ~/.config/Kvantum/kvantum.kvconfig ~/.config/qt6ct/qt6ct.conf
 
-# Or reset to defaults
-rm kdeglobals Kvantum/kvantum.kvconfig qt6ct/qt6ct.conf
-home-manager switch  # Recreate from Home Manager
+# Rebuild Home Manager
+fish -c "nixos-apply-config"
+
+# Check status
+~/nixos-config/scripts/check-rose-pine-theme.sh
 ```
 
 ---
 
 **🎉 Enjoy your beautifully themed Dolphin file manager!**
 
-*This setup provides consistent theming across all KDE/Qt applications in your Hyprland environment, with Rose Pine as primary and Catppuccin Frappe as fallback where needed.*
+*This setup provides consistent Rose Pine theming across all KDE/Qt applications in your Hyprland environment. The dark, soothing colors are perfect for long coding sessions and provide excellent readability.*
+
+## 📞 Support
+
+If you encounter issues:
+1. Run the status checker first
+2. Check the troubleshooting section
+3. Ensure all environment variables are set correctly
+4. Try manual theme tools for fine-tuning
+
+Your Dolphin file manager should now display beautiful Rose Pine colors that match your overall system theme!
