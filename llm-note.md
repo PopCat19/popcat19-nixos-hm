@@ -34,7 +34,7 @@ tree -L 4
 1. Make configuration changes with Sequential Thinking MCP
 2. Check repo structure with `tree -L 4`
 3. **IMPORTANT: Add new files/dirs to git** with `git add .` (required for flake compatibility)
-4. **Test build first** with `fish -c "nix build --dry-run .#nixosConfigurations.popcat19-nixos0"` (no sudo required)
+4. **Test build first** with `fish -c "nix build --dry-run .#nixosConfigurations.popcat19-nixos0.config.system.build.toplevel"` (no sudo required)
 5. **Only after dry-run succeeds**, rebuild with `fish -c 'nixos-apply-config -m "<short-commit>"'`
 6. If errors occur, use `nix search` to find missing packages
 7. Check Hyprland issues with `hyprctl configerrors`
