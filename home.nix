@@ -19,7 +19,7 @@
     QT_QPA_PLATFORM = "wayland;xcb"; # Qt Wayland and XCB platform.
 
     # GTK theming environment variables
-    GTK_THEME = "Rose-Pine-Main-BL-GS"; # Force GTK theme
+    GTK_THEME = "Rose-Pine-Main-BL"; # Force GTK theme
     GDK_BACKEND = "wayland,x11,*"; # GTK backend preference
     XCURSOR_THEME = "rose-pine-hyprcursor"; # X11 cursor theme
     XCURSOR_SIZE = "24"; # Cursor size
@@ -66,7 +66,7 @@
       package = inputs.rose-pine-hyprcursor.packages.${system}.default;
     };
     theme = {
-      name = "Rose-Pine-Main-BL-GS";
+      name = "Rose-Pine-Main-BL";
       package = pkgs.rose-pine-gtk-theme-full;
     };
     iconTheme = {
@@ -191,7 +191,7 @@
   home.file.".config/kdeglobals" = {
     text = ''
       [ColorScheme]
-      Name=Rose-Pine-Main-BL-GS
+      Name=Rose-Pine-Main-BL
 
       [Colors:Button]
       BackgroundAlternate=49,46,77
@@ -250,7 +250,7 @@
       ForegroundVisited=196,167,231
 
       [General]
-      ColorScheme=Rose-Pine-Main-BL-GS
+      ColorScheme=Rose-Pine-Main-BL
       Name=Rose Pine
       shadeSortColumn=true
 
@@ -308,7 +308,7 @@
     "org/gnome/desktop/interface" = {
       cursor-theme = "rose-pine-hyprcursor";
       cursor-size = 24;
-      gtk-theme = "Rose-Pine-Main-BL-GS";
+      gtk-theme = "Rose-Pine-Main-BL";
       icon-theme = "Rose-Pine";
       font-name = "CaskaydiaCove Nerd Font 11";
       document-font-name = "CaskaydiaCove Nerd Font 11";
@@ -316,7 +316,7 @@
       color-scheme = "prefer-dark";
     };
     "org/gnome/desktop/wm/preferences" = {
-      theme = "Rose-Pine-Main-BL-GS";
+      theme = "Rose-Pine-Main-BL";
     };
   };
 
@@ -739,7 +739,45 @@
     ];
   };
 
-  # **FILE CONFIGURATIONS**
+  # fcitx5 Rose Pine theme configuration
+  home.file.".config/fcitx5/conf/classicui.conf".text = ''
+    # Vertical Candidate List
+    Vertical Candidate List=False
+    # Use Per Screen DPI
+    PerScreenDPI=True
+    # Use mouse wheel to go to prev or next page
+    WheelForPaging=True
+    # Font
+    Font="CaskaydiaCove Nerd Font 11"
+    # Menu Font
+    MenuFont="CaskaydiaCove Nerd Font 11"
+    # Tray Font
+    TrayFont="CaskaydiaCove Nerd Font Bold 11"
+    # Tray Label Outline Color
+    TrayOutlineColor=#000000
+    # Tray Label Text Color
+    TrayTextColor=#ffffff
+    # Prefer Text Icon
+    PreferTextIcon=False
+    # Show Layout Name In Icon
+    ShowLayoutNameInIcon=True
+    # Use input method language to display text
+    UseInputMethodLangaugeToDisplayText=True
+    # Rose Pine Theme
+    Theme=rose-pine
+    # Dark Theme
+    DarkTheme=rose-pine
+    # Follow system light/dark color scheme
+    UseDarkTheme=True
+    # Use accent color
+    UseAccentColor=True
+    # Use system tray icon
+    EnableTray=True
+    # Show preedit in application
+    ShowPreeditInApplication=False
+  '';
+
+  # **FONTS CONFIGURATION**
   # Manages symlinks for configuration files.
   home.file.".config/hypr" = {
     source = ./hypr_config;
@@ -1105,7 +1143,7 @@
 
           # Check kdeglobals
           if [[ -f "$HOME/.config/kdeglobals" ]]; then
-              if grep -q "ColorScheme=Rose-Pine-Main-BL-GS" "$HOME/.config/kdeglobals" 2>/dev/null; then
+              if grep -q "ColorScheme=Rose-Pine-Main-BL" "$HOME/.config/kdeglobals" 2>/dev/null; then
                   echo -e "''${GREEN} kdeglobals: Rose Pine configured''${NC}"
               else
                   echo -e "''${YELLOW} kdeglobals: exists but may not be Rose Pine''${NC}"
@@ -1184,7 +1222,7 @@
           echo -e "''${PURPLE} Summary''${NC}"
           echo ""
           echo "Your system is configured for Rose Pine theming with:"
-          echo " Rose Pine GTK theme (Rose-Pine-Main-BL-GS) for GTK applications"
+          echo " Rose Pine GTK theme (Rose-Pine-Main-BL) for GTK applications"
           echo " Rose Pine Kvantum theme for Qt applications"
           echo " KDE kdeglobals for Dolphin and KDE apps"
           echo " Qt6ct for Qt6 application theming"
