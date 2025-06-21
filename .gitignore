@@ -3,3 +3,22 @@ hardware-configuration.nix
 
 # Ignore build result symlinks
 result
+
+# Ignore backup files
+*.bak
+*.backup
+*~
+
+# Ignore temporary files
+.DS_Store
+Thumbs.db
+
+# Ignore editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore nix build artifacts
+result-*
+.direnv/

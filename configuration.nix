@@ -250,6 +250,10 @@
     usbutils
     nodejs
     rocmPackages.rpp
+    # Screenshot tools
+    grim
+    slurp
+    wl-clipboard
   ];
 
   # **FONTS CONFIGURATION**
@@ -271,12 +275,5 @@
   ];
 
   # Enable fontconfig for better font rendering
-  fonts.fontconfig = {
-    enable = true;
-    defaultFonts = {
-      serif = [ "Noto Serif" "Noto Serif CJK JP" ];
-      sansSerif = [ "Noto Sans" "Noto Sans CJK JP" ];
-      monospace = [ "JetBrainsMono Nerd Font" ];
-    };
-  };
+  fonts.fontconfig.enable = true;
 }
