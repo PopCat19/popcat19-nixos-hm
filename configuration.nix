@@ -348,7 +348,8 @@
     xdg-utils
     shared-mime-info
 
-
+    # Shell tools (needed for system-wide access)
+    starship                           # Shell prompt (available for root)
 
     # Hardware tools (require system-level access)
     i2c-tools
