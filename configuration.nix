@@ -56,8 +56,8 @@
     firewall = {
       enable = true;
       trustedInterfaces = [ "lo" ]; # Trust the loopback interface.
-      allowedTCPPorts = [ 53317 22000 ]; # Syncthing TCP ports.
-      allowedUDPPorts = [ 53317 21027 ]; # Syncthing UDP ports.
+      allowedTCPPorts = [ 53317 22000 8384 ]; # Syncthing TCP ports.
+      allowedUDPPorts = [ 53317 22000 21027 ]; # Syncthing UDP ports.
     };
   };
 
