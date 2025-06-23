@@ -202,7 +202,164 @@
     # firefox.enable = true;
 
     # Shells (must stay system-level for login shell)
-    fish.enable = true;
+    fish = {
+      enable = true;
+      shellInit = ''
+        # Set NixOS configuration paths (adjust for current user)
+        if test "$USER" = "popcat19"
+            set -Ux NIXOS_CONFIG_DIR /home/popcat19/nixos-config
+        else if test "$USER" = "root"
+            set -Ux NIXOS_CONFIG_DIR /home/popcat19/nixos-config
+        else
+            set -Ux NIXOS_CONFIG_DIR /home/popcat19/nixos-config
+        end
+        set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0
+        set -g fish_greeting "" # Disable default fish greeting.
+
+        # Custom greeting disabled - fastfetch removed
+        function fish_greeting
+            # Empty greeting
+        end
+
+        # Add user's bin directory to PATH if it exists
+        if test -d "$HOME/bin"
+            fish_add_path $HOME/bin
+        end
+
+        # Add local bin directory to PATH if it exists
+        if test -d "$HOME/.local/bin"
+            fish_add_path $HOME/.local/bin
+        end
+
+        # Initialize Starship prompt for interactive shells
+        if status is-interactive
+            starship init fish | source
+        end
+      '';
+      shellAbbrs = {
+        # Navigation shortcuts.
+        ".." = "cd ..";
+        "..." = "cd ../..";
+        ".3" = "cd ../../..";
+        ".4" = "cd ../../../..";
+        ".5" = "cd ../../../../..";
+
+        # File Operations using eza.
+        mkdir = "mkdir -p";
+        l = "eza -lh --icons=auto";
+        ls = "eza -1 --icons=auto";
+        ll = "eza -lha --icons=auto --sort=name --group-directories-first";
+        ld = "eza -lhD --icons=auto";
+        lt = "eza --tree --icons=auto";
+        o = "open_smart"; # Custom function to open files.
+
+        # NixOS Configuration Management.
+        nconf = "nixconf-edit";
+        nixos-ed = "nixconf-edit";
+        hconf = "homeconf-edit";
+        home-ed = "homeconf-edit";
+        flconf = "flake-edit";
+        flake-ed = "flake-edit";
+        flup = "flake-update";
+        flake-up = "flake-update";
+        ngit = "nixos-git";
+
+        # NixOS Build and Switch operations.
+        nrb = "nixos-apply-config";
+        nixos-sw = "nixos-apply-config";
+        nerb = "nixos-edit-rebuild";
+        nixoss = "nixos-edit-rebuild";
+        herb = "home-edit-rebuild";
+        home-sw = "home-edit-rebuild";
+        nup = "nixos-upgrade";
+        nixos-up = "nixos-upgrade";
+
+        # Package Management with nixpkg.
+        pkgls = "nixpkg list";
+        pkgadd = "nixpkg add";
+        pkgrm = "nixpkg remove";
+        pkgs = "nixpkg search";
+        pkghelp = "nixpkg help";
+        pkgman = "nixpkg manual";
+        pkgaddr = "nixpkg add --rebuild";
+        pkgrmr = "nixpkg remove --rebuild";
+      };
+    };
+
+    # Starship prompt configuration (system-wide for all users)
+    starship = {
+      enable = true;
+      settings = {
+        format = "$all$character";
+        palette = "rose_pine";
+
+        palettes.rose_pine = {
+          base = "#191724";
+          surface = "#1f1d2e";
+          overlay = "#26233a";
+          muted = "#6e6a86";
+          subtle = "#908caa";
+          text = "#e0def4";
+          love = "#eb6f92";
+          gold = "#f6c177";
+          rose = "#ebbcba";
+          pine = "#31748f";
+          foam = "#9ccfd8";
+          iris = "#c4a7e7";
+        };
+
+        character = {
+          success_symbol = "[❯](bold foam)";
+          error_symbol = "[❯](bold love)";
+          vimcmd_symbol = "[❮](bold iris)";
+        };
+
+        directory = {
+          style = "bold iris";
+          truncation_length = 3;
+          format = "[$path]($style)[$read_only]($read_only_style) ";
+          read_only = " 󰌾";
+          read_only_style = "love";
+        };
+
+        git_branch = {
+          format = "[$symbol$branch]($style) ";
+          symbol = " ";
+          style = "bold pine";
+        };
+
+        git_status = {
+          format = "([\\[$all_status$ahead_behind\\]]($style) )";
+          style = "bold rose";
+          conflicted = "=";
+          ahead = "⇡\${count}";
+          behind = "⇣\${count}";
+          untracked = "?\${count}";
+          modified = "!\${count}";
+          staged = "+\${count}";
+          deleted = "✘\${count}";
+        };
+
+        cmd_duration = {
+          format = "[$duration]($style) ";
+          style = "bold gold";
+          min_time = 2000;
+        };
+
+        username = {
+          show_always = false;
+          format = "[$user]($style)@";
+          style_user = "bold text";
+          style_root = "bold love";
+        };
+
+        nix_shell = {
+          format = "[$symbol$state]($style) ";
+          symbol = " ";
+          style = "bold iris";
+        };
+      };
+    };
 
     # Gaming related programs (system-level for hardware access)
     gamemode.enable = true; # GameMode for performance optimization.
@@ -240,6 +397,10 @@
     TERMINAL = "kitty";
     EDITOR = "micro";
     VISUAL = "micro";
+    BROWSER = "zen-beta";
+    # Fish and NixOS configuration
+    NIXOS_CONFIG_DIR = "/home/popcat19/nixos-config";
+    NIXOS_FLAKE_HOSTNAME = "popcat19-nixos0";
   };
 
   # **SYSTEM PACKAGES**
@@ -255,6 +416,10 @@
     xdg-utils
     shared-mime-info
 
+    # Shell tools (needed for system-wide Fish configuration)
+    starship                           # Shell prompt (used in Fish shellInit)
+    eza                                # Modern ls replacement (used in Fish abbrs)
+
     # Hardware tools (require system-level access)
     i2c-tools
     ddcutil
@@ -265,9 +430,13 @@
     # - ranger, superfile (file managers)
     # - nodejs (development tool)
     # - grim, slurp, wl-clipboard (screenshot tools)
-    # - kdePackages.dolphin, nemo (file managers)
-    # - All thumbnail generation packages
   ];
+
+  # **FISH FUNCTIONS**
+  # Copy Fish functions to system-wide location for root and other users
+  environment.etc = {
+    "fish/functions".source = ./fish_functions;
+  };
 
   # **FONTS CONFIGURATION**
   # Installs system-wide fonts with comprehensive CJK support.
