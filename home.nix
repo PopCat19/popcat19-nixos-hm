@@ -13,7 +13,7 @@
   home.sessionVariables = {
     EDITOR = "micro"; # Default terminal editor.
     VISUAL = "$EDITOR"; # Visual editor alias.
-    BROWSER = "flatpak run app.zen_browser.zen"; # Default web browser.
+    BROWSER = "zen-beta"; # Default web browser.
   };
 
   # Add local bin to PATH
@@ -37,17 +37,17 @@
   # You can manually edit ~/.config/mimeapps.list to set Zen browser as default.
   # Example content for mimeapps.list:
   # [Default Applications]
-  # x-scheme-handler/http=app.zen_browser.zen.desktop
-  # x-scheme-handler/https=app.zen_browser.zen.desktop
+  # x-scheme-handler/http=zen-beta.desktop
+  # x-scheme-handler/https=zen-beta.desktop
   # XDG MIME Applications Configuration
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
       # Web browsers
-      "x-scheme-handler/http" = ["zen.desktop"];
-      "x-scheme-handler/https" = ["zen.desktop"];
-      "text/html" = ["zen.desktop"];
-      "application/xhtml+xml" = ["zen.desktop"];
+      "x-scheme-handler/http" = ["zen-beta.desktop"];
+      "x-scheme-handler/https" = ["zen-beta.desktop"];
+      "text/html" = ["zen-beta.desktop"];
+      "application/xhtml+xml" = ["zen-beta.desktop"];
 
       # Terminal
       "application/x-terminal-emulator" = ["kitty.desktop"];
