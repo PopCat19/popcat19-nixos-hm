@@ -235,6 +235,12 @@
 
 
       '';
+      loginShellInit = ''
+        # Source all Fish functions to make them available
+        for func_file in /etc/fish/functions/*.fish
+            source $func_file 2>/dev/null
+        end
+      '';
       interactiveShellInit = ''
         # Initialize Starship prompt for interactive shells
         starship init fish | source
@@ -436,18 +442,9 @@
   ];
 
   # **FISH CONFIGURATION**
-  # Set up Fish functions and configuration for all users
+  # Set up Fish functions for all users
   environment.etc = {
     "fish/functions".source = ./fish_functions;
-    "fish/conf.d/nixos-functions.fish".text = ''
-      # Add system functions directory to function path and source all functions
-      set -g fish_function_path /etc/fish/functions $fish_function_path
-
-      # Source all Fish functions to make them available
-      for func_file in /etc/fish/functions/*.fish
-          source $func_file
-      end
-    '';
   };
 
   # **FONTS CONFIGURATION**
