@@ -216,6 +216,8 @@
         set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0
         set -g fish_greeting "" # Disable default fish greeting.
 
+
+
         # Custom greeting disabled - fastfetch removed
         function fish_greeting
             # Empty greeting
@@ -231,10 +233,11 @@
             fish_add_path $HOME/.local/bin
         end
 
+
+      '';
+      interactiveShellInit = ''
         # Initialize Starship prompt for interactive shells
-        if status is-interactive
-            starship init fish | source
-        end
+        starship init fish | source
       '';
       shellAbbrs = {
         # Navigation shortcuts.
@@ -432,10 +435,14 @@
     # - grim, slurp, wl-clipboard (screenshot tools)
   ];
 
-  # **FISH FUNCTIONS**
-  # Copy Fish functions to system-wide location for root and other users
+  # **FISH CONFIGURATION**
+  # Set up Fish functions and configuration for all users
   environment.etc = {
     "fish/functions".source = ./fish_functions;
+    "fish/conf.d/nixos-functions.fish".text = ''
+      # Add system functions directory to function path
+      set -g fish_function_path /etc/fish/functions $fish_function_path
+    '';
   };
 
   # **FONTS CONFIGURATION**
