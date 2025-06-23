@@ -205,94 +205,17 @@
     fish = {
       enable = true;
       shellInit = ''
-        # Set NixOS configuration paths (adjust for current user)
-        if test "$USER" = "popcat19"
-            set -Ux NIXOS_CONFIG_DIR /home/popcat19/nixos-config
-        else if test "$USER" = "root"
-            set -Ux NIXOS_CONFIG_DIR /home/popcat19/nixos-config
-        else
-            set -Ux NIXOS_CONFIG_DIR /home/popcat19/nixos-config
-        end
-        set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0
         set -g fish_greeting "" # Disable default fish greeting.
-
-
 
         # Custom greeting disabled - fastfetch removed
         function fish_greeting
             # Empty greeting
-        end
-
-        # Add user's bin directory to PATH if it exists
-        if test -d "$HOME/bin"
-            fish_add_path $HOME/bin
-        end
-
-        # Add local bin directory to PATH if it exists
-        if test -d "$HOME/.local/bin"
-            fish_add_path $HOME/.local/bin
-        end
-
-
-      '';
-      loginShellInit = ''
-        # Source all Fish functions to make them available
-        for func_file in /etc/fish/functions/*.fish
-            source $func_file 2>/dev/null
         end
       '';
       interactiveShellInit = ''
         # Initialize Starship prompt for interactive shells
         starship init fish | source
       '';
-      shellAbbrs = {
-        # Navigation shortcuts.
-        ".." = "cd ..";
-        "..." = "cd ../..";
-        ".3" = "cd ../../..";
-        ".4" = "cd ../../../..";
-        ".5" = "cd ../../../../..";
-
-        # File Operations using eza.
-        mkdir = "mkdir -p";
-        l = "eza -lh --icons=auto";
-        ls = "eza -1 --icons=auto";
-        ll = "eza -lha --icons=auto --sort=name --group-directories-first";
-        ld = "eza -lhD --icons=auto";
-        lt = "eza --tree --icons=auto";
-        o = "open_smart"; # Custom function to open files.
-
-        # NixOS Configuration Management.
-        nconf = "nixconf-edit";
-        nixos-ed = "nixconf-edit";
-        hconf = "homeconf-edit";
-        home-ed = "homeconf-edit";
-        flconf = "flake-edit";
-        flake-ed = "flake-edit";
-        flup = "flake-update";
-        flake-up = "flake-update";
-        ngit = "nixos-git";
-
-        # NixOS Build and Switch operations.
-        nrb = "nixos-apply-config";
-        nixos-sw = "nixos-apply-config";
-        nerb = "nixos-edit-rebuild";
-        nixoss = "nixos-edit-rebuild";
-        herb = "home-edit-rebuild";
-        home-sw = "home-edit-rebuild";
-        nup = "nixos-upgrade";
-        nixos-up = "nixos-upgrade";
-
-        # Package Management with nixpkg.
-        pkgls = "nixpkg list";
-        pkgadd = "nixpkg add";
-        pkgrm = "nixpkg remove";
-        pkgs = "nixpkg search";
-        pkghelp = "nixpkg help";
-        pkgman = "nixpkg manual";
-        pkgaddr = "nixpkg add --rebuild";
-        pkgrmr = "nixpkg remove --rebuild";
-      };
     };
 
     # Starship prompt configuration (system-wide for all users)
@@ -425,9 +348,7 @@
     xdg-utils
     shared-mime-info
 
-    # Shell tools (needed for system-wide Fish configuration)
-    starship                           # Shell prompt (used in Fish shellInit)
-    eza                                # Modern ls replacement (used in Fish abbrs)
+
 
     # Hardware tools (require system-level access)
     i2c-tools
@@ -442,10 +363,8 @@
   ];
 
   # **FISH CONFIGURATION**
-  # Set up Fish functions for all users
-  environment.etc = {
-    "fish/functions".source = ./fish_functions;
-  };
+  # Fish is configured at system level for basic functionality
+  # Functions and abbreviations are handled by home-manager
 
   # **FONTS CONFIGURATION**
   # Installs system-wide fonts with comprehensive CJK support.

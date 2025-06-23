@@ -35,8 +35,8 @@ with pkgs; [
   git-lfs                            # Git Large File Storage
   jq                                 # JSON processor
   tree                               # Directory tree display
-  # eza moved to system level (configuration.nix) for Fish abbrs
-  # starship moved to system level (configuration.nix) for Fish shellInit
+  eza                                # Modern ls replacement (used in fish abbrs)
+  starship                           # Shell prompt (configured above)
 
   # ─── FILE MANAGERS (ADDITIONAL) ───
   ranger                             # Terminal file manager (moved from system-level)
