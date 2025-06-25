@@ -1,9 +1,13 @@
-function nixos-upgrade -d "󰚰 Update flake inputs, then 🚀 apply"
-  echo "󰚰 Starting NixOS system upgrade (flake update + apply)..."
-  if flake-update $argv[2..-1]
-    nixos-apply-config $argv[1]
-  else
-    echo "❌ System upgrade failed during flake update."
-    return 1
-  end
-end
+# This function has been moved to nixos-workflows.fish
+# Use nixos-upgrade from that file instead
+#
+# The new implementation provides:
+# - Better error handling
+# - Consistent argument parsing
+# - Integration with the new core utilities
+# - Help system integration
+# - Proper flake input handling
+#
+# Usage remains the same:
+#   nixos-upgrade [options]
+#   nixos-upgrade --help

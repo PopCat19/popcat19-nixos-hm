@@ -1,73 +1,121 @@
 # ~/nixos-config/fish_functions/nixconf-edit.fish
-function nixconf-edit -d "📝 Edit NixOS configuration.nix with your preferred editor. Use 'nixconf-edit help' for manual."
-    if test "$argv[1]" = "help" -o "$argv[1]" = "h" -o "$argv[1]" = "--help" -o "$argv[1]" = "-h"
-        _nixconf_edit_help
-        return 0
-    else if test "$argv[1]" = "manual" -o "$argv[1]" = "man" -o "$argv[1]" = "doc"
-        _nixconf_edit_manual
+# NixOS configuration file editors
+# Simple, focused functions for editing configuration files
+
+# Load core dependencies
+set -l script_dir (dirname (status --current-filename))
+source "$script_dir/nixos-core.fish"
+
+function nixconf-edit -d "📝 Edit NixOS configuration.nix"
+    if contains -- --help $argv; or contains -- help $argv
+        _nixconf_help
         return 0
     end
-    
-    if not test -f "$NIXOS_CONFIG_DIR/configuration.nix"
-        echo "❌ Error: configuration.nix not found in $NIXOS_CONFIG_DIR"
-        echo "💡 Ensure \$NIXOS_CONFIG_DIR is set correctly"
+
+    if not nixos_validate_env
         return 1
     end
-    
-    echo "📝 Editing NixOS configuration: $NIXOS_CONFIG_DIR/configuration.nix"
-    $EDITOR $NIXOS_CONFIG_DIR/configuration.nix $argv
+
+    set -l config_file "$NIXOS_CONFIG_DIR/configuration.nix"
+    if not test -f "$config_file"
+        echo "❌ Configuration file not found: $config_file"
+        return 1
+    end
+
+    echo "📝 Editing: $(basename $config_file)"
+    $EDITOR "$config_file" $argv
 end
 
-function _nixconf_edit_help -d "Show help for nixconf-edit"
-    echo "📝 nixconf-edit - NixOS System Configuration Editor"
-    echo "════════════════════════════════════════════════════════════"
-    echo ""
-    echo "🎯 DESCRIPTION:"
-    echo "   Opens your system-wide NixOS configuration file for editing."
-    echo ""
-    echo "⚙️  USAGE:"
-    echo "   nixconf-edit [editor-options]"
-    echo "   nixconf-edit help|manual"
-    echo ""
-    echo "📂 FILE EDITED:"
-    echo "   \$NIXOS_CONFIG_DIR/configuration.nix"
-    echo ""
-    echo "🔗 RELATED FUNCTIONS:"
-    echo "   homeconf-edit      # Edit home.nix"
-    echo "   flake-edit         # Edit flake.nix"
-    echo "   nixos-edit-rebuild # Edit + rebuild"
-    echo ""
-    echo "🎮 ABBREVIATIONS:"
-    echo "   nconf, nixos-ed = nixconf-edit"
-    echo "   nerb = nixos-edit-rebuild"
+function homeconf-edit -d "📝 Edit Home Manager home.nix"
+    if contains -- --help $argv; or contains -- help $argv
+        _homeconf_help
+        return 0
+    end
+
+    if not nixos_validate_env
+        return 1
+    end
+
+    set -l config_file "$NIXOS_CONFIG_DIR/home.nix"
+    if not test -f "$config_file"
+        echo "❌ Configuration file not found: $config_file"
+        return 1
+    end
+
+    echo "📝 Editing: $(basename $config_file)"
+    $EDITOR "$config_file" $argv
 end
 
-function _nixconf_edit_manual -d "Show detailed manual for nixconf-edit"
-    echo "📖 nixconf-edit - Complete Manual"
-    echo "════════════════════════════════════════════════════════════════════════════════"
+function flake-edit -d "📝 Edit flake.nix"
+    if contains -- --help $argv; or contains -- help $argv
+        _flake_help
+        return 0
+    end
+
+    if not nixos_validate_env
+        return 1
+    end
+
+    set -l config_file "$NIXOS_CONFIG_DIR/flake.nix"
+    if not test -f "$config_file"
+        echo "❌ Flake file not found: $config_file"
+        return 1
+    end
+
+    echo "📝 Editing: $(basename $config_file)"
+    $EDITOR "$config_file" $argv
+end
+
+function nixconf-list -d "📋 List available configuration files"
+    if not nixos_validate_env
+        return 1
+    end
+
+    nixos_list_configs
+end
+
+# Help functions
+function _nixconf_help
+    echo "📝 nixconf-edit - Edit NixOS system configuration"
     echo ""
-    echo "🔍 PURPOSE:"
-    echo "   Quick access to edit your system-wide NixOS configuration file."
-    echo "   Part of the configuration management workflow."
+    echo "Usage:"
+    echo "  nixconf-edit [editor-options]"
+    echo "  nixconf-edit --help"
     echo ""
-    echo "📂 FILE DETAILS:"
-    echo "   • Location: \$NIXOS_CONFIG_DIR/configuration.nix"
-    echo "   • Scope: System-wide settings and packages"
-    echo "   • Content: Hardware config, services, system packages, users"
+    echo "Edits: \$NIXOS_CONFIG_DIR/configuration.nix"
     echo ""
-    echo "🔧 COMMON CONFIGURATION SECTIONS:"
-    echo "   • imports: Include other configuration files"
-    echo "   • boot: Boot loader and kernel settings"
-    echo "   • networking: Network configuration"
-    echo "   • services: System services (SSH, printing, etc.)"
-    echo "   • environment.systemPackages: System-wide packages"
-    echo "   • users: User account configuration"
-    echo "   • programs: System-wide program settings"
+    echo "Related commands:"
+    echo "  homeconf-edit    Edit home.nix"
+    echo "  flake-edit       Edit flake.nix"
+    echo "  nixconf-list     List config files"
+end
+
+function _homeconf_help
+    echo "📝 homeconf-edit - Edit Home Manager configuration"
     echo ""
-    echo "💡 WORKFLOW INTEGRATION:"
-    echo "   1. nixconf-edit              # Edit configuration"
-    echo "   2. nixos-apply-config       # Test changes"
-    echo "   3. nixos-git \"message\"      # Commit if successful"
+    echo "Usage:"
+    echo "  homeconf-edit [editor-options]"
+    echo "  homeconf-edit --help"
     echo ""
-    echo "   Or use nixos-edit-rebuild for edit + rebuild in one command."
+    echo "Edits: \$NIXOS_CONFIG_DIR/home.nix"
+    echo ""
+    echo "Related commands:"
+    echo "  nixconf-edit     Edit configuration.nix"
+    echo "  flake-edit       Edit flake.nix"
+    echo "  nixconf-list     List config files"
+end
+
+function _flake_help
+    echo "📝 flake-edit - Edit Nix flake configuration"
+    echo ""
+    echo "Usage:"
+    echo "  flake-edit [editor-options]"
+    echo "  flake-edit --help"
+    echo ""
+    echo "Edits: \$NIXOS_CONFIG_DIR/flake.nix"
+    echo ""
+    echo "Related commands:"
+    echo "  nixconf-edit     Edit configuration.nix"
+    echo "  homeconf-edit    Edit home.nix"
+    echo "  flake-update     Update flake inputs"
 end

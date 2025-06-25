@@ -1,117 +1,154 @@
 # ~/nixos-config/fish_functions/flake-update.fish
-function flake-update -d "🔄 Update Nix Flake inputs with backup and validation. Use 'flake-update help' for manual."
-    if test "$argv[1]" = "help" -o "$argv[1]" = "h" -o "$argv[1]" = "--help" -o "$argv[1]" = "-h"
+# Streamlined flake input management
+# Handles updating, backup, and restoration of flake inputs
+
+# Load core dependencies
+set -l script_dir (dirname (status --current-filename))
+source "$script_dir/nixos-core.fish"
+
+function flake-update -d "🔄 Update Nix flake inputs with backup and validation"
+    # Parse arguments
+    set -l show_help false
+    set -l recreate_lock false
+    set -l specific_inputs
+
+    for arg in $argv
+        switch $arg
+            case -h --help help
+                set show_help true
+            case --recreate-lock-file
+                set recreate_lock true
+            case '*'
+                # Assume it's a specific input name
+                set -a specific_inputs $arg
+        end
+    end
+
+    if test "$show_help" = true
         _flake_update_help
         return 0
-    else if test "$argv[1]" = "manual" -o "$argv[1]" = "man" -o "$argv[1]" = "doc"
-        _flake_update_manual
-        return 0
     end
-    
+
+    # Validate environment
+    if not nixos_validate_env
+        return 1
+    end
+
+    # Check for flake.nix
     if not test -f "$NIXOS_CONFIG_DIR/flake.nix"
-        echo "❌ Error: flake.nix not found in $NIXOS_CONFIG_DIR"
-        echo "💡 Ensure you're in a flake-enabled NixOS configuration"
+        echo "❌ flake.nix not found in $NIXOS_CONFIG_DIR"
+        echo "💡 This command requires a flake-based configuration"
         return 1
     end
-    
-    echo "🔄 Updating Flake inputs in $NIXOS_CONFIG_DIR..."
-    
-    # Backup current flake.lock
-    if test -f "$NIXOS_CONFIG_DIR/flake.lock"
-        cp "$NIXOS_CONFIG_DIR/flake.lock" "$NIXOS_CONFIG_DIR/flake.lock.bak"
-        echo "💾 Backed up flake.lock to flake.lock.bak"
-    end
-    
-    pushd $NIXOS_CONFIG_DIR
-    if nix --extra-experimental-features nix-command --extra-experimental-features flakes flake update $argv
-        echo "✅ Flake inputs updated successfully."
-        echo "📊 Changes made to flake.lock:"
-        if command -q git
-            git diff --no-index flake.lock.bak flake.lock 2>/dev/null || echo "   (Use git diff to see changes)"
+
+    echo "🔄 Updating flake inputs..."
+
+    # Backup current lock file
+    nixos_backup_lock
+
+    # Perform update
+    pushd "$NIXOS_CONFIG_DIR" >/dev/null
+
+    set -l update_cmd "nix flake update"
+
+    # Add specific inputs if provided
+    if test (count $specific_inputs) -gt 0
+        for input in $specific_inputs
+            set update_cmd "$update_cmd $input"
         end
+        echo "🎯 Updating specific inputs: $specific_inputs"
     else
-        echo "❌ Flake update failed."
-        if test -f "flake.lock.bak"
-            echo "🔄 Restoring backup..."
-            mv flake.lock.bak flake.lock
+        echo "📦 Updating all inputs..."
+    end
+
+    # Add recreate flag if requested
+    if test "$recreate_lock" = true
+        set update_cmd "$update_cmd --recreate-lock-file"
+        echo "🔄 Recreating lock file..."
+    end
+
+    # Execute update
+    if eval $update_cmd
+        echo "✅ Flake inputs updated successfully"
+
+        # Show changes if git is available
+        if nixos_git_check
+            echo "📊 Changes made:"
+            if test -f "flake.lock.bak"
+                git diff --no-index flake.lock.bak flake.lock 2>/dev/null || echo "  (Use git diff to see detailed changes)"
+            end
         end
-        popd
+
+        popd >/dev/null
+        return 0
+    else
+        echo "❌ Flake update failed"
+
+        # Restore backup on failure
+        echo "🔄 Restoring backup..."
+        if nixos_restore_lock
+            echo "✅ Backup restored"
+        end
+
+        popd >/dev/null
         return 1
     end
-    popd
-    echo "💾 Remember to test with nixos-apply-config and commit the updated flake.lock"
 end
 
-function _flake_update_help -d "Show help for flake-update"
-    echo "🔄 flake-update - Nix Flake Input Updater"
-    echo "════════════════════════════════════════════════════════════"
-    echo ""
-    echo "🎯 DESCRIPTION:"
-    echo "   Safely updates all flake inputs with automatic backup and validation."
-    echo ""
-    echo "⚙️  USAGE:"
-    echo "   flake-update [nix-flake-options]"
-    echo "   flake-update help|manual"
-    echo ""
-    echo "💡 EXAMPLES:"
-    echo "   flake-update                    # Update all inputs"
-    echo "   flake-update nixpkgs           # Update specific input"
-    echo "   flake-update --recreate-lock-file # Recreate entire lock file"
-    echo ""
-    echo "🔗 WORKFLOW:"
-    echo "   1. Backs up current flake.lock"
-    echo "   2. Updates flake inputs"
-    echo "   3. Shows changes made"
-    echo "   4. Restores backup on failure"
-    echo ""
-    echo "🎮 INTEGRATION:"
-    echo "   • Used by nixos-upgrade function"
-    echo "   • flup, flake-up abbreviations available"
+function flake-lock-clean -d "🧹 Clean up backup lock files"
+    if not nixos_validate_env
+        return 1
+    end
+
+    set -l backup_files "$NIXOS_CONFIG_DIR/flake.lock.bak"
+
+    if test -f "$backup_files"
+        rm "$backup_files"
+        echo "🧹 Cleaned up backup files"
+    else
+        echo "ℹ️  No backup files to clean"
+    end
 end
 
-function _flake_update_manual -d "Show detailed manual for flake-update"
-    echo "📖 flake-update - Complete Manual"
-    echo "════════════════════════════════════════════════════════════════════════════════"
+function flake-rollback -d "🔄 Rollback flake.lock to backup"
+    if not nixos_validate_env
+        return 1
+    end
+
+    if nixos_restore_lock
+        echo "✅ Flake rolled back to backup"
+        echo "💡 Test with: nixos-apply-config -d"
+    else
+        echo "❌ No backup available to rollback to"
+        return 1
+    end
+end
+
+function _flake_update_help
+    echo "🔄 flake-update - Nix Flake Input Manager"
     echo ""
-    echo "🔍 OVERVIEW:"
-    echo "   Manages Nix flake input updates with safety features and integration"
-    echo "   into your NixOS configuration workflow."
+    echo "Usage:"
+    echo "  flake-update [inputs...] [options]"
     echo ""
-    echo "🔄 UPDATE PROCESS:"
-    echo "   1. Validates flake.nix exists"
-    echo "   2. Creates backup of flake.lock"
-    echo "   3. Runs nix flake update with provided options"
-    echo "   4. Shows diff of changes"
-    echo "   5. Restores backup if update fails"
+    echo "Options:"
+    echo "  --recreate-lock-file    Recreate entire lock file"
+    echo "  -h, --help             Show this help"
     echo ""
-    echo "🎯 UPDATE STRATEGIES:"
+    echo "Examples:"
+    echo "  flake-update                    # Update all inputs"
+    echo "  flake-update nixpkgs           # Update only nixpkgs"
+    echo "  flake-update nixpkgs home-manager  # Update specific inputs"
+    echo "  flake-update --recreate-lock-file   # Recreate lock file"
     echo ""
-    echo "   📦 Full Update (recommended monthly):"
-    echo "     flake-update"
-    echo "     → Updates all inputs to latest versions"
+    echo "Related commands:"
+    echo "  flake-rollback      Restore from backup"
+    echo "  flake-lock-clean    Clean backup files"
     echo ""
-    echo "   🎯 Selective Update (for specific issues):"
-    echo "     flake-update nixpkgs"
-    echo "     → Updates only specified input"
+    echo "Workflow:"
+    echo "  1. Backup current flake.lock"
+    echo "  2. Update inputs"
+    echo "  3. Show changes made"
+    echo "  4. Restore backup on failure"
     echo ""
-    echo "   🔄 Lock File Rebuild (for corruption):"
-    echo "     flake-update --recreate-lock-file"
-    echo "     → Completely recreates lock file"
-    echo ""
-    echo "⚠️  IMPORTANT CONSIDERATIONS:"
-    echo "   • Updates can introduce breaking changes"
-    echo "   • Always test with nixos-apply-config after updating"
-    echo "   • Keep backup files until testing is complete"
-    echo "   • Consider selective updates for production systems"
-    echo ""
-    echo "🔧 INTEGRATION WORKFLOW:"
-    echo "   1. flake-update                 # Update inputs"
-    echo "   2. nixos-apply-config          # Test rebuild"
-    echo "   3. If successful: commit changes"
-    echo "   4. If failed: restore from backup"
-    echo ""
-    echo "🆘 TROUBLESHOOTING:"
-    echo "   • Build failures after update: Use --show-trace"
-    echo "   • Restore backup: mv flake.lock.bak flake.lock"
-    echo "   • Selective rollback: git checkout flake.lock"
+    echo "💡 Always test updates with 'nixos-apply-config -d' before committing"
 end
