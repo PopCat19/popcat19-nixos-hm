@@ -49,7 +49,7 @@ with pkgs; [
   hyprpolkitagent                    # Polkit agent for Hyprland
   hyprutils                          # Hyprland utilities
   hyprshade                          # Screen shader manager
-  hyprpanel                          # Panel for Hyprland
+  hyprpanel                          # Panel for Hyprland (using package until HM module is fixed)
 
   # ─── GAMING AND PERFORMANCE ───
   obs-studio                         # Screen recording and streaming

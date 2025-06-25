@@ -50,6 +50,7 @@
   # **NETWORKING CONFIGURATION**
   # Manages network setup and firewall rules.
   networking = {
+    hostName = "popcat19-nixos0"; # Set hostname to match flake.nix
     networkmanager.enable = true; # Enable NetworkManager for network control.
 
     # Firewall configuration.
