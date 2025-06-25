@@ -199,7 +199,7 @@ function nixos_test_config -d "Test configuration with dry-run"
 end
 
 function nixos_current_generation -d "Get current generation number"
-    nixos-rebuild list-generations | tail -1 | awk '{print $1}'
+    sudo nixos-rebuild list-generations | grep -E '\s+True\s*$' | awk '{print $1}'
 end
 
 function nixos_rebuild -d "Rebuild and switch system configuration"

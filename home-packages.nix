@@ -5,7 +5,7 @@
 { pkgs, inputs, system }:
 
 with pkgs; [
-  btop                              # Added by nixpkg
+  btop-rocm                              # Added by nixpkg
   # ─── CORE DESKTOP APPLICATIONS ───
   kitty                              # Terminal emulator (configured above)
   fuzzel                             # Application launcher (configured above)
@@ -62,7 +62,6 @@ with pkgs; [
   playerctl                          # Media player control (used by services)
 
   # ─── SYSTEM MONITORING ───
-  btop-rocm                          # System monitor with ROCm support
   glances                            # System monitor
 
   # ─── HARDWARE CONTROL ───
