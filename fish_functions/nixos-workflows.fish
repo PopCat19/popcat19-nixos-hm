@@ -118,7 +118,7 @@ function nixos-status -d "📊 Show comprehensive NixOS system status"
 
     echo ""
     echo "📋 Recent generations:"
-    nixos-rebuild list-generations | tail -3
+    nixos-rebuild list-generations | head -4 | tail -3
 
     echo ""
     echo "📦 Flake status:"

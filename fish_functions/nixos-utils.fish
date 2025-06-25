@@ -86,7 +86,7 @@ function nixos-info -d "📊 Show detailed system information"
 
     # Recent generations
     echo "📋 Recent Generations:"
-    nixos-rebuild list-generations 2>/dev/null | tail -5 | while read line
+    nixos-rebuild list-generations 2>/dev/null | head -6 | tail -5 | while read line
         if echo "$line" | grep -q "current"
             echo "  → $line"
         else
