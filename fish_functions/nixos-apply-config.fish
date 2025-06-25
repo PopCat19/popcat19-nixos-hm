@@ -41,7 +41,7 @@ function nixos-apply-config -d "🚀 Apply NixOS configuration with optional git
     # Handle message flag properly
     set -l i 1
     while test $i -le (count $argv)
-        if test "$argv[$i]" = "-m" -o "$argv[$i]" = "--message"
+        if test "$argv[$i]" = "-m"; or test "$argv[$i]" = "--message"
             if test $i -lt (count $argv)
                 set i (math $i + 1)
                 set commit_msg "$argv[$i]"

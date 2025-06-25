@@ -5,6 +5,7 @@
 { pkgs, inputs, system }:
 
 with pkgs; [
+  btop                              # Added by nixpkg
   # ─── CORE DESKTOP APPLICATIONS ───
   kitty                              # Terminal emulator (configured above)
   fuzzel                             # Application launcher (configured above)

@@ -154,8 +154,8 @@ function _nixpkg_remove -d "Remove package from configuration"
 
     echo "🗑️  Removing $package from $(basename $config_file)"
 
-    # Check if package exists
-    if not grep -q "pkgs\.$package" "$config_file"
+    # Check if package exists (both with and without pkgs prefix)
+    if not grep -q "pkgs\.$package" "$config_file"; and not grep -q "^\s*$package\b" "$config_file"
         echo "ℹ️  Package $package not found in configuration"
         return 0
     end
@@ -259,9 +259,16 @@ function _nixpkg_insert_package -d "Insert package into config file"
     else if grep -q "environment\.systemPackages.*\[" "$config_file"
         # System packages direct style
         sed -i "/environment\.systemPackages.*\[/a\\    pkgs.$package" "$config_file"
+    else if grep -q "with pkgs; \[" "$config_file"
+        # Package list starting with "with pkgs; [" (like home-packages.nix)
+        sed -i "/with pkgs; \[/a\\  $package                              # Added by nixpkg" "$config_file"
+    else if grep -q "^\s*\[" "$config_file" && grep -q "# " "$config_file"
+        # Simple list format - insert after opening bracket
+        sed -i "/^\s*\[/a\\  $package                              # Added by nixpkg" "$config_file"
     else
         echo "❌ Could not find suitable package list in configuration"
-        echo "💡 Make sure you have either home.packages or environment.systemPackages defined"
+        echo "💡 Make sure you have either home.packages, environment.systemPackages, or a package list defined"
+        echo "💡 Current file structure not recognized - manual addition required"
         return 1
     end
 
@@ -272,9 +279,9 @@ function _nixpkg_delete_package -d "Remove package from config file"
     set -l config_file "$argv[1]"
     set -l package "$argv[2]"
 
-    # Remove both with and without pkgs prefix
-    sed -i "/^\s*pkgs\.$package\s*\$/d" "$config_file"
-    sed -i "/^\s*$package\s*\$/d" "$config_file"
+    # Remove both with and without pkgs prefix, including comments
+    sed -i "/^\s*pkgs\.$package\b.*\$/d" "$config_file"
+    sed -i "/^\s*$package\b.*\$/d" "$config_file"
 
     return 0
 end
