@@ -20,7 +20,7 @@
     # Add '/nix/store/.../hyprpanel' to your
     # Hyprland config 'exec-once'.
     # Default: false
-    hyprland.enable = true;
+    hyprland.enable = false;
 
     # Fix the overwrite issue with HyprPanel.
     # See below for more information.
