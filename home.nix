@@ -14,10 +14,14 @@
     EDITOR = "micro"; # Default terminal editor.
     VISUAL = "$EDITOR"; # Visual editor alias.
     BROWSER = "zen-beta"; # Default web browser.
+    TERMINAL = "kitty";
+    FILE_MANAGER = "dolphin";
+    # Ensure thumbnails work properly
+    WEBKIT_DISABLE_COMPOSITING_MODE = "1";
   };
 
   # Add local bin to PATH
-  home.sessionPath = [ "$HOME/.local/bin" ];
+  home.sessionPath = [ "$HOME/.local/bin" "$HOME/.npm-global/bin" ];
 
   # ═══════════════════════════════════════════════════════════════════════════════
   # 🎨 THEME CONFIGURATION
@@ -287,6 +291,7 @@
           # Empty greeting
       end
       fish_add_path $HOME/bin # Add user's bin directory to PATH.
+      fish_add_path $HOME/.npm-global/bin # Add npm global packages to PATH.
       if status is-interactive
           starship init fish | source # Initialize Starship prompt.
       end
@@ -337,8 +342,8 @@
       pkgs = "nixpkg search";
       pkghelp = "nixpkg help";
       pkgman = "nixpkg manual";
-      pkgaddr = "nixpkg add --rebuild";
-      pkgrmr = "nixpkg remove --rebuild";
+      pkgaddr = "nixpkg add";
+      pkgrmr = "nixpkg remove";
     };
   };
 
@@ -567,6 +572,30 @@
   home.file.".config/micro/colorschemes/rose-pine.micro" = {
     source = ./micro_config/rose-pine.micro;
   };
+
+  # NPM global configuration for reproducible package management
+  home.file.".npmrc".text = ''
+    prefix=${config.home.homeDirectory}/.npm-global
+  '';
+
+  # Script to install global npm packages manually
+  home.file.".local/bin/install-npm-globals".text = ''
+    #!/usr/bin/env bash
+
+    # Install Google Gemini CLI if not already installed
+    if ! command -v gemini &> /dev/null; then
+        echo "Installing Google Gemini CLI..."
+        npm install -g @google/gemini-cli
+    else
+        echo "Google Gemini CLI already installed (version: $(gemini --version))"
+    fi
+
+    # Add other global npm packages here as needed
+    # npm install -g some-other-package
+  '';
+
+  home.file.".local/bin/install-npm-globals".executable = true;
+
 
 
 
@@ -1063,11 +1092,5 @@
     };
   };
 
-  # Additional environment variables for better integration
-  home.sessionVariables = {
-    TERMINAL = "kitty";
-    FILE_MANAGER = "dolphin";
-    # Ensure thumbnails work properly
-    WEBKIT_DISABLE_COMPOSITING_MODE = "1";
-  };
+  
 }
