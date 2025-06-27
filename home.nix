@@ -904,9 +904,11 @@
     Exec=kitty --working-directory %f
   '';
 
-  # Create directory for syncthing-shared
-  home.activation.createSyncthingDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  # Create directories for syncthing
+  home.activation.createSyncthingDirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p $HOME/syncthing-shared
+    mkdir -p $HOME/.local/share/syncthing
+    mkdir -p $HOME/Passwords
   '';
 
   # Additional desktop files for better integration
@@ -1092,5 +1094,5 @@
     };
   };
 
-  
+
 }

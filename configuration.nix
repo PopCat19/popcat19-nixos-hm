@@ -26,6 +26,14 @@
     supportedFilesystems = [ "ntfs" ]; # Add NTFS filesystem support.
     kernelPackages = pkgs.linuxPackages_zen; # Use the Zen kernel.
     kernelModules = [ "i2c-dev" ]; # Load the I2C development module.
+
+    # Kernel parameters for optimized network performance (Syncthing UDP buffers).
+    kernel.sysctl = {
+      "net.core.rmem_max" = 7340032;  # Maximum receive buffer size (7MB)
+      "net.core.wmem_max" = 7340032;  # Maximum send buffer size (7MB)
+      "net.core.rmem_default" = 262144; # Default receive buffer size (256KB)
+      "net.core.wmem_default" = 262144; # Default send buffer size (256KB)
+    };
   };
 
   # **HARDWARE CONFIGURATION**
@@ -163,21 +171,42 @@
       user = "popcat19";
       group = "users";
       openDefaultPorts = true; # Open firewall ports for Syncthing.
-      dataDir = "/home/popcat19/syncthing"; # Data directory for Syncthing.
+      dataDir = "/home/popcat19/.local/share/syncthing"; # Data directory for Syncthing.
       configDir = "/home/popcat19/.config/syncthing"; # Configuration directory.
 
-      # Syncthing folder configurations.
+      # Syncthing folder and device configurations.
       settings = {
+        devices = {
+          "remote-device" = {
+            id = "QP7SCT2-7XQTOK3-WTTSZ5T-T6BH4EZ-IA7VEIQ-RUQO5UV-FWWRF5L-LDQXTAS";
+            name = "Remote Device";
+            addresses = [ "dynamic" ];
+          };
+        };
         folders = {
           "keepass-vault" = {
             id = "keepass-vault";
             label = "KeePass Vault";
             path = "/home/popcat19/Passwords";
-            devices = [ ]; # Devices to sync with (empty means no specific devices here).
+            devices = [ "remote-device" ]; # Share with the remote device.
             type = "sendreceive";
             rescanIntervalS = 60;
             ignorePerms = true; # Ignore file permissions during sync.
           };
+          "syncthing-shared" = {
+            id = "syncthing-shared";
+            label = "Syncthing Shared";
+            path = "/home/popcat19/syncthing-shared";
+            devices = [ "remote-device" ]; # Share with the remote device.
+            type = "sendreceive";
+            rescanIntervalS = 300;
+            ignorePerms = true;
+          };
+        };
+        options = {
+          globalAnnounceEnabled = true;
+          localAnnounceEnabled = true;
+          relaysEnabled = true;
         };
       };
     };
