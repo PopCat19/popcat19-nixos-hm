@@ -46,6 +46,12 @@ with pkgs; [
   # ─── GRAPHICS TOOLS ───
   hyprpicker                         # Color picker for Hyprland
 
+  # ─── SCREENSHOT AND CLIPBOARD TOOLS ───
+  grim                               # Screenshot utility for Wayland
+  slurp                              # Screen area selection for Wayland
+  wl-clipboard                       # Clipboard utilities for Wayland
+  wtype                              # Wayland typing utility for auto-pasting
+
   # ─── HYPRLAND ECOSYSTEM ───
   hyprpolkitagent                    # Polkit agent for Hyprland
   hyprutils                          # Hyprland utilities
@@ -72,6 +78,7 @@ with pkgs; [
   universal-android-debloater        # Android debloating tool
   android-tools                      # ADB and other Android utilities
   scrcpy                             # Android screen mirroring
+  sidequest                          # Quest 2 adb manager
 
   # ─── EMBEDDED SYSTEMS TOOLS ───
   sunxi-tools                        # Tools for Allwinner SoCs
