@@ -80,6 +80,9 @@ with pkgs; [
   scrcpy                             # Android screen mirroring
   sidequest                          # Quest 2 adb manager
 
+  # ─── GAME STREAMING ───
+  moonlight-qt                       # Moonlight game streaming client
+
   # ─── EMBEDDED SYSTEMS TOOLS ───
   sunxi-tools                        # Tools for Allwinner SoCs
   binwalk                            # Firmware analysis tool

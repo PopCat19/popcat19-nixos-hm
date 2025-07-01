@@ -145,7 +145,7 @@
   # Defines system users and their groups.
   users.users.popcat19 = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "audio" "networkmanager" "i2c" ]; # Add user to necessary groups.
+    extraGroups = [ "wheel" "video" "audio" "networkmanager" "i2c" "input" ]; # Add user to necessary groups.
     shell = pkgs.fish; # Set Fish as default shell.
   };
 
@@ -164,6 +164,17 @@
 
     # Hardware Control.
     hardware.openrgb.enable = true; # OpenRGB for controlling RGB lighting.
+
+    # Game Streaming.
+    sunshine = {
+      enable = true;
+      autoStart = true;
+      capSysAdmin = true; # Required for Wayland support
+      openFirewall = true; # Automatically open required firewall ports
+      settings = {
+        output_name = "1"; # Select MSI monitor (Monitor 1 from KMS list)
+      };
+    };
 
     # File Synchronization.
     syncthing = {
@@ -219,6 +230,13 @@
     KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
     # Rule for Allwinner FEL mode: allow user access for flashing devices.
     SUBSYSTEM=="usb", ATTRS{idVendor}=="1f3a", ATTRS{idProduct}=="efe8", MODE="0666", GROUP="users"
+    # Game controller rules for Sunshine
+    KERNEL=="event*", SUBSYSTEM=="input", GROUP="input", MODE="0664"
+    KERNEL=="js*", SUBSYSTEM=="input", GROUP="input", MODE="0664"
+    # PlayStation controllers
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="0ce6", GROUP="input", MODE="0664"
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="09cc", GROUP="input", MODE="0664"
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="05c4", GROUP="input", MODE="0664"
   '';
 
   # **VIRTUALIZATION**
