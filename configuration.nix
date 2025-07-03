@@ -145,7 +145,7 @@
   # Defines system users and their groups.
   users.users.popcat19 = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "audio" "networkmanager" "i2c" "input" ]; # Add user to necessary groups.
+    extraGroups = [ "wheel" "video" "audio" "networkmanager" "i2c" "input" "libvirtd" ]; # Add user to necessary groups.
     shell = pkgs.fish; # Set Fish as default shell.
   };
 
@@ -241,7 +241,22 @@
 
   # **VIRTUALIZATION**
   # Enables virtualization technologies.
-  virtualisation.waydroid.enable = true; # Waydroid for Android containerization.
+  virtualisation = {
+    waydroid.enable = true; # Waydroid for Android containerization.
+
+    # Add KVM/QEMU support
+    libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        runAsRoot = true;
+        swtpm.enable = true;
+        ovmf.enable = true;
+        ovmf.packages = [ pkgs.OVMFFull.fd ];
+      };
+    };
+    spiceUSBRedirection.enable = true;
+  };
 
   # **PROGRAMS & APPLICATIONS**
   # Enables and configures various applications and program settings.
@@ -404,6 +419,16 @@
     ddcutil
     usbutils
     rocmPackages.rpp
+
+    # virtualisation
+    qemu                               # Virtualization
+    libvirt                            # Virtualization platform
+    virt-manager                       # Virtual machine manager
+    virt-viewer                        # VM display viewer
+    spice-gtk                          # SPICE client
+    win-virtio                         # Windows VirtIO drivers
+    win-spice                          # Windows SPICE guest tools
+    quickemu                           # Quick virtualization
 
     # User applications moved to home-packages.nix:
     # - ranger, superfile (file managers)
