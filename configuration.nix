@@ -429,6 +429,7 @@
     win-virtio                         # Windows VirtIO drivers
     win-spice                          # Windows SPICE guest tools
     quickemu                           # Quick virtualization
+    quickgui                           # Quick virtualization GUI
 
     # User applications moved to home-packages.nix:
     # - ranger, superfile (file managers)

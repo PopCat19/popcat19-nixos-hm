@@ -95,6 +95,19 @@
           };
         })
 
+        # Patch quickemu to correctly handle version 10.0.0 of QEMU
+        (final: prev: {
+          quickemu = prev.quickemu.overrideAttrs {
+            patches = [
+              (prev.fetchpatch {
+                name = "correctly-handle-version-10.0.0-of-qemu.patch";
+                url = "https://github.com/quickemu-project/quickemu/commit/f25205f4513c4fa72be6940081c62e613d1fddc6.patch";
+                hash = "sha256-OAXGyhMVDwbUypEPj/eRnH0wZYaL9WLGjbyoobe20UY=";
+              })
+            ];
+          };
+        })
+
         # HyprPanel overlay for Hyprland panel components.
         inputs.hyprpanel.overlay
       ];
