@@ -45,6 +45,7 @@ with pkgs; [
 
   # ─── GRAPHICS TOOLS ───
   hyprpicker                         # Color picker for Hyprland
+  pureref                            # Reference viewer
 
   # ─── SCREENSHOT AND CLIPBOARD TOOLS ───
   grim                               # Screenshot utility for Wayland
@@ -103,6 +104,7 @@ with pkgs; [
   # ─── PRODUCTIVITY APPLICATIONS ───
   keepassxc                          # Password manager
   zed-editor_git                     # Modern text editor
+  code-cursor-fhs                    # LLM oriented text editor
 
   # ─── ENTERTAINMENT ───
   mangayomi                          # Manga reader
