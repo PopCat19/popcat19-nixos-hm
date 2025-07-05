@@ -1,4 +1,3 @@
-# flake.nix
 {
   description = "NixOS configuration with custom packages and overlays";
 
@@ -31,6 +30,7 @@
     catppuccin-nix = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs"; # Ensure Catppuccin uses our Nixpkgs version.
+    };
   };
 
   outputs = { self, nixpkgs, hyprpanel, home-manager, ... }@inputs:
@@ -47,7 +47,7 @@
         # Custom packages overlay
         (final: prev: {
           # Rose Pine GTK theme from Fausto-Korpsvart with better styling
-          rose-pine-gtk-theme-full = prev.callPackage ./pkgs/rose-pine-gtk-theme-full.nix {};
+          rose-pine-gtk-theme-full = prev.callPackage ./pkgs/rose-pine-gtk-theme-full.nix { };
 
           # zrok package overlay: adds a custom build for the zrok application.
           zrok = prev.stdenv.mkDerivation rec {
@@ -79,11 +79,11 @@
             meta = with prev.lib; {
               description = "Geo-distributed, secure, and highly available sharing built on OpenZiti";
               homepage = "https://zrok.io/";
-              license = licenses.asl20;
+              license = prev.lib.licenses.asl20;
               mainProgram = "zrok";
-              maintainers = [ maintainers.popcat19 ];
+              maintainers = with prev.lib.maintainers; [ popcat19 ];
               platforms = [ "x86_64-linux" ];
-              sourceProvenance = with sourceTypes; [ binaryNativeCode ];
+              sourceProvenance = with prev.lib.sourceTypes; [ binaryNativeCode ];
             };
           };
         })
