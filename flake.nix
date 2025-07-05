@@ -20,12 +20,6 @@
     # Application-specific inputs
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
-    # Desktop environment components
-    hyprpanel = {
-      url = "github:Jas-SinghFSU/HyprPanel";
-      inputs.nixpkgs.follows = "nixpkgs"; # Ensure HyprPanel uses our Nixpkgs version.
-    };
-
     # Home management for user-specific configurations.
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -37,7 +31,6 @@
     catppuccin-nix = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs"; # Ensure Catppuccin uses our Nixpkgs version.
-    };
   };
 
   outputs = { self, nixpkgs, hyprpanel, home-manager, ... }@inputs:
@@ -109,7 +102,7 @@
         })
 
         # HyprPanel overlay for Hyprland panel components.
-        inputs.hyprpanel.overlay
+        # inputs.hyprpanel.overlay
       ];
 
       # **GAMING CONFIGURATION MODULE**
