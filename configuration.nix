@@ -67,6 +67,7 @@
       trustedInterfaces = [ "lo" ]; # Trust the loopback interface.
       allowedTCPPorts = [ 53317 22000 8384 ]; # Syncthing TCP ports.
       allowedUDPPorts = [ 53317 22000 21027 ]; # Syncthing UDP ports.
+      checkReversePath = false;
     };
   };
 
@@ -430,6 +431,10 @@
     win-spice                          # Windows SPICE guest tools
     quickemu                           # Quick virtualization
     quickgui                           # Quick virtualization GUI
+
+    # VPNs
+    wireguard-tools
+    protonvpn-gui
 
     # User applications moved to home-packages.nix:
     # - ranger, superfile (file managers)

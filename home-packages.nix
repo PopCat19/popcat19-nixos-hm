@@ -105,6 +105,7 @@ with pkgs; [
   keepassxc                          # Password manager
   zed-editor_git                     # Modern text editor
   code-cursor-fhs                    # LLM oriented text editor
+  vscodium.fhs                       # VSCodium with fhs
 
   # ─── ENTERTAINMENT ───
   mangayomi                          # Manga reader
