@@ -20,9 +20,9 @@
     WEBKIT_DISABLE_COMPOSITING_MODE = "1";
 
     # Input Method (fcitx5)
-    GTK_IM_MODULE = "fcitx";
-    QT_IM_MODULE = "fcitx";
-    XMODIFIERS = "@im=fcitx";
+    GTK_IM_MODULE = lib.mkForce "fcitx5";
+    QT_IM_MODULE = lib.mkForce "fcitx5";
+    XMODIFIERS = lib.mkForce "@im=fcitx5";
   };
 
   # Add local bin to PATH
