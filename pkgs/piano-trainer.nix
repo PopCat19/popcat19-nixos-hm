@@ -50,7 +50,7 @@ let
 
     installPhase = ''
       runHook preInstall
-      cp -r dist $out
+      cp -r build $out
       runHook postInstall
     '';
   };
@@ -82,9 +82,9 @@ in rustPlatform.buildRustPackage {
   ];
 
   # Copy frontend build to expected location
-  preBuild = ''
-    mkdir -p ../dist
-    cp -r ${frontend}/* ../dist/
+  postUnpack = ''
+    chmod -R +w source
+    cp -r ${frontend} source/build
   '';
 
   # Configure environment for MIDI support
@@ -96,12 +96,6 @@ in rustPlatform.buildRustPackage {
     ];
   };
 
-  # Tauri looks for frontend dist in parent directory
-  postPatch = ''
-    # Ensure tauri.conf.json points to correct dist directory
-    substituteInPlace tauri.conf.json \
-      --replace '"distDir": "../dist"' '"distDir": "../dist"'
-  '';
 
   meta = with lib; {
     description = "A desktop application for learning piano scales and chords with MIDI support";
