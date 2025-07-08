@@ -130,4 +130,5 @@ with pkgs; [
 
   # ─── UTILITIES ───
   fastfetch                          # System information display
+  appimage-run                       # Run AppImages
 ]
