@@ -51,35 +51,77 @@ The system emphasizes clean theming consistency, efficient workflows, and reliab
 
 ### Prerequisites
 
-NixOS 23.05 or later with flakes enabled in your Nix configuration. Git must be installed for cloning the repository. Ensure your system supports Wayland compositors for optimal Hyprland functionality.
+A full, manual NixOS minimal install (following the official guide: https://nixos.org/manual/nixos/stable/#sec-installation-manual) is **highly recommended** for the best experience. This ensures a clean and well-understood base system. NixOS 23.05 or later with flakes enabled in your Nix configuration is required. Git must be installed for cloning the repository. Ensure your system supports Wayland compositors for optimal Hyprland functionality.
 
 ### System Setup
 
 Clone the repository to your NixOS configuration directory. Replace the repository URL with the actual location of your configuration.
 
 ```bash
-git clone <repository-url> /etc/nixos
-cd /etc/nixos
+git clone https://github.com/PopCat19/popcat19-nixos-hm.git ~/nixos-config
+cd ~/nixos-config
+```
+
+If you performed a minimal install and your user's home directory wasn't automatically created, create it now (replace `<your-username>` with your actual username):
+
+```bash
+sudo mkdir -p /home/<your-username>
+sudo chown <your-username>:<your-username> /home/<your-username>
 ```
 
 ### Hardware Configuration
 
-Generate your hardware-specific configuration and integrate it with the flake setup. This step is crucial for proper hardware detection and driver configuration.
+This repository includes a `hardware-configuration.nix` file. If you've booted into NixOS on bare metal, it's **highly recommended** to overwrite the included `hardware-configuration.nix` with your own from `/etc/nixos/`. The one generated during initial NixOS install contains configurations specific to your hardware and is crucial for booting.
+
+> [!WARNING]
+> **Critical Step:** You **MUST** overwrite the `hardware-configuration.nix` file in the repository with your *own* from `/etc/nixos/`.  Using the provided `hardware-configuration.nix` can result in an unbootable system or hardware malfunctions.
 
 ```bash
-sudo nixos-generate-config --root /mnt
-sudo cp /mnt/etc/nixos/hardware-configuration.nix .
+# Overwrite the included hardware-configuration.nix
+sudo cp /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
+
+# Compare the files to ensure the overwrite was successful.
+# This command shows the differences between the original and the copied file.
+diff /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
 ```
+
+To prevent accidental overwrites or tracking of your specific hardware configuration, add `hardware-configuration.nix` to your `.gitignore` file:
+
+```bash
+echo "hardware-configuration.nix" >> .gitignore
+```
+
+This step is crucial for proper hardware detection and driver configuration.
 
 ### User Configuration
 
-Update system and user information in [`flake.nix`](flake.nix) to match your setup. Change the hostname variable to your system hostname and username variable to your username. Update the system architecture if not using x86_64-linux.
+> [!NOTE]
+> Before proceeding, it's crucial to tailor the flake to your specific system and user needs.  Accurate configuration here ensures a smooth transition and proper system functionality.
 
-Update [`home.nix`](home.nix) with your user-specific settings. Change home.username to your username and home.homeDirectory to your home path. Update any user-specific paths and preferences.
+Update system-specific information within [`flake.nix`](flake.nix). This involves modifying the `hostname` variable to reflect your system's hostname, setting the `username` variable to your actual username, and verifying the system architecture, especially if you're not using the standard `x86_64-linux`. Consult your existing `/etc/nixos/configuration.nix` for accurate values.
 
-Apply the initial system configuration using the flake. This will build and switch to your new NixOS configuration.
+> [!NOTE]
+> Pay close attention to the values in your current `/etc/nixos/configuration.nix` and `/etc/nixos/hardware-configuration.nix` as these were generated specifically for your hardware during the initial NixOS installation.
+
+Next, customize [`home.nix`](home.nix) with your user-specific settings. Update `home.username` to your username and `home.homeDirectory` to your home directory path. The default username is configured as `popcat19` with hostname `nixos0`. Replace these placeholders with the corresponding values from your `/etc/nixos/configuration.nix` to accurately reflect your user setup.
+
+You might also need to modify [`flake.nix`](flake.nix) and [`configuration.nix`](configuration.nix) to reflect your system's hostname and any other system-wide configurations. Examine your existing `/etc/nixos/configuration.nix` for any user or system-specific paths or preferences and replicate them accurately within your `home.nix`, `flake.nix`, or `configuration.nix` files as appropriate.
+
+For example, in `home.nix`:
+
+```nix
+{ config, pkgs, ... }:
+
+{
+  home.username = "<your-username>";
+  home.homeDirectory = "/home/<your-username>";
+}
+```
+
+Finally, apply the initial system configuration using the flake. This command, run from within the `~/nixos-config` directory, will build and switch your NixOS configuration, incorporating the settings from the flake alongside elements derived from your original system configuration.
 
 ```bash
+cd ~/nixos-config
 sudo nixos-rebuild switch --flake .#<hostname>
 ```
 
