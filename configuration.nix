@@ -65,7 +65,7 @@
     firewall = {
       enable = true;
       trustedInterfaces = [ "lo" ]; # Trust the loopback interface.
-      allowedTCPPorts = [ 53317 22000 8384 ]; # Syncthing TCP ports.
+      allowedTCPPorts = [ 53317 22000 8384 30071 ]; # Syncthing TCP ports.
       allowedUDPPorts = [ 53317 22000 21027 ]; # Syncthing UDP ports.
       checkReversePath = false;
     };
@@ -435,6 +435,8 @@
     # VPNs
     wireguard-tools
     protonvpn-gui
+
+    fuse
 
     # User applications moved to home-packages.nix:
     # - ranger, superfile (file managers)

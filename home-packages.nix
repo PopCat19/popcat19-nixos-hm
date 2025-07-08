@@ -103,7 +103,6 @@ with pkgs; [
 
   # ─── PRODUCTIVITY APPLICATIONS ───
   keepassxc                          # Password manager
-  piano-trainer                      # Piano learning app with MIDI support
   zed-editor_git                     # Modern text editor
   code-cursor-fhs                    # LLM oriented text editor
   vscodium.fhs                       # VSCodium with fhs
