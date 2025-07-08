@@ -24,7 +24,15 @@ git status             # Check changes
 - Keep change summaries short and concise.
 - Reserve bullet points for explicit lists. Write sentences otherwise.
 - Use context7 tool for code documentation to to reduce avoidable errors.
-- Always use diff for proposing and writing changes.
+- Always use diff for proposing and writing changes:
+````
+Diff Title:
+<<<<<<< SEARCH
+[exact content]
+=======
+[new content]
+>>>>>>> REPLACE
+````
 - When asked, articulate on why and how the [proposed|written] changes affect the result without excessive bullet points.
 - When asked, avoid styling excessively on markdown documentation. Prefer digestible paragraphs and code blocks.
 
