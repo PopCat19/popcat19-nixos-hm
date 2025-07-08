@@ -49,6 +49,9 @@
           # Rose Pine GTK theme from Fausto-Korpsvart with better styling
           rose-pine-gtk-theme-full = prev.callPackage ./pkgs/rose-pine-gtk-theme-full.nix { };
 
+          # Piano Trainer: Tauri-based desktop app for learning piano scales and chords with MIDI support
+          piano-trainer = prev.callPackage ./pkgs/piano-trainer.nix { };
+
           # zrok package overlay: adds a custom build for the zrok application.
           zrok = prev.stdenv.mkDerivation rec {
             pname = "zrok";
