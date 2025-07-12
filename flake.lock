@@ -287,6 +287,26 @@
         "type": "github"
       }
     },
+    "quickshell": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1752209830,
+        "narHash": "sha256-QNwSVRSnb173usdTV4TtKPepGNrKhUFn06r/444kkOU=",
+        "ref": "refs/heads/master",
+        "rev": "026aac375617a99ea0b5746fd6df2fc8aa526761",
+        "revCount": 617,
+        "type": "git",
+        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
+      }
+    },
     "root": {
       "inputs": {
         "aagl": "aagl",
@@ -294,6 +314,7 @@
         "chaotic": "chaotic",
         "home-manager": "home-manager_2",
         "nixpkgs": "nixpkgs_2",
+        "quickshell": "quickshell",
         "rose-pine-hyprcursor": "rose-pine-hyprcursor",
         "zen-browser": "zen-browser"
       }

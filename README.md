@@ -71,10 +71,10 @@ sudo chown <your-username>:<your-username> /home/<your-username>
 
 ### Hardware Configuration
 
-This repository includes a `hardware-configuration.nix` file. If you've booted into NixOS on bare metal, it's **highly recommended** to overwrite the included `hardware-configuration.nix` with your own from `/etc/nixos/`. The one generated during initial NixOS install contains configurations specific to your hardware and is crucial for booting.
+This repository includes a `hardware-configuration.nix` file. If you've booted into NixOS on bare metal, it is recommended to replace the included `hardware-configuration.nix` with the one from `/etc/nixos/`. The file generated during the initial NixOS install contains configurations specific to your hardware and is important for booting.
 
 > [!WARNING]
-> **Critical Step:** You **MUST** overwrite the `hardware-configuration.nix` file in the repository with your *own* from `/etc/nixos/`.  Using the provided `hardware-configuration.nix` can result in an unbootable system or hardware malfunctions.
+> Overwrite the `hardware-configuration.nix` file in this repository with your own from `/etc/nixos/`. Using the provided file may result in a failed build.
 
 ```bash
 # Overwrite the included hardware-configuration.nix

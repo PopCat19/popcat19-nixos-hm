@@ -437,6 +437,7 @@
     protonvpn-gui
 
     fuse
+    python313Packages.pip
 
     # User applications moved to home-packages.nix:
     # - ranger, superfile (file managers)

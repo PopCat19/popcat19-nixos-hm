@@ -58,6 +58,7 @@ with pkgs; [
   hyprutils                          # Hyprland utilities
   hyprshade                          # Screen shader manager
   hyprpanel                          # Panel for Hyprland (using package until HM module is fixed)
+  quickshell                         # Quick shell for Hyprland
 
   # ─── GAMING AND PERFORMANCE ───
   obs-studio                         # Screen recording and streaming
