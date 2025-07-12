@@ -244,6 +244,7 @@
   # Enables virtualization technologies.
   virtualisation = {
     waydroid.enable = true; # Waydroid for Android containerization.
+    docker.enable = true;
 
     # Add KVM/QEMU support
     libvirtd = {
@@ -438,6 +439,8 @@
 
     fuse
     python313Packages.pip
+    docker
+    flatpak-builder
 
     # User applications moved to home-packages.nix:
     # - ranger, superfile (file managers)

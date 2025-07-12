@@ -13,7 +13,7 @@ with pkgs; [
 
   # ─── WEB BROWSERS ───
   inputs.zen-browser.packages."${system}".default # Zen browser (flake input)
-  firefox                            # Firefox browser (moved from system-level)
+  firefox                            # Firefox browser
 
   # ─── FILE MANAGERS ───
   kdePackages.dolphin                # Primary file manager (KDE, themed via kdeglobals)
@@ -31,8 +31,11 @@ with pkgs; [
   kdePackages.ark                    # Archive manager (used in MIME associations)
 
   # ─── DEVELOPMENT TOOLS ───
-  jdk                                # Java Development Kit (moved from system-level)
-  nodejs                             # Node.js runtime (moved from system-level)
+  jdk                                # Java Development Kit
+  nodejs                             # Node.js runtime
+  yarn-berry                         # Yarn package manager
+  cargo                              # Rust package manager
+  appstream                          # Application metadata
   git-lfs                            # Git Large File Storage
   jq                                 # JSON processor
   tree                               # Directory tree display
@@ -40,8 +43,8 @@ with pkgs; [
   starship                           # Shell prompt (configured above)
 
   # ─── FILE MANAGERS (ADDITIONAL) ───
-  ranger                             # Terminal file manager (moved from system-level)
-  superfile                          # Modern terminal file manager (moved from system-level)
+  ranger                             # Terminal file manager
+  superfile                          # Modern terminal file manager
 
   # ─── GRAPHICS TOOLS ───
   hyprpicker                         # Color picker for Hyprland
@@ -106,7 +109,7 @@ with pkgs; [
   keepassxc                          # Password manager
   zed-editor_git                     # Modern text editor
   code-cursor-fhs                    # LLM oriented text editor
-  vscodium.fhs                       # VSCodium with fhs
+  vscodium                           # VSCodium
 
   # ─── ENTERTAINMENT ───
   mangayomi                          # Manga reader
