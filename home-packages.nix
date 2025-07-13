@@ -34,13 +34,13 @@ with pkgs; [
   jdk                                # Java Development Kit
   nodejs                             # Node.js runtime
   yarn-berry                         # Yarn package manager
-  cargo                              # Rust package manager
   appstream                          # Application metadata
   git-lfs                            # Git Large File Storage
   jq                                 # JSON processor
   tree                               # Directory tree display
   eza                                # Modern ls replacement (used in fish abbrs)
   starship                           # Shell prompt (configured above)
+  rustup
 
   # ─── FILE MANAGERS (ADDITIONAL) ───
   ranger                             # Terminal file manager
