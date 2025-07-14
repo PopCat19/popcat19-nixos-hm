@@ -4,7 +4,8 @@
 
 # Load core dependencies
 set -l script_dir (dirname (status --current-filename))
-source "$script_dir/nixos-core.fish"
+source "$script_dir/nixos-env-core.fish"
+source "$script_dir/nixos-git-core.fish"
 
 function nixos-git -d "📝 Git operations for NixOS config (commit, push, pull, status)"
     # Parse arguments

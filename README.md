@@ -167,9 +167,41 @@ Custom packages are defined in the [`pkgs/`](pkgs/) directory with proper Nix ex
 
 ### Fish Shell Functions
 
-The configuration includes over 100 custom Fish shell functions for NixOS management and daily workflows. Functions are organized in [`fish_functions/`](fish_functions/) with comprehensive documentation and help systems. Key functions include [`nixos-apply-config`](fish_functions/nixos-apply-config.fish) for configuration management and [`nixpkg`](fish_functions/nixpkg.fish) for package operations.
+The configuration includes custom Fish shell functions for NixOS management and daily workflows. Functions are organized in [`fish_functions/`](fish_functions/) with comprehensive documentation and help systems.
 
-The [`nixos-help`](fish_functions/nixos-help.fish) function provides comprehensive documentation for all available functions. Functions support command-line help and integrate with the broader NixOS workflow for seamless system management.
+The following table lists all available fish shell functions:
+
+| Function | Description | File |
+|----------|-------------|------|
+| [flake-update](fish_functions/flake-update.fish) | 🔄 Update Nix flake inputs with backup and validation | [flake-update.fish](fish_functions/flake-update.fish) |
+| [flake-lock-clean](fish_functions/flake-update.fish) | 🧹 Clean up backup lock files | [flake-update.fish](fish_functions/flake-update.fish) |
+| [flake-rollback](fish_functions/flake-update.fish) | 🔄 Rollback flake.lock to backup | [flake-update.fish](fish_functions/flake-update.fish) |
+| [get](fish_functions/get.fish) | alias get git clone with optional -cd to enter repo | [get.fish](fish_functions/get.fish) |
+| [nixconf-edit](fish_functions/nixconf-edit.fish) | 📝 Edit NixOS configuration.nix | [nixconf-edit.fish](fish_functions/nixconf-edit.fish) |
+| [homeconf-edit](fish_functions/nixconf-edit.fish) | 📝 Edit Home Manager home.nix | [nixconf-edit.fish](fish_functions/nixconf-edit.fish) |
+| [flake-edit](fish_functions/nixconf-edit.fish) | 📝 Edit flake.nix | [nixconf-edit.fish](fish_functions/nixconf-edit.fish) |
+| [nixconf-list](fish_functions/nixconf-edit.fish) | 📋 List available configuration files | [nixconf-edit.fish](fish_functions/nixconf-edit.ffish) |
+| [nixos-apply-config](fish_functions/nixos-apply-config.fish) | 🚀 Apply NixOS configuration with optional git operations | [nixos-apply-config.fish](fish_functions/nixos-apply-config.fish) |
+| [nixos-core](fish_functions/nixos-core.fish) | ⚠️ DEPRECATED: Core functionality has been moved to modular components | [nixos-core.fish](fish_functions/nixos-core.fish) |
+| [nixos-git](fish_functions/nixos-git.fish) | 📝 Git operations for NixOS config (commit, push, pull, status) | [nixos-git.fish](fish_functions/nixos-git.fish) |
+| [nixos-help](fish_functions/nixos-help.fish) | 📖 Comprehensive help for NixOS configuration management | [nixos-help.fish](fish_functions/nixos-help.fish) |
+| [nixos-rebuild-switch](fish_functions/nixos-rebuild-switch.fish) | 🚀 Rebuild and switch NixOS system configuration | [nixos-rebuild-switch.fish](fish_functions/nixos-rebuild-switch.fish) |
+| [nixos-system-core](fish_functions/nixos-system-core.fish) | System operations module for NixOS configuration management | [nixos-system-core.fish](fish_functions/nixos-system-core.fish) |
+| [nixos-info](fish_functions/nixos-utils.fish) | 📊 Show detailed system information | [nixos-utils.fish](fish_functions/nixos-utils.fish) |
+| [nixos-doctor](fish_functions/nixos-utils.fish) | 🔧 Diagnose common NixOS configuration issues | [nixos-utils.fish](fish_functions/nixos-utils.fish) |
+| [nixos-cleanup](fish_functions/nixos-utils.fish) | 🧹 Clean up temporary files and old generations | [nixos-utils.fish](fish_functions/nixos-utils.fish) |
+| [nixos-backup](fish_functions/nixos-utils.fish) | 💾 Backup current configuration | [nixos-utils.fish](fish_functions/nixos-utils.fish) |
+| [nixos-restore](fish_functions/nixos-utils.fish) | 🔄 Restore configuration from backup | [nixos-utils.fish](fish_functions/nixos-utils.fish) |
+| [nixos-edit-rebuild](fish_functions/nixos-workflows.fish) | 📝 Edit configuration.nix, then 🚀 rebuild | [nixos-workflows.fish](fish_functions/nixos-workflows.fish) |
+| [home-edit-rebuild](fish_functions/nixos-workflows.fish) | 📝 Edit home.nix, then 🚀 rebuild | [nixos-workflows.fish](fish_functions/nixos-workflows.fish) |
+| [nixos-upgrade](fish_functions/nixos-workflows.fish) | 🔄 Update flake inputs, then 🚀 rebuild | [nixos-workflows.fish](fish_functions/nixos-workflows.fish) |
+| [nixos-quick-commit](fish_functions/nixos-workflows.fish) | 🚀 Quick rebuild and commit with message | [nixos-workflows.fish](fish_functions/nixos-workflows.fish) |
+| [nixos-status](fish_functions/nixos-workflows.fish) | 📊 Show comprehensive NixOS system status | [nixos-workflows.fish](fish_functions/nixos-workflows.fish) |
+| [nixos-rollback](fish_functions/nixos-workflows.fish) | 🔄 Rollback to previous generation | [nixos-workflows.fish](fish_functions/nixos-workflows.fish) |
+| [nixpkg](fish_functions/nixpkg.fish) | 📦 Simple NixOS package manager (add, remove, list, search) | [nixpkg.fish](fish_functions/nixpkg.fish) |
+| [sillytavern](fish_functions/sillytavern.fish) | alias sillytavern nohup ngrok http --url=usable-sailfish-merely.ngrok-free.app 8000 & ~/SillyTavern-Launcher/SillyTavern/start.sh | [sillytavern.fish](fish_functions/sillytavern.fish) |
+
+Use the `nixos-help` function for comprehensive documentation.
 
 ### Hyprland Configuration
 
