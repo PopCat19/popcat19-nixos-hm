@@ -20,7 +20,7 @@ function nixos_test_config -d "Test configuration with dry-run"
 
     pushd "$NIXOS_CONFIG_DIR" >/dev/null
 
-    sudo nixos-rebuild dry-run --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME"
+    nixos-rebuild dry-run --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME"
     set -l rebuild_status $status
     popd >/dev/null
     return $rebuild_status
