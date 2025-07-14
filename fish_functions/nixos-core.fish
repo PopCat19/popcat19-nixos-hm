@@ -184,18 +184,12 @@ function nixos_test_config -d "Test configuration with dry-run"
         return 1
     end
 
-    echo "🔍 Testing configuration..."
     pushd "$NIXOS_CONFIG_DIR" >/dev/null
 
-    if sudo nixos-rebuild dry-run --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME" >/dev/null 2>&1
-        echo "✅ Configuration test passed"
-        popd >/dev/null
-        return 0
-    else
-        echo "❌ Configuration test failed"
-        popd >/dev/null
-        return 1
-    end
+    sudo nixos-rebuild dry-run --flake "$NIXOS_CONFIG_DIR#$NIXOS_FLAKE_HOSTNAME"
+    set -l rebuild_status $status
+    popd >/dev/null
+    return $rebuild_status
 end
 
 function nixos_current_generation -d "Get current generation number"
