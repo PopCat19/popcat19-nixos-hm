@@ -4,7 +4,7 @@
 
 # Load core dependencies
 set -l script_dir (dirname (status --current-filename))
-source "$script_dir/nixos-core.fish"
+source "$script_dir/nixos-env-core.fish"
 
 function nixpkg -d "📦 Simple NixOS package manager (add, remove, list, search)"
     # Parse arguments

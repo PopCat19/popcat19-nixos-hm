@@ -4,7 +4,8 @@
 
 # Load core dependencies
 set -l script_dir (dirname (status --current-filename))
-source "$script_dir/nixos-core.fish"
+source "$script_dir/nixos-env-core.fish"
+source "$script_dir/nixos-system-core.fish"
 
 function nixos-rebuild-switch -d "🚀 Rebuild and switch NixOS system configuration"
     if contains -- --help $argv; or contains -- help $argv

@@ -4,7 +4,10 @@
 
 # Load core dependencies
 set -l script_dir (dirname (status --current-filename))
-source "$script_dir/nixos-core.fish"
+source "$script_dir/nixos-env-core.fish"
+source "$script_dir/nixos-system-core.fish"
+source "$script_dir/nixos-utils-core.fish"
+source "$script_dir/nixos-git-core.fish"
 
 function nixos-apply-config -d "🚀 Apply NixOS configuration with optional git operations"
     # Parse arguments
