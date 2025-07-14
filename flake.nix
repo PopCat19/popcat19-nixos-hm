@@ -61,11 +61,11 @@
           # zrok package overlay: adds a custom build for the zrok application.
           zrok = prev.stdenv.mkDerivation rec {
             pname = "zrok";
-            version = "1.0.4";
+            version = "1.0.6";
 
             src = prev.fetchurl {
               url = "https://github.com/openziti/zrok/releases/download/v${version}/zrok_${version}_linux_amd64.tar.gz";
-              sha256 = "1fwhx2cdksfc44pqvcs84m6ykapghcqbh1b8zjyc3js3cf3ajwgd";
+              sha256 = "2821fc2faeaeff7f5f9b04ba5b56160d2f3e5c17ffa487b7921e8d1fd01d684c";
             };
 
             dontUnpack = true;
