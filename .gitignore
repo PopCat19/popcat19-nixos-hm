@@ -16,6 +16,7 @@ Thumbs.db
 # Ignore editor files
 .vscode/
 .idea/
+.roo/
 *.swp
 *.swo
 
