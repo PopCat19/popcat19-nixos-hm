@@ -90,12 +90,26 @@ function nixos_git_push -d "Push changes to remote"
         return 0
     end
 
-    if git push origin 2>/dev/null
-        echo "✅ Pushed to remote"
+    # Handle refspec arguments
+    set -l push_args $argv
+    if test (count $argv) -eq 0
+        set push_args ""
+    end
+
+    if git push origin $push_args 2>/dev/null
+        if test (count $argv) -gt 0
+            echo "✅ Pushed to remote: $argv"
+        else
+            echo "✅ Pushed to remote"
+        end
         popd >/dev/null
         return 0
     else
-        echo "⚠️  Failed to push to remote"
+        if test (count $argv) -gt 0
+            echo "⚠️  Failed to push to remote: $argv"
+        else
+            echo "⚠️  Failed to push to remote"
+        end
         popd >/dev/null
         return 1
     end

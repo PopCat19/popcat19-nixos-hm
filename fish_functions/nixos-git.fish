@@ -45,7 +45,7 @@ function nixos-git -d "📝 Git operations for NixOS config (commit, push, pull,
             _nixos_git_commit_and_push "$commit_msg"
 
         case push p
-            _nixos_git_push_only
+            _nixos_git_push_only $argv[2..-1]
 
         case pull
             _nixos_git_pull_only $argv[2..-1]
@@ -79,7 +79,7 @@ end
 
 function _nixos_git_push_only -d "Push without committing"
     echo "📤 Pushing to remote..."
-    nixos_git_push
+    nixos_git_push $argv
 end
 
 function _nixos_git_pull_only -d "Pull from remote"
@@ -111,7 +111,7 @@ function _nixos_git_help
     echo "Usage:"
     echo "  nixos-git commit 'message'      # Commit with message and push"
     echo "  nixos-git 'commit message'      # Same as above (shortcut)"
-    echo "  nixos-git push                  # Push without committing"
+    echo "  nixos-git push [refspec]        # Push without committing"
     echo "  nixos-git pull [options]        # Pull from remote"
     echo "  nixos-git status                # Show git status"
     echo "  nixos-git sync                  # Pull then push"
@@ -120,6 +120,9 @@ function _nixos_git_help
     echo "Examples:"
     echo "  nixos-git 'Add new packages'              # Commit and push"
     echo "  nixos-git commit 'Fix configuration'      # Explicit commit"
+    echo "  nixos-git push                            # Push current branch"
+    echo "  nixos-git push dev:main                   # Push dev branch to main"
+    echo "  nixos-git push origin dev:main            # Push dev to main on origin"
     echo "  nixos-git pull --rebase                   # Pull with rebase"
     echo "  nixos-git status                          # Check status"
     echo ""
