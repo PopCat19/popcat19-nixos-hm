@@ -96,7 +96,10 @@ function nixos_git_push -d "Push changes to remote"
         set push_args ""
     end
 
-    if git push origin $push_args 2>/dev/null
+    set -l push_output (git push origin $push_args 2>&1)
+    set -l push_exit_code $?
+    
+    if test $push_exit_code -eq 0
         if test (count $argv) -gt 0
             echo "✅ Pushed to remote: $argv"
         else
@@ -110,6 +113,7 @@ function nixos_git_push -d "Push changes to remote"
         else
             echo "⚠️  Failed to push to remote"
         end
+        echo "💡 Error details: $push_output"
         popd >/dev/null
         return 1
     end
