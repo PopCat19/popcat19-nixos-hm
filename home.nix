@@ -19,10 +19,13 @@
     # Ensure thumbnails work properly
     WEBKIT_DISABLE_COMPOSITING_MODE = "1";
 
-    # Input Method (fcitx5)
+    # Input Method (fcitx5) with Wayland support
     GTK_IM_MODULE = lib.mkForce "fcitx5";
     QT_IM_MODULE = lib.mkForce "fcitx5";
     XMODIFIERS = lib.mkForce "@im=fcitx5";
+    # Firefox/Zen Browser specific for Wayland input method
+    MOZ_ENABLE_WAYLAND = "1";
+    GTK4_IM_MODULE = "fcitx5";
   };
 
   # Add local bin to PATH
@@ -499,13 +502,13 @@
   };
 
   # **INPUT METHOD CONFIGURATION**
-  # Configures Fcitx5 for input methods.
+  # Configures Fcitx5 for input methods with full Wayland support.
   i18n.inputMethod = {
     type = "fcitx5";
     enable = true;
     fcitx5.addons = with pkgs; [
-      fcitx5-gtk # GTK module.
       libsForQt5.fcitx5-qt # Qt module.
+      fcitx5-gtk
       fcitx5-mozc # Mozc input method engine for Japanese.
       fcitx5-rose-pine # Rose Pine theme for fcitx5.
     ];
@@ -1093,6 +1096,24 @@
       Type = "oneshot";
       ExecStart = "${config.home.homeDirectory}/.local/bin/update-thumbnails";
       RemainAfterExit = true;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
+  # Fcitx5 systemd service for proper Wayland initialization
+  systemd.user.services.fcitx5-wayland = {
+    Unit = {
+      Description = "Fcitx5 input method for Wayland";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.fcitx5}/bin/fcitx5 --disable=x11";
+      Restart = "on-failure";
+      RestartSec = "1";
     };
     Install = {
       WantedBy = [ "graphical-session.target" ];
