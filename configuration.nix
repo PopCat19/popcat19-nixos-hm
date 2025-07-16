@@ -33,7 +33,22 @@
       "net.core.wmem_max" = 7340032;  # Maximum send buffer size (7MB)
       "net.core.rmem_default" = 262144; # Default receive buffer size (256KB)
       "net.core.wmem_default" = 262144; # Default send buffer size (256KB)
+      
+      # MT7921E driver stabilization parameters
+      "net.ipv4.tcp_keepalive_time" = 600;  # Faster keepalive for stability
+      "net.ipv4.tcp_keepalive_intvl" = 30;  # More frequent keepalive checks
+      "net.ipv4.tcp_keepalive_probes" = 8;  # More probes before giving up
+      
+      # Disable power management for MT7921E
+      "net.core.default_qdisc" = "fq";  # Fair queuing for better stability
     };
+    
+    # Kernel boot parameters for MT7921E stability
+    kernelParams = [
+      "pcie_aspm=off"           # Disable PCIe Active State Power Management
+      "mt7921e.disable_aspm=1"  # Disable ASPM for MT7921E specifically
+      "iwlwifi.power_save=0"    # Disable WiFi power saving (fallback)
+    ];
   };
 
   # **HARDWARE CONFIGURATION**
@@ -59,7 +74,11 @@
   # Manages network setup and firewall rules.
   networking = {
     hostName = "popcat19-nixos0"; # Set hostname to match flake.nix
-    networkmanager.enable = true; # Enable NetworkManager for network control.
+    networkmanager = {
+      enable = true; # Enable NetworkManager for network control.
+      wifi.powersave = false;  # Disable WiFi power saving for stability
+      wifi.backend = "wpa_supplicant";  # Ensure wpa_supplicant backend
+    };
 
     # Firewall configuration.
     firewall = {
@@ -502,3 +521,4 @@
 
 
 }
+
