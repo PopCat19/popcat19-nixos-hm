@@ -17,7 +17,7 @@ function nixos-git -d "📝 Git operations for NixOS config (commit, push, pull,
         set show_help true
     else
         set operation $argv[1]
-        if test "$operation" = "help" -o "$operation" = "-h" -o "$operation" = "--help"
+        if test "$operation" = "help"; or test "$operation" = "-h"; or test "$operation" = "--help"
             set show_help true
         end
     end
