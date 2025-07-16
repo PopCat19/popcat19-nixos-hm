@@ -76,6 +76,24 @@
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
+  # **JOURNALD CONFIGURATION**
+  # Configure systemd-journald for 3-day log retention
+  services.journald.extraConfig = ''
+    # Automatically rotate logs after 3 days
+    MaxRetentionSec=3day
+
+    # Limit journal size to prevent excessive disk usage
+    SystemMaxUse=500M
+    SystemKeepFree=100M
+
+    # Compress archived journals
+    Compress=yes
+
+    # Forward to syslog (disabled to reduce duplication)
+    ForwardToSyslog=no
+    ForwardToWall=no
+  '';
+
   # **DISPLAY SERVER & DESKTOP ENVIRONMENT**
   # Configures graphical server and Wayland compositor.
   # X11 Server (required for SDDM).
