@@ -1084,41 +1084,4 @@
       tabstospaces = true;
     };
   };
-
-  # Systemd user service for thumbnail cache updates
-  systemd.user.services.thumbnail-update = {
-    Unit = {
-      Description = "Update thumbnail cache on login";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${config.home.homeDirectory}/.local/bin/update-thumbnails";
-      RemainAfterExit = true;
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
-
-  # Fcitx5 systemd service for proper Wayland initialization
-  systemd.user.services.fcitx5-wayland = {
-    Unit = {
-      Description = "Fcitx5 input method for Wayland";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "simple";
-      ExecStart = "${pkgs.fcitx5}/bin/fcitx5 --disable=x11";
-      Restart = "on-failure";
-      RestartSec = "1";
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
-
-
 }

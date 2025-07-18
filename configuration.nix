@@ -33,16 +33,16 @@
       "net.core.wmem_max" = 7340032;  # Maximum send buffer size (7MB)
       "net.core.rmem_default" = 262144; # Default receive buffer size (256KB)
       "net.core.wmem_default" = 262144; # Default send buffer size (256KB)
-      
+
       # MT7921E driver stabilization parameters
       "net.ipv4.tcp_keepalive_time" = 600;  # Faster keepalive for stability
       "net.ipv4.tcp_keepalive_intvl" = 30;  # More frequent keepalive checks
       "net.ipv4.tcp_keepalive_probes" = 8;  # More probes before giving up
-      
+
       # Disable power management for MT7921E
       "net.core.default_qdisc" = "fq";  # Fair queuing for better stability
     };
-    
+
     # Kernel boot parameters for MT7921E stability
     kernelParams = [
       "pcie_aspm=off"           # Disable PCIe Active State Power Management
@@ -120,6 +120,9 @@
     enable = true;
     xkb.layout = "us"; # Set keyboard layout to US.
   };
+
+  # Allow XDG autostart if no desktop manager is selected (kept for compatibility with SDDM/Hyprland)
+  services.xserver.desktopManager.runXdgAutostartIfNone = true;
 
   # Polkit for authentication and theme support
   security.polkit.enable = true;
@@ -211,6 +214,14 @@
       openFirewall = true; # Automatically open required firewall ports
       settings = {
         output_name = "1"; # Select MSI monitor (Monitor 1 from KMS list)
+      };
+    };
+
+    # OpenVPN Configuration.
+    openvpn.servers = {
+      vpngateJapan = {
+        config = '' config /root/nixos/openvpn/vpngate-japan-udp.conf '';
+        updateResolvConf = true;
       };
     };
 
@@ -521,4 +532,3 @@
 
 
 }
-

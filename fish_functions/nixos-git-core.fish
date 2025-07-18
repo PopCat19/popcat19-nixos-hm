@@ -97,7 +97,7 @@ function nixos_git_push -d "Push changes to remote"
     end
 
     set -l push_output (git push origin $push_args 2>&1)
-    set -l push_exit_code $?
+    set -l push_exit_code $status
     
     if test $push_exit_code -eq 0
         if test (count $argv) -gt 0

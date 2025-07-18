@@ -110,6 +110,8 @@ with pkgs; [
   zed-editor_git                     # Modern text editor
   code-cursor-fhs                    # LLM oriented text editor
   vscodium                           # VSCodium
+  nil
+  nixd
 
   # ─── ENTERTAINMENT ───
   mangayomi                          # Manga reader
