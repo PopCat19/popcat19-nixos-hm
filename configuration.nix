@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # **IMPORTS**
@@ -29,25 +29,25 @@
 
     # Kernel parameters for optimized network performance (Syncthing UDP buffers).
     kernel.sysctl = {
-      "net.core.rmem_max" = 7340032;  # Maximum receive buffer size (7MB)
-      "net.core.wmem_max" = 7340032;  # Maximum send buffer size (7MB)
+      "net.core.rmem_max" = 7340032; # Maximum receive buffer size (7MB)
+      "net.core.wmem_max" = 7340032; # Maximum send buffer size (7MB)
       "net.core.rmem_default" = 262144; # Default receive buffer size (256KB)
       "net.core.wmem_default" = 262144; # Default send buffer size (256KB)
 
       # MT7921E driver stabilization parameters
-      "net.ipv4.tcp_keepalive_time" = 600;  # Faster keepalive for stability
-      "net.ipv4.tcp_keepalive_intvl" = 30;  # More frequent keepalive checks
-      "net.ipv4.tcp_keepalive_probes" = 8;  # More probes before giving up
+      "net.ipv4.tcp_keepalive_time" = 600; # Faster keepalive for stability
+      "net.ipv4.tcp_keepalive_intvl" = 30; # More frequent keepalive checks
+      "net.ipv4.tcp_keepalive_probes" = 8; # More probes before giving up
 
       # Disable power management for MT7921E
-      "net.core.default_qdisc" = "fq";  # Fair queuing for better stability
+      "net.core.default_qdisc" = "fq"; # Fair queuing for better stability
     };
 
     # Kernel boot parameters for MT7921E stability
     kernelParams = [
-      "pcie_aspm=off"           # Disable PCIe Active State Power Management
-      "mt7921e.disable_aspm=1"  # Disable ASPM for MT7921E specifically
-      "iwlwifi.power_save=0"    # Disable WiFi power saving (fallback)
+      "pcie_aspm=off" # Disable PCIe Active State Power Management
+      "mt7921e.disable_aspm=1" # Disable ASPM for MT7921E specifically
+      "iwlwifi.power_save=0" # Disable WiFi power saving (fallback)
     ];
   };
 
@@ -76,16 +76,25 @@
     hostName = "popcat19-nixos0"; # Set hostname to match flake.nix
     networkmanager = {
       enable = true; # Enable NetworkManager for network control.
-      wifi.powersave = false;  # Disable WiFi power saving for stability
-      wifi.backend = "wpa_supplicant";  # Ensure wpa_supplicant backend
+      wifi.powersave = false; # Disable WiFi power saving for stability
+      wifi.backend = "wpa_supplicant"; # Ensure wpa_supplicant backend
     };
 
     # Firewall configuration.
     firewall = {
       enable = true;
       trustedInterfaces = [ "lo" ]; # Trust the loopback interface.
-      allowedTCPPorts = [ 53317 22000 8384 30071 ]; # Syncthing TCP ports.
-      allowedUDPPorts = [ 53317 22000 21027 ]; # Syncthing UDP ports.
+      allowedTCPPorts = [
+        53317
+        22000
+        8384
+        30071
+      ]; # Syncthing TCP ports.
+      allowedUDPPorts = [
+        53317
+        22000
+        21027
+      ]; # Syncthing UDP ports.
       checkReversePath = false;
     };
   };
@@ -186,7 +195,15 @@
   # Defines system users and their groups.
   users.users.popcat19 = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "audio" "networkmanager" "i2c" "input" "libvirtd" ]; # Add user to necessary groups.
+    extraGroups = [
+      "wheel"
+      "video"
+      "audio"
+      "networkmanager"
+      "i2c"
+      "input"
+      "libvirtd"
+    ]; # Add user to necessary groups.
     shell = pkgs.fish; # Set Fish as default shell.
   };
 
@@ -220,7 +237,7 @@
     # OpenVPN Configuration.
     openvpn.servers = {
       vpngateJapan = {
-        config = '' config /root/nixos/openvpn/vpngate-japan-udp.conf '';
+        config = ''config /root/nixos/openvpn/vpngate-japan-udp.conf '';
         updateResolvConf = true;
       };
     };
@@ -432,8 +449,8 @@
   # **ENVIRONMENT VARIABLES**
   # Global session environment variables.
   environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";           # Hint for Electron apps to use Wayland.
-    WLR_NO_HARDWARE_CURSORS = "1";  # Cursor compatibility for Wayland compositors.
+    NIXOS_OZONE_WL = "1"; # Hint for Electron apps to use Wayland.
+    WLR_NO_HARDWARE_CURSORS = "1"; # Cursor compatibility for Wayland compositors.
     # Thumbnail generation support
     GST_PLUGIN_SYSTEM_PATH_1_0 = "/run/current-system/sw/lib/gstreamer-1.0";
     # GTK thumbnail support
@@ -457,12 +474,12 @@
     wget
     curl
     git
-    gh                                 # GitHub CLI (needed for git operations)
+    gh # GitHub CLI (needed for git operations)
     xdg-utils
     shared-mime-info
 
     # Shell tools (needed for system-wide access)
-    starship                           # Shell prompt (available for root)
+    starship # Shell prompt (available for root)
 
     # Hardware tools (require system-level access)
     i2c-tools
@@ -471,15 +488,15 @@
     rocmPackages.rpp
 
     # virtualisation
-    qemu                               # Virtualization
-    libvirt                            # Virtualization platform
-    virt-manager                       # Virtual machine manager
-    virt-viewer                        # VM display viewer
-    spice-gtk                          # SPICE client
-    win-virtio                         # Windows VirtIO drivers
-    win-spice                          # Windows SPICE guest tools
-    quickemu                           # Quick virtualization
-    quickgui                           # Quick virtualization GUI
+    qemu # Virtualization
+    libvirt # Virtualization platform
+    virt-manager # Virtual machine manager
+    virt-viewer # VM display viewer
+    spice-gtk # SPICE client
+    win-virtio # Windows VirtIO drivers
+    win-spice # Windows SPICE guest tools
+    quickemu # Quick virtualization
+    quickgui # Quick virtualization GUI
 
     # VPNs
     wireguard-tools
@@ -523,12 +540,20 @@
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      serif = [ "Rounded Mplus 1c Medium" "Noto Serif" ];
-      sansSerif = [ "Rounded Mplus 1c Medium" "Noto Sans" ];
-      monospace = [ "JetBrainsMono Nerd Font" "Noto Sans Mono" ];
+      serif = [
+        "Rounded Mplus 1c Medium"
+        "Noto Serif"
+      ];
+      sansSerif = [
+        "Rounded Mplus 1c Medium"
+        "Noto Sans"
+      ];
+      monospace = [
+        "JetBrainsMono Nerd Font"
+        "Noto Sans Mono"
+      ];
       emoji = [ "Noto Color Emoji" ];
     };
   };
-
 
 }
