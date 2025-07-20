@@ -90,12 +90,9 @@ function nixos_git_push -d "Push changes to remote"
         return 0
     end
 
-    # Handle refspec arguments
+    # Handle refspec arguments - avoid empty string as refspec
     set -l push_args $argv
-    if test (count $argv) -eq 0
-        set push_args
-    end
-
+    
     set -l push_output
     if test (count $push_args) -eq 0
         set push_output (git push origin 2>&1)
