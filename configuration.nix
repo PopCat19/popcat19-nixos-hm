@@ -234,13 +234,13 @@
       };
     };
 
-    # OpenVPN Configuration.
-    openvpn.servers = {
-      vpngateJapan = {
-        config = ''config /root/nixos/openvpn/vpngate-japan-udp.conf '';
-        updateResolvConf = true;
-      };
-    };
+    # # OpenVPN Configuration.
+    # openvpn.servers = {
+    #   vpngateJapan = {
+    #     config = ''config /root/nixos/openvpn/vpngate-japan-udp.conf '';
+    #     updateResolvConf = true;
+    #   };
+    # };
 
     # File Synchronization.
     syncthing = {
