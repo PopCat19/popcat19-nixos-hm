@@ -48,6 +48,8 @@
       "pcie_aspm=off" # Disable PCIe Active State Power Management
       "mt7921e.disable_aspm=1" # Disable ASPM for MT7921E specifically
       "iwlwifi.power_save=0" # Disable WiFi power saving (fallback)
+      "ieee80211_disable_40mhz_24ghz=1" # 2.4 GHz only: disable 40 MHz intolerance
+      "mac80211_disable_vht=1" # 5 GHz: drop VHT if you roam to 2.4 GHz
     ];
   };
 
@@ -78,6 +80,21 @@
       enable = true; # Enable NetworkManager for network control.
       wifi.powersave = false; # Disable WiFi power saving for stability
       wifi.backend = "wpa_supplicant"; # Ensure wpa_supplicant backend
+      wifi.scanRandMacAddress = false;
+    };
+
+    # wpa_supplicant extra options
+    wireless = {
+      enable = false; # we use NM
+      networks = { };
+      extraConfig = ''
+        # Aggressive roaming / keep-alive
+        bgscan="simple:30:-65:300"
+        ap_scan=1
+        fast_reauth=1
+        # Disable 802.11r for buggy APs
+        disable_ht40=1
+      '';
     };
 
     # Firewall configuration.
