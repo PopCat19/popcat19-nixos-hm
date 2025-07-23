@@ -79,22 +79,27 @@
     networkmanager = {
       enable = true; # Enable NetworkManager for network control.
       wifi.powersave = false; # Disable WiFi power saving for stability
-      wifi.backend = "wpa_supplicant"; # Ensure wpa_supplicant backend
+      wifi.backend = "wpa_supplicant"; # Use wpa_supplicant as WiFi backend
       wifi.scanRandMacAddress = false;
     };
 
-    # wpa_supplicant extra options
-    wireless = {
-      enable = false; # we use NM
-      networks = { };
-      extraConfig = ''
-        # Aggressive roaming / keep-alive
-        bgscan="simple:30:-65:300"
-        ap_scan=1
-        fast_reauth=1
-        # Disable 802.11r for buggy APs
-        disable_ht40=1
-      '';
+    # Enable iwd (iNet Wireless Daemon)
+    wireless.iwd = {
+      enable = false;
+      settings = {
+        General = {
+          AddressRandomization = true;
+        };
+        Scan = {
+          DisablePeriodicScan = false;
+          InitialPeriodicScan = true;
+        };
+        Network = {
+          DisableANQP = false;
+          RoamThreshold = -70;
+          TriggeredRoamThreshold = -75;
+        };
+      };
     };
 
     # Firewall configuration.
