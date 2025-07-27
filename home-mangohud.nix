@@ -35,8 +35,8 @@
 
   home.packages = with pkgs; [
     # ─── CORE MANGOHUD PACKAGES ───
-    mangohud                           # Gaming performance overlay with system metrics
-    goverlay                           # MangoHUD configuration GUI for easy setup
+    mangohud # Gaming performance overlay with system metrics
+    goverlay # MangoHUD configuration GUI for easy setup
 
     # Note: MangoHUD automatically integrates with Steam and most gaming platforms
     # Additional gaming tools can be found in home-packages.nix under gaming section
