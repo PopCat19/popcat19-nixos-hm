@@ -402,7 +402,6 @@
     gh
     fuse
     libvirt
-    virtio-viewer
     qemu
     shared-mime-info
     wireguard-tools
