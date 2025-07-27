@@ -42,7 +42,13 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs:
     let
       # **SYSTEM DEFINITIONS**
       # Basic system parameters for configuration.
@@ -57,6 +63,15 @@
         (final: prev: {
           # Rose Pine GTK theme from Fausto-Korpsvart with better styling
           rose-pine-gtk-theme-full = prev.callPackage ./pkgs/rose-pine-gtk-theme-full.nix { };
+
+          # Hyprshade 4.0.0 overlay - Hyprland shade configuration tool
+          # Updates from nixpkgs version 3.2.1 to latest 4.0.0 release
+          # Major changes in v4.0.0: Updated shaders to use GLES version 3.0
+          # Can crawl and auto-configure screen shaders on schedule
+          # Usage: hyprshade auto, hyprshade on <shader>, hyprshade toggle
+          hyprshade = prev.python3Packages.callPackage ./pkgs/hyprshade.nix {
+            hyprland = prev.hyprland;
+          };
 
           # zrok package overlay: adds a custom build for the zrok application.
           zrok = prev.stdenv.mkDerivation rec {
@@ -137,7 +152,8 @@
         };
       };
 
-    in {
+    in
+    {
       # **NIXOS SYSTEM CONFIGURATION**
       # Defines the primary NixOS system configuration.
       nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
