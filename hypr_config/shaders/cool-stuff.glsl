@@ -3,7 +3,10 @@
 precision highp float;
 
 // Input texture coordinates
-varying vec2 v_texcoord;
+in vec2 v_texcoord;
+
+// Output color
+out vec4 FragColor;
 
 // Input texture and time uniform
 uniform sampler2D tex;
@@ -165,7 +168,7 @@ vec3 applyBitrateCompression(vec2 uv, vec3 color) {
     for (float x = 0.0; x < 1.0; x += 0.25) {
         for (float y = 0.0; y < 1.0; y += 0.25) {
             vec2 sampleUV = blockUV + vec2(x, y) / BITRATE_BLOCK_SIZE;
-            avgColor += texture2D(tex, sampleUV).rgb;
+            avgColor += texture(tex, sampleUV).rgb;
         }
     }
     avgColor /= 16.0;
@@ -217,11 +220,11 @@ vec3 applyChromaticAberration(vec2 uv, out float alpha) {
     float strength_r = totalFalloff * CA_RED_STRENGTH;
     float strength_b = totalFalloff * CA_BLUE_STRENGTH;
 
-    alpha = texture2D(tex, uv).a;
+    alpha = texture(tex, uv).a;
     return vec3(
-        texture2D(tex, uv + dir * strength_r).r,
-        texture2D(tex, uv).g,
-        texture2D(tex, uv - dir * strength_b).b
+        texture(tex, uv + dir * strength_r).r,
+        texture(tex, uv).g,
+        texture(tex, uv - dir * strength_b).b
     );
 }
 
@@ -243,7 +246,7 @@ vec3 calculateBloom(vec2 uv) {
 
         // Get sample color
         vec2 sampleUV = uv + dir;
-        vec3 sampleColor = texture2D(tex, sampleUV).rgb;
+        vec3 sampleColor = texture(tex, sampleUV).rgb;
 
         // Calculate luminance threshold
         float luminance = dot(sampleColor, vec3(0.299, 0.587, 0.114));
@@ -275,9 +278,9 @@ vec3 applyVHSOverlay(vec2 uv, float time, vec3 originalColor) {
     vec2 displacement = VHS_OVERLAY_OFFSET * VHS_OVERLAY_DISPLACEMENT_SCALE *
             (1.0 + random(uv * VHS_OVERLAY_NOISE_SCALE + time) * 0.5);
 
-    vec3 overlay = texture2D(tex, uv + displacement).rgb;
-    overlay.r = texture2D(tex, uv + displacement * 1.2).r;
-    overlay.b = texture2D(tex, uv - displacement * 0.8).b;
+    vec3 overlay = texture(tex, uv + displacement).rgb;
+    overlay.r = texture(tex, uv + displacement * 1.2).r;
+    overlay.b = texture(tex, uv - displacement * 0.8).b;
 
     return mix(
         originalColor,
@@ -314,9 +317,9 @@ vec3 applyGlitch(vec2 uv, float time, vec3 color, float isActive) {
             GLITCH_COLOR_SHIFT * (random(vec2(time + 1.0)) - 0.5)
         );
     vec3 distorted = vec3(
-            texture2D(tex, uv + shift).r,
-            texture2D(tex, uv).g,
-            texture2D(tex, uv - shift).b
+            texture(tex, uv + shift).r,
+            texture(tex, uv).g,
+            texture(tex, uv - shift).b
         );
 
     // Block displacement
@@ -328,7 +331,7 @@ vec3 applyGlitch(vec2 uv, float time, vec3 color, float isActive) {
 
     // Mix effects
     vec3 finalColor = mix(color, distorted, isActive * GLITCH_STRENGTH);
-    finalColor = mix(finalColor, texture2D(tex, displacedUV).rgb, isActive * blockGlitch);
+    finalColor = mix(finalColor, texture(tex, displacedUV).rgb, isActive * blockGlitch);
 
     return finalColor;
 }
@@ -378,7 +381,7 @@ void main() {
     #if DEBUG_CA
     color = applyChromaticAberration(processedUV, alpha);
     #else
-    vec4 base = texture2D(tex, processedUV);
+    vec4 base = texture(tex, processedUV);
     color = base.rgb;
     alpha = base.a;
     #endif
@@ -431,5 +434,5 @@ void main() {
     #endif
 
     // Final output
-    gl_FragColor = vec4(color, alpha);
+    FragColor = vec4(color, alpha);
 }
