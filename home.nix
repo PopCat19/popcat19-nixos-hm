@@ -1,5 +1,12 @@
 # ~/nixos-config/home.nix
-{ pkgs, config, system, lib, inputs, ... }:
+{
+  pkgs,
+  config,
+  system,
+  lib,
+  inputs,
+  ...
+}:
 
 {
   # **BASIC HOME CONFIGURATION**
@@ -29,7 +36,10 @@
   };
 
   # Add local bin to PATH
-  home.sessionPath = [ "$HOME/.local/bin" "$HOME/.npm-global/bin" ];
+  home.sessionPath = [
+    "$HOME/.local/bin"
+    "$HOME/.npm-global/bin"
+  ];
 
   # ═══════════════════════════════════════════════════════════════════════════════
   # 🎨 THEME CONFIGURATION
@@ -44,77 +54,66 @@
     # ./home-hyprpanel.nix  # Temporarily disabled due to Home Manager module issues
   ];
 
-  # **XDG MIME APPLICATIONS**
-  # Disabled to allow manual configuration of default applications.
-  # You can manually edit ~/.config/mimeapps.list to set Zen browser as default.
-  # Example content for mimeapps.list:
-  # [Default Applications]
-  # x-scheme-handler/http=zen-beta.desktop
-  # x-scheme-handler/https=zen-beta.desktop
   # XDG MIME Applications Configuration
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
       # Web browsers
-      "x-scheme-handler/http" = ["zen-beta.desktop"];
-      "x-scheme-handler/https" = ["zen-beta.desktop"];
-      "text/html" = ["zen-beta.desktop"];
-      "application/xhtml+xml" = ["zen-beta.desktop"];
+      "x-scheme-handler/http" = [ "zen-beta.desktop" ];
+      "x-scheme-handler/https" = [ "zen-beta.desktop" ];
+      "text/html" = [ "zen-beta.desktop" ];
+      "application/xhtml+xml" = [ "zen-beta.desktop" ];
 
       # Terminal
-      "application/x-terminal-emulator" = ["kitty.desktop"];
-      "x-scheme-handler/terminal" = ["kitty.desktop"];
+      "application/x-terminal-emulator" = [ "kitty.desktop" ];
+      "x-scheme-handler/terminal" = [ "kitty.desktop" ];
 
       # Text files
-      "text/plain" = ["micro.desktop"];
-      "text/x-readme" = ["micro.desktop"];
-      "text/x-log" = ["micro.desktop"];
-      "application/json" = ["micro.desktop"];
-      "text/x-python" = ["micro.desktop"];
-      "text/x-shellscript" = ["micro.desktop"];
-      "text/x-script" = ["micro.desktop"];
+      "text/plain" = [ "micro.desktop" ];
+      "text/x-readme" = [ "micro.desktop" ];
+      "text/x-log" = [ "micro.desktop" ];
+      "application/json" = [ "micro.desktop" ];
+      "text/x-python" = [ "micro.desktop" ];
+      "text/x-shellscript" = [ "micro.desktop" ];
+      "text/x-script" = [ "micro.desktop" ];
 
       # Images
-      "image/jpeg" = ["org.kde.gwenview.desktop"];
-      "image/png" = ["org.kde.gwenview.desktop"];
-      "image/gif" = ["org.kde.gwenview.desktop"];
-      "image/webp" = ["org.kde.gwenview.desktop"];
-      "image/svg+xml" = ["org.kde.gwenview.desktop"];
+      "image/jpeg" = [ "org.kde.gwenview.desktop" ];
+      "image/png" = [ "org.kde.gwenview.desktop" ];
+      "image/gif" = [ "org.kde.gwenview.desktop" ];
+      "image/webp" = [ "org.kde.gwenview.desktop" ];
+      "image/svg+xml" = [ "org.kde.gwenview.desktop" ];
 
       # Videos
-      "video/mp4" = ["mpv.desktop"];
-      "video/mkv" = ["mpv.desktop"];
-      "video/avi" = ["mpv.desktop"];
-      "video/webm" = ["mpv.desktop"];
-      "video/x-matroska" = ["mpv.desktop"];
+      "video/mp4" = [ "mpv.desktop" ];
+      "video/mkv" = [ "mpv.desktop" ];
+      "video/avi" = [ "mpv.desktop" ];
+      "video/webm" = [ "mpv.desktop" ];
+      "video/x-matroska" = [ "mpv.desktop" ];
 
       # Audio
-      "audio/mpeg" = ["mpv.desktop"];
-      "audio/ogg" = ["mpv.desktop"];
-      "audio/wav" = ["mpv.desktop"];
-      "audio/flac" = ["mpv.desktop"];
+      "audio/mpeg" = [ "mpv.desktop" ];
+      "audio/ogg" = [ "mpv.desktop" ];
+      "audio/wav" = [ "mpv.desktop" ];
+      "audio/flac" = [ "mpv.desktop" ];
 
       # Archives
-      "application/zip" = ["org.kde.ark.desktop"];
-      "application/x-tar" = ["org.kde.ark.desktop"];
-      "application/x-compressed-tar" = ["org.kde.ark.desktop"];
-      "application/x-7z-compressed" = ["org.kde.ark.desktop"];
+      "application/zip" = [ "org.kde.ark.desktop" ];
+      "application/x-tar" = [ "org.kde.ark.desktop" ];
+      "application/x-compressed-tar" = [ "org.kde.ark.desktop" ];
+      "application/x-7z-compressed" = [ "org.kde.ark.desktop" ];
 
       # File manager
-      "inode/directory" = ["org.kde.dolphin.desktop"];
+      "inode/directory" = [ "org.kde.dolphin.desktop" ];
 
       # PDF
-      "application/pdf" = ["org.kde.okular.desktop"];
+      "application/pdf" = [ "org.kde.okular.desktop" ];
     };
     associations.added = {
-      "application/x-terminal-emulator" = ["kitty.desktop"];
-      "x-scheme-handler/terminal" = ["kitty.desktop"];
+      "application/x-terminal-emulator" = [ "kitty.desktop" ];
+      "x-scheme-handler/terminal" = [ "kitty.desktop" ];
     };
   };
-
-
-
-
 
   # Systemd services for theme initialization
   systemd.user.services.theme-init = {
@@ -553,9 +552,12 @@
   '';
 
   # Manually link fcitx5 rose pine themes to user directory
-  home.file.".local/share/fcitx5/themes/rose-pine".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine";
-  home.file.".local/share/fcitx5/themes/rose-pine-dawn".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-dawn";
-  home.file.".local/share/fcitx5/themes/rose-pine-moon".source = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-moon";
+  home.file.".local/share/fcitx5/themes/rose-pine".source =
+    "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine";
+  home.file.".local/share/fcitx5/themes/rose-pine-dawn".source =
+    "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-dawn";
+  home.file.".local/share/fcitx5/themes/rose-pine-moon".source =
+    "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes/rose-pine-moon";
 
   # **CONFIGURATION FILE MANAGEMENT**
   # Manages symlinks for configuration files.
@@ -573,8 +575,6 @@
     source = ./fish_themes;
     recursive = true;
   };
-
-
 
   # Micro editor colorscheme - temporarily disabled for build
   home.file.".config/micro/colorschemes/rose-pine.micro" = {
@@ -603,10 +603,6 @@
   '';
 
   home.file.".local/bin/install-npm-globals".executable = true;
-
-
-
-
 
   # Theme checker utility script
   home.file.".local/bin/check-rose-pine-theme" = {
@@ -846,7 +842,6 @@
      </bookmark>
     </xbel>
   '';
-
 
   # Dolphin configuration with enhanced thumbnails and better opacity
   home.file.".config/dolphinrc".text = ''
