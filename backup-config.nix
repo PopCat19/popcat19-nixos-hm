@@ -109,9 +109,17 @@ let
             continue
           fi
           
-          # If we're in imports and it's a system_modules import, comment it out
-          if [[ "$in_imports" == true && "$line" =~ ^[[:space:]]*\./system_modules/ ]]; then
-            echo "    # $line  # COMMENTED OUT - Content inlined below" >> "$BACKUP_PREFIX"
+          # If we're in imports, check if it should be commented out
+          if [[ "$in_imports" == true ]]; then
+            if [[ "$line" =~ ^[[:space:]]*\./system_modules/ ]]; then
+              echo "    # $line  # COMMENTED OUT - Content inlined below" >> "$BACKUP_PREFIX"
+            elif [[ "$line" =~ ^[[:space:]]*\./hardware-configuration\.nix ]]; then
+              echo "    # $line  # COMMENTED OUT - Content inlined below" >> "$BACKUP_PREFIX"
+            elif [[ "$line" =~ ^[[:space:]]*\./backup-config\.nix ]]; then
+              echo "    # $line  # COMMENTED OUT - Not needed in standalone backup" >> "$BACKUP_PREFIX"
+            else
+              echo "$line" >> "$BACKUP_PREFIX"
+            fi
           else
             echo "$line" >> "$BACKUP_PREFIX"
           fi
