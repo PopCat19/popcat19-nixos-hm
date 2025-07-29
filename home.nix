@@ -57,6 +57,7 @@
     ./modules/android-tools.nix
     ./modules/shimboot-project.nix
     ./modules/desktop-theme.nix
+    ./modules/dolphin.nix
   ];
 
   # XDG MIME Applications Configuration
