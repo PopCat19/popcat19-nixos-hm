@@ -72,12 +72,12 @@
 
   # Fish configuration files
   home.file.".config/fish/functions" = {
-    source = ./fish_functions;
+    source = ../fish_functions;
     recursive = true;
   };
 
   home.file.".config/fish/themes" = {
-    source = ./fish_themes;
+    source = ../fish_themes;
     recursive = true;
   };
 }

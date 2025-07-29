@@ -27,6 +27,6 @@
 
   # Micro editor colorscheme
   home.file.".config/micro/colorschemes/rose-pine.micro" = {
-    source = ./micro_config/rose-pine.micro;
+    source = ../micro_config/rose-pine.micro;
   };
 }
