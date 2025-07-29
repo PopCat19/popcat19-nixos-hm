@@ -161,6 +161,98 @@
           echo "✅ Successfully merged dev into main and pushed to remote"
           cd $original_dir
       end
+
+      # Enhanced flake update function with feedback and diff
+      function nixos-flake-update
+          set -l original_dir (pwd)
+          cd $NIXOS_CONFIG_DIR
+          
+          echo "🔄 Updating NixOS flake inputs..."
+          echo ""
+          
+          # Create backup of current flake.lock
+          if test -f flake.lock
+              cp flake.lock flake.lock.bak
+              echo "💾 Backup created: flake.lock.bak"
+          else
+              echo "⚠️  No existing flake.lock found"
+          end
+          
+          # Store current flake.lock content for comparison
+          set -l old_lock_content ""
+          if test -f flake.lock
+              set old_lock_content (cat flake.lock)
+          end
+          
+          # Perform flake update
+          echo "📦 Running nix flake update..."
+          if nix flake update
+              echo "✅ Flake update completed successfully"
+              echo ""
+              
+              # Check if anything actually changed
+              if test -f flake.lock
+                  set -l new_lock_content (cat flake.lock)
+                  
+                  if test "$old_lock_content" = "$new_lock_content"
+                      echo "ℹ️  No changes detected - all inputs were already up to date"
+                  else
+                      echo "📊 Changes detected in flake.lock:"
+                      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                      
+                      # Show diff if available
+                      if command -v diff >/dev/null
+                          diff --unified=3 --color=always flake.lock.bak flake.lock 2>/dev/null || begin
+                              echo "📝 Detailed diff:"
+                              diff --unified=3 flake.lock.bak flake.lock 2>/dev/null || echo "   (diff command failed, but changes were detected)"
+                          end
+                      else
+                          echo "📝 Changes detected but diff command not available"
+                      end
+                      
+                      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                      echo ""
+                      
+                      # Show summary of what inputs were updated
+                      echo "🔍 Analyzing updated inputs..."
+                      if command -v jq >/dev/null
+                          # Extract input names that changed
+                          set -l updated_inputs (jq -r '.nodes | to_entries[] | select(.value.locked) | .key' flake.lock 2>/dev/null | head -10)
+                          if test -n "$updated_inputs"
+                              echo "📋 Updated inputs:"
+                              for input in $updated_inputs
+                                  echo "   • $input"
+                              end
+                          end
+                      else
+                          echo "   (jq not available for detailed analysis)"
+                      end
+                      
+                      echo ""
+                      echo "💡 Next steps:"
+                      echo "   • Test your configuration: nixos-rebuild dry-run --flake ."
+                      echo "   • Apply changes: nixos-commit-rebuild-push 'flake update'"
+                      echo "   • Restore backup if needed: mv flake.lock.bak flake.lock"
+                  end
+              else
+                  echo "⚠️  flake.lock not found after update"
+              end
+          else
+              echo "❌ Flake update failed"
+              
+              # Restore backup if update failed
+              if test -f flake.lock.bak
+                  echo "🔄 Restoring backup..."
+                  mv flake.lock.bak flake.lock
+                  echo "✅ Backup restored"
+              end
+              
+              cd $original_dir
+              return 1
+          end
+          
+          cd $original_dir
+      end
       fish_add_path $HOME/bin # Add user's bin directory to PATH.
       fish_add_path $HOME/.npm-global/bin # Add npm global packages to PATH.
       if status is-interactive
@@ -188,7 +280,7 @@
       nconf = "$EDITOR $NIXOS_CONFIG_DIR/configuration.nix";
       hconf = "$EDITOR $NIXOS_CONFIG_DIR/home.nix";
       flconf = "$EDITOR $NIXOS_CONFIG_DIR/flake.nix";
-      flup = "begin; cd $NIXOS_CONFIG_DIR; cp flake.lock flake.lock.bak; nix flake update; cd -; end";
+      flup = "nixos-flake-update";
       ngit = "begin; cd $NIXOS_CONFIG_DIR; git $argv; cd -; end";
       cdh = "cd $NIXOS_CONFIG_DIR";
 
