@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, userConfig, ... }:
 
 let
   # Backup script that handles configuration.nix backup with rotation
@@ -27,7 +27,7 @@ let
     fi
     
     # Always try to create backups in the actual nixos-config directory
-    ACTUAL_SOURCE_DIR="/home/popcat19/nixos-config"
+    ACTUAL_SOURCE_DIR="${userConfig.directories.home}/nixos-config"
     
     CONFIG_FILE="$SOURCE_DIR/configuration.nix"
     HARDWARE_CONFIG_FILE="$SOURCE_DIR/hardware-configuration.nix"
