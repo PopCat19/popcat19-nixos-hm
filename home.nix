@@ -66,6 +66,7 @@
     ./modules/micro.nix
     ./modules/fcitx5.nix
     ./modules/rose-pine-checker.nix
+    ./modules/syncthing.nix
   ];
 
   # Systemd services for theme initialization
@@ -136,12 +137,6 @@
   # All user packages are imported from home-packages.nix for better organization
   home.packages = import ./home-packages.nix { inherit pkgs inputs system; };
 
-  # Create directories for syncthing
-  home.activation.createSyncthingDirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p $HOME/syncthing-shared
-    mkdir -p $HOME/.local/share/syncthing
-    mkdir -p $HOME/Passwords
-  '';
 
   # Nemo file manager configuration with Rose Pine theme and kitty terminal
   home.file.".config/nemo/nemo.conf".text = ''
