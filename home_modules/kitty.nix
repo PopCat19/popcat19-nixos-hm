@@ -47,7 +47,7 @@
       # Tab bar
       tab_bar_edge = "bottom";
       tab_bar_style = "separator";
-      tab_separator = "   ";
+      tab_separator = " | ";
       active_tab_foreground = "#e0def4";
       active_tab_background = "#26233a";
       inactive_tab_foreground = "#908caa";
