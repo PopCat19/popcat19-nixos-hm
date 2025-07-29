@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 
 let
   # Backup script that handles configuration.nix backup with rotation
@@ -7,16 +7,34 @@ let
     #!/bin/bash
     set -euo pipefail
     
-    # Use current directory during build, /etc/nixos during runtime
-    if [[ -f "./configuration.nix" ]]; then
-      CONFIG_DIR="."
+    # Determine source directory based on environment
+    # For flake builds, use the source directory; for traditional builds, use /etc/nixos
+    if [[ -n "''${NIXOS_CONFIG_SOURCE:-}" ]]; then
+      # Flake build - use source directory
+      SOURCE_DIR="$NIXOS_CONFIG_SOURCE"
+    elif [[ -f "/etc/nixos/flake.nix" ]]; then
+      # Flake in /etc/nixos
+      SOURCE_DIR="/etc/nixos"
+    elif [[ -f "./flake.nix" ]]; then
+      # Current directory has flake
+      SOURCE_DIR="."
+    elif [[ -f "./configuration.nix" ]]; then
+      # Current directory has configuration.nix
+      SOURCE_DIR="."
     else
-      CONFIG_DIR="/etc/nixos"
+      # Default to /etc/nixos
+      SOURCE_DIR="/etc/nixos"
     fi
-    CONFIG_FILE="$CONFIG_DIR/configuration.nix"
-    BACKUP_PREFIX="$CONFIG_DIR/configuration.nix.bak"
+    
+    CONFIG_FILE="$SOURCE_DIR/configuration.nix"
+    HARDWARE_CONFIG_FILE="$SOURCE_DIR/hardware-configuration.nix"
+    BACKUP_DIR="/etc/nixos"
+    BACKUP_PREFIX="$BACKUP_DIR/configuration.nix.bak"
     MAX_BACKUPS=3
-    SYSTEM_MODULES_DIR="$CONFIG_DIR/system_modules"
+    SYSTEM_MODULES_DIR="$SOURCE_DIR/system_modules"
+    
+    # Ensure backup directory exists
+    mkdir -p "$BACKUP_DIR"
     
     # Function to rotate backups
     rotate_backups() {
@@ -45,6 +63,7 @@ let
       # Start backup file with header
       cat > "$BACKUP_PREFIX" << EOF
     # Configuration backup created on $timestamp
+    # Source directory: $SOURCE_DIR
     # This backup includes the original configuration.nix with system_modules content inlined
     # Original system_modules imports are commented out and replaced with inline content
     # This backup is self-contained and will work even if system_modules/ directory is missing
@@ -57,7 +76,6 @@ let
         
         # Read and process the original file line by line
         local in_imports=false
-        local brace_count=0
         
         while IFS= read -r line; do
           # Track if we're inside the imports section
@@ -84,6 +102,28 @@ let
         
         # Remove the closing brace temporarily to add system_modules content
         sed -i '$d' "$BACKUP_PREFIX"
+        
+        # Add hardware-configuration.nix content if it exists
+        if [[ -f "$HARDWARE_CONFIG_FILE" ]]; then
+          echo "" >> "$BACKUP_PREFIX"
+          echo "  # =========================================" >> "$BACKUP_PREFIX"
+          echo "  # HARDWARE CONFIGURATION (INLINED)" >> "$BACKUP_PREFIX"
+          echo "  # =========================================" >> "$BACKUP_PREFIX"
+          echo "" >> "$BACKUP_PREFIX"
+          echo "  # === Content from hardware-configuration.nix ===" >> "$BACKUP_PREFIX"
+          
+          # Extract the content between the outermost braces, preserving indentation
+          local temp_content=$(mktemp)
+          sed -n '/^{/,/^}$/p' "$HARDWARE_CONFIG_FILE" | sed '1d;$d' > "$temp_content"
+          
+          # Add the content with proper indentation
+          while IFS= read -r content_line; do
+            echo "$content_line" >> "$BACKUP_PREFIX"
+          done < "$temp_content"
+          
+          rm -f "$temp_content"
+          echo "" >> "$BACKUP_PREFIX"
+        fi
         
         # Add system_modules content inline if directory exists
         if [[ -d "$SYSTEM_MODULES_DIR" ]]; then
@@ -133,6 +173,7 @@ let
     
     # Main execution
     echo "Creating configuration backup with system_modules content inlined..."
+    echo "Source directory: $SOURCE_DIR"
     
     # Rotate existing backups
     rotate_backups
@@ -163,29 +204,44 @@ let
     fi
   '';
 
-  # Activation script that runs the backup during system activation
-  backupActivationScript = ''
-    echo "Running configuration backup with system_modules inlining..."
-    if ${backupScript}/bin/backup-config; then
-      echo "✓ Configuration backup completed successfully"
-    else
-      echo "⚠ Warning: Configuration backup failed, but continuing with system activation"
-    fi
-  '';
-
 in
 {
   # **CONFIGURATION BACKUP SYSTEM**
   # Automatically backs up configuration.nix with system_modules content inlined
   # Maintains rotation of 3 backup histories for redundancy
   # Creates self-contained backups that work even if system_modules/ is missing
+  # Includes hardware-configuration.nix content for complete system backup
   
   # Add the backup script to system packages for manual use
   environment.systemPackages = [ backupScript ];
   
-  # Run backup during system activation (every rebuild)
-  system.activationScripts.backup-config = {
-    text = backupActivationScript;
-    deps = [ "etc" ]; # Run after /etc is set up but before other services
+  # Create systemd service for configuration backup
+  systemd.services.nixos-config-backup = {
+    description = "NixOS Configuration Backup Service";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "local-fs.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${backupScript}/bin/backup-config";
+      User = "root";
+      Group = "root";
+      # Set source directory for flake builds
+      Environment = [
+        "NIXOS_CONFIG_SOURCE=${toString ./.}"
+      ];
+    };
+    # Run on system activation
+    requiredBy = [ "multi-user.target" ];
+  };
+  
+  # Timer to run backup periodically (optional - runs on every boot/activation)
+  systemd.timers.nixos-config-backup = {
+    description = "NixOS Configuration Backup Timer";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      # Run backup on system start and after each rebuild
+      OnBootSec = "1min";
+      OnUnitActiveSec = "1h"; # Also run hourly as a safety net
+    };
   };
 }
