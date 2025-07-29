@@ -10,7 +10,7 @@
       shell_integration = "enabled";
 
       # Window behavior
-      confirm_os_window_close = 0;
+      confirm_os_window_close = -1;
 
       # Cursor
       cursor_shape = "block";
