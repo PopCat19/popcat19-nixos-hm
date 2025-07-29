@@ -26,7 +26,7 @@
     ./home-theme.nix
     ./home-screenshot.nix
     ./home-mangohud.nix
-    # ./home-hyprpanel.nix  # Temporarily disabled due to Home Manager module issues
+    ./home-hyprpanel.nix
 
     # Core system modules
     ./modules/environment.nix
