@@ -1,10 +1,10 @@
 # home-hyprpanel.nix
 # HyprPanel configuration with Rose Pine theme integration
 # Based on documentation: https://hyprpanel.com/
-{ inputs, ... }:
+{ ... }:
 {
-  imports = [ inputs.hyprpanel.homeManagerModules.hyprpanel ];
-
+  # HyprPanel is available in nixpkgs and has a home-manager module
+  # No need for separate flake input - just enable the program
   programs.hyprpanel = {
 
     # Enable the module.
@@ -17,18 +17,12 @@
     # Default: false
     systemd.enable = true;
 
-    # Add '/nix/store/.../hyprpanel' to your
-    # Hyprland config 'exec-once'.
-    # Default: false
-    hyprland.enable = false;
-
-    # Fix the overwrite issue with HyprPanel.
-    # See below for more information.
-    # Default: false
-    overwrite.enable = true;
-
-    # Layout configuration
-    layout = {
+    # Configure and theme almost all options from the GUI.
+    # Using new flat settings format (not nested objects)
+    # See 'https://hyprpanel.com/configuration/settings.html'.
+    # Default: <same as gui>
+    settings = {
+      # Layout configuration - Configure bar layouts for monitors
       "bar.layouts" = {
         "*" = {
           left = [ "dashboard" "workspaces" "media" ];
@@ -36,13 +30,7 @@
           right = [ "network" "bluetooth" "volume" "systray" "clock" "notifications" ];
         };
       };
-    };
 
-    # Configure and theme almost all options from the GUI.
-    # Using new flat settings format (not nested objects)
-    # See 'https://hyprpanel.com/configuration/settings.html'.
-    # Default: <same as gui>
-    settings = {
       # General settings
       "tear" = false;
       "scalingPriority" = "hyprland";
