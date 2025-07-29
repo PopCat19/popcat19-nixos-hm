@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, userConfig, ... }:
 
 {
   # Fish Shell Configuration
@@ -6,8 +6,8 @@
     enable = true;
     shellInit = ''
       set -Ux NIXOS_CONFIG_DIR $HOME/nixos-config
-      set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0
-      set -Ux EDITOR micro
+      set -Ux NIXOS_FLAKE_HOSTNAME ${userConfig.host.hostname}
+      set -Ux EDITOR ${userConfig.defaultApps.editor.command}
       set -g fish_greeting "" # Disable default fish greeting.
 
       # Custom greeting disabled - fastfetch removed

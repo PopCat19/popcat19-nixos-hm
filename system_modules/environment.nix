@@ -1,4 +1,4 @@
-{ ... }:
+{ userConfig, ... }:
 
 {
   # **SYSTEM ENVIRONMENT CONFIGURATION**
@@ -23,14 +23,14 @@
     GDK_PIXBUF_MODULE_FILE = "/run/current-system/sw/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache";
 
     # Default applications (also defined in home_modules for user-specific overrides)
-    TERMINAL = "kitty";
-    EDITOR = "micro";
-    VISUAL = "micro";
-    BROWSER = "zen-beta";
-    FILECHOOSER = "dolphin";
+    TERMINAL = userConfig.defaultApps.terminal.command;
+    EDITOR = userConfig.defaultApps.editor.command;
+    VISUAL = userConfig.defaultApps.editor.command;
+    BROWSER = userConfig.defaultApps.browser.package;
+    FILECHOOSER = userConfig.defaultApps.fileManager.package;
 
     # NixOS configuration paths
-    NIXOS_CONFIG_DIR = "/home/popcat19/nixos-config";
-    NIXOS_FLAKE_HOSTNAME = "popcat19-nixos0";
+    NIXOS_CONFIG_DIR = "${userConfig.directories.home}/nixos-config";
+    NIXOS_FLAKE_HOSTNAME = userConfig.host.hostname;
   };
 }
