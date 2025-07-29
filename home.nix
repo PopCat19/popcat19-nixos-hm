@@ -57,7 +57,7 @@
     ./modules/android-tools.nix
     ./modules/shimboot-project.nix
     ./modules/desktop-theme.nix
-    ./modules/dolphin.nix
+    ./modules/kde.nix
     ./modules/qt-gtk-config.nix
     ./modules/fuzzel-config.nix
     ./modules/kitty.nix
@@ -66,7 +66,7 @@
     ./modules/micro.nix
     ./modules/fcitx5.nix
     ./modules/rose-pine-checker.nix
-    ./modules/syncthing-home.nix
+    ./syncthing_config/home.nix
   ];
 
   # Systemd services for theme initialization
