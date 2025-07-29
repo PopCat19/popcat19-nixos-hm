@@ -50,6 +50,7 @@
     ./modules/micro.nix
     ./modules/fcitx5.nix
     ./modules/rose-pine-checker.nix
+    ./modules/quickshell.nix
     ./syncthing_config/home.nix
   ];
 
