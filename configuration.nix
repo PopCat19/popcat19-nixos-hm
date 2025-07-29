@@ -27,6 +27,8 @@
     ./system_modules/virtualisation.nix
     ./system_modules/programs.nix
     ./system_modules/environment.nix
+    ./system_modules/core-packages.nix
+    ./system_modules/packages.nix
     ./system_modules/fonts.nix
   ];
 

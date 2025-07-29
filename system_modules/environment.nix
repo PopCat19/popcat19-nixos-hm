@@ -1,9 +1,10 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   # **SYSTEM ENVIRONMENT CONFIGURATION**
-  # Defines system-level environment variables and packages.
+  # Defines system-level environment variables and Nix settings.
   # Note: User-specific environment variables are configured in home_modules/environment.nix
+  # Note: System packages are now configured in core-packages.nix and packages.nix
   
   # **NIX CONFIGURATION**
   nixpkgs.config.allowUnfree = true;
@@ -32,54 +33,4 @@
     NIXOS_CONFIG_DIR = "/home/popcat19/nixos-config";
     NIXOS_FLAKE_HOSTNAME = "popcat19-nixos0";
   };
-
-  # **SYSTEM PACKAGES**
-  environment.systemPackages = with pkgs; [
-    # Core utilities
-    vim
-    micro
-    wget
-    curl
-    git
-    
-    # Package management
-    flatpak-builder
-    
-    # Network tools
-    protonvpn-gui
-    wireguard-tools
-    
-    # Virtualization
-    docker
-    spice-gtk
-    win-virtio
-    win-spice
-    virt-manager
-    libvirt
-    qemu
-    
-    # Hardware tools
-    i2c-tools
-    ddcutil
-    usbutils
-    
-    # Development tools
-    python313Packages.pip
-    gh
-    
-    # System utilities
-    xdg-utils
-    shared-mime-info
-    fuse
-    
-    # Gaming/Graphics
-    rocmPackages.rpp
-    
-    # Quick tools
-    quickgui
-    quickemu
-    
-    # Shell
-    starship
-  ];
 }
