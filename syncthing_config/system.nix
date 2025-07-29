@@ -1,13 +1,13 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, userConfig, ... }:
 
 let
   # Syncthing configuration constants
-  syncthingUser = "popcat19";
+  syncthingUser = userConfig.user.username;
   syncthingPaths = {
-    shared = "/home/${syncthingUser}/syncthing-shared";
-    passwords = "/home/${syncthingUser}/Passwords";
-    dataDir = "/home/${syncthingUser}/.local/share/syncthing";
-    configDir = "/home/${syncthingUser}/.config/syncthing";
+    shared = userConfig.directories.syncthing;
+    passwords = "${userConfig.directories.home}/Passwords";
+    dataDir = "${userConfig.directories.home}/.local/share/syncthing";
+    configDir = "${userConfig.directories.home}/.config/syncthing";
   };
 in
 {

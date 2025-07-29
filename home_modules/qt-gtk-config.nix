@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, userConfig, ... }:
 
 {
   # XDG MIME Applications Configuration
@@ -6,99 +6,99 @@
     enable = true;
     defaultApplications = {
       # Web browsers
-      "x-scheme-handler/http" = [ "zen-beta.desktop" ];
-      "x-scheme-handler/https" = [ "zen-beta.desktop" ];
-      "text/html" = [ "zen-beta.desktop" ];
-      "application/xhtml+xml" = [ "zen-beta.desktop" ];
+      "x-scheme-handler/http" = [ userConfig.defaultApps.browser.desktop ];
+      "x-scheme-handler/https" = [ userConfig.defaultApps.browser.desktop ];
+      "text/html" = [ userConfig.defaultApps.browser.desktop ];
+      "application/xhtml+xml" = [ userConfig.defaultApps.browser.desktop ];
 
       # Terminal
-      "application/x-terminal-emulator" = [ "kitty.desktop" ];
-      "x-scheme-handler/terminal" = [ "kitty.desktop" ];
+      "application/x-terminal-emulator" = [ userConfig.defaultApps.terminal.desktop ];
+      "x-scheme-handler/terminal" = [ userConfig.defaultApps.terminal.desktop ];
 
       # Text files
-      "text/plain" = [ "micro.desktop" ];
-      "text/x-readme" = [ "micro.desktop" ];
-      "text/x-log" = [ "micro.desktop" ];
-      "application/json" = [ "micro.desktop" ];
-      "text/x-python" = [ "micro.desktop" ];
-      "text/x-shellscript" = [ "micro.desktop" ];
-      "text/x-script" = [ "micro.desktop" ];
+      "text/plain" = [ userConfig.defaultApps.editor.desktop ];
+      "text/x-readme" = [ userConfig.defaultApps.editor.desktop ];
+      "text/x-log" = [ userConfig.defaultApps.editor.desktop ];
+      "application/json" = [ userConfig.defaultApps.editor.desktop ];
+      "text/x-python" = [ userConfig.defaultApps.editor.desktop ];
+      "text/x-shellscript" = [ userConfig.defaultApps.editor.desktop ];
+      "text/x-script" = [ userConfig.defaultApps.editor.desktop ];
 
       # Images
-      "image/jpeg" = [ "org.kde.gwenview.desktop" ];
-      "image/png" = [ "org.kde.gwenview.desktop" ];
-      "image/gif" = [ "org.kde.gwenview.desktop" ];
-      "image/webp" = [ "org.kde.gwenview.desktop" ];
-      "image/svg+xml" = [ "org.kde.gwenview.desktop" ];
+      "image/jpeg" = [ userConfig.defaultApps.imageViewer.desktop ];
+      "image/png" = [ userConfig.defaultApps.imageViewer.desktop ];
+      "image/gif" = [ userConfig.defaultApps.imageViewer.desktop ];
+      "image/webp" = [ userConfig.defaultApps.imageViewer.desktop ];
+      "image/svg+xml" = [ userConfig.defaultApps.imageViewer.desktop ];
 
       # Videos
-      "video/mp4" = [ "mpv.desktop" ];
-      "video/mkv" = [ "mpv.desktop" ];
-      "video/avi" = [ "mpv.desktop" ];
-      "video/webm" = [ "mpv.desktop" ];
-      "video/x-matroska" = [ "mpv.desktop" ];
+      "video/mp4" = [ userConfig.defaultApps.videoPlayer.desktop ];
+      "video/mkv" = [ userConfig.defaultApps.videoPlayer.desktop ];
+      "video/avi" = [ userConfig.defaultApps.videoPlayer.desktop ];
+      "video/webm" = [ userConfig.defaultApps.videoPlayer.desktop ];
+      "video/x-matroska" = [ userConfig.defaultApps.videoPlayer.desktop ];
 
       # Audio
-      "audio/mpeg" = [ "mpv.desktop" ];
-      "audio/ogg" = [ "mpv.desktop" ];
-      "audio/wav" = [ "mpv.desktop" ];
-      "audio/flac" = [ "mpv.desktop" ];
+      "audio/mpeg" = [ userConfig.defaultApps.videoPlayer.desktop ];
+      "audio/ogg" = [ userConfig.defaultApps.videoPlayer.desktop ];
+      "audio/wav" = [ userConfig.defaultApps.videoPlayer.desktop ];
+      "audio/flac" = [ userConfig.defaultApps.videoPlayer.desktop ];
 
       # Archives
-      "application/zip" = [ "org.kde.ark.desktop" ];
-      "application/x-tar" = [ "org.kde.ark.desktop" ];
-      "application/x-compressed-tar" = [ "org.kde.ark.desktop" ];
-      "application/x-7z-compressed" = [ "org.kde.ark.desktop" ];
+      "application/zip" = [ userConfig.defaultApps.archiveManager.desktop ];
+      "application/x-tar" = [ userConfig.defaultApps.archiveManager.desktop ];
+      "application/x-compressed-tar" = [ userConfig.defaultApps.archiveManager.desktop ];
+      "application/x-7z-compressed" = [ userConfig.defaultApps.archiveManager.desktop ];
 
       # File manager
-      "inode/directory" = [ "org.kde.dolphin.desktop" ];
+      "inode/directory" = [ userConfig.defaultApps.fileManager.desktop ];
 
       # PDF
-      "application/pdf" = [ "org.kde.okular.desktop" ];
+      "application/pdf" = [ userConfig.defaultApps.pdfViewer.desktop ];
     };
     associations.added = {
-      "application/x-terminal-emulator" = [ "kitty.desktop" ];
-      "x-scheme-handler/terminal" = [ "kitty.desktop" ];
+      "application/x-terminal-emulator" = [ userConfig.defaultApps.terminal.desktop ];
+      "x-scheme-handler/terminal" = [ userConfig.defaultApps.terminal.desktop ];
     };
   };
 
   # Additional GTK theme files for better consistency
   home.file.".config/gtk-3.0/bookmarks".text = ''
-    file:///home/${config.home.username}/Documents Documents
-    file:///home/${config.home.username}/Downloads Downloads
-    file:///home/${config.home.username}/Pictures Pictures
-    file:///home/${config.home.username}/Videos Videos
-    file:///home/${config.home.username}/Music Music
-    file:///home/${config.home.username}/syncthing-shared Syncthing Shared
-    file:///home/${config.home.username}/Desktop Desktop
+    file://${userConfig.directories.documents} Documents
+    file://${userConfig.directories.downloads} Downloads
+    file://${userConfig.directories.pictures} Pictures
+    file://${userConfig.directories.videos} Videos
+    file://${userConfig.directories.music} Music
+    file://${userConfig.directories.syncthing} Syncthing Shared
+    file://${userConfig.directories.desktop} Desktop
     trash:/// Trash
   '';
 
   # Additional desktop files for better integration
-  home.file.".local/share/applications/kitty.desktop".text = ''
+  home.file.".local/share/applications/${userConfig.defaultApps.terminal.package}.desktop".text = ''
     [Desktop Entry]
     Version=1.0
     Type=Application
-    Name=Kitty
+    Name=${userConfig.defaultApps.terminal.package}
     GenericName=Terminal
     Comment=A modern, hackable, featureful, OpenGL-based terminal emulator
-    TryExec=kitty
-    Exec=kitty
-    Icon=kitty
+    TryExec=${userConfig.defaultApps.terminal.command}
+    Exec=${userConfig.defaultApps.terminal.command}
+    Icon=${userConfig.defaultApps.terminal.package}
     Categories=System;TerminalEmulator;
     StartupNotify=true
     MimeType=application/x-terminal-emulator;x-scheme-handler/terminal;
   '';
 
-  home.file.".local/share/applications/micro.desktop".text = ''
+  home.file.".local/share/applications/${userConfig.defaultApps.editor.package}.desktop".text = ''
     [Desktop Entry]
     Version=1.0
     Type=Application
-    Name=Micro
+    Name=${userConfig.defaultApps.editor.package}
     GenericName=Text Editor
     Comment=A modern and intuitive terminal-based text editor
-    TryExec=micro
-    Exec=micro %F
+    TryExec=${userConfig.defaultApps.editor.command}
+    Exec=${userConfig.defaultApps.editor.command} %F
     Icon=text-editor
     Categories=Utility;TextEditor;Development;
     StartupNotify=false
@@ -131,7 +131,7 @@
     show-home-icon-toolbar=true
     show-computer-icon-toolbar=false
     show-up-icon-toolbar=true
-    terminal-command=kitty
+    terminal-command=${userConfig.defaultApps.terminal.command}
     close-device-view-on-device-eject=true
     thumbnail-limit=10485760
     executable-text-activation=ask
@@ -164,7 +164,7 @@
     [Nemo Action]
     Name=Open in Terminal
     Comment=Open a terminal in this location
-    Exec=kitty --working-directory %f
+    Exec=${userConfig.defaultApps.terminal.command} --working-directory %f
     Icon-Name=utilities-terminal
     Selection=None
     Extensions=dir;
@@ -174,7 +174,7 @@
     [Nemo Action]
     Name=Edit as Root
     Comment=Edit this file with root privileges
-    Exec=pkexec micro %F
+    Exec=pkexec ${userConfig.defaultApps.editor.command} %F
     Icon-Name=accessories-text-editor
     Selection=S
     Extensions=any;

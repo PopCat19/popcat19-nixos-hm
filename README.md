@@ -34,23 +34,26 @@ sudo cp /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
 echo "hardware-configuration.nix" >> .gitignore
 ```
 
-3. Update system-specific settings in [`flake.nix`](flake.nix):
-   - Change `hostname` from `popcat19-nixos0` to your hostname
-   - Change `username` from `popcat19` to your username
-   - Verify `system` architecture (default: `x86_64-linux`)
+3. **Configure your system settings** in [`config.nix`](config.nix):
+   - Update `host.hostname` to your desired hostname
+   - Update `host.system` architecture if needed (default: `x86_64-linux`)
+   - Update `user.username` to your username
+   - Update `user.fullName` and `user.email` for Git and personal info
+   - Customize `defaultApps` to set your preferred applications
+   - Modify `network` settings if needed (firewall ports, etc.)
 
-4. Update user settings in [`home.nix`](home.nix):
-   - Update `home.username` and `home.homeDirectory`
-
-5. Apply the configuration:
+4. Apply the configuration:
 ```bash
 sudo nixos-rebuild switch --flake .#<your-hostname>
 ```
+
+**Note**: The configuration now uses a centralized [`config.nix`](config.nix) file for all user-specific settings. You no longer need to edit multiple files to customize the system for different users or machines.
 
 ## Configuration Structure
 
 ### Core Files
 
+- **[`config.nix`](config.nix)** - **Centralized user configuration** - All customizable settings in one place
 - **[`flake.nix`](flake.nix)** - Main flake definition with inputs, overlays, and system configuration
 - **[`configuration.nix`](configuration.nix)** - System-level NixOS configuration
 - **[`backup-config.nix`](backup-config.nix)** - Automatic configuration backup system
@@ -123,12 +126,33 @@ The backup system is implemented in [`backup-config.nix`](backup-config.nix) and
 
 ## Customization
 
-The configuration is designed to be easily customizable:
+The configuration is designed to be easily customizable through a centralized configuration system:
+
+### Primary Customization (config.nix)
+
+**[`config.nix`](config.nix)** is your main customization file containing:
+
+- **Host Configuration**: System architecture, hostname
+- **User Credentials**: Username, full name, email, shell preference
+- **Default Applications**: Browser, terminal, editor, file manager, media players
+- **Network Settings**: Firewall ports, trusted interfaces
+- **Git Configuration**: User name, email, and additional git settings
+- **Directory Paths**: All user directory references
+
+### Advanced Customization
 
 1. **Packages**: Edit [`home_modules/packages.nix`](home_modules/packages.nix) to add/remove software
 2. **Theming**: Modify [`home_modules/theme.nix`](home_modules/theme.nix) for appearance changes
 3. **Hyprland**: Adjust [`hypr_config/hyprland.conf`](hypr_config/hyprland.conf) for window manager behavior
 4. **System services**: Update [`configuration.nix`](configuration.nix) for system-level changes
+
+### Benefits of Centralized Configuration
+
+- **Single Source of Truth**: All user-specific settings in one file
+- **Easy Migration**: Copy `config.nix` to new systems and rebuild
+- **Consistent References**: All modules automatically use your configured values
+- **No Hardcoded Values**: Username, hostname, and paths are dynamically referenced
+- **Maintainable**: Clear separation between personal config and system logic
 
 ## System Requirements
 

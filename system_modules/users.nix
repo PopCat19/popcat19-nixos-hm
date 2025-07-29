@@ -1,28 +1,20 @@
-{ pkgs, ... }:
+{ pkgs, userConfig, ... }:
 
 {
   # **USERS & TMPFILES CONFIGURATION**
   # Defines user accounts, groups, and temporary file rules.
   
   # **USER ACCOUNT**
-  users.users.popcat19 = {
+  users.users.${userConfig.user.username} = {
     isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "video"
-      "audio"
-      "networkmanager"
-      "i2c"
-      "input"
-      "libvirtd"
-    ];
-    shell = pkgs.fish;
+    extraGroups = userConfig.user.extraGroups;
+    shell = pkgs.${userConfig.user.shell};
   };
 
   # **TMPFILES RULES**
   systemd.tmpfiles.rules = [
-    "d /home/popcat19            0755 popcat19 users -"
-    "d /home/popcat19/Videos     0755 popcat19 users -"
-    "d /home/popcat19/Music      0755 popcat19 users -"
+    "d ${userConfig.directories.home}            0755 ${userConfig.user.username} users -"
+    "d ${userConfig.directories.videos}     0755 ${userConfig.user.username} users -"
+    "d ${userConfig.directories.music}      0755 ${userConfig.user.username} users -"
   ];
 }
