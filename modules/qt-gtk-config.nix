@@ -105,4 +105,78 @@
     MimeType=text/plain;text/x-readme;text/x-log;application/json;text/x-python;text/x-shellscript;text/x-script;
     Terminal=true
   '';
+
+  # Nemo file manager configuration with Rose Pine theme and kitty terminal
+  home.file.".config/nemo/nemo.conf".text = ''
+    [preferences]
+    default-folder-viewer=list-view
+    show-hidden-files=false
+    show-location-entry=false
+    start-with-dual-pane=false
+    inherit-folder-viewer=true
+    ignore-view-metadata=false
+    default-sort-order=name
+    default-sort-type=ascending
+    size-prefixes=base-10
+    quick-renames-with-pause-in-between=true
+    show-compact-view-icon-toolbar=false
+    show-compact-view-icon-toolbar-icons-small=false
+    show-compact-view-text-beside-icons=false
+    show-full-path-titles=true
+    show-new-folder-icon-toolbar=true
+    show-open-in-terminal-toolbar=true
+    show-reload-icon-toolbar=true
+    show-search-icon-toolbar=true
+    show-edit-icon-toolbar=false
+    show-home-icon-toolbar=true
+    show-computer-icon-toolbar=false
+    show-up-icon-toolbar=true
+    terminal-command=kitty
+    close-device-view-on-device-eject=true
+    thumbnail-limit=10485760
+    executable-text-activation=ask
+    show-image-thumbnails=true
+    show-thumbnails=true
+
+    [window-state]
+    geometry=800x600+0+0
+    maximized=false
+    sidebar-width=200
+    start-with-sidebar=true
+    start-with-status-bar=true
+    start-with-toolbar=true
+    sidebar-bookmark-breakpoint=5
+
+    [list-view]
+    default-zoom-level=standard
+    default-visible-columns=name,size,type,date_modified
+    default-column-order=name,size,type,date_modified
+
+    [icon-view]
+    default-zoom-level=standard
+
+    [compact-view]
+    default-zoom-level=standard
+  '';
+
+  # Nemo actions for better context menu integration
+  home.file.".local/share/nemo/actions/open-in-kitty.nemo_action".text = ''
+    [Nemo Action]
+    Name=Open in Terminal
+    Comment=Open a terminal in this location
+    Exec=kitty --working-directory %f
+    Icon-Name=utilities-terminal
+    Selection=None
+    Extensions=dir;
+  '';
+
+  home.file.".local/share/nemo/actions/edit-as-root.nemo_action".text = ''
+    [Nemo Action]
+    Name=Edit as Root
+    Comment=Edit this file with root privileges
+    Exec=pkexec micro %F
+    Icon-Name=accessories-text-editor
+    Selection=S
+    Extensions=any;
+  '';
 }
