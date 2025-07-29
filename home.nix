@@ -23,37 +23,38 @@
 
   imports = [
     # Theme and UI configurations
-    ./home-theme.nix
-    ./home-screenshot.nix
-    ./home-mangohud.nix
-    ./home-hyprpanel.nix
+    ./home_modules/theme.nix
+    ./home_modules/screenshot.nix
+    ./home_modules/mangohud.nix
+    ./hypr_config/hyprpanel.nix
 
     # Core system modules
-    ./modules/environment.nix
-    ./modules/services.nix
-    ./modules/git.nix
-    ./modules/home-files.nix
-    ./modules/systemd-services.nix
+    ./home_modules/environment.nix
+    ./home_modules/services.nix
+    ./home_modules/git.nix
+    ./home_modules/home-files.nix
+    ./home_modules/systemd-services.nix
 
     # Application and feature modules
-    ./modules/gaming.nix
-    ./modules/development.nix
-    ./modules/android-tools.nix
-    ./modules/shimboot-project.nix
-    ./modules/desktop-theme.nix
-    ./modules/kde.nix
-    ./modules/qt-gtk-config.nix
-    ./modules/fuzzel-config.nix
-    ./modules/kitty.nix
-    ./modules/fish.nix
-    ./modules/starship.nix
-    ./modules/micro.nix
-    ./modules/fcitx5.nix
-    ./modules/rose-pine-checker.nix
+    ./home_modules/gaming.nix
+    ./home_modules/development.nix
+    ./home_modules/android-tools.nix
+    ./home_modules/shimboot-project.nix
+    ./home_modules/desktop-theme.nix
+    ./home_modules/kde.nix
+    ./home_modules/qt-gtk-config.nix
+    ./home_modules/fuzzel-config.nix
+    ./home_modules/kitty.nix
+    ./home_modules/fish.nix
+    ./home_modules/starship.nix
+    ./home_modules/micro.nix
+    ./home_modules/fcitx5.nix
+    ./home_modules/rose-pine-checker.nix
+    ./quickshell_config/quickshell.nix
     ./syncthing_config/home.nix
   ];
 
   # **INSTALLED PACKAGES**
-  # All user packages are imported from home-packages.nix for better organization
-  home.packages = import ./home-packages.nix { inherit pkgs inputs system; };
+  # All user packages are imported from home_modules/packages.nix for better organization
+  home.packages = import ./home_modules/packages.nix { inherit pkgs inputs system; };
 }

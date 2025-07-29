@@ -32,7 +32,7 @@ with pkgs;
   hyprshade
   hyprpolkitagent
   hyprutils
-  quickshell
+  # quickshell - now provided by modules/quickshell.nix using flake input
   
   # Communication
   vesktop
