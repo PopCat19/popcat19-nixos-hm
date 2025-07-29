@@ -4,9 +4,6 @@ import Quickshell
 import QtQuick
 
 Scope {
-  // Use the Time singleton for clock functionality
-  Time { id: timeSource }
-
   Variants {
     model: Quickshell.screens
 
@@ -45,9 +42,8 @@ Scope {
           }
         }
 
-        // Clock widget
+        // Clock widget - no need to pass time property since it accesses singleton directly
         ClockWidget {
-          time: timeSource.time
         }
 
         // System info placeholder
