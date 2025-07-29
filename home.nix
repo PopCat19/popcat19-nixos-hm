@@ -66,7 +66,7 @@
     ./modules/micro.nix
     ./modules/fcitx5.nix
     ./modules/rose-pine-checker.nix
-    ./modules/syncthing.nix
+    ./modules/syncthing-home.nix
   ];
 
   # Systemd services for theme initialization
