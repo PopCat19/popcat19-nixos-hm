@@ -23,10 +23,10 @@
 
   imports = [
     # Theme and UI configurations
-    ./home-theme.nix
-    ./home-screenshot.nix
-    ./home-mangohud.nix
-    ./home-hyprpanel.nix
+    ./modules/theme.nix
+    ./modules/screenshot.nix
+    ./modules/mangohud.nix
+    ./hypr_config/hyprpanel.nix
 
     # Core system modules
     ./modules/environment.nix
@@ -50,11 +50,11 @@
     ./modules/micro.nix
     ./modules/fcitx5.nix
     ./modules/rose-pine-checker.nix
-    ./modules/quickshell.nix
+    ./quickshell_config/quickshell.nix
     ./syncthing_config/home.nix
   ];
 
   # **INSTALLED PACKAGES**
-  # All user packages are imported from home-packages.nix for better organization
-  home.packages = import ./home-packages.nix { inherit pkgs inputs system; };
+  # All user packages are imported from modules/packages.nix for better organization
+  home.packages = import ./modules/packages.nix { inherit pkgs inputs system; };
 }
