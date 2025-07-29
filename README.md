@@ -34,7 +34,7 @@ sudo cp /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
 echo "hardware-configuration.nix" >> .gitignore
 ```
 
-3. **Configure your system settings** in [`config.nix`](config.nix):
+3. **Configure your system settings** in [`user-config.nix`](user-config.nix):
    - Update `host.hostname` to your desired hostname
    - Update `host.system` architecture if needed (default: `x86_64-linux`)
    - Update `user.username` to your username
@@ -47,16 +47,16 @@ echo "hardware-configuration.nix" >> .gitignore
 sudo nixos-rebuild switch --flake .#<your-hostname>
 ```
 
-**Note**: The configuration now uses a centralized [`config.nix`](config.nix) file for all user-specific settings. You no longer need to edit multiple files to customize the system for different users or machines.
+**Note**: The configuration now uses a centralized [`user-config.nix`](user-config.nix) file for all user-specific settings. You no longer need to edit multiple files to customize the system for different users or machines.
 
 ## Configuration Structure
 
 ### Core Files
 
-- **[`config.nix`](config.nix)** - **Centralized user configuration** - All customizable settings in one place
+- **[`user-config.nix`](user-config.nix)** - **Centralized user configuration** - All customizable settings in one place
 - **[`flake.nix`](flake.nix)** - Main flake definition with inputs, overlays, and system configuration
 - **[`configuration.nix`](configuration.nix)** - System-level NixOS configuration
-- **[`backup-config.nix`](backup-config.nix)** - Automatic configuration backup system
+- **[`backup-user-config.nix`](backup-user-config.nix)** - Automatic configuration backup system
 - **[`home.nix`](home.nix)** - Home Manager user configuration entry point
 
 ### Modular Organization
@@ -116,7 +116,7 @@ This configuration includes an automatic backup system that creates self-contain
 - **Standalone ready** - Works even if modular files are missing
 - **Git ignored** - Backup files are excluded from version control
 
-The backup system is implemented in [`backup-config.nix`](backup-config.nix) and automatically integrated into the system configuration.
+The backup system is implemented in [`backup-user-config.nix`](backup-user-config.nix) and automatically integrated into the system configuration.
 
 ### Custom Overlays
 - **Rose Pine GTK theme** - Enhanced styling
@@ -128,9 +128,9 @@ The backup system is implemented in [`backup-config.nix`](backup-config.nix) and
 
 The configuration is designed to be easily customizable through a centralized configuration system:
 
-### Primary Customization (config.nix)
+### Primary Customization (user-config.nix)
 
-**[`config.nix`](config.nix)** is your main customization file containing:
+**[`user-config.nix`](user-config.nix)** is your main customization file containing:
 
 - **Host Configuration**: System architecture, hostname
 - **User Credentials**: Username, full name, email, shell preference
@@ -149,7 +149,7 @@ The configuration is designed to be easily customizable through a centralized co
 ### Benefits of Centralized Configuration
 
 - **Single Source of Truth**: All user-specific settings in one file
-- **Easy Migration**: Copy `config.nix` to new systems and rebuild
+- **Easy Migration**: Copy `user-config.nix` to new systems and rebuild
 - **Consistent References**: All modules automatically use your configured values
 - **No Hardcoded Values**: Username, hostname, and paths are dynamically referenced
 - **Maintainable**: Clear separation between personal config and system logic
