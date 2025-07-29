@@ -10,87 +10,55 @@
 
 with pkgs;
 [
-  btop-rocm
+  # Terminal & Core Tools
   kitty
   fuzzel
   micro
+  eza
+  starship
+  wl-clipboard
+  
+  # Browsers
   inputs.zen-browser.packages."${system}".default
   firefox
+  
+  # File Manager
   kdePackages.dolphin
-  nautilus
-  nemo
+  
+  # Media
   mpv
   audacious
   audacious-plugins
-  kdePackages.gwenview
-  kdePackages.okular
-  kdePackages.ark
-  jdk
-  nodejs
-  yarn-berry
-  appstream
-  git-lfs
-  jq
-  tree
-  eza
-  starship
-  rustup
-  ranger
-  superfile
-  hyprpicker
-  pureref
-  grim
-  slurp
-  wl-clipboard
-  wtype
+  
+  # Hyprland Essentials
+  hyprpanel
+  hyprshade
   hyprpolkitagent
   hyprutils
-  hyprshade
-  hyprpanel
-  hyprls
   quickshell
-  obs-studio
-  lutris
-  osu-lazer-bin
-  pavucontrol
-  playerctl
-  glances
-  ddcui
-  openrgb-with-all-plugins
-  universal-android-debloater
-  android-tools
-  scrcpy
-  sidequest
-  moonlight-qt
-  sunxi-tools
-  binwalk
-  vboot_reference
-  pv
-  parted
-  squashfsTools
-  nixos-install-tools
-  nixos-generators
-  localsend
-  zrok
+  
+  # Communication
   vesktop
   keepassxc
-  zed-editor_git
-  code-cursor-fhs
-  vscodium
-  nil
-  nixd
-  mangayomi
-  ollama-rocm
-  ffmpegthumbnailer
-  poppler_utils
-  libgsf
-  webp-pixbuf-loader
-  kdePackages.kdegraphics-thumbnailers
-  kdePackages.kimageformats
-  kdePackages.kio-extras
+  
+  # System Monitoring
+  btop-rocm
+  fastfetch
+  
+  # File Sharing
+  localsend
+  zrok
+  
+  # Notifications
+  dunst
   libnotify
   zenity
-  dunst
-  fastfetch
-  appimage-run
+  
+  # Development Editors
+  zed-editor_git
+  vscodium
+  
+  # Nix Development
+  nil
+  nixd
 ]
