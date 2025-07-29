@@ -52,6 +52,11 @@
     ./home-screenshot.nix
     ./home-mangohud.nix
     # ./home-hyprpanel.nix  # Temporarily disabled due to Home Manager module issues
+    ./modules/gaming.nix
+    ./modules/development.nix
+    ./modules/android-tools.nix
+    ./modules/project-tools.nix
+    ./modules/desktop-theme.nix
   ];
 
   # XDG MIME Applications Configuration
