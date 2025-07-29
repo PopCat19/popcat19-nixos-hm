@@ -5,7 +5,7 @@
   programs.starship = {
     enable = true;
     settings = {
-      format = "$time$git_branch$git_status$directory$line_break$character";
+      format = "$time$directory$git_branch$git_status$line_break$character";
 
       palette = "rose_pine";
 

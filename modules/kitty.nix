@@ -15,7 +15,8 @@
       # Cursor
       cursor_shape = "block";
       cursor_blink_interval = 0.5;
-      cursor_stop_blinking_after = 15.0;
+      cursor_stop_blinking_after = 16.0;
+      cursor_trail = 1;
 
       # Scrollback
       scrollback_lines = 10000;
@@ -32,7 +33,7 @@
       sync_to_monitor = "yes";
 
       # Audio
-      enable_audio_bell = "no";
+      enable_audio_bell = "yes";
       visual_bell_duration = 0.0;
 
       # Window
@@ -46,7 +47,7 @@
       # Tab bar
       tab_bar_edge = "bottom";
       tab_bar_style = "separator";
-      tab_separator = " ┇ ";
+      tab_separator = "   ";
       active_tab_foreground = "#e0def4";
       active_tab_background = "#26233a";
       inactive_tab_foreground = "#908caa";
@@ -77,9 +78,9 @@
       color15 = "#e0def4";
 
       # Theme tweaks
-      background_opacity = "0.85";
+      background_opacity = "0.80";
       dynamic_background_opacity = "yes";
-      background_blur = 20;
+      background_blur = 16;
     };
   };
 }
