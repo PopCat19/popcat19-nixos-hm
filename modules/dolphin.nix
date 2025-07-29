@@ -44,7 +44,7 @@
       <title>Music</title>
      </bookmark>
      <bookmark href="file:///home/${config.home.username}/syncthing-shared">
-      <title>syncthing-shared</title>
+      <title>Syncthing Shared</title>
      </bookmark>
      <bookmark href="file:///home/${config.home.username}/Desktop">
       <title>Desktop</title>

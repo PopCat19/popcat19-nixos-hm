@@ -69,7 +69,7 @@
     file:///home/${config.home.username}/Pictures Pictures
     file:///home/${config.home.username}/Videos Videos
     file:///home/${config.home.username}/Music Music
-    file:///home/${config.home.username}/syncthing-shared syncthing-shared
+    file:///home/${config.home.username}/syncthing-shared Syncthing Shared
     file:///home/${config.home.username}/Desktop Desktop
     trash:/// Trash
   '';

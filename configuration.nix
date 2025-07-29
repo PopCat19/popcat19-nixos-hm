@@ -8,7 +8,10 @@
   ################################
   # IMPORTS / STATE VERSION
   ################################
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+    ./modules/syncthing.nix
+  ];
 
   # WARNING: DO NOT CHANGE AFTER INITIAL INSTALL.
   system.stateVersion = "24.11";
@@ -55,15 +58,11 @@
       trustedInterfaces = [ "lo" ];
       allowedTCPPorts = [
         53317
-        22000
-        8384
         30071
-      ]; # 22000=Syncthing
+      ];
       allowedUDPPorts = [
         53317
-        22000
-        21027
-      ]; # 22xxx/21027=Syncthing
+      ];
       checkReversePath = false;
     };
   };
@@ -186,49 +185,6 @@
       settings.output_name = "1";
     };
 
-    # Sync
-    syncthing = {
-      enable = true;
-      user = "popcat19";
-      group = "users";
-      openDefaultPorts = true;
-      dataDir = "/home/popcat19/.local/share/syncthing";
-      configDir = "/home/popcat19/.config/syncthing";
-      settings = {
-        devices = {
-          "remote-device" = {
-            id = "QP7SCT2-7XQTOK3-WTTSZ5T-T6BH4EZ-IA7VEIQ-RUQO5UV-FWWRF5L-LDQXTAS";
-            name = "Remote Device";
-            addresses = [ "dynamic" ];
-          };
-        };
-        folders = {
-          keepass-vault = {
-            id = "keepass-vault";
-            label = "KeePass Vault";
-            path = "/home/popcat19/Passwords";
-            devices = [ "remote-device" ];
-            type = "sendreceive";
-            rescanIntervalS = 60;
-            ignorePerms = true;
-          };
-          syncthing-shared = {
-            id = "syncthing-shared";
-            label = "Syncthing Shared";
-            path = "/home/popcat19/syncthing-shared";
-            devices = [ "remote-device" ];
-            type = "sendreceive";
-            rescanIntervalS = 300;
-            ignorePerms = true;
-          };
-        };
-        options = {
-          globalAnnounceEnabled = true;
-          localAnnounceEnabled = true;
-          relaysEnabled = true;
-        };
-      };
-    };
   };
 
   ################################
