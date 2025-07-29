@@ -13,6 +13,40 @@
     hostname = "popcat19-nixos0";
   };
 
+  # **ARCHITECTURE DETECTION HELPERS**
+  # Helper functions for architecture-specific configurations
+  # Note: These functions use the host.system value defined above
+  arch = let
+    # Current system architecture (references host.system)
+    current = "x86_64-linux"; # This will be dynamically set by the flake
+  in rec {
+    inherit current;
+    
+    # Architecture detection functions
+    isX86_64 = current == "x86_64-linux";
+    isAarch64 = current == "aarch64-linux";
+    isArm = isAarch64; # Alias for ARM64
+    
+    # Hardware capability detection
+    supportsROCm = isX86_64; # ROCm is primarily x86_64
+    supportsVirtualization = true; # Both architectures support virtualization
+    supportsGaming = isX86_64; # Most gaming software is x86_64 only
+    
+    # Architecture-specific package preferences
+    preferredVideoPlayer = if isX86_64 then "mpv" else "mpv"; # Both work well
+    preferredTerminal = "kitty"; # Works on both architectures
+    
+    # Helper function to conditionally include packages based on architecture
+    onlyX86_64 = packages: if isX86_64 then packages else [];
+    onlyAarch64 = packages: if isAarch64 then packages else [];
+    
+    # Helper function to select package based on architecture
+    selectByArch = { x86_64 ? null, aarch64 ? null, fallback ? null }:
+      if isX86_64 && x86_64 != null then x86_64
+      else if isAarch64 && aarch64 != null then aarch64
+      else fallback;
+  };
+
   # **USER CREDENTIALS**
   # User account and personal information
   user = {

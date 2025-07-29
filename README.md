@@ -1,15 +1,16 @@
 # NixOS Configuration Flake
 
-A modern NixOS configuration flake featuring Hyprland compositor, Rose Pine theming, and comprehensive Home Manager integration. This configuration provides a complete, optimized NixOS setup with declarative package management and modular design.
+A modern NixOS configuration flake featuring Hyprland compositor, Rose Pine theming, and comprehensive Home Manager integration. This configuration provides a complete, optimized NixOS setup with declarative package management, modular design, and **crossplatform support**.
 
 ## Overview
 
 This is a personal NixOS configuration that emphasizes:
+- **Crossplatform support** for x86_64-linux and aarch64-linux (ARM64)
 - **Clean theming consistency** with Rose Pine color scheme
 - **Modular design** with organized configuration files
 - **Wayland-first** desktop environment using Hyprland
 - **Declarative package management** through Nix flakes
-- **Gaming support** with Steam, MangoHUD, and game launchers
+- **Gaming support** with Steam, MangoHUD, and game launchers (x86_64 optimized)
 - **Development tools** and environment setup
 
 ## Quick Start
@@ -154,12 +155,75 @@ The configuration is designed to be easily customizable through a centralized co
 - **No Hardcoded Values**: Username, hostname, and paths are dynamically referenced
 - **Maintainable**: Clear separation between personal config and system logic
 
+## Crossplatform Support
+
+This configuration now supports multiple CPU architectures with automatic feature detection and optimization:
+
+### Supported Architectures
+
+- **x86_64-linux** - Full feature support including ROCm acceleration, gaming, and all packages
+- **aarch64-linux (ARM64)** - Optimized support with architecture-specific package selection
+
+### Architecture-Specific Features
+
+#### x86_64-linux Features
+- **ROCm GPU acceleration** for AMD graphics cards
+- **Gaming support** with Steam, AAGL, and game launchers
+- **Full virtualization** with KVM acceleration
+- **Hardware control** tools like OpenRGB and DDC utilities
+- **All binary packages** including architecture-specific overlays
+
+#### aarch64-linux (ARM64) Features
+- **CPU-based AI acceleration** for Ollama (no ROCm)
+- **ARM-optimized virtualization** with appropriate QEMU packages
+- **Universal packages** that work across architectures
+- **Fallback implementations** for x86_64-only packages
+
+### Multi-Architecture Installation
+
+The flake automatically detects your system architecture and applies the appropriate configuration:
+
+```bash
+# For x86_64 systems
+sudo nixos-rebuild switch --flake .#x86_64-linux
+
+# For ARM64 systems
+sudo nixos-rebuild switch --flake .#aarch64-linux
+
+# Or use your hostname (automatically detects architecture from user-config.nix)
+sudo nixos-rebuild switch --flake .#<your-hostname>
+```
+
+### Architecture Configuration
+
+Update your architecture in [`user-config.nix`](user-config.nix):
+
+```nix
+host = {
+  system = "x86_64-linux";  # or "aarch64-linux" for ARM64
+  hostname = "your-hostname";
+};
+```
+
+The configuration will automatically:
+- Include/exclude architecture-specific packages
+- Select appropriate hardware acceleration methods
+- Configure virtualization for your platform
+- Apply architecture-optimized settings
+
 ## System Requirements
 
-- **Architecture**: x86_64-linux (configurable in flake.nix)
+### x86_64-linux Requirements
+- **Architecture**: x86_64-linux (Intel/AMD 64-bit)
 - **Graphics**: Wayland-compatible GPU with proper drivers
 - **Memory**: 8GB+ recommended for full feature set
 - **Storage**: SSD recommended for optimal performance
+
+### aarch64-linux Requirements
+- **Architecture**: aarch64-linux (ARM64)
+- **Graphics**: ARM Mali, Adreno, or compatible GPU
+- **Memory**: 4GB+ minimum, 8GB+ recommended
+- **Storage**: Fast storage recommended (eMMC/SSD)
 
 ## Contributing
 

@@ -50,18 +50,21 @@
       ...
     }@inputs:
     let
+      # **SUPPORTED SYSTEMS**
+      # Define supported architectures for crossplatform support
+      supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
+      
       # **USER CONFIGURATION**
       # Import user configuration from user-config.nix
       userConfig = import ./user-config.nix;
       
       # Extract commonly used values for backward compatibility
-      system = userConfig.host.system;
       hostname = userConfig.host.hostname;
       username = userConfig.user.username;
 
-      # **CUSTOM OVERLAYS**
-      # Overlays to add custom packages or modify existing ones.
-      overlays = [
+      # **ARCHITECTURE-AWARE OVERLAYS**
+      # Overlays that adapt to different architectures
+      mkOverlays = system: [
         # Custom packages overlay
         (final: prev: {
           # Rose Pine GTK theme from Fausto-Korpsvart with better styling
@@ -77,7 +80,7 @@
           };
         })
 
-        # Import zrok overlay from separate file
+        # Import architecture-aware zrok overlay
         (import ./overlays/zrok.nix)
 
         # Import quickemu overlay from separate file
@@ -89,18 +92,20 @@
 
       # **GAMING CONFIGURATION MODULE**
       # Integrates AAGL (Anime Game Launcher) for gaming support.
-      gamingModule = {
+      # Note: AAGL may have limited ARM64 support
+      mkGamingModule = system: {
         imports = [ inputs.aagl.nixosModules.default ];
         nix.settings = inputs.aagl.nixConfig;
         programs = {
-          anime-game-launcher.enable = true;
-          honkers-railway-launcher.enable = true;
+          # Enable gaming launchers based on architecture support
+          anime-game-launcher.enable = (system == "x86_64-linux");
+          honkers-railway-launcher.enable = (system == "x86_64-linux");
         };
       };
 
       # **HOME MANAGER CONFIGURATION MODULE**
       # Manages user-specific configurations via Home Manager.
-      homeManagerModule = {
+      mkHomeManagerModule = system: {
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
@@ -112,17 +117,15 @@
         };
       };
 
-    in
-    {
-      # **NIXOS SYSTEM CONFIGURATION**
-      # Defines the primary NixOS system configuration.
-      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+      # **SYSTEM CONFIGURATION GENERATOR**
+      # Creates NixOS configuration for a specific architecture
+      mkSystemConfig = system: nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs userConfig; };
 
         modules = [
-          # Apply custom overlays defined above.
-          { nixpkgs.overlays = overlays; }
+          # Apply architecture-specific overlays
+          { nixpkgs.overlays = mkOverlays system; }
 
           # Core system configuration from configuration.nix.
           ./configuration.nix
@@ -132,9 +135,20 @@
           inputs.home-manager.nixosModules.home-manager
 
           # Feature-specific modules.
-          gamingModule
-          homeManagerModule
+          (mkGamingModule system)
+          (mkHomeManagerModule system)
         ];
+      };
+
+    in
+    {
+      # **MULTI-ARCHITECTURE NIXOS CONFIGURATIONS**
+      # Generate configurations for all supported systems
+      nixosConfigurations = nixpkgs.lib.genAttrs supportedSystems (system:
+        mkSystemConfig system
+      ) // {
+        # Keep the original hostname-based configuration for backward compatibility
+        ${hostname} = mkSystemConfig userConfig.host.system;
       };
     };
 }
