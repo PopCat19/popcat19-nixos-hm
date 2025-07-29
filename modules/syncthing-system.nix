@@ -12,8 +12,7 @@ let
 in
 {
   # System-level syncthing service configuration
-  # This will be applied when imported in configuration.nix
-  services.syncthing = lib.mkIf (config.services ? syncthing) {
+  services.syncthing = {
     enable = true;
     user = syncthingUser;
     group = "users";
@@ -57,7 +56,7 @@ in
   };
 
   # Firewall configuration for syncthing
-  networking.firewall = lib.mkIf (config.networking ? firewall) {
+  networking.firewall = {
     allowedTCPPorts = [
       22000  # Syncthing sync protocol
       8384   # Syncthing web UI
@@ -67,12 +66,4 @@ in
       21027  # Syncthing discovery
     ];
   };
-
-  # User-level directory creation and configuration
-  # This will be applied when imported in home.nix
-  home.activation.createSyncthingDirs = lib.mkIf (config.home ? activation) (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p ${syncthingPaths.shared}
-    mkdir -p ${syncthingPaths.dataDir}
-    mkdir -p ${syncthingPaths.passwords}
-  '');
 }

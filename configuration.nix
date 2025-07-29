@@ -10,7 +10,7 @@
   ################################
   imports = [
     ./hardware-configuration.nix
-    ./modules/syncthing.nix
+    ./modules/syncthing-system.nix
   ];
 
   # WARNING: DO NOT CHANGE AFTER INITIAL INSTALL.
