@@ -22,9 +22,6 @@ with pkgs;
   inputs.zen-browser.packages."${system}".default
   firefox
   
-  # File Manager
-  kdePackages.dolphin
-  
   # Media
   mpv
   audacious
