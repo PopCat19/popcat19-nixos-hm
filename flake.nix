@@ -62,68 +62,23 @@
         # Custom packages overlay
         (final: prev: {
           # Rose Pine GTK theme from Fausto-Korpsvart with better styling
-          rose-pine-gtk-theme-full = prev.callPackage ./pkgs/rose-pine-gtk-theme-full.nix { };
+          rose-pine-gtk-theme-full = prev.callPackage ./overlays/rose-pine-gtk-theme-full.nix { };
 
           # Hyprshade 4.0.0 overlay - Hyprland shade configuration tool
           # Updates from nixpkgs version 3.2.1 to latest 4.0.0 release
           # Major changes in v4.0.0: Updated shaders to use GLES version 3.0
           # Can crawl and auto-configure screen shaders on schedule
           # Usage: hyprshade auto, hyprshade on <shader>, hyprshade toggle
-          hyprshade = prev.python3Packages.callPackage ./pkgs/hyprshade.nix {
+          hyprshade = prev.python3Packages.callPackage ./overlays/hyprshade.nix {
             hyprland = prev.hyprland;
           };
-
-          # zrok package overlay: adds a custom build for the zrok application.
-          zrok = prev.stdenv.mkDerivation rec {
-            pname = "zrok";
-            version = "1.0.6";
-
-            src = prev.fetchurl {
-              url = "https://github.com/openziti/zrok/releases/download/v${version}/zrok_${version}_linux_amd64.tar.gz";
-              sha256 = "2821fc2faeaeff7f5f9b04ba5b56160d2f3e5c17ffa487b7921e8d1fd01d684c";
-            };
-
-            dontUnpack = true;
-            nativeBuildInputs = [ prev.patchelf ];
-
-            installPhase = ''
-              runHook preInstall
-
-              tar -xzf $src -C .
-              mkdir -p $out/bin
-              cp ./zrok $out/bin/zrok
-              chmod +x $out/bin/zrok
-
-              # Set correct ELF interpreter for NixOS.
-              patchelf --set-interpreter "$(< $NIX_CC/nix-support/dynamic-linker)" "$out/bin/zrok"
-
-              runHook postInstall
-            '';
-
-            meta = with prev.lib; {
-              description = "Geo-distributed, secure, and highly available sharing built on OpenZiti";
-              homepage = "https://zrok.io/";
-              license = prev.lib.licenses.asl20;
-              mainProgram = "zrok";
-              maintainers = with prev.lib.maintainers; [ popcat19 ];
-              platforms = [ "x86_64-linux" ];
-              sourceProvenance = with prev.lib.sourceTypes; [ binaryNativeCode ];
-            };
-          };
         })
 
-        # Patch quickemu to correctly handle version 10.0.0 of QEMU
-        (final: prev: {
-          quickemu = prev.quickemu.overrideAttrs {
-            patches = [
-              (prev.fetchpatch {
-                name = "correctly-handle-version-10.0.0-of-qemu.patch";
-                url = "https://github.com/quickemu-project/quickemu/commit/f25205f4513c4fa72be6940081c62e613d1fddc6.patch";
-                hash = "sha256-OAXGyhMVDwbUypEPj/eRnH0wZYaL9WLGjbyoobe20UY=";
-              })
-            ];
-          };
-        })
+        # Import zrok overlay from separate file
+        (import ./overlays/zrok.nix)
+
+        # Import quickemu overlay from separate file
+        (import ./overlays/quickemu.nix)
 
         # HyprPanel overlay for Hyprland panel components.
         # inputs.hyprpanel.overlay
