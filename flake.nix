@@ -51,8 +51,8 @@
     }@inputs:
     let
       # **USER CONFIGURATION**
-      # Import user configuration from config.nix
-      userConfig = import ./config.nix;
+      # Import user configuration from user-config.nix
+      userConfig = import ./user-config.nix;
       
       # Extract commonly used values for backward compatibility
       system = userConfig.host.system;
