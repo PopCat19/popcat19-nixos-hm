@@ -6,11 +6,31 @@
   pkgs,
   inputs,
   system,
+  userConfig,
 }:
 
+let
+  # Architecture detection helpers
+  isX86_64 = system == "x86_64-linux";
+  isAarch64 = system == "aarch64-linux";
+  
+  # Helper function to conditionally include packages
+  onlyX86_64 = packages: if isX86_64 then packages else [];
+  onlyAarch64 = packages: if isAarch64 then packages else [];
+  
+  # Architecture-specific package selections
+  systemMonitoring = if isX86_64 then [ pkgs.btop-rocm ] else [ pkgs.btop ];
+  hardwareControl = if isX86_64 then [
+    pkgs.ddcui
+    pkgs.openrgb-with-all-plugins
+  ] else [
+    # ARM64 alternatives or empty list
+  ];
+  
+in
 with pkgs;
 [
-  # Terminal & Core Tools
+  # Terminal & Core Tools (universal)
   kitty
   fuzzel
   micro
@@ -18,51 +38,59 @@ with pkgs;
   starship
   wl-clipboard
   
-  # Browsers
-  inputs.zen-browser.packages."${system}".default
+  # Browsers (check availability per architecture)
   firefox
+] ++ (if inputs.zen-browser.packages ? "${system}" then [
+  inputs.zen-browser.packages."${system}".default
+] else []) ++ [
   
-  # Media
+  # Media (universal)
   mpv
   audacious
   audacious-plugins
   
-  # Hyprland Essentials
+  # Hyprland Essentials (check ARM64 compatibility)
   hyprpanel
   hyprshade
   hyprpolkitagent
   hyprutils
   # quickshell - now provided by modules/quickshell.nix using flake input
   
-  # Communication
+  # Communication (universal)
   vesktop
   keepassxc
   
-  # System Monitoring
-  btop-rocm
+  # System Monitoring (architecture-specific)
+] ++ systemMonitoring ++ [
   fastfetch
   
-  # Audio & Hardware Control
+  # Audio & Hardware Control (architecture-specific)
   pavucontrol
   playerctl
-  ddcui
-  openrgb-with-all-plugins
+] ++ hardwareControl ++ [
   glances
   
-  # File Sharing
+  # File Sharing (universal)
   localsend
   zrok
   
-  # Notifications
+  # Notifications (universal)
   dunst
   libnotify
   zenity
   
-  # Development Editors
+  # Development Editors (universal)
   zed-editor_git
   vscodium
   
-  # Nix Development
+  # Nix Development (universal)
   nil
   nixd
+] ++
+# Architecture-specific packages
+onlyX86_64 [
+  # x86_64-specific packages that may not be available on ARM64
+] ++
+onlyAarch64 [
+  # ARM64-specific packages
 ]

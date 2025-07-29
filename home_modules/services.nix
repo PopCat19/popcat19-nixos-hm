@@ -1,5 +1,14 @@
-{ ... }:
+{ system, ... }:
 
+let
+  # Architecture detection
+  isX86_64 = system == "x86_64-linux";
+  isAarch64 = system == "aarch64-linux";
+  
+  # Architecture-specific acceleration settings
+  ollamaAcceleration = if isX86_64 then "rocm" else null; # ROCm only on x86_64
+  
+in
 {
   # **SYSTEM SERVICES**
   # Enables user-level services.
@@ -20,7 +29,8 @@
     # AI/ML Services.
     ollama = {
       enable = true;
-      acceleration = "rocm"; # Enable ROCm acceleration for Ollama.
+      # Architecture-specific acceleration
+      acceleration = ollamaAcceleration; # ROCm on x86_64, CPU on ARM64
     };
   };
 }

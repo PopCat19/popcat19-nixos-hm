@@ -58,5 +58,5 @@
 
   # **INSTALLED PACKAGES**
   # All user packages are imported from home_modules/packages.nix for better organization
-  home.packages = import ./home_modules/packages.nix { inherit pkgs inputs system; };
+  home.packages = import ./home_modules/packages.nix { inherit pkgs inputs system userConfig; };
 }
