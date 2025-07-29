@@ -53,6 +53,7 @@ sudo nixos-rebuild switch --flake .#<your-hostname>
 
 - **[`flake.nix`](flake.nix)** - Main flake definition with inputs, overlays, and system configuration
 - **[`configuration.nix`](configuration.nix)** - System-level NixOS configuration
+- **[`backup-config.nix`](backup-config.nix)** - Automatic configuration backup system
 - **[`home.nix`](home.nix)** - Home Manager user configuration entry point
 
 ### Modular Organization
@@ -99,6 +100,20 @@ sudo nixos-rebuild switch --flake .#<your-hostname>
 - **Hardware control** - OpenRGB, DDC utilities, tablet support
 - **Audio** - PipeWire with EasyEffects
 - **File sharing** - Syncthing configuration
+- **Configuration backup** - Automatic backup system with rotation
+
+### Configuration Backup System
+
+This configuration includes an automatic backup system that creates self-contained backups of your NixOS configuration:
+
+- **Automatic backups** - Created on every `nixos-commit-rebuild-push`
+- **Dual locations** - Stored in both `/etc/nixos/` and `~/nixos-config/`
+- **3-backup rotation** - Maintains `configuration.nix.bak`, `configuration.nix.bak1`, `configuration.nix.bak2`, `configuration.nix.bak3`
+- **Self-contained** - Includes all `system_modules/*` and `hardware-configuration.nix` content inlined
+- **Standalone ready** - Works even if modular files are missing
+- **Git ignored** - Backup files are excluded from version control
+
+The backup system is implemented in [`backup-config.nix`](backup-config.nix) and automatically integrated into the system configuration.
 
 ### Custom Overlays
 - **Rose Pine GTK theme** - Enhanced styling
