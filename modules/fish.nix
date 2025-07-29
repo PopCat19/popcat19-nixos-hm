@@ -45,6 +45,92 @@
           end
           cd $original_dir
       end
+
+      # Smart dev to main merge function
+      function dev-to-main
+          set -l original_dir (pwd)
+          cd $NIXOS_CONFIG_DIR
+          
+          # Check if we're on dev branch
+          set -l current_branch (git branch --show-current)
+          if test "$current_branch" != "dev"
+              echo "❌ Not on dev branch. Currently on: $current_branch"
+              echo "💡 Switch to dev branch first: git checkout dev"
+              cd $original_dir
+              return 1
+          end
+          
+          # Check for uncommitted changes
+          if not git diff --quiet; or not git diff --cached --quiet
+              echo "❌ You have uncommitted changes on dev branch"
+              echo "💡 Commit or stash your changes first"
+              git status --short
+              cd $original_dir
+              return 1
+          end
+          
+          # Fetch latest changes
+          echo "🔄 Fetching latest changes..."
+          git fetch origin
+          
+          # Check if dev is behind origin/dev
+          set -l dev_behind (git rev-list --count HEAD..origin/dev 2>/dev/null || echo "0")
+          if test "$dev_behind" -gt 0
+              echo "❌ Your dev branch is $dev_behind commits behind origin/dev"
+              echo "💡 Pull latest changes first: git pull origin dev"
+              cd $original_dir
+              return 1
+          end
+          
+          # Check if dev is ahead of origin/dev (unpushed commits)
+          set -l dev_ahead (git rev-list --count origin/dev..HEAD 2>/dev/null || echo "0")
+          if test "$dev_ahead" -gt 0
+              echo "❌ You have $dev_ahead unpushed commits on dev"
+              echo "💡 Push your dev changes first: git push origin dev"
+              cd $original_dir
+              return 1
+          end
+          
+          # Switch to main and check for conflicts
+          echo "🔄 Switching to main branch..."
+          git checkout main
+          
+          # Check if main is behind origin/main
+          set -l main_behind (git rev-list --count HEAD..origin/main 2>/dev/null || echo "0")
+          if test "$main_behind" -gt 0
+              echo "🔄 Pulling latest main changes..."
+              git pull origin main
+          end
+          
+          # Check for potential merge conflicts
+          echo "🔍 Checking for potential merge conflicts..."
+          if not git merge --no-commit --no-ff dev >/dev/null 2>&1
+              git merge --abort 2>/dev/null
+              echo "❌ Merge conflicts detected between dev and main"
+              echo "💡 Resolve conflicts manually or use a different merge strategy"
+              git checkout dev
+              cd $original_dir
+              return 1
+          end
+          
+          # Abort the test merge
+          git merge --abort 2>/dev/null
+          
+          # Perform the actual merge
+          echo "✅ No conflicts detected. Merging dev into main..."
+          git merge dev --no-ff -m "Merge dev into main"
+          
+          # Push to main
+          echo "🚀 Pushing to main..."
+          git push origin main
+          
+          # Switch back to dev
+          echo "🔄 Switching back to dev branch..."
+          git checkout dev
+          
+          echo "✅ Successfully merged dev into main and pushed to remote"
+          cd $original_dir
+      end
       fish_add_path $HOME/bin # Add user's bin directory to PATH.
       fish_add_path $HOME/.npm-global/bin # Add npm global packages to PATH.
       if status is-interactive
@@ -87,6 +173,7 @@
       # Git shortcuts.
       gac = "git add . && git commit -m $argv";
       greset = "git reset --hard && git clean -fd";
+      dtm = "dev-to-main";
 
       # SillyTavern launcher.
       sillytavern = "begin; cd ~/SillyTavern-Launcher/SillyTavern; git pull origin staging 2>/dev/null || true; ./start.sh; cd -; end";
