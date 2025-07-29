@@ -58,68 +58,9 @@
     ./modules/shimboot-project.nix
     ./modules/desktop-theme.nix
     ./modules/dolphin.nix
+    ./modules/qt-gtk-config.nix
+    ./modules/fuzzel-config.nix
   ];
-
-  # XDG MIME Applications Configuration
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      # Web browsers
-      "x-scheme-handler/http" = [ "zen-beta.desktop" ];
-      "x-scheme-handler/https" = [ "zen-beta.desktop" ];
-      "text/html" = [ "zen-beta.desktop" ];
-      "application/xhtml+xml" = [ "zen-beta.desktop" ];
-
-      # Terminal
-      "application/x-terminal-emulator" = [ "kitty.desktop" ];
-      "x-scheme-handler/terminal" = [ "kitty.desktop" ];
-
-      # Text files
-      "text/plain" = [ "micro.desktop" ];
-      "text/x-readme" = [ "micro.desktop" ];
-      "text/x-log" = [ "micro.desktop" ];
-      "application/json" = [ "micro.desktop" ];
-      "text/x-python" = [ "micro.desktop" ];
-      "text/x-shellscript" = [ "micro.desktop" ];
-      "text/x-script" = [ "micro.desktop" ];
-
-      # Images
-      "image/jpeg" = [ "org.kde.gwenview.desktop" ];
-      "image/png" = [ "org.kde.gwenview.desktop" ];
-      "image/gif" = [ "org.kde.gwenview.desktop" ];
-      "image/webp" = [ "org.kde.gwenview.desktop" ];
-      "image/svg+xml" = [ "org.kde.gwenview.desktop" ];
-
-      # Videos
-      "video/mp4" = [ "mpv.desktop" ];
-      "video/mkv" = [ "mpv.desktop" ];
-      "video/avi" = [ "mpv.desktop" ];
-      "video/webm" = [ "mpv.desktop" ];
-      "video/x-matroska" = [ "mpv.desktop" ];
-
-      # Audio
-      "audio/mpeg" = [ "mpv.desktop" ];
-      "audio/ogg" = [ "mpv.desktop" ];
-      "audio/wav" = [ "mpv.desktop" ];
-      "audio/flac" = [ "mpv.desktop" ];
-
-      # Archives
-      "application/zip" = [ "org.kde.ark.desktop" ];
-      "application/x-tar" = [ "org.kde.ark.desktop" ];
-      "application/x-compressed-tar" = [ "org.kde.ark.desktop" ];
-      "application/x-7z-compressed" = [ "org.kde.ark.desktop" ];
-
-      # File manager
-      "inode/directory" = [ "org.kde.dolphin.desktop" ];
-
-      # PDF
-      "application/pdf" = [ "org.kde.okular.desktop" ];
-    };
-    associations.added = {
-      "application/x-terminal-emulator" = [ "kitty.desktop" ];
-      "x-scheme-handler/terminal" = [ "kitty.desktop" ];
-    };
-  };
 
   # Systemd services for theme initialization
   systemd.user.services.theme-init = {
@@ -220,73 +161,6 @@
       background_opacity = "0.85";
       dynamic_background_opacity = "yes";
       background_blur = 20;
-    };
-  };
-
-  # Fuzzel Launcher Configuration - Enhanced with Rose Pine theme and QoL features.
-  programs.fuzzel = {
-    enable = true;
-    settings = {
-      main = {
-        layer = "overlay"; # Display as an overlay.
-        exit-on-click = true; # Close on click outside.
-        prompt = "  "; # Unicode search icon with space.
-        placeholder = "Search applications...";
-        width = 50; # Width in characters.
-        lines = 12; # Number of lines to display.
-        horizontal-pad = 20; # Horizontal padding.
-        vertical-pad = 12; # Vertical padding.
-        inner-pad = 8; # Padding between border and content.
-        image-size-ratio = 0.8; # Size ratio for application icons.
-        show-actions = true; # Show application actions.
-        terminal = "kitty"; # Terminal for launching terminal applications.
-        launch-prefix = ""; # Prefix for launching applications.
-        filter-desktop = true; # Filter desktop files.
-        icon-theme = "Papirus-Dark"; # Icon theme to use.
-        icons-enabled = true; # Enable application icons.
-        fields = "name,generic,comment,categories,filename,keywords"; # Search fields.
-        password-character = "*"; # Character for password fields.
-        tab-cycles = true; # Tab cycles through results.
-        match-mode = "fzf"; # Use fuzzy matching algorithm.
-        sort-result = true; # Sort search results.
-        list-executables-in-path = false; # Don't list PATH executables.
-      };
-      colors = {
-        background = "191724f0"; # Rose Pine base with higher opacity.
-        text = "e0def4ff"; # Rose Pine text.
-        match = "eb6f92ff"; # Rose Pine love (red) for matches.
-        selection = "403d52ff"; # Rose Pine highlight medium for selection.
-        selection-text = "e0def4ff"; # Rose Pine text for selected.
-        selection-match = "f6c177ff"; # Rose Pine gold for selected matches.
-        border = "ebbcbaff"; # Rose Pine rose for border.
-        placeholder = "908caaff"; # Rose Pine subtle for placeholder.
-      };
-      border = {
-        radius = 12; # Rounded corners.
-        width = 2; # Border width.
-      };
-      key-bindings = {
-        cancel = "Escape Control+c Control+g";
-        execute = "Return KP_Enter Control+m";
-        execute-or-next = "Tab";
-        cursor-left = "Left Control+b";
-        cursor-left-word = "Control+Left Mod1+b";
-        cursor-right = "Right Control+f";
-        cursor-right-word = "Control+Right Mod1+f";
-        cursor-home = "Home Control+a";
-        cursor-end = "End Control+e";
-        delete-prev = "BackSpace Control+h";
-        delete-prev-word = "Mod1+BackSpace Control+w";
-        delete-next = "Delete Control+d";
-        delete-next-word = "Mod1+d";
-        delete-line = "Control+k";
-        prev = "Up Control+p";
-        next = "Down Control+n";
-        page-up = "Page_Up Control+v";
-        page-down = "Page_Down Mod1+v";
-        first = "Control+Home";
-        last = "Control+End";
-      };
     };
   };
 
@@ -802,18 +676,6 @@
   # All user packages are imported from home-packages.nix for better organization
   home.packages = import ./home-packages.nix { inherit pkgs inputs system; };
 
-  # Additional GTK theme files for better consistency
-  home.file.".config/gtk-3.0/bookmarks".text = ''
-    file:///home/${config.home.username}/Documents Documents
-    file:///home/${config.home.username}/Downloads Downloads
-    file:///home/${config.home.username}/Pictures Pictures
-    file:///home/${config.home.username}/Videos Videos
-    file:///home/${config.home.username}/Music Music
-    file:///home/${config.home.username}/syncthing-shared syncthing-shared
-    file:///home/${config.home.username}/Desktop Desktop
-    trash:/// Trash
-  '';
-
   # Dolphin file manager bookmarks
   home.file.".local/share/user-places.xbel".text = ''
     <?xml version="1.0" encoding="UTF-8"?>
@@ -918,38 +780,6 @@
     mkdir -p $HOME/syncthing-shared
     mkdir -p $HOME/.local/share/syncthing
     mkdir -p $HOME/Passwords
-  '';
-
-  # Additional desktop files for better integration
-  home.file.".local/share/applications/kitty.desktop".text = ''
-    [Desktop Entry]
-    Version=1.0
-    Type=Application
-    Name=Kitty
-    GenericName=Terminal
-    Comment=A modern, hackable, featureful, OpenGL-based terminal emulator
-    TryExec=kitty
-    Exec=kitty
-    Icon=kitty
-    Categories=System;TerminalEmulator;
-    StartupNotify=true
-    MimeType=application/x-terminal-emulator;x-scheme-handler/terminal;
-  '';
-
-  home.file.".local/share/applications/micro.desktop".text = ''
-    [Desktop Entry]
-    Version=1.0
-    Type=Application
-    Name=Micro
-    GenericName=Text Editor
-    Comment=A modern and intuitive terminal-based text editor
-    TryExec=micro
-    Exec=micro %F
-    Icon=text-editor
-    Categories=Utility;TextEditor;Development;
-    StartupNotify=false
-    MimeType=text/plain;text/x-readme;text/x-log;application/json;text/x-python;text/x-shellscript;text/x-script;
-    Terminal=true
   '';
 
   # Nemo file manager configuration with Rose Pine theme and kitty terminal
