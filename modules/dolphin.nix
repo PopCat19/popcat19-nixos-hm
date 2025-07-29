@@ -119,6 +119,27 @@
     Exec=kitty --working-directory %f
   '';
 
+  # Thumbnail cache update script
+  home.file.".local/bin/update-thumbnails".text = ''
+    #!/usr/bin/env bash
+
+    # Clear thumbnail cache
+    rm -rf ~/.cache/thumbnails/*
+
+    # Update desktop database
+    update-desktop-database ~/.local/share/applications 2>/dev/null || true
+
+    # Update MIME database
+    update-mime-database ~/.local/share/mime 2>/dev/null || true
+
+    # Regenerate thumbnails for common directories by touching files
+    find ~/Pictures ~/Downloads ~/Videos ~/Music -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.gif" -o -name "*.webp" -o -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec touch {} \; 2>/dev/null || true
+
+    echo "Thumbnail cache cleared and databases updated"
+  '';
+
+  home.file.".local/bin/update-thumbnails".executable = true;
+
   # KDE Service Menu for terminal integration
   home.file.".local/share/kio/servicemenus/open-terminal-here.desktop".text = ''
     [Desktop Entry]

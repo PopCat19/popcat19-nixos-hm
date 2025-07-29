@@ -15,12 +15,18 @@
           # Empty greeting
       end
 
-      # NixOS commit function
-      function nixos-commit-function
+      # NixOS commit, rebuild, and push function
+      function nixos-commit-rebuild-push
           set -l original_dir (pwd)
           cd $NIXOS_CONFIG_DIR
           git add .
           git commit -m "$argv"
+          if sudo nixos-rebuild switch --flake .
+              git push
+              echo "✅ Build succeeded, changes pushed to remote"
+          else
+              echo "❌ Build failed, changes not pushed"
+          end
           cd $original_dir
       end
       fish_add_path $HOME/bin # Add user's bin directory to PATH.
@@ -55,8 +61,8 @@
       cdh = "cd $NIXOS_CONFIG_DIR";
 
       # NixOS Build and Switch operations.
-      nrb = "begin; cd $NIXOS_CONFIG_DIR; sudo nixos-rebuild switch --flake .; cd -; end";
-      nrbm = "nixos-commit-function";
+      nrb = "begin; cd $NIXOS_CONFIG_DIR; git add .; sudo nixos-rebuild switch --flake .; cd -; end";
+      nrbc = "nixos-commit-rebuild-push";
 
       # Package Management with nix search.
       pkgs = "nix search nixpkgs";
