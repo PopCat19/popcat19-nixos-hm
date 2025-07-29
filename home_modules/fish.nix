@@ -27,8 +27,33 @@
           git commit -m "$argv"
           
           if sudo nixos-rebuild switch --flake .
-              git push
-              echo "✅ Build succeeded, changes pushed to remote"
+              # Try to push and handle potential conflicts
+              if git push 2>/dev/null
+                  echo "✅ Build succeeded, changes pushed to remote"
+              else
+                  echo ""
+                  echo "⚠️  Normal push failed - likely due to diverged history"
+                  echo "💡 This can happen after rollbacks or when remote is ahead"
+                  echo ""
+                  
+                  # 5 second countdown for force push
+                  echo "🚨 Force push required to update remote branch"
+                  for i in (seq 5 -1 1)
+                      printf "\r⏰ Force push in %d seconds... (Ctrl+C to cancel)" $i
+                      sleep 1
+                  end
+                  echo ""
+                  
+                  read -l -P "Proceed with force push? [y/N]: " force_push_choice
+                  
+                  if test "$force_push_choice" = "y" -o "$force_push_choice" = "Y"
+                      git push --force-with-lease
+                      echo "✅ Build succeeded, changes force-pushed to remote"
+                  else
+                      echo "⚠️  Build succeeded but changes not pushed to remote"
+                      echo "💡 You can manually push later with: git push --force-with-lease"
+                  end
+              end
           else
               echo "❌ Build failed, changes not pushed"
               echo ""
@@ -38,9 +63,14 @@
                   git reset --hard $pre_commit_hash
                   echo "🔄 Rolled back to commit: $pre_commit_hash"
                   echo "📝 Your changes have been reverted"
+                  echo ""
+                  echo "⚠️  Note: If you had pushed this commit before, you may need to force push"
+                  echo "   after your next successful commit to sync the remote branch"
               else
                   echo "⚠️  Changes kept in current commit. You can manually rollback with:"
                   echo "   git reset --hard $pre_commit_hash"
+                  echo ""
+                  echo "💡 If you rollback later and then push, you may need --force-with-lease"
               end
           end
           cd $original_dir
@@ -163,7 +193,7 @@
       cdh = "cd $NIXOS_CONFIG_DIR";
 
       # NixOS Build and Switch operations.
-      nrb = "begin; cd $NIXOS_CONFIG_DIR; git add .; sudo nixos-rebuild switch --flake .; cd -; end";
+      nrb = "nixos-rebuild-basic";
       nrbc = "nixos-commit-rebuild-push";
 
       # Package Management with nix search.
