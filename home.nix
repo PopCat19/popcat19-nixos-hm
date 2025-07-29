@@ -55,7 +55,7 @@
     ./modules/gaming.nix
     ./modules/development.nix
     ./modules/android-tools.nix
-    ./modules/project-tools.nix
+    ./modules/shimboot-project.nix
     ./modules/desktop-theme.nix
   ];
 

@@ -45,6 +45,13 @@ with pkgs;
   btop-rocm
   fastfetch
   
+  # Audio & Hardware Control
+  pavucontrol
+  playerctl
+  ddcui
+  openrgb-with-all-plugins
+  glances
+  
   # File Sharing
   localsend
   zrok
