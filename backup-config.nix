@@ -44,34 +44,34 @@ let
     # Function to rotate backups in both locations
     rotate_backups() {
       # Rotate backups in /etc/nixos
-      if [[ -f "${BACKUP_PREFIX}3" ]]; then
-        rm -f "${BACKUP_PREFIX}3"
+      if [[ -f "$BACKUP_PREFIX"3 ]]; then
+        rm -f "$BACKUP_PREFIX"3
       fi
       
       for i in $(seq 2 -1 1); do
-        if [[ -f "${BACKUP_PREFIX}$i" ]]; then
-          mv "${BACKUP_PREFIX}$i" "${BACKUP_PREFIX}$((i + 1))"
+        if [[ -f "$BACKUP_PREFIX$i" ]]; then
+          mv "$BACKUP_PREFIX$i" "$BACKUP_PREFIX$((i + 1))"
         fi
       done
       
       if [[ -f "$BACKUP_PREFIX" ]]; then
-        mv "$BACKUP_PREFIX" "${BACKUP_PREFIX}1"
+        mv "$BACKUP_PREFIX" "$BACKUP_PREFIX"1
       fi
       
       # Rotate backups in actual source directory (always try)
       if [[ -d "$ACTUAL_SOURCE_DIR" ]]; then
-        if [[ -f "${SOURCE_BACKUP_PREFIX}3" ]]; then
-          rm -f "${SOURCE_BACKUP_PREFIX}3"
+        if [[ -f "$SOURCE_BACKUP_PREFIX"3 ]]; then
+          rm -f "$SOURCE_BACKUP_PREFIX"3
         fi
         
         for i in $(seq 2 -1 1); do
-          if [[ -f "${SOURCE_BACKUP_PREFIX}$i" ]]; then
-            mv "${SOURCE_BACKUP_PREFIX}$i" "${SOURCE_BACKUP_PREFIX}$((i + 1))"
+          if [[ -f "$SOURCE_BACKUP_PREFIX$i" ]]; then
+            mv "$SOURCE_BACKUP_PREFIX$i" "$SOURCE_BACKUP_PREFIX$((i + 1))"
           fi
         done
         
         if [[ -f "$SOURCE_BACKUP_PREFIX" ]]; then
-          mv "$SOURCE_BACKUP_PREFIX" "${SOURCE_BACKUP_PREFIX}1"
+          mv "$SOURCE_BACKUP_PREFIX" "$SOURCE_BACKUP_PREFIX"1
         fi
       fi
     }
@@ -226,10 +226,10 @@ let
       echo ""
       echo "Current backups in /etc/nixos:"
       for i in $(seq 1 $MAX_BACKUPS); do
-        if [[ -f "${BACKUP_PREFIX}$i" ]]; then
-          backup_date=$(stat -c %y "${BACKUP_PREFIX}$i" | cut -d' ' -f1,2 | cut -d'.' -f1)
-          backup_size=$(stat -c %s "${BACKUP_PREFIX}$i")
-          echo "  - ${BACKUP_PREFIX}$i (created: $backup_date, size: $backup_size bytes)"
+        if [[ -f "$BACKUP_PREFIX$i" ]]; then
+          backup_date=$(stat -c %y "$BACKUP_PREFIX$i" | cut -d' ' -f1,2 | cut -d'.' -f1)
+          backup_size=$(stat -c %s "$BACKUP_PREFIX$i")
+          echo "  - $BACKUP_PREFIX$i (created: $backup_date, size: $backup_size bytes)"
         fi
       done
       if [[ -f "$BACKUP_PREFIX" ]]; then
@@ -243,10 +243,10 @@ let
         echo ""
         echo "Current backups in actual source directory ($ACTUAL_SOURCE_DIR):"
         for i in $(seq 1 $MAX_BACKUPS); do
-          if [[ -f "${SOURCE_BACKUP_PREFIX}$i" ]]; then
-            backup_date=$(stat -c %y "${SOURCE_BACKUP_PREFIX}$i" | cut -d' ' -f1,2 | cut -d'.' -f1)
-            backup_size=$(stat -c %s "${SOURCE_BACKUP_PREFIX}$i")
-            echo "  - ${SOURCE_BACKUP_PREFIX}$i (created: $backup_date, size: $backup_size bytes)"
+          if [[ -f "$SOURCE_BACKUP_PREFIX$i" ]]; then
+            backup_date=$(stat -c %y "$SOURCE_BACKUP_PREFIX$i" | cut -d' ' -f1,2 | cut -d'.' -f1)
+            backup_size=$(stat -c %s "$SOURCE_BACKUP_PREFIX$i")
+            echo "  - $SOURCE_BACKUP_PREFIX$i (created: $backup_date, size: $backup_size bytes)"
           fi
         done
         if [[ -f "$SOURCE_BACKUP_PREFIX" ]]; then
