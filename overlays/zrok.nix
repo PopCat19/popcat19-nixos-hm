@@ -13,7 +13,7 @@ final: prev: {
       hash = "sha256-IY9eZyEm8cAixt+Vwr50UVjrA31cHfm715zpqdMieUs=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Will be updated during build
+    vendorHash = "sha256-bU6WXe5hhnGX7hcbtDlnl1vuxjJOMhaWAts8+fUjpdk=";
 
     subPackages = [ "cmd/zrok" ];
 
