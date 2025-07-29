@@ -76,6 +76,22 @@
           cd $original_dir
       end
 
+      # Basic NixOS rebuild function (no commit/push)
+      function nixos-rebuild-basic
+          set -l original_dir (pwd)
+          cd $NIXOS_CONFIG_DIR
+          
+          echo "🔄 Running NixOS rebuild..."
+          if sudo nixos-rebuild switch --flake .
+              echo "✅ Build succeeded"
+          else
+              echo "❌ Build failed"
+              cd $original_dir
+              return 1
+          end
+          cd $original_dir
+      end
+
       # Smart dev to main merge function
       function dev-to-main
           set -l original_dir (pwd)
