@@ -19,13 +19,29 @@
       function nixos-commit-rebuild-push
           set -l original_dir (pwd)
           cd $NIXOS_CONFIG_DIR
+          
+          # Store the current commit hash before making changes
+          set -l pre_commit_hash (git rev-parse HEAD)
+          
           git add .
           git commit -m "$argv"
+          
           if sudo nixos-rebuild switch --flake .
               git push
               echo "✅ Build succeeded, changes pushed to remote"
           else
               echo "❌ Build failed, changes not pushed"
+              echo ""
+              read -l -P "Do you want to rollback to the previous commit? [y/N]: " rollback_choice
+              
+              if test "$rollback_choice" = "y" -o "$rollback_choice" = "Y"
+                  git reset --hard $pre_commit_hash
+                  echo "🔄 Rolled back to commit: $pre_commit_hash"
+                  echo "📝 Your changes have been reverted"
+              else
+                  echo "⚠️  Changes kept in current commit. You can manually rollback with:"
+                  echo "   git reset --hard $pre_commit_hash"
+              end
           end
           cd $original_dir
       end
