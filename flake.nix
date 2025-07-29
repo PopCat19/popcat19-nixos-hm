@@ -50,11 +50,14 @@
       ...
     }@inputs:
     let
-      # **SYSTEM DEFINITIONS**
-      # Basic system parameters for configuration.
-      system = "x86_64-linux";
-      hostname = "popcat19-nixos0";
-      username = "popcat19";
+      # **USER CONFIGURATION**
+      # Import user configuration from config.nix
+      userConfig = import ./config.nix;
+      
+      # Extract commonly used values for backward compatibility
+      system = userConfig.host.system;
+      hostname = userConfig.host.hostname;
+      username = userConfig.user.username;
 
       # **CUSTOM OVERLAYS**
       # Overlays to add custom packages or modify existing ones.
@@ -101,7 +104,9 @@
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
-          extraSpecialArgs = { inherit inputs system; };
+          extraSpecialArgs = {
+            inherit inputs system userConfig;
+          };
           users.${username} = import ./home.nix;
           backupFileExtension = "bak2"; # Custom backup file extension.
         };
@@ -113,7 +118,7 @@
       # Defines the primary NixOS system configuration.
       nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs userConfig; };
 
         modules = [
           # Apply custom overlays defined above.

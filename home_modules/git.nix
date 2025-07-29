@@ -1,11 +1,12 @@
-{ ... }:
+{ userConfig, ... }:
 
 {
   # **PROGRAM CONFIGURATIONS**
   # Git Configuration for user details.
   programs.git = {
     enable = true;
-    userName = "PopCat19";
-    userEmail = "atsuo11111@gmail.com";
+    userName = userConfig.git.userName;
+    userEmail = userConfig.git.userEmail;
+    extraConfig = userConfig.git.extraConfig;
   };
 }

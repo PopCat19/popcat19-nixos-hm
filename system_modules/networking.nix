@@ -1,24 +1,19 @@
-{ ... }:
+{ userConfig, ... }:
 
 {
   # **NETWORKING & FIREWALL CONFIGURATION**
   # Defines network settings, hostname, and firewall rules.
   networking = {
-    hostName = "popcat19-nixos0";
+    hostName = userConfig.host.hostname;
     networkmanager = {
       enable = true;
       wifi.backend = "wpa_supplicant";
     };
     firewall = {
       enable = true;
-      trustedInterfaces = [ "lo" ];
-      allowedTCPPorts = [
-        53317  # Syncthing
-        30071  # Custom port
-      ];
-      allowedUDPPorts = [
-        53317  # Syncthing
-      ];
+      trustedInterfaces = userConfig.network.trustedInterfaces;
+      allowedTCPPorts = userConfig.network.allowedTCPPorts;
+      allowedUDPPorts = userConfig.network.allowedUDPPorts;
       checkReversePath = false;
     };
   };

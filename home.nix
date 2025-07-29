@@ -5,14 +5,15 @@
   system,
   lib,
   inputs,
+  userConfig,
   ...
 }:
 
 {
   # **BASIC HOME CONFIGURATION**
   # Sets up basic user home directory parameters.
-  home.username = "popcat19";
-  home.homeDirectory = "/home/popcat19";
+  home.username = userConfig.user.username;
+  home.homeDirectory = userConfig.directories.home;
   home.stateVersion = "24.05"; # Home Manager state version.
 
   # ═══════════════════════════════════════════════════════════════════════════════

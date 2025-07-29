@@ -2,7 +2,7 @@
 # This file contains MangoHUD gaming performance overlay configuration and packages
 # Imported by home.nix
 
-{ config, pkgs, ... }:
+{ config, pkgs, userConfig, ... }:
 
 {
   # ═══════════════════════════════════════════════════════════════════════════════
@@ -124,7 +124,7 @@
 
       # ─── ADVANCED SETTINGS ───
       af=8                             # Anisotropic filtering level
-      output_folder=/home/popcat19     # Log output directory
+      output_folder=${userConfig.directories.home}     # Log output directory
       log_duration=30                  # Logging duration in seconds
       autostart_log=0                  # Don't auto-start logging
       log_interval=100                 # Log interval in milliseconds
