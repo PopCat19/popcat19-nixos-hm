@@ -1,12 +1,13 @@
-{ lib
-, stdenvNoCC
-, fetchFromGitHub
-, gtk3
-, gtk4
-, gnome-themes-extra
-, gtk-engine-murrine
-, gtk_engines
-, sassc
+{
+  lib,
+  stdenvNoCC,
+  fetchFromGitHub,
+  gtk3,
+  gtk4,
+  gnome-themes-extra,
+  gtk-engine-murrine,
+  gtk_engines,
+  sassc,
 }:
 
 stdenvNoCC.mkDerivation rec {
@@ -17,7 +18,7 @@ stdenvNoCC.mkDerivation rec {
     owner = "Fausto-Korpsvart";
     repo = "Rose-Pine-GTK-Theme";
     rev = "main";
-    sha256 = "sha256-wFzyF59jjudjOoS/K5zmlNUbEZcHhp5kkcbrd8k0CC4=";
+    sha256 = "sha256-Z6zpnrQF8gd+30QNsIEudh0UgIjjwTvPkMp8tsm5MIQ=";
   };
 
   nativeBuildInputs = [
@@ -64,72 +65,72 @@ stdenvNoCC.mkDerivation rec {
   '';
 
   installPhase = ''
-    runHook preInstall
+        runHook preInstall
 
-    # Create destination directories
-    mkdir -p $out/share/themes
-    mkdir -p $out/share/icons
+        # Create destination directories
+        mkdir -p $out/share/themes
+        mkdir -p $out/share/icons
 
-    # Install Rose Pine Main theme (borderless for Hyprland)
-    THEME_NAME="Rose-Pine-Main-BL"
-    mkdir -p "$out/share/themes/$THEME_NAME"
+        # Install Rose Pine Main theme (borderless for Hyprland)
+        THEME_NAME="Rose-Pine-Main-BL"
+        mkdir -p "$out/share/themes/$THEME_NAME"
 
-    # Copy built theme files
-    cp -r themes/src/main/* "$out/share/themes/$THEME_NAME/"
-    cp -r themes/src/assets "$out/share/themes/$THEME_NAME/"
+        # Copy built theme files
+        cp -r themes/src/main/* "$out/share/themes/$THEME_NAME/"
+        cp -r themes/src/assets "$out/share/themes/$THEME_NAME/"
 
-    # Rename CSS files to standard names
-    if [ -f "$out/share/themes/$THEME_NAME/gtk-3.0/gtk-Dark.css" ]; then
-      mv "$out/share/themes/$THEME_NAME/gtk-3.0/gtk-Dark.css" "$out/share/themes/$THEME_NAME/gtk-3.0/gtk.css"
-    fi
-    if [ -f "$out/share/themes/$THEME_NAME/gtk-4.0/gtk-Dark.css" ]; then
-      mv "$out/share/themes/$THEME_NAME/gtk-4.0/gtk-Dark.css" "$out/share/themes/$THEME_NAME/gtk-4.0/gtk.css"
-    fi
+        # Rename CSS files to standard names
+        if [ -f "$out/share/themes/$THEME_NAME/gtk-3.0/gtk-Dark.css" ]; then
+          mv "$out/share/themes/$THEME_NAME/gtk-3.0/gtk-Dark.css" "$out/share/themes/$THEME_NAME/gtk-3.0/gtk.css"
+        fi
+        if [ -f "$out/share/themes/$THEME_NAME/gtk-4.0/gtk-Dark.css" ]; then
+          mv "$out/share/themes/$THEME_NAME/gtk-4.0/gtk-Dark.css" "$out/share/themes/$THEME_NAME/gtk-4.0/gtk.css"
+        fi
 
-    # Create Moon variant
-    MOON_THEME_NAME="Rose-Pine-Moon-BL"
-    cp -r "$out/share/themes/$THEME_NAME" "$out/share/themes/$MOON_THEME_NAME"
+        # Create Moon variant
+        MOON_THEME_NAME="Rose-Pine-Moon-BL"
+        cp -r "$out/share/themes/$THEME_NAME" "$out/share/themes/$MOON_THEME_NAME"
 
-    # Install icon themes
-    cp -r icons/Rose-Pine "$out/share/icons/"
-    cp -r icons/Rose-Pine-Moon "$out/share/icons/"
+        # Install icon themes
+        cp -r icons/Rose-Pine "$out/share/icons/"
+        cp -r icons/Rose-Pine-Moon "$out/share/icons/"
 
-    # Create index.theme files for proper theme recognition
-    cat > "$out/share/themes/$THEME_NAME/index.theme" << 'EOF'
-[Desktop Entry]
-Type=X-GNOME-Metatheme
-Name=Rose Pine Main BL
-Comment=Rose Pine dark theme with borderless windows
-Encoding=UTF-8
+        # Create index.theme files for proper theme recognition
+        cat > "$out/share/themes/$THEME_NAME/index.theme" << 'EOF'
+    [Desktop Entry]
+    Type=X-GNOME-Metatheme
+    Name=Rose Pine Main BL
+    Comment=Rose Pine dark theme with borderless windows
+    Encoding=UTF-8
 
-[X-GNOME-Metatheme]
-GtkTheme=Rose-Pine-Main-BL
-MetacityTheme=Rose-Pine-Main-BL
-IconTheme=Rose-Pine
-CursorTheme=rose-pine-hyprcursor
-ButtonLayout=appmenu:minimize,maximize,close
-EOF
+    [X-GNOME-Metatheme]
+    GtkTheme=Rose-Pine-Main-BL
+    MetacityTheme=Rose-Pine-Main-BL
+    IconTheme=Rose-Pine
+    CursorTheme=rose-pine-hyprcursor
+    ButtonLayout=appmenu:minimize,maximize,close
+    EOF
 
-    cat > "$out/share/themes/$MOON_THEME_NAME/index.theme" << 'EOF'
-[Desktop Entry]
-Type=X-GNOME-Metatheme
-Name=Rose Pine Moon BL
-Comment=Rose Pine moon theme with borderless windows
-Encoding=UTF-8
+        cat > "$out/share/themes/$MOON_THEME_NAME/index.theme" << 'EOF'
+    [Desktop Entry]
+    Type=X-GNOME-Metatheme
+    Name=Rose Pine Moon BL
+    Comment=Rose Pine moon theme with borderless windows
+    Encoding=UTF-8
 
-[X-GNOME-Metatheme]
-GtkTheme=Rose-Pine-Moon-BL
-MetacityTheme=Rose-Pine-Moon-BL
-IconTheme=Rose-Pine-Moon
-CursorTheme=rose-pine-hyprcursor
-ButtonLayout=appmenu:minimize,maximize,close
-EOF
+    [X-GNOME-Metatheme]
+    GtkTheme=Rose-Pine-Moon-BL
+    MetacityTheme=Rose-Pine-Moon-BL
+    IconTheme=Rose-Pine-Moon
+    CursorTheme=rose-pine-hyprcursor
+    ButtonLayout=appmenu:minimize,maximize,close
+    EOF
 
-    # Fix permissions
-    find $out/share -type f -exec chmod 644 {} \;
-    find $out/share -type d -exec chmod 755 {} \;
+        # Fix permissions
+        find $out/share -type f -exec chmod 644 {} \;
+        find $out/share -type d -exec chmod 755 {} \;
 
-    runHook postInstall
+        runHook postInstall
   '';
 
   meta = with lib; {
