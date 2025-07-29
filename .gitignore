@@ -6,6 +6,8 @@ result
 
 # Ignore backup files
 *.bak
+*.bak[0-9]
+configuration.nix.bak*
 *.backup
 *~
 
