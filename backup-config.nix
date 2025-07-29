@@ -63,7 +63,7 @@ let
           fi
           
           # Check if we're closing the imports section
-          if [[ "$in_imports" == true && "$line" =~ ^[[:space:]]*\]; ]]; then
+          if [[ "$in_imports" == true && "$line" =~ ^[[:space:]]*\]\;[[:space:]]*$ ]]; then
             in_imports=false
             echo "$line" >> "$BACKUP_PREFIX"
             continue
