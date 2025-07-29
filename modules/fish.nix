@@ -7,6 +7,7 @@
     shellInit = ''
       set -Ux NIXOS_CONFIG_DIR $HOME/nixos-config
       set -Ux NIXOS_FLAKE_HOSTNAME popcat19-nixos0
+      set -Ux EDITOR micro
       set -g fish_greeting "" # Disable default fish greeting.
 
       # Custom greeting disabled - fastfetch removed
@@ -35,47 +36,28 @@
       ll = "eza -lha --icons=auto --sort=name --group-directories-first";
       ld = "eza -lhD --icons=auto";
       lt = "eza --tree --icons=auto";
-      o = "open_smart"; # Custom function to open files.
 
       # NixOS Configuration Management.
-      nconf = "nixconf-edit";
-      nixos-ed = "nixconf-edit";
-      hconf = "homeconf-edit";
-      home-ed = "homeconf-edit";
-      flconf = "flake-edit";
-      flake-ed = "flake-edit";
-      flup = "flake-update";
-      flake-up = "flake-update";
-      ngit = "nixos-git";
+      nconf = "$EDITOR $NIXOS_CONFIG_DIR/configuration.nix";
+      hconf = "$EDITOR $NIXOS_CONFIG_DIR/home.nix";
+      flconf = "$EDITOR $NIXOS_CONFIG_DIR/flake.nix";
+      flup = "(cd $NIXOS_CONFIG_DIR && nix flake update)";
+      ngit = "(cd $NIXOS_CONFIG_DIR && git $argv)";
+      cdh = "cd $NIXOS_CONFIG_DIR";
 
       # NixOS Build and Switch operations.
-      nrb = "nixos-apply-config";
-      nixos-sw = "nixos-apply-config";
-      nerb = "nixos-edit-rebuild";
-      nixoss = "nixos-edit-rebuild";
-      herb = "home-edit-rebuild";
-      home-sw = "home-edit-rebuild";
-      nup = "nixos-upgrade";
-      nixos-up = "nixos-upgrade";
+      nrb = "(cd $NIXOS_CONFIG_DIR && sudo nixos-rebuild switch --flake .)";
 
-      # Package Management with nixpkg.
-      pkgls = "nixpkg list";
-      pkgadd = "nixpkg add";
-      pkgrm = "nixpkg remove";
-      pkgs = "nixpkg search";
-      pkghelp = "nixpkg help";
-      pkgman = "nixpkg manual";
-      pkgaddr = "nixpkg add";
-      pkgrmr = "nixpkg remove";
+      # Package Management with nix search.
+      pkgs = "nix search nixpkgs";
+
+      # Git shortcuts.
+      gac = "git add . && git commit -m $argv";
+      greset = "git reset --hard && git clean -fd";
     };
   };
 
   # Fish configuration files
-  home.file.".config/fish/functions" = {
-    source = ../fish_functions;
-    recursive = true;
-  };
-
   home.file.".config/fish/themes" = {
     source = ../fish_themes;
     recursive = true;
