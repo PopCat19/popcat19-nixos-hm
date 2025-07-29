@@ -26,11 +26,14 @@ let
       SOURCE_DIR="/etc/nixos"
     fi
     
+    # Always try to create backups in the actual nixos-config directory
+    ACTUAL_SOURCE_DIR="/home/popcat19/nixos-config"
+    
     CONFIG_FILE="$SOURCE_DIR/configuration.nix"
     HARDWARE_CONFIG_FILE="$SOURCE_DIR/hardware-configuration.nix"
     BACKUP_DIR="/etc/nixos"
     BACKUP_PREFIX="$BACKUP_DIR/configuration.nix.bak"
-    SOURCE_BACKUP_PREFIX="$SOURCE_DIR/configuration.nix.bak"
+    SOURCE_BACKUP_PREFIX="$ACTUAL_SOURCE_DIR/configuration.nix.bak"
     MAX_BACKUPS=3
     SYSTEM_MODULES_DIR="$SOURCE_DIR/system_modules"
     
@@ -55,8 +58,8 @@ let
         mv "$BACKUP_PREFIX" "$BACKUP_PREFIX.1"
       fi
       
-      # Rotate backups in source directory (if different from /etc/nixos and writable)
-      if [[ "$SOURCE_DIR" != "/etc/nixos" && "$SOURCE_DIR" != /nix/store/* ]]; then
+      # Rotate backups in actual source directory (always try)
+      if [[ -d "$ACTUAL_SOURCE_DIR" ]]; then
         if [[ -f "$SOURCE_BACKUP_PREFIX.3" ]]; then
           rm -f "$SOURCE_BACKUP_PREFIX.3"
         fi
@@ -190,8 +193,8 @@ let
         # Make the backup file readable
         chmod 644 "$BACKUP_PREFIX"
         
-        # Also create backup in source directory (if different from /etc/nixos and writable)
-        if [[ "$SOURCE_DIR" != "/etc/nixos" && "$SOURCE_DIR" != /nix/store/* ]]; then
+        # Also create backup in actual source directory (always try)
+        if [[ -d "$ACTUAL_SOURCE_DIR" ]]; then
           cp "$BACKUP_PREFIX" "$SOURCE_BACKUP_PREFIX"
           chmod 644 "$SOURCE_BACKUP_PREFIX"
         fi
@@ -212,10 +215,10 @@ let
     # Create new backup
     if create_backup; then
       echo "✓ Backup created successfully at $BACKUP_PREFIX"
-      if [[ "$SOURCE_DIR" != "/etc/nixos" && "$SOURCE_DIR" != /nix/store/* ]]; then
+      if [[ -d "$ACTUAL_SOURCE_DIR" ]]; then
         echo "✓ Backup also created at $SOURCE_BACKUP_PREFIX"
-      elif [[ "$SOURCE_DIR" == /nix/store/* ]]; then
-        echo "ℹ Source directory is read-only (Nix store), backup only created in /etc/nixos"
+      else
+        echo "ℹ Actual source directory not accessible, backup only created in /etc/nixos"
       fi
       echo "✓ Backup rotation: keeping last $MAX_BACKUPS backups"
       
@@ -235,10 +238,10 @@ let
         echo "  - $BACKUP_PREFIX (created: $backup_date, size: $backup_size bytes)"
       fi
       
-      # List source directory backups if different and writable
-      if [[ "$SOURCE_DIR" != "/etc/nixos" && "$SOURCE_DIR" != /nix/store/* ]]; then
+      # List actual source directory backups if accessible
+      if [[ -d "$ACTUAL_SOURCE_DIR" ]]; then
         echo ""
-        echo "Current backups in source directory ($SOURCE_DIR):"
+        echo "Current backups in actual source directory ($ACTUAL_SOURCE_DIR):"
         for i in $(seq 1 $MAX_BACKUPS); do
           if [[ -f "$SOURCE_BACKUP_PREFIX.$i" ]]; then
             backup_date=$(stat -c %y "$SOURCE_BACKUP_PREFIX.$i" | cut -d' ' -f1,2 | cut -d'.' -f1)
