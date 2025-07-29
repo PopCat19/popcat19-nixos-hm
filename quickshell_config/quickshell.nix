@@ -19,7 +19,7 @@
   # **QUICKSHELL CONFIGURATION FILES**
   # Link the quickshell_config directory to ~/.config/quickshell
   home.file.".config/quickshell" = {
-    source = ../quickshell_config;
+    source = ./.;
     recursive = true;
   };
 }
