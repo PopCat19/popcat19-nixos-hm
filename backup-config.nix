@@ -55,8 +55,8 @@ let
         mv "$BACKUP_PREFIX" "$BACKUP_PREFIX.1"
       fi
       
-      # Rotate backups in source directory (if different from /etc/nixos)
-      if [[ "$SOURCE_DIR" != "/etc/nixos" ]]; then
+      # Rotate backups in source directory (if different from /etc/nixos and writable)
+      if [[ "$SOURCE_DIR" != "/etc/nixos" && "$SOURCE_DIR" != /nix/store/* ]]; then
         if [[ -f "$SOURCE_BACKUP_PREFIX.3" ]]; then
           rm -f "$SOURCE_BACKUP_PREFIX.3"
         fi
@@ -182,8 +182,8 @@ let
         # Make the backup file readable
         chmod 644 "$BACKUP_PREFIX"
         
-        # Also create backup in source directory (if different from /etc/nixos)
-        if [[ "$SOURCE_DIR" != "/etc/nixos" ]]; then
+        # Also create backup in source directory (if different from /etc/nixos and writable)
+        if [[ "$SOURCE_DIR" != "/etc/nixos" && "$SOURCE_DIR" != /nix/store/* ]]; then
           cp "$BACKUP_PREFIX" "$SOURCE_BACKUP_PREFIX"
           chmod 644 "$SOURCE_BACKUP_PREFIX"
         fi
@@ -204,8 +204,10 @@ let
     # Create new backup
     if create_backup; then
       echo "✓ Backup created successfully at $BACKUP_PREFIX"
-      if [[ "$SOURCE_DIR" != "/etc/nixos" ]]; then
+      if [[ "$SOURCE_DIR" != "/etc/nixos" && "$SOURCE_DIR" != /nix/store/* ]]; then
         echo "✓ Backup also created at $SOURCE_BACKUP_PREFIX"
+      elif [[ "$SOURCE_DIR" == /nix/store/* ]]; then
+        echo "ℹ Source directory is read-only (Nix store), backup only created in /etc/nixos"
       fi
       echo "✓ Backup rotation: keeping last $MAX_BACKUPS backups"
       
@@ -225,8 +227,8 @@ let
         echo "  - $BACKUP_PREFIX (created: $backup_date, size: $backup_size bytes)"
       fi
       
-      # List source directory backups if different
-      if [[ "$SOURCE_DIR" != "/etc/nixos" ]]; then
+      # List source directory backups if different and writable
+      if [[ "$SOURCE_DIR" != "/etc/nixos" && "$SOURCE_DIR" != /nix/store/* ]]; then
         echo ""
         echo "Current backups in source directory ($SOURCE_DIR):"
         for i in $(seq 1 $MAX_BACKUPS); do
