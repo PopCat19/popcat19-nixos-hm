@@ -41,12 +41,12 @@
       nconf = "$EDITOR $NIXOS_CONFIG_DIR/configuration.nix";
       hconf = "$EDITOR $NIXOS_CONFIG_DIR/home.nix";
       flconf = "$EDITOR $NIXOS_CONFIG_DIR/flake.nix";
-      flup = "(cd $NIXOS_CONFIG_DIR && nix flake update)";
-      ngit = "(cd $NIXOS_CONFIG_DIR && git $argv)";
+      flup = "begin; cd $NIXOS_CONFIG_DIR; nix flake update; cd -; end";
+      ngit = "begin; cd $NIXOS_CONFIG_DIR; git $argv; cd -; end";
       cdh = "cd $NIXOS_CONFIG_DIR";
 
       # NixOS Build and Switch operations.
-      nrb = "(cd $NIXOS_CONFIG_DIR && sudo nixos-rebuild switch --flake .)";
+      nrb = "begin; cd $NIXOS_CONFIG_DIR; sudo nixos-rebuild switch --flake .; cd -; end";
 
       # Package Management with nix search.
       pkgs = "nix search nixpkgs";
