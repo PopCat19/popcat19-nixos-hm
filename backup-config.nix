@@ -147,14 +147,14 @@ let
       echo "Current backups:"
       for i in $(seq 1 $MAX_BACKUPS); do
         if [[ -f "$BACKUP_PREFIX.$i" ]]; then
-          local backup_date=$(stat -c %y "$BACKUP_PREFIX.$i" | cut -d' ' -f1,2 | cut -d'.' -f1)
-          local backup_size=$(stat -c %s "$BACKUP_PREFIX.$i")
+          backup_date=$(stat -c %y "$BACKUP_PREFIX.$i" | cut -d' ' -f1,2 | cut -d'.' -f1)
+          backup_size=$(stat -c %s "$BACKUP_PREFIX.$i")
           echo "  - $BACKUP_PREFIX.$i (created: $backup_date, size: $backup_size bytes)"
         fi
       done
       if [[ -f "$BACKUP_PREFIX" ]]; then
-        local backup_date=$(stat -c %y "$BACKUP_PREFIX" | cut -d' ' -f1,2 | cut -d'.' -f1)
-        local backup_size=$(stat -c %s "$BACKUP_PREFIX")
+        backup_date=$(stat -c %y "$BACKUP_PREFIX" | cut -d' ' -f1,2 | cut -d'.' -f1)
+        backup_size=$(stat -c %s "$BACKUP_PREFIX")
         echo "  - $BACKUP_PREFIX (created: $backup_date, size: $backup_size bytes)"
       fi
     else
