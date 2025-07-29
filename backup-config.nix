@@ -7,7 +7,12 @@ let
     #!/bin/bash
     set -euo pipefail
     
-    CONFIG_DIR="/etc/nixos"
+    # Use current directory during build, /etc/nixos during runtime
+    if [[ -f "./configuration.nix" ]]; then
+      CONFIG_DIR="."
+    else
+      CONFIG_DIR="/etc/nixos"
+    fi
     CONFIG_FILE="$CONFIG_DIR/configuration.nix"
     BACKUP_PREFIX="$CONFIG_DIR/configuration.nix.bak"
     MAX_BACKUPS=3
@@ -122,7 +127,7 @@ let
         
       else
         echo "Error: $CONFIG_FILE not found" >&2
-        return 1
+        exit 1
       fi
     }
     
@@ -154,7 +159,7 @@ let
       fi
     else
       echo "✗ Backup creation failed" >&2
-      return 1
+      exit 1
     fi
   '';
 
