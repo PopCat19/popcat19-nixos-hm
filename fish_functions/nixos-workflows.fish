@@ -6,6 +6,8 @@
 set -l script_dir (dirname (status --current-filename))
 source "$script_dir/nixos-env-core.fish"
 source "$script_dir/nixos-utils-core.fish"
+source "$script_dir/nixos-system-core.fish"
+source "$script_dir/nixos-git.fish"
 
 function nixos-edit-rebuild -d "📝 Edit configuration.nix, then 🚀 rebuild"
     if contains -- --help $argv; or contains -- help $argv
@@ -158,6 +160,7 @@ function nixos-rollback -d "🔄 Rollback to previous generation"
         if contains -- --commit $argv
             nixos-git "🔄 Rollback to generation $new_gen"
         end
+        return 0
     else
         echo "❌ Rollback failed"
         return 1
