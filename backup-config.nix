@@ -30,29 +30,46 @@ let
     HARDWARE_CONFIG_FILE="$SOURCE_DIR/hardware-configuration.nix"
     BACKUP_DIR="/etc/nixos"
     BACKUP_PREFIX="$BACKUP_DIR/configuration.nix.bak"
+    SOURCE_BACKUP_PREFIX="$SOURCE_DIR/configuration.nix.bak"
     MAX_BACKUPS=3
     SYSTEM_MODULES_DIR="$SOURCE_DIR/system_modules"
     
-    # Ensure backup directory exists
+    # Ensure backup directories exist
     mkdir -p "$BACKUP_DIR"
+    mkdir -p "$SOURCE_DIR"
     
-    # Function to rotate backups
+    # Function to rotate backups in both locations
     rotate_backups() {
-      # Remove oldest backup if it exists (bak3)
+      # Rotate backups in /etc/nixos
       if [[ -f "$BACKUP_PREFIX.3" ]]; then
         rm -f "$BACKUP_PREFIX.3"
       fi
       
-      # Shift existing backups
       for i in $(seq 2 -1 1); do
         if [[ -f "$BACKUP_PREFIX.$i" ]]; then
           mv "$BACKUP_PREFIX.$i" "$BACKUP_PREFIX.$((i + 1))"
         fi
       done
       
-      # Move current backup to bak1 if it exists
       if [[ -f "$BACKUP_PREFIX" ]]; then
         mv "$BACKUP_PREFIX" "$BACKUP_PREFIX.1"
+      fi
+      
+      # Rotate backups in source directory (if different from /etc/nixos)
+      if [[ "$SOURCE_DIR" != "/etc/nixos" ]]; then
+        if [[ -f "$SOURCE_BACKUP_PREFIX.3" ]]; then
+          rm -f "$SOURCE_BACKUP_PREFIX.3"
+        fi
+        
+        for i in $(seq 2 -1 1); do
+          if [[ -f "$SOURCE_BACKUP_PREFIX.$i" ]]; then
+            mv "$SOURCE_BACKUP_PREFIX.$i" "$SOURCE_BACKUP_PREFIX.$((i + 1))"
+          fi
+        done
+        
+        if [[ -f "$SOURCE_BACKUP_PREFIX" ]]; then
+          mv "$SOURCE_BACKUP_PREFIX" "$SOURCE_BACKUP_PREFIX.1"
+        fi
       fi
     }
     
@@ -165,6 +182,12 @@ let
         # Make the backup file readable
         chmod 644 "$BACKUP_PREFIX"
         
+        # Also create backup in source directory (if different from /etc/nixos)
+        if [[ "$SOURCE_DIR" != "/etc/nixos" ]]; then
+          cp "$BACKUP_PREFIX" "$SOURCE_BACKUP_PREFIX"
+          chmod 644 "$SOURCE_BACKUP_PREFIX"
+        fi
+        
       else
         echo "Error: $CONFIG_FILE not found" >&2
         exit 1
@@ -181,11 +204,14 @@ let
     # Create new backup
     if create_backup; then
       echo "✓ Backup created successfully at $BACKUP_PREFIX"
+      if [[ "$SOURCE_DIR" != "/etc/nixos" ]]; then
+        echo "✓ Backup also created at $SOURCE_BACKUP_PREFIX"
+      fi
       echo "✓ Backup rotation: keeping last $MAX_BACKUPS backups"
       
       # List current backups with sizes
       echo ""
-      echo "Current backups:"
+      echo "Current backups in /etc/nixos:"
       for i in $(seq 1 $MAX_BACKUPS); do
         if [[ -f "$BACKUP_PREFIX.$i" ]]; then
           backup_date=$(stat -c %y "$BACKUP_PREFIX.$i" | cut -d' ' -f1,2 | cut -d'.' -f1)
@@ -197,6 +223,24 @@ let
         backup_date=$(stat -c %y "$BACKUP_PREFIX" | cut -d' ' -f1,2 | cut -d'.' -f1)
         backup_size=$(stat -c %s "$BACKUP_PREFIX")
         echo "  - $BACKUP_PREFIX (created: $backup_date, size: $backup_size bytes)"
+      fi
+      
+      # List source directory backups if different
+      if [[ "$SOURCE_DIR" != "/etc/nixos" ]]; then
+        echo ""
+        echo "Current backups in source directory ($SOURCE_DIR):"
+        for i in $(seq 1 $MAX_BACKUPS); do
+          if [[ -f "$SOURCE_BACKUP_PREFIX.$i" ]]; then
+            backup_date=$(stat -c %y "$SOURCE_BACKUP_PREFIX.$i" | cut -d' ' -f1,2 | cut -d'.' -f1)
+            backup_size=$(stat -c %s "$SOURCE_BACKUP_PREFIX.$i")
+            echo "  - $SOURCE_BACKUP_PREFIX.$i (created: $backup_date, size: $backup_size bytes)"
+          fi
+        done
+        if [[ -f "$SOURCE_BACKUP_PREFIX" ]]; then
+          backup_date=$(stat -c %y "$SOURCE_BACKUP_PREFIX" | cut -d' ' -f1,2 | cut -d'.' -f1)
+          backup_size=$(stat -c %s "$SOURCE_BACKUP_PREFIX")
+          echo "  - $SOURCE_BACKUP_PREFIX (created: $backup_date, size: $backup_size bytes)"
+        fi
       fi
     else
       echo "✗ Backup creation failed" >&2
