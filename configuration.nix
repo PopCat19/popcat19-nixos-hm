@@ -12,6 +12,9 @@
     # Hardware configuration (kept in root as requested)
     ./hardware-configuration.nix
     
+    # Backup system (creates configuration.nix.bak with system_modules inlined)
+    ./backup-config.nix
+    
     # External configurations
     ./syncthing_config/system.nix
     
