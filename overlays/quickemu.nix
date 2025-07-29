@@ -43,12 +43,13 @@ final: prev: {
       
       install -Dm755 quickemu $out/bin/quickemu
       install -Dm755 quickget $out/bin/quickget
-      install -Dm755 macrecovery $out/bin/macrecovery
+      install -Dm755 chunkcheck $out/bin/chunkcheck
+      install -Dm755 quickreport $out/bin/quickreport
       
-      installManPage quickemu.1 quickget.1
+      installManPage docs/quickemu.1 docs/quickget.1 docs/quickemu_conf.5
       
       # Wrap binaries to ensure dependencies are available
-      for bin in quickemu quickget macrecovery; do
+      for bin in quickemu quickget chunkcheck quickreport; do
         wrapProgram $out/bin/$bin \
           --prefix PATH : ${prev.lib.makeBinPath buildInputs}
       done
