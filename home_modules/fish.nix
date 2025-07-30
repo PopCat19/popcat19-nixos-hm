@@ -10,6 +10,32 @@
       set -Ux EDITOR ${userConfig.defaultApps.editor.command}
       set -g fish_greeting "" # Disable default fish greeting.
 
+      # Function to temporarily enable unfree and insecure packages for nix-shell
+      function nix-shell-unfree
+          set -lx NIXPKGS_ALLOW_UNFREE 1
+          set -lx NIXPKGS_ALLOW_INSECURE 1
+          if test (count $argv) -gt 0
+              nix-shell $argv
+          else
+              echo "NIXPKGS_ALLOW_UNFREE and NIXPKGS_ALLOW_INSECURE are now set for this session."
+              echo "You can now run nix-shell with packages that require these flags."
+          end
+      end
+
+      # Function to list available fish functions and abbreviations
+      function list-fish-helpers
+          echo "🐟 Available Fish Functions:"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          functions | grep -v "^_" | grep -v "^fish_" | sort
+          echo ""
+          echo "🔤 Available Fish Abbreviations:"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          abbr --list | sort
+          echo ""
+          echo "💡 Use 'type <function_name>' to see function definition"
+          echo "💡 Use 'abbr --show <abbr_name>' to see abbreviation expansion"
+      end
+
       # Custom greeting disabled - fastfetch removed
       function fish_greeting
           # Empty greeting
