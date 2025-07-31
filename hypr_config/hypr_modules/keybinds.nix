@@ -124,6 +124,9 @@
       "$mainMod+Alt, S, movetoworkspacesilent, special"
       "$mainMod, S, togglespecialworkspace"
 
+      # Power Management
+      "$mainMod+Alt, P, exec, hypr-powersave-toggle"
+
       # Debug & Development
       "$mainMod+Shift, N, exec, sh -c 'hyprctl layers > ~/hyprctl-layer-out.txt && $term $editor ~/hyprctl-layer-out.txt'"
     ];
