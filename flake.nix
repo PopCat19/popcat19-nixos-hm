@@ -68,7 +68,7 @@
         # Custom packages overlay
         (final: prev: {
           # Rose Pine GTK theme from Fausto-Korpsvart with better styling
-          rose-pine-gtk-theme-full = prev.callPackage ./overlays/rose-pine-gtk-theme-full.nix { };
+          # rose-pine-gtk-theme-full = prev.callPackage ./overlays/rose-pine-gtk-theme-full.nix { };
 
           # Hyprshade 4.0.0 overlay - Hyprland shade configuration tool
           # Updates from nixpkgs version 3.2.1 to latest 4.0.0 release
