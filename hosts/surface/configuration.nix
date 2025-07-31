@@ -1,7 +1,7 @@
 # Surface-specific NixOS configuration
 # This file defines the configuration for the Surface device
 
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, ... }:
 
 let
   # Import surface-specific user configuration
@@ -63,7 +63,7 @@ in
   };
 
   # Use latest kernel for Surface compatibility
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
   # Surface-specific settings
   networking.hostName = "surface-nixos";
