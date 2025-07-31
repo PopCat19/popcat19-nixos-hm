@@ -8,12 +8,12 @@ Always `git add .` when you create new, untracked files/directories to update gi
 
 To just rebuild, run:
 ```
-nixos-commit-rebuild-push
+nixos-rebuild-basic
 ```
 
-To commit, rebuild, and push, run:
+Preferably, to commit, rebuild, and push, run:
 ```
-nixos-commit-rebuild-push '<commit>'
+nixos-commit-rebuild-push '<4/5-word-commit>'
 ```
 
 To query nixpkgs, run:
@@ -24,4 +24,9 @@ nix search nixpkgs <package>
 To check hyprland errors, run:
 ```
 hyprctl configerrors
+```
+
+To check the current system logs, run:
+```
+whoami && hostname && journalctl | tail -80 && sudo dmesg | tail -40
 ```
