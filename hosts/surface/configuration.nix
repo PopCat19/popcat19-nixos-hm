@@ -45,6 +45,9 @@ in
     inputs.home-manager.nixosModules.home-manager
   ];
 
+# **USER CONFIGURATION**
+  # Make the surface user configuration available to system modules
+  _module.args.userConfig = surfaceUserConfig;
   # **HOME MANAGER CONFIGURATION**
   # Manages user-specific configurations via Home Manager.
   home-manager = {
