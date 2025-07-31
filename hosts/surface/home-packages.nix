@@ -77,7 +77,6 @@ let
     zrok
     
     # Notifications (universal)
-    dunst
     libnotify
     zenity
     
