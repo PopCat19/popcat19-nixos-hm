@@ -66,7 +66,7 @@ in
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
   # Surface-specific settings
-  networking.hostName = "surface-nixos";
+  networking.hostName = "popcat19-surface0";
 
   # WARNING: DO NOT CHANGE AFTER INITIAL INSTALL.
   system.stateVersion = "25.05";
