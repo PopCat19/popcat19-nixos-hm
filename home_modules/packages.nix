@@ -80,7 +80,6 @@ with pkgs;
   zenity
   
   # Development Editors (universal)
-  zed-editor_git
   vscodium
   
   # Nix Development (universal)
