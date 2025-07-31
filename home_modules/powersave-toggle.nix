@@ -44,7 +44,4 @@
       fi
     '';
   };
-
-  # Ensure the script directory is in PATH
-  home.sessionPath = [ "$HOME/.local/bin" ];
 }
