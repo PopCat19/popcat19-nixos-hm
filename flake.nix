@@ -119,7 +119,7 @@
 
       # **SYSTEM CONFIGURATION GENERATOR**
       # Creates NixOS configuration for a specific architecture
-      mkSystemConfig = system: nixpkgs.lib.nixosSystem {
+      mkSystemConfig = system: userConfig: nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs userConfig; };
 
@@ -140,15 +140,41 @@
         ];
       };
 
+      # **HOST-SPECIFIC CONFIGURATION GENERATOR**
+      # Creates NixOS configuration for a specific host with its own configuration files
+      mkHostConfig = hostname: system: hostConfigPath: nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+
+        modules = [
+          # Apply architecture-specific overlays
+          { nixpkgs.overlays = mkOverlays system; }
+
+          # Host-specific configuration
+          hostConfigPath
+
+          # External NixOS modules from flake inputs.
+          inputs.chaotic.nixosModules.default
+          inputs.home-manager.nixosModules.home-manager
+
+          # Feature-specific modules.
+          (mkGamingModule system)
+          # Note: Home Manager is configured within the host-specific configuration
+        ];
+      };
+
     in
     {
       # **MULTI-ARCHITECTURE NIXOS CONFIGURATIONS**
       # Generate configurations for all supported systems
       nixosConfigurations = nixpkgs.lib.genAttrs supportedSystems (system:
-        mkSystemConfig system
+        mkSystemConfig system userConfig
       ) // {
         # Keep the original hostname-based configuration for backward compatibility
-        ${hostname} = mkSystemConfig userConfig.host.system;
+        ${hostname} = mkSystemConfig userConfig.host.system userConfig;
+        
+        # Surface-specific configuration
+        surface-nixos = mkHostConfig "surface-nixos" "x86_64-linux" ./hosts/surface/configuration.nix;
       };
     };
 }
