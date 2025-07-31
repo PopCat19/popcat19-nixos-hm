@@ -473,7 +473,7 @@
 
     # ─── ROSE PINE THEME PACKAGES ───
     rose-pine-kvantum                  # Kvantum Rose Pine themes
-    rose-pine-gtk-theme-full           # Complete Rose Pine GTK theme (custom package)
+    # rose-pine-gtk-theme-full           # Complete Rose Pine GTK theme (custom package)
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # Rose Pine cursors
 
     # ─── ADDITIONAL THEME PACKAGES ───
