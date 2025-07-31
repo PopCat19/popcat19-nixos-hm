@@ -174,7 +174,7 @@
         ${hostname} = mkSystemConfig userConfig.host.system userConfig;
         
         # Surface-specific configuration
-        surface-nixos = mkHostConfig "surface-nixos" "x86_64-linux" ./hosts/surface/configuration.nix;
+        popcat19-surface0 = mkHostConfig "popcat19-surface0" "x86_64-linux" ./hosts/surface/configuration.nix;
       };
     };
 }

@@ -9,7 +9,7 @@
     system = "x86_64-linux";
     
     # Hostname for the system
-    hostname = "surface-nixos";
+    hostname = "popcat19-surface0";
   };
 
   # **ARCHITECTURE DETECTION HELPERS**
