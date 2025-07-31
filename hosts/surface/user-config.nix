@@ -67,7 +67,6 @@
       "video"
       "audio"
       "networkmanager"
-      "i2c"
       "input"
       "libvirtd"
     ];

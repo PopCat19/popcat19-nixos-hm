@@ -26,8 +26,8 @@ in
     ../../syncthing_config/system.nix
     
     # System modules (shared with main configuration)
-    ../../system_modules/boot.nix
-    ../../system_modules/hardware.nix
+    ./boot.nix  # Surface-specific boot configuration
+    ./hardware.nix  # Surface-specific hardware configuration
     ../../system_modules/networking.nix
     ../../system_modules/localization.nix
     ../../system_modules/services.nix
@@ -38,7 +38,7 @@ in
     ../../system_modules/programs.nix
     ../../system_modules/environment.nix
     ../../system_modules/core-packages.nix
-    ../../system_modules/packages.nix
+    ./packages.nix  # Surface-specific packages configuration
     ../../system_modules/fonts.nix
     
     # Home Manager module
@@ -58,7 +58,7 @@ in
       userConfig = surfaceUserConfig;
       system = "x86_64-linux";
     };
-    users.${surfaceUserConfig.user.username} = import ../../home.nix;
+    users.${surfaceUserConfig.user.username} = import ./home-packages.nix;
     backupFileExtension = "bak2"; # Custom backup file extension.
   };
 
