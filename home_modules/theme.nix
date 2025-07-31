@@ -59,10 +59,10 @@
     # ─── GTK THEME ───
     # Main visual theme for all GTK applications
     # This theme is built as a package and provides the Rose Pine color scheme
-    theme = {
-      name = "Rose-Pine-Main-BL";           # Must match GTK_THEME environment variable
-      package = pkgs.rose-pine-gtk-theme-full;  # Custom package built in pkgs/
-    };
+    # theme = {
+    #   name = "Rose-Pine-Main-BL";           # Must match GTK_THEME environment variable
+    #   package = pkgs.rose-pine-gtk-theme-full;  # Custom package built in pkgs/
+    # };
 
     # ─── ICON THEME ───
     # Dark icon theme that complements Rose Pine colors
