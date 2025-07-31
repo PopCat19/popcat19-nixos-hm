@@ -3,7 +3,12 @@
 # This module imports all Hyprland configuration sub-modules
 # and enables the Hyprland window manager through Home Manager
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
+
+let
+  # Check if we're on a Surface device
+  isSurface = lib.hasPrefix "popcat19-surface" config.networking.hostName or "";
+in
 
 {
   imports = [
@@ -26,7 +31,8 @@
     settings = {
       # Configuration imports (these files are not modularized as requested)
       source = [
-        "~/.config/hypr/monitors.conf"
+        # Use Surface-specific monitor configuration if on Surface, otherwise use default
+        (if isSurface then "~/.config/hypr/monitors-surface.conf" else "~/.config/hypr/monitors.conf")
         "~/.config/hypr/userprefs.conf"
       ];
     };
@@ -34,8 +40,10 @@
 
   # Ensure Hyprland config directory exists and copy static files
   home.file = {
-    # Copy the existing monitors.conf and userprefs.conf files
+    # Copy the appropriate monitors.conf file based on device
     ".config/hypr/monitors.conf".source = ./monitors.conf;
+    # Copy Surface-specific monitor configuration
+    ".config/hypr/monitors-surface.conf".source = ./monitors-surface.conf;
     ".config/hypr/userprefs.conf".source = ./userprefs.conf;
     
     # Copy hyprpaper.conf (not modularized as requested)
