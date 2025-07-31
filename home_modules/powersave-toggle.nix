@@ -7,7 +7,7 @@
 
 {
   # Create the powersave toggle script
-  home.file.".local/bin/hypr-powersave-toggle" = {
+  home.file.".local/bin/powersave-toggle" = {
     executable = true;
     text = ''
       #!/usr/bin/env bash
