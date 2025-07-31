@@ -13,7 +13,7 @@
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'sleep 2 && ${pkgs.dconf}/bin/dconf update'";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'sleep 2 && ${pkgs.dconf}/bin/dconf load / < /dev/null'";
       RemainAfterExit = true;
     };
     Install = {
