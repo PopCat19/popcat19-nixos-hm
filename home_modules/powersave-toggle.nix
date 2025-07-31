@@ -8,6 +8,7 @@
 {
   # Create the powersave toggle script
   home.file.".local/bin/hypr-powersave-toggle" = {
+    executable = true;
     text = ''
       #!/usr/bin/env bash
       # Hyprland Powersave Toggle Script
@@ -42,7 +43,6 @@
           fi
       fi
     '';
-    executable = true;
   };
 
   # Ensure the script directory is in PATH
