@@ -5,11 +5,6 @@
 
 { config, pkgs, lib, ... }:
 
-let
-  # Check if we're on a Surface device
-  isSurface = lib.hasPrefix "popcat19-surface" config.networking.hostName or "";
-in
-
 {
   imports = [
     # Import all Hyprland configuration modules
@@ -31,8 +26,8 @@ in
     settings = {
       # Configuration imports (these files are not modularized as requested)
       source = [
-        # Use Surface-specific monitor configuration if on Surface, otherwise use default
-        (if isSurface then "~/.config/hypr/monitors-surface.conf" else "~/.config/hypr/monitors.conf")
+        # Monitor configuration (now includes both default and Surface-specific settings)
+        "~/.config/hypr/monitors.conf"
         "~/.config/hypr/userprefs.conf"
       ];
     };
@@ -40,10 +35,8 @@ in
 
   # Ensure Hyprland config directory exists and copy static files
   home.file = {
-    # Copy the appropriate monitors.conf file based on device
+    # Copy the monitors.conf file (now includes both default and Surface-specific settings)
     ".config/hypr/monitors.conf".source = ./monitors.conf;
-    # Copy Surface-specific monitor configuration
-    ".config/hypr/monitors-surface.conf".source = ./monitors-surface.conf;
     ".config/hypr/userprefs.conf".source = ./userprefs.conf;
     
     # Copy hyprpaper.conf (not modularized as requested)
