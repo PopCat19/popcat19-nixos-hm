@@ -1,31 +1,26 @@
-name: CI
+name: Nix Flake CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, dev]
 
 jobs:
-  check-flake:
+  flake-check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Install Nix
-      uses: cachix/install-nix-action@v25
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
-        extra_nix_config: |
-          experimental-features = nix-command flakes
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Cachix
-      uses: cachix/cachix-action@v14
-      with:
-        name: nix-community
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-        skipPush: true
+      # 2. Install Nix with flakes support
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v12
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
 
-    - name: Check flake
-      run: nix flake check
+      # 3. Validate flake structure
+      - name: Check flake
+        run: nix flake check -L
