@@ -18,9 +18,9 @@ Preferably for nixos flakes, to commit, rebuild, and push, run:
 nixos-commit-rebuild-push '<4/5-word-commit>'
 ```
 
-To build a specific machine configuration, run:
+To test a machine configuration, run:
 ```
-nix build .#nixosConfigurations.<target-hostname>.system.build.toplevel
+nixos-rebuild dry-run --flake .#<hostname>
 ```
 
 To query nixpkgs, run:
