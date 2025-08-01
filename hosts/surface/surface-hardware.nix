@@ -77,6 +77,9 @@
     
     # Surface-specific kernel parameters
     kernelParams = [
+      # Modern Standby support - required for proper S0ix sleep states
+      "mem_sleep_default=deep"
+      
       # Enable Surface aggregator bus
       "surface_aggregator.dyndbg=+p"
       
