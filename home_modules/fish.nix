@@ -469,6 +469,48 @@
           end
       end
 
+      # SSH to nixos0 function
+      function ssh-nixos0
+          echo "🔗 Connecting to nixos0 (192.168.50.172)..."
+          ssh popcat19@192.168.50.172 $argv
+      end
+
+      # SSH to surface0 function (for use from nixos0)
+      function ssh-surface0
+          echo "🔗 Connecting to surface0..."
+          # Try to determine surface IP dynamically or use common patterns
+          set -l surface_ips "192.168.50.171" "192.168.50.173" "192.168.50.174"
+          
+          for ip in $surface_ips
+              if ping -c 1 -W 1 $ip >/dev/null 2>&1
+                  echo "📍 Found surface0 at $ip"
+                  ssh popcat19@$ip $argv
+                  return
+              end
+          end
+          
+          echo "❌ Could not find surface0 on network"
+          echo "💡 Try manually: ssh popcat19@<surface-ip>"
+      end
+
+      # Interactive SSH with hostname detection
+      function ssh-other
+          set -l current_host (hostname)
+          
+          if string match -q "*surface*" $current_host
+              echo "📱 Currently on Surface, connecting to nixos0..."
+              ssh-nixos0 $argv
+          else if string match -q "*nixos0*" $current_host
+              echo "🖥️  Currently on nixos0, connecting to surface0..."
+              ssh-surface0 $argv
+          else
+              echo "❓ Unknown host: $current_host"
+              echo "💡 Available options:"
+              echo "   • ssh-nixos0    - Connect to nixos0"
+              echo "   • ssh-surface0  - Connect to surface0"
+          end
+      end
+
       # Show distributed builds status
       function nixos-build-status
           echo "🏗️  Distributed Builds Status"
@@ -501,6 +543,11 @@
           echo "   • test-nixos0-ssh               - Test SSH connection"
           echo "   • rb <package>                  - Quick remote build"
           echo "   • rrb [action]                  - Quick remote rebuild"
+          echo ""
+          echo "🔗 SSH shortcuts:"
+          echo "   • sn / nixos0                   - SSH to nixos0"
+          echo "   • ss / surface0                 - SSH to surface0"
+          echo "   • so                            - SSH to other machine (auto-detect)"
       end
       
       # Function to fix corrupted fish history
@@ -610,6 +657,13 @@
       rrbdry = "nixos-remote-rebuild dry-run";
       rrbswitch = "nixos-remote-rebuild switch";
       rrbtest = "nixos-remote-rebuild test";
+      
+      # SSH shortcuts for bi-directional access.
+      sn = "ssh-nixos0";
+      ss = "ssh-surface0";
+      so = "ssh-other";
+      nixos0 = "ssh-nixos0";
+      surface0 = "ssh-surface0";
     };
   };
 
