@@ -186,10 +186,8 @@
     # Thermal management is now handled by thermal-config.nix
     # thermald.enable = true;  # Moved to thermal-config.nix with custom configuration
     
-    # Intel Precise Touch & Stylus Daemon for Surface touch and pen support
-    iptsd = {
-      enable = lib.mkDefault true;
-    };
+    # Note: iptsd service may not be available in current nixpkgs version
+    # Touch and pen support is handled by existing Surface kernel modules
     
     # Power management - using auto-cpufreq instead of power-profiles-daemon
     power-profiles-daemon.enable = false;
@@ -261,7 +259,7 @@
   environment.systemPackages = with pkgs; [
     # Surface-specific utilities
     libwacom-surface  # Wacom drivers for Surface pen
-    surface-control   # Surface hardware control utilities
+    # Note: surface-control may not be available in current nixpkgs version
     
     # Hardware monitoring and control
     lm_sensors
