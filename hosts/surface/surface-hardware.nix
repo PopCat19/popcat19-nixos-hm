@@ -247,8 +247,8 @@
     
     # WiFi utilities for debugging
     iw
-    wireless-tools
     wpa_supplicant
+    wirelesstools
   ];
 
   # **SURFACE POWER MANAGEMENT**
