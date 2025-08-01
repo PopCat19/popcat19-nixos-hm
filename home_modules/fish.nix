@@ -479,7 +479,7 @@
       function ssh-surface0
           echo "🔗 Connecting to surface0..."
           # Try to determine surface IP dynamically or use common patterns
-          set -l surface_ips "192.168.50.171" "192.168.50.173" "192.168.50.174"
+          set -l surface_ips "192.168.50.219" "192.168.50.171" "192.168.50.173" "192.168.50.174"
           
           for ip in $surface_ips
               if ping -c 1 -W 1 $ip >/dev/null 2>&1
