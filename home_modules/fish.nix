@@ -297,7 +297,120 @@
           
           cd $original_dir
       end
+      
+      # Distributed builds functions
+      function nixos-remote-build
+          set -l original_dir (pwd)
+          cd $NIXOS_CONFIG_DIR
+          
+          if test (count $argv) -eq 0
+              echo "❌ Usage: nixos-remote-build <package-name>"
+              echo "💡 Example: nixos-remote-build hello"
+              echo "💡 Example: nixos-remote-build firefox"
+              cd $original_dir
+              return 1
+          end
+          
+          set -l package $argv[1]
+          echo "🏗️  Building $package on nixos0 (192.168.50.172)..."
+          echo "⚡ Using R5 5500 (12 threads) for faster builds"
+          
+          if nix build "nixpkgs#$package" --builders "ssh://popcat19@192.168.50.172 x86_64-linux" --max-jobs 0
+              echo "✅ Remote build completed successfully"
+              echo "📦 Package built: $package"
+          else
+              echo "❌ Remote build failed"
+              cd $original_dir
+              return 1
+          end
+          
+          cd $original_dir
+      end
 
+      # Remote NixOS system rebuild function
+      function nixos-remote-rebuild
+          set -l original_dir (pwd)
+          cd $NIXOS_CONFIG_DIR
+          
+          set -l config "popcat19-surface0"
+          set -l action "dry-run"
+          
+          # Parse arguments
+          for arg in $argv
+              switch $arg
+                  case "switch" "boot" "test" "dry-run" "dry-activate"
+                      set action $arg
+                  case "surface0" "popcat19-surface0"
+                      set config "popcat19-surface0"
+                  case "nixos0" "popcat19-nixos0"
+                      set config "popcat19-nixos0"
+                  case "*"
+                      set config $arg
+              end
+          end
+          
+          echo "🏗️  Building $config configuration on nixos0..."
+          echo "⚡ Using R5 5500 (12 threads) for faster builds"
+          echo "🎯 Action: $action"
+          
+          if nixos-rebuild --flake ".#$config" --build-host popcat19@192.168.50.172 --target-host localhost $action
+              echo "✅ Remote rebuild completed successfully"
+          else
+              echo "❌ Remote rebuild failed"
+              cd $original_dir
+              return 1
+          end
+          
+          cd $original_dir
+      end
+
+      # Test SSH connection to nixos0
+      function test-nixos0-ssh
+          echo "🔗 Testing SSH connection to nixos0..."
+          if ssh -o ConnectTimeout=5 popcat19@192.168.50.172 "hostname && whoami && nix --version"
+              echo "✅ SSH connection successful"
+              echo "🏗️  Remote builder is ready"
+          else
+              echo "❌ SSH connection failed"
+              echo "💡 Check network connectivity and SSH configuration"
+              return 1
+          end
+      end
+
+      # Show distributed builds status
+      function nixos-build-status
+          echo "🏗️  Distributed Builds Status"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📍 Current machine: $(hostname) ($(whoami))"
+          echo "🎯 Remote builder: popcat19-nixos0 (192.168.50.172)"
+          echo "⚡ Builder specs: R5 5500 (6c/12t), 32GB DDR4"
+          echo ""
+          
+          # Test connectivity
+          echo "🔗 Testing connection..."
+          if ssh -o ConnectTimeout=3 popcat19@192.168.50.172 "echo 'Connection OK'" 2>/dev/null
+              echo "✅ SSH connection: OK"
+              
+              # Get remote system info
+              set -l remote_info (ssh popcat19@192.168.50.172 "uname -r && nix --version | head -1" 2>/dev/null)
+              if test -n "$remote_info"
+                  echo "🖥️  Remote kernel: $(echo $remote_info | head -1)"
+                  echo "📦 Remote Nix: $(echo $remote_info | tail -1)"
+              end
+          else
+              echo "❌ SSH connection: FAILED"
+              echo "💡 Run 'test-nixos0-ssh' for detailed diagnostics"
+          end
+          
+          echo ""
+          echo "🛠️  Available commands:"
+          echo "   • nixos-remote-build <package>  - Build package on nixos0"
+          echo "   • nixos-remote-rebuild [action]  - Rebuild system on nixos0"
+          echo "   • test-nixos0-ssh               - Test SSH connection"
+          echo "   • rb <package>                  - Quick remote build"
+          echo "   • rrb [action]                  - Quick remote rebuild"
+      end
+      
       # Function to fix corrupted fish history
       function fix-fish-history
           echo "🔧 Fixing fish history corruption..."
@@ -391,6 +504,17 @@
 
       # Fish history management.
       fixhist = "fix-fish-history";
+
+      # Distributed builds shortcuts.
+      rb = "nixos-remote-build";
+      rrb = "nixos-remote-rebuild";
+      buildstatus = "nixos-build-status";
+      testssh = "test-nixos0-ssh";
+      
+      # Remote rebuild variations.
+      rrbdry = "nixos-remote-rebuild dry-run";
+      rrbswitch = "nixos-remote-rebuild switch";
+      rrbtest = "nixos-remote-rebuild test";
     };
   };
 
