@@ -21,6 +21,11 @@ in
     configDir = syncthingPaths.configDir;
     settings = {
       devices = {
+        "nixos0" = {
+          id = "K6FLBMQ-5CJEX4X-VL4KETN-7AYJQW5-5VTXJWY-CLRMKBV-TGXIU26-WUY74QZ";
+          name = "NixOS 0";
+          addresses = [ "dynamic" ];
+        };
         "surface0" = {
           id = "5HCOSXJ-N56FEEI-VIUQRUV-S2LCQTM-AZK4DSC-5AOSNYF-7RQTTZM-6VOJYAN";
           name = "Surface 0";
@@ -32,7 +37,7 @@ in
           id = "keepass-vault";
           label = "KeePass Vault";
           path = syncthingPaths.passwords;
-          devices = [ "surface0" ];
+          devices = [ "surface0" "nixos0" ];
           type = "sendreceive";
           rescanIntervalS = 60;
           ignorePerms = true;
@@ -41,7 +46,7 @@ in
           id = "syncthing-shared";
           label = "Syncthing Shared";
           path = syncthingPaths.shared;
-          devices = [ "surface0" ];
+          devices = [ "surface0" "nixos0" ];
           type = "sendreceive";
           rescanIntervalS = 300;
           ignorePerms = true;
