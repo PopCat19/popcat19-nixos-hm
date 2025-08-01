@@ -168,7 +168,7 @@
         intel-compute-runtime
         
         # OpenCL support for Intel CPUs and GPUs
-        intel-compute-runtime-legacy1  # For older Intel CPUs
+        # intel-compute-runtime-legacy1  # Removed due to conflict with intel-compute-runtime
         intel-ocl  # OpenCL support
         
         # Vulkan drivers for modern graphics
