@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   # **SYSTEM SERVICES CONFIGURATION**
@@ -28,6 +28,7 @@
 
     # Hardware
     hardware.openrgb.enable = true;
+    upower.enable = true;
 
     # Game streaming
     sunshine = {

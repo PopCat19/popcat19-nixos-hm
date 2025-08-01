@@ -27,7 +27,7 @@
         "*" = {
           left = [ "dashboard" "workspaces" "media" ];
           middle = [ ];
-          right = [ "network" "bluetooth" "volume" "systray" "clock" "notifications" ];
+          right = [ "cputemp" "battery" "network" "bluetooth" "volume" "systray" "clock" "notifications" ];
         };
       };
 
