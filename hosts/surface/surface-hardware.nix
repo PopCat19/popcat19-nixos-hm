@@ -19,7 +19,7 @@
     kernelModules = [
       # Core Surface modules
       "surface_aggregator"
-      "surface_aggregator_registry" 
+      "surface_aggregator_registry"
       "surface_aggregator_hub"
       "surface_hid_core"
       "surface_hid"
@@ -61,6 +61,12 @@
       "processor_thermal_device"
       "intel_soc_dts_iosf"
       
+      # WiFi and networking modules
+      "mwifiex"
+      "mwifiex_pcie"
+      "cfg80211"
+      "mac80211"
+      
       # MSR module for BD-PROCHOT clearing
       "msr"
     ];
@@ -83,11 +89,31 @@
       
       # Thermal management
       "intel_idle.max_cstate=2"
+      
+      # WiFi driver optimizations for mwifiex
+      "mwifiex_pcie.disable_msi=1"
+      "mwifiex_pcie.reg_alpha2=US"
+      "cfg80211.ieee80211_regdom=US"
+      
+      # Reduce DPTF power management errors
+      "acpi_osi=Linux"
+      "acpi_backlight=vendor"
+      "intel_pstate=disable"
+      "processor.ignore_ppc=1"
+      
+      # Additional WiFi stability parameters
+      "iwlwifi.power_save=0"
+      "iwlwifi.uapsd_disable=1"
     ];
     
     # Additional module packages for Surface hardware
     extraModulePackages = with config.boot.kernelPackages; [
       # Surface-specific drivers that may not be in mainline kernel
+    ];
+    
+    # Blacklist problematic modules that might interfere with mwifiex
+    blacklistedKernelModules = [
+      "ideapad_laptop"  # Can interfere with WiFi on some devices
     ];
   };
 
@@ -99,6 +125,12 @@
     
     # CPU microcode updates
     cpu.intel.updateMicrocode = true;
+    
+    # Additional firmware for WiFi and other hardware
+    firmware = with pkgs; [
+      linux-firmware
+      wireless-regdb
+    ];
     
     # Graphics configuration for Surface
     graphics = {
@@ -179,7 +211,15 @@
       
       # Surface battery and power devices
       SUBSYSTEM=="power_supply", ATTRS{name}=="*Surface*", MODE="0664", GROUP="users"
+      
+      # WiFi power management and stability rules
+      ACTION=="add", SUBSYSTEM=="net", KERNEL=="wlp*", RUN+="${pkgs.iw}/bin/iw dev $name set power_save off"
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x11ab", ATTR{device}=="0x2b38", ATTR{power/control}="on"
+      
+      # Disable USB autosuspend for WiFi devices to prevent disconnections
+      ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="11ab", ATTRS{idProduct}=="2b38", ATTR{power/autosuspend}="-1"
     '';
+    
   };
 
   # **SURFACE-SPECIFIC PACKAGES**
@@ -204,6 +244,11 @@
     # Audio utilities
     alsa-utils
     pulseaudio
+    
+    # WiFi utilities for debugging
+    iw
+    wireless-tools
+    wpa_supplicant
   ];
 
   # **SURFACE POWER MANAGEMENT**
@@ -214,18 +259,11 @@
   };
 
   # **SURFACE NETWORKING**
-  # WiFi and Bluetooth optimizations
-  networking.wireless.iwd = {
-    enable = true;
-    settings = {
-      IPv6 = {
-        Enabled = true;
-      };
-      Settings = {
-        AutoConnect = true;
-      };
-    };
-  };
+  # WiFi optimizations for mwifiex driver - disable iwd to avoid conflicts with NetworkManager
+  networking.wireless.iwd.enable = false;
+  
+  # WiFi firmware and driver optimizations
+  networking.wireless.enable = false; # Let NetworkManager handle WiFi
 
   # **SURFACE DISPLAY CONFIGURATION**
   # High DPI display support
@@ -250,5 +288,18 @@
     enable = true;
     pkcs11.enable = true;
     tctiEnvironment.enable = true;
+  };
+
+  # **ADDITIONAL SYSTEMD SERVICES**
+  # WiFi stability services
+  systemd.services.wifi-powersave-off = {
+    description = "Turn off WiFi power saving";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.bash}/bin/bash -c 'for i in /sys/class/net/wlp*; do [ -e $i/device/power/control ] && echo on > $i/device/power/control; done'";
+    };
   };
 }
