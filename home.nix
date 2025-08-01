@@ -29,8 +29,7 @@
     ./home_modules/mangohud.nix
     ./hypr_config/hyprland.nix
     ./hypr_config/hyprpanel.nix
-    ./home_modules/powersave-toggle.nix
-
+    
     # Core system modules
     ./home_modules/environment.nix
     ./home_modules/services.nix
