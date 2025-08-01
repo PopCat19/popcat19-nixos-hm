@@ -16,8 +16,14 @@ in
     # Hardware configuration for Surface
     ./hardware-configuration.nix
     
+    # Comprehensive Surface hardware drivers and configuration
+    ./surface-hardware.nix
+    
     # Surface-specific systemd service
     ./clear-bdprochot.nix
+    
+    # Surface thermal management configuration
+    ./thermal-config.nix
     
     # Backup system (creates configuration.nix.bak with system_modules inlined)
     ../../backup-config.nix
@@ -34,7 +40,7 @@ in
     ../../system_modules/display.nix
     ../../system_modules/audio.nix
     ../../system_modules/users.nix
-    ../../system_modules/virtualisation.nix
+    ./virtualisation.nix  # Surface-specific virtualization (no QEMU/KVM)
     ../../system_modules/programs.nix
     ../../system_modules/environment.nix
     ../../system_modules/core-packages.nix
@@ -61,9 +67,6 @@ in
     users.${surfaceUserConfig.user.username} = import ./home-packages.nix;
     backupFileExtension = "bak2"; # Custom backup file extension.
   };
-
-  # Use latest kernel for Surface compatibility
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
   # Surface-specific settings
   networking.hostName = "popcat19-surface0";

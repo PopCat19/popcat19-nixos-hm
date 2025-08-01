@@ -3,7 +3,7 @@
 # This module imports all Hyprland configuration sub-modules
 # and enables the Hyprland window manager through Home Manager
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
@@ -26,6 +26,7 @@
     settings = {
       # Configuration imports (these files are not modularized as requested)
       source = [
+        # Monitor configuration (now includes both default and Surface-specific settings)
         "~/.config/hypr/monitors.conf"
         "~/.config/hypr/userprefs.conf"
       ];
@@ -34,7 +35,7 @@
 
   # Ensure Hyprland config directory exists and copy static files
   home.file = {
-    # Copy the existing monitors.conf and userprefs.conf files
+    # Copy the monitors.conf file (now includes both default and Surface-specific settings)
     ".config/hypr/monitors.conf".source = ./monitors.conf;
     ".config/hypr/userprefs.conf".source = ./userprefs.conf;
     

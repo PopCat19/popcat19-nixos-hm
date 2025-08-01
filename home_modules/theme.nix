@@ -83,7 +83,6 @@
     # ─── GTK3 SPECIFIC SETTINGS ───
     # These settings ensure GTK3 applications integrate properly with our theme
     gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = true;    # Force dark theme preference
       gtk-decoration-layout = "appmenu:minimize,maximize,close";  # macOS-style window controls
       gtk-enable-animations = true;                # Enable smooth animations
       gtk-primary-button-warps-slider = false;    # Disable confusing slider behavior
@@ -91,8 +90,9 @@
 
     # ─── GTK4 SPECIFIC SETTINGS ───
     # GTK4 applications need separate configuration for the same settings
+    # Note: gtk-application-prefer-dark-theme is deprecated for GTK4/libadwaita
+    # Use AdwStyleManager:color-scheme instead (configured in dconf settings)
     gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
       gtk-decoration-layout = "appmenu:minimize,maximize,close";
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
