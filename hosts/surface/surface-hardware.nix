@@ -76,34 +76,41 @@
       # Enable Surface aggregator bus
       "surface_aggregator.dyndbg=+p"
       
-      # Improve touch responsiveness
+      # Improve touch responsiveness and graphics performance
       "i915.enable_psr=0"
-      "i915.enable_fbc=0"
+      "i915.enable_fbc=1"
+      "i915.fastboot=1"
+      "i915.enable_guc=2"
       
-      # Power management optimizations
+      # Power management optimizations - use intel_pstate for better performance
       "intel_pstate=active"
-      "processor.max_cstate=1"
+      "intel_pstate=hwp_only"
+      
+      # Allow deeper C-states for better power efficiency when idle
+      "processor.max_cstate=8"
+      "intel_idle.max_cstate=8"
       
       # Audio improvements
       "snd_hda_intel.dmic_detect=0"
-      
-      # Thermal management
-      "intel_idle.max_cstate=2"
       
       # WiFi driver optimizations for mwifiex
       "mwifiex_pcie.disable_msi=1"
       "mwifiex_pcie.reg_alpha2=US"
       "cfg80211.ieee80211_regdom=US"
       
-      # Reduce DPTF power management errors
+      # ACPI and backlight optimizations
       "acpi_osi=Linux"
-      "acpi_backlight=vendor"
-      "intel_pstate=disable"
-      "processor.ignore_ppc=1"
+      "acpi_backlight=native"
       
       # Additional WiFi stability parameters
       "iwlwifi.power_save=0"
       "iwlwifi.uapsd_disable=1"
+      
+      # Performance optimizations
+      "mitigations=off"
+      "nowatchdog"
+      "quiet"
+      "loglevel=3"
     ];
     
     # Additional module packages for Surface hardware
@@ -161,6 +168,14 @@
     opentabletdriver.enable = true;
   };
 
+  # **USER GROUPS FOR HARDWARE ACCESS**
+  # Add user to video group for brightness control
+  users.users = {
+    popcat19 = {
+      extraGroups = [ "video" ];
+    };
+  };
+
   # **SURFACE-SPECIFIC SERVICES**
   services = {
     # Thermal management daemon
@@ -169,17 +184,21 @@
     # Power management - using auto-cpufreq instead of power-profiles-daemon
     power-profiles-daemon.enable = false;
     
-    # Auto CPU frequency scaling
+    # Auto CPU frequency scaling - optimized for Surface performance
     auto-cpufreq = {
       enable = true;
       settings = {
         battery = {
-          governor = "powersave";
-          turbo = "never";
+          governor = "schedutil";
+          turbo = "auto";
+          scaling_min_freq = 400000;
+          scaling_max_freq = 2800000;
         };
         charger = {
           governor = "performance";
           turbo = "auto";
+          scaling_min_freq = 800000;
+          scaling_max_freq = 4200000;
         };
       };
     };
@@ -212,6 +231,12 @@
       # Surface battery and power devices
       SUBSYSTEM=="power_supply", ATTRS{name}=="*Surface*", MODE="0664", GROUP="users"
       
+      # Brightness control permissions
+      SUBSYSTEM=="backlight", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
+      SUBSYSTEM=="backlight", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
+      SUBSYSTEM=="leds", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/leds/%k/brightness"
+      SUBSYSTEM=="leds", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/leds/%k/brightness"
+      
       # WiFi power management and stability rules
       ACTION=="add", SUBSYSTEM=="net", KERNEL=="wlp*", RUN+="${pkgs.iw}/bin/iw dev $name set power_save off"
       ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x11ab", ATTR{device}=="0x2b38", ATTR{power/control}="on"
@@ -229,6 +254,7 @@
     
     # Hardware monitoring and control
     lm_sensors
+    brightnessctl  # Brightness control utility
     
     # Power management utilities
     powertop
@@ -255,7 +281,8 @@
   powerManagement = {
     enable = true;
     powertop.enable = true;
-    cpuFreqGovernor = "ondemand";
+    cpuFreqGovernor = "schedutil";  # Better than ondemand for modern CPUs
+    scsiLinkPolicy = "med_power_with_dipm";
   };
 
   # **SURFACE NETWORKING**
