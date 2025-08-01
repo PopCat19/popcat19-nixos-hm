@@ -6,6 +6,11 @@
 { config, pkgs, lib, ... }:
 
 {
+  # Add libnotify for notifications
+  home.packages = with pkgs; [
+    libnotify                          # Desktop notifications (notify-send)
+  ];
+
   # Create the powersave toggle script
   home.file.".local/bin/powersave-toggle" = {
     executable = true;
