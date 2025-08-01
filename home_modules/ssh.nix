@@ -23,11 +23,4 @@
         ControlPersist 600
     '';
   };
-  
-  # Ensure SSH directory exists
-  home.file.".ssh" = {
-    recursive = true;
-    # The actual SSH keys should be managed separately
-    # This just ensures the directory structure exists
-  };
 }
