@@ -175,7 +175,7 @@
     # Additional git configuration can be added here
     extraConfig = {
       # Example: init.defaultBranch = "main";
-      credential.helper = "store";
+      credential.helper = "!gh auth git-credential";
     };
   };
 }
