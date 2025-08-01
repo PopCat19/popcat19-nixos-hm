@@ -156,11 +156,25 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
+        # Intel Mesa drivers for optimal graphics performance
+        mesa
+        
         # Intel graphics drivers
         intel-media-driver
         intel-vaapi-driver
         libvdpau-va-gl
         intel-compute-runtime
+        
+        # Additional Intel graphics packages
+        vpl-gpu-rt # QSV on 11th gen or newer
+        # intel-media-sdk # Removed due to security vulnerabilities
+      ];
+      
+      # 32-bit support for Intel graphics
+      extraPackages32 = with pkgs.pkgsi686Linux; [
+        mesa
+        intel-vaapi-driver
+        intel-media-driver
       ];
     };
     
@@ -301,6 +315,19 @@
   
   # WiFi firmware and driver optimizations
   networking.wireless.enable = false; # Let NetworkManager handle WiFi
+
+  # **INTEL GRAPHICS ENVIRONMENT VARIABLES**
+  # Set environment variables for Intel graphics drivers
+  environment.sessionVariables = {
+    # Use Intel HD Media Driver for VAAPI
+    LIBVA_DRIVER_NAME = "iHD";
+    
+    # Enable Intel GPU debugging if needed
+    # INTEL_DEBUG = "all";
+    
+    # Set DRI_PRIME for hybrid graphics if needed
+    # DRI_PRIME = "1";
+  };
 
   # **SURFACE DISPLAY CONFIGURATION**
   # High DPI display support
