@@ -21,9 +21,9 @@ in
     configDir = syncthingPaths.configDir;
     settings = {
       devices = {
-        "remote-device" = {
-          id = "QP7SCT2-7XQTOK3-WTTSZ5T-T6BH4EZ-IA7VEIQ-RUQO5UV-FWWRF5L-LDQXTAS";
-          name = "Remote Device";
+        "surface0" = {
+          id = "5HCOSXJ-N56FEEI-VIUQRUV-S2LCQTM-AZK4DSC-5AOSNYF-7RQTTZM-6VOJYAN";
+          name = "Surface 0";
           addresses = [ "dynamic" ];
         };
       };
@@ -32,7 +32,7 @@ in
           id = "keepass-vault";
           label = "KeePass Vault";
           path = syncthingPaths.passwords;
-          devices = [ "remote-device" ];
+          devices = [ "surface0" ];
           type = "sendreceive";
           rescanIntervalS = 60;
           ignorePerms = true;
@@ -41,7 +41,7 @@ in
           id = "syncthing-shared";
           label = "Syncthing Shared";
           path = syncthingPaths.shared;
-          devices = [ "remote-device" ];
+          devices = [ "surface0" ];
           type = "sendreceive";
           rescanIntervalS = 300;
           ignorePerms = true;

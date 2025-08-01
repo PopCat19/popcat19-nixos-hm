@@ -146,31 +146,32 @@
               end
           else
               if sudo nixos-rebuild switch --flake .
-              # Try to push and handle potential conflicts
-              if git push 2>/dev/null
-                  echo "✅ Build succeeded, changes pushed to remote"
-              else
-                  echo ""
-                  echo "⚠️  Normal push failed - likely due to diverged history"
-                  echo "💡 This can happen after rollbacks or when remote is ahead"
-                  echo ""
-                  
-                  # 5 second countdown for force push
-                  echo "🚨 Force push required to update remote branch"
-                  for i in (seq 5 -1 1)
-                      printf "\r⏰ Force push in %d seconds... (Ctrl+C to cancel)" $i
-                      sleep 1
-                  end
-                  echo ""
-                  
-                  read -l -P "Proceed with force push? [y/N]: " force_push_choice
-                  
-                  if test "$force_push_choice" = "y" -o "$force_push_choice" = "Y"
-                      git push --force-with-lease
-                      echo "✅ Build succeeded, changes force-pushed to remote"
+                  # Try to push and handle potential conflicts
+                  if git push 2>/dev/null
+                      echo "✅ Build succeeded, changes pushed to remote"
                   else
-                      echo "⚠️  Build succeeded but changes not pushed to remote"
-                      echo "💡 You can manually push later with: git push --force-with-lease"
+                      echo ""
+                      echo "⚠️  Normal push failed - likely due to diverged history"
+                      echo "💡 This can happen after rollbacks or when remote is ahead"
+                      echo ""
+                      
+                      # 5 second countdown for force push
+                      echo "🚨 Force push required to update remote branch"
+                      for i in (seq 5 -1 1)
+                          printf "\r⏰ Force push in %d seconds... (Ctrl+C to cancel)" $i
+                          sleep 1
+                      end
+                      echo ""
+                      
+                      read -l -P "Proceed with force push? [y/N]: " force_push_choice
+                      
+                      if test "$force_push_choice" = "y" -o "$force_push_choice" = "Y"
+                          git push --force-with-lease
+                          echo "✅ Build succeeded, changes force-pushed to remote"
+                      else
+                          echo "⚠️  Build succeeded but changes not pushed to remote"
+                          echo "💡 You can manually push later with: git push --force-with-lease"
+                      end
                   end
               end
           else
