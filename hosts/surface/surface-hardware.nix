@@ -222,7 +222,7 @@
           governor = "schedutil";
           turbo = "auto";
           scaling_min_freq = 400000;
-          scaling_max_freq = 2800000;
+          scaling_max_freq = 4200000;
         };
         charger = {
           governor = "performance";
