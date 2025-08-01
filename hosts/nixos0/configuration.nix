@@ -58,7 +58,7 @@ in
       userConfig = nixos0UserConfig;
       system = "x86_64-linux";
     };
-    users.${nixos0UserConfig.user.username} = import ../../home.nix;
+    users.${nixos0UserConfig.user.username} = import ../../old-root-config/home.nix;
     backupFileExtension = "bak2"; # Custom backup file extension.
   };
 
