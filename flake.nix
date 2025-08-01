@@ -173,11 +173,9 @@
       nixosConfigurations = nixpkgs.lib.genAttrs supportedSystems (system:
         mkSystemConfig system userConfig
       ) // {
-        # Keep the original hostname-based configuration for backward compatibility
-        ${hostname} = mkSystemConfig userConfig.host.system userConfig;
-        
-        # Surface-specific configuration
+        # Host-specific configurations
         popcat19-surface0 = mkHostConfig "popcat19-surface0" "x86_64-linux" ./hosts/surface/configuration.nix;
+        popcat19-nixos0 = mkHostConfig "popcat19-nixos0" "x86_64-linux" ./hosts/nixos0/configuration.nix;
       };
     };
 }
