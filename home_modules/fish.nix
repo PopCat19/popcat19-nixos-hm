@@ -173,24 +173,24 @@
                           echo "💡 You can manually push later with: git push --force-with-lease"
                       end
                   end
-              end
-          else
-              echo "❌ Build failed, changes not pushed"
-              echo ""
-              read -l -P "Do you want to rollback to the previous commit? [y/N]: " rollback_choice
-              
-              if test "$rollback_choice" = "y" -o "$rollback_choice" = "Y"
-                  git reset --hard $pre_commit_hash
-                  echo "🔄 Rolled back to commit: $pre_commit_hash"
-                  echo "📝 Your changes have been reverted"
-                  echo ""
-                  echo "⚠️  Note: If you had pushed this commit before, you may need to force push"
-                  echo "   after your next successful commit to sync the remote branch"
               else
-                  echo "⚠️  Changes kept in current commit. You can manually rollback with:"
-                  echo "   git reset --hard $pre_commit_hash"
+                  echo "❌ Build failed, changes not pushed"
                   echo ""
-                  echo "💡 If you rollback later and then push, you may need --force-with-lease"
+                  read -l -P "Do you want to rollback to the previous commit? [y/N]: " rollback_choice
+                  
+                  if test "$rollback_choice" = "y" -o "$rollback_choice" = "Y"
+                      git reset --hard $pre_commit_hash
+                      echo "🔄 Rolled back to commit: $pre_commit_hash"
+                      echo "📝 Your changes have been reverted"
+                      echo ""
+                      echo "⚠️  Note: If you had pushed this commit before, you may need to force push"
+                      echo "   after your next successful commit to sync the remote branch"
+                  else
+                      echo "⚠️  Changes kept in current commit. You can manually rollback with:"
+                      echo "   git reset --hard $pre_commit_hash"
+                      echo ""
+                      echo "💡 If you rollback later and then push, you may need --force-with-lease"
+                  end
               end
           end
           cd $original_dir
