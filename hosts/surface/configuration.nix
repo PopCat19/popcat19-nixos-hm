@@ -25,9 +25,6 @@ in
     # Surface thermal management configuration
     ./thermal-config.nix
     
-    # Backup system (creates configuration.nix.bak with system_modules inlined)
-    ../../backup-config.nix
-    
     # External configurations
     ../../syncthing_config/system.nix
     
