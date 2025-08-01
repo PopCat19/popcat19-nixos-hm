@@ -58,8 +58,8 @@
       supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
       
       # **USER CONFIGURATION**
-      # Import user configuration from user-config.nix
-      userConfig = import ./user-config.nix;
+      # Import user configuration from user-config.nix with default hostname
+      userConfig = import ./user-config.nix { };
       
       # Extract commonly used values for backward compatibility
       hostname = userConfig.host.hostname;
@@ -130,8 +130,7 @@
           # Apply architecture-specific overlays
           { nixpkgs.overlays = mkOverlays system; }
 
-          # Core system configuration from configuration.nix.
-          ./configuration.nix
+          # Core system configuration - this file doesn't exist, removing this line
 
           # External NixOS modules from flake inputs.
           inputs.chaotic.nixosModules.default
@@ -168,12 +167,9 @@
 
     in
     {
-      # **MULTI-ARCHITECTURE NIXOS CONFIGURATIONS**
-      # Generate configurations for all supported systems
-      nixosConfigurations = nixpkgs.lib.genAttrs supportedSystems (system:
-        mkSystemConfig system userConfig
-      ) // {
-        # Host-specific configurations
+      # **HOST-SPECIFIC NIXOS CONFIGURATIONS**
+      # Only include the host-specific configurations
+      nixosConfigurations = {
         popcat19-surface0 = mkHostConfig "popcat19-surface0" "x86_64-linux" ./hosts/surface/configuration.nix;
         popcat19-nixos0 = mkHostConfig "popcat19-nixos0" "x86_64-linux" ./hosts/nixos0/configuration.nix;
       };
