@@ -54,8 +54,8 @@
   # User configuration for SSH keys
   users.users.popcat19 = {
     openssh.authorizedKeys.keys = [
-      # This will be populated with the public key from surface0
-      # The surface0 machine will need to add its public key here
+      # Public key from surface0 for distributed builds
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBXoyiQly9JMgho/x4EWrLMYvnR7Az0lQNLFwsPyMNWP popcat19@surface0-for-nixos0"
     ];
   };
 
