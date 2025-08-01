@@ -48,13 +48,104 @@
           set -l original_dir (pwd)
           cd $NIXOS_CONFIG_DIR
           
+          # Parse arguments for distributed builds
+          set -l commit_message ""
+          set -l build_host ""
+          set -l use_remote_build false
+          
+          # Parse arguments
+          set -l i 1
+          while test $i -le (count $argv)
+              switch $argv[$i]
+                  case "--build-host"
+                      set i (math $i + 1)
+                      if test $i -le (count $argv)
+                          set build_host $argv[$i]
+                          set use_remote_build true
+                      else
+                          echo "❌ --build-host requires a hostname"
+                          cd $original_dir
+                          return 1
+                      end
+                  case "--remote"
+                      set build_host "popcat19@192.168.50.172"
+                      set use_remote_build true
+                  case "*"
+                      if test -z "$commit_message"
+                          set commit_message $argv[$i]
+                      else
+                          set commit_message "$commit_message $argv[$i]"
+                      end
+              end
+              set i (math $i + 1)
+          end
+          
+          # Ensure we have a commit message
+          if test -z "$commit_message"
+              echo "❌ Usage: nixos-commit-rebuild-push [--remote|--build-host <host>] '<commit-message>'"
+              echo "💡 Examples:"
+              echo "   nixos-commit-rebuild-push 'update config'"
+              echo "   nixos-commit-rebuild-push --remote 'update config'"
+              echo "   nixos-commit-rebuild-push --build-host user@host 'update config'"
+              cd $original_dir
+              return 1
+          end
+          
           # Store the current commit hash before making changes
           set -l pre_commit_hash (git rev-parse HEAD)
           
           git add .
-          git commit -m "$argv"
+          git commit -m "$commit_message"
           
-          if sudo nixos-rebuild switch --flake .
+          # Build command based on whether we're using remote builds
+          if test "$use_remote_build" = "true"
+              echo "🏗️  Building on remote host: $build_host"
+              if sudo nixos-rebuild switch --flake . --build-host $build_host
+                  # Try to push and handle potential conflicts
+                  if git push 2>/dev/null
+                      echo "✅ Remote build succeeded, changes pushed to remote"
+                  else
+                      echo ""
+                      echo "⚠️  Normal push failed - likely due to diverged history"
+                      echo "💡 This can happen after rollbacks or when remote is ahead"
+                      echo ""
+                      
+                      # 5 second countdown for force push
+                      echo "🚨 Force push required to update remote branch"
+                      for i in (seq 5 -1 1)
+                          printf "\r⏰ Force push in %d seconds... (Ctrl+C to cancel)" $i
+                          sleep 1
+                      end
+                      echo ""
+                      
+                      read -l -P "Proceed with force push? [y/N]: " force_push_choice
+                      
+                      if test "$force_push_choice" = "y" -o "$force_push_choice" = "Y"
+                          git push --force-with-lease
+                          echo "✅ Remote build succeeded, changes force-pushed to remote"
+                      else
+                          echo "⚠️  Remote build succeeded but changes not pushed to remote"
+                          echo "💡 You can manually push later with: git push --force-with-lease"
+                      end
+                  end
+              else
+                  echo "❌ Remote build failed, changes not pushed"
+                  echo ""
+                  read -l -P "Do you want to rollback to the previous commit? [y/N]: " rollback_choice
+                  
+                  if test "$rollback_choice" = "y" -o "$rollback_choice" = "Y"
+                      git reset --hard $pre_commit_hash
+                      echo "🔄 Rolled back to commit: $pre_commit_hash"
+                      echo "📝 Your changes have been reverted"
+                  else
+                      echo "⚠️  Changes kept in current commit. You can manually rollback with:"
+                      echo "   git reset --hard $pre_commit_hash"
+                  end
+                  cd $original_dir
+                  return 1
+              end
+          else
+              if sudo nixos-rebuild switch --flake .
               # Try to push and handle potential conflicts
               if git push 2>/dev/null
                   echo "✅ Build succeeded, changes pushed to remote"
@@ -489,6 +580,9 @@
       # NixOS Build and Switch operations.
       nrb = "nixos-rebuild-basic";
       nrbc = "nixos-commit-rebuild-push";
+      
+      # Remote distributed builds with nixos-commit-rebuild-push.
+      nrbcr = "nixos-commit-rebuild-push --build-host popcat19@192.168.50.172";
 
       # Package Management with nix search.
       pkgs = "nix search nixpkgs";
