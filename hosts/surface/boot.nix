@@ -9,7 +9,8 @@
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "ntfs" ];
-    kernelPackages = pkgs.linuxPackages_latest;
+    # Let nixos-hardware common module provide the patched linux-surface kernel
+    # kernelPackages = pkgs.linuxPackages_latest;  # Removed to avoid conflict with nixos-hardware
     # i2c-dev module removed for Surface
     kernelModules = [ ];
   };
