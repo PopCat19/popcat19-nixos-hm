@@ -147,12 +147,14 @@
   network = {
     # Firewall ports to open
     allowedTCPPorts = [
-      53317  # Syncthing
+      22000  # Syncthing sync protocol
+      8384   # Syncthing web UI
       30071  # Custom port
     ];
     
     allowedUDPPorts = [
-      53317  # Syncthing
+      22000  # Syncthing sync protocol
+      21027  # Syncthing discovery
     ];
     
     # Trusted network interfaces
