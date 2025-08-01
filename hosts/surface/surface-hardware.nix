@@ -183,8 +183,8 @@
 
   # **SURFACE-SPECIFIC SERVICES**
   services = {
-    # Thermal management daemon
-    thermald.enable = true;
+    # Thermal management is now handled by thermal-config.nix
+    # thermald.enable = true;  # Moved to thermal-config.nix with custom configuration
     
     # Power management - using auto-cpufreq instead of power-profiles-daemon
     power-profiles-daemon.enable = false;
