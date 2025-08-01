@@ -89,6 +89,8 @@
       "i915.enable_fbc=1"
       "i915.fastboot=1"
       "i915.enable_guc=2"
+      "i915.enable_dc=0"  # Disable display C-states for better performance
+      "i915.disable_power_well=0"  # Keep power wells active
       
       # Power management optimizations - use intel_pstate for better performance
       "intel_pstate=active"
@@ -165,9 +167,29 @@
         libvdpau-va-gl
         intel-compute-runtime
         
+        # OpenCL support for Intel CPUs and GPUs
+        intel-compute-runtime-legacy1  # For older Intel CPUs
+        intel-ocl  # OpenCL support
+        
+        # Vulkan drivers for modern graphics
+        vulkan-loader
+        vulkan-validation-layers
+        vulkan-extension-layer
+        
         # Additional Intel graphics packages
         vpl-gpu-rt # QSV on 11th gen or newer
-        # intel-media-sdk # Removed due to security vulnerabilities
+        # intel-media-sdk removed due to security vulnerabilities
+        
+        # WebGL and hardware acceleration support
+        libGL
+        libGLU
+        freeglut
+        glxinfo
+        
+        # VDPAU support
+        libva
+        libva-utils
+        vdpauinfo
       ];
       
       # 32-bit support for Intel graphics
@@ -175,6 +197,9 @@
         mesa
         intel-vaapi-driver
         intel-media-driver
+        libGL
+        libGLU
+        vulkan-loader
       ];
     };
     
@@ -321,6 +346,19 @@
   environment.sessionVariables = {
     # Use Intel HD Media Driver for VAAPI
     LIBVA_DRIVER_NAME = "iHD";
+    
+    # WebGL and hardware acceleration support
+    MESA_LOADER_DRIVER_OVERRIDE = "iris";
+    
+    # Enable hardware acceleration in browsers
+    MOZ_ENABLE_WAYLAND = "1";
+    MOZ_USE_XINPUT2 = "1";
+    
+    # Vulkan driver selection
+    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
+    
+    # OpenCL support
+    OCL_ICD_VENDORS = "/run/opengl-driver/etc/OpenCL/vendors";
     
     # Enable Intel GPU debugging if needed
     # INTEL_DEBUG = "all";
