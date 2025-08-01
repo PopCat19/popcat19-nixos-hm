@@ -18,7 +18,7 @@ stdenvNoCC.mkDerivation rec {
     owner = "Fausto-Korpsvart";
     repo = "Rose-Pine-GTK-Theme";
     rev = "main";
-    sha256 = "sha256-1pRnwvBxeugYQ81VARV5/6DwlNfDg25LJ2F5kJ1HZI=";
+    sha256 = "sha256-1pRnwvBxeugYQ81VARv5/6DwlnfDg25LJ2F5kJ1hZ1o=";
   };
 
   nativeBuildInputs = [
