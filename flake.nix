@@ -34,6 +34,9 @@
       inputs.nixpkgs.follows = "nixpkgs"; # Ensure Home Manager uses our Nixpkgs version.
     };
 
+    # Hardware-specific configurations for various devices
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
     # Theming related inputs
     rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
     catppuccin-nix = {

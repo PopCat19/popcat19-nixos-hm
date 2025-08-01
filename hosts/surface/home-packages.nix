@@ -26,8 +26,10 @@ let
   hardwareControl = if isX86_64 then [
     # ddcui removed for Surface - no DDC support needed
     pkgs.openrgb-with-all-plugins
+    pkgs.brightnessctl  # Brightness control for Surface display
   ] else [
     # ARM64 alternatives or empty list
+    pkgs.brightnessctl  # Brightness control for Surface display
   ];
   
   # Package list
