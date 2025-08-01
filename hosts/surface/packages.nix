@@ -20,19 +20,11 @@ let
     # ARM64-specific packages could go here
   ];
   
-  # Virtualization packages (architecture-specific)
+  # Virtualization packages (Docker only, no QEMU/KVM)
   virtualizationPackages = with pkgs; [
     docker
-    spice-gtk
-    win-virtio
-    win-spice
-    virt-manager
-    libvirt
-  ] ++ (if isX86_64 then [
-    qemu  # Full QEMU support on x86_64
-  ] else [
-    qemu  # QEMU also works on ARM64, but with different capabilities
-  ]);
+    # QEMU/KVM packages removed - only keeping Waydroid via system config
+  ];
 
 in
 {
