@@ -10,10 +10,11 @@
   ];
 
   # **SURFACE-SPECIFIC KERNEL CONFIGURATION**
-  # Use latest kernel for best Surface hardware support
+  # Use linux-surface patched kernel from nixos-hardware for best Surface hardware support
+  # The nixos-hardware common module provides the patched kernel automatically
   boot = {
-    # Latest kernel packages for Surface compatibility
-    kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    # Let nixos-hardware common module provide the patched linux-surface kernel
+    # kernelPackages = lib.mkForce pkgs.linuxPackages_latest;  # Disabled to use linux-surface patches
     
     # Surface-specific kernel modules
     kernelModules = [
@@ -180,10 +181,10 @@
   };
 
   # **USER GROUPS FOR HARDWARE ACCESS**
-  # Add user to video group for brightness control
+  # Add user to video group for brightness control and surface-control for performance modes
   users.users = {
     popcat19 = {
-      extraGroups = [ "video" ];
+      extraGroups = [ "video" "surface-control" ];
     };
   };
 
@@ -192,8 +193,9 @@
     # Thermal management is now handled by thermal-config.nix
     # thermald.enable = true;  # Moved to thermal-config.nix with custom configuration
     
-    # Note: iptsd service may not be available in current nixpkgs version
-    # Touch and pen support is handled by existing Surface kernel modules
+    # Intel Precise Touch & Stylus Daemon for Surface touch and pen support
+    # Enable IPTS for most Surface devices (except Surface Go and Surface Laptop 3 AMD)
+    iptsd.enable = lib.mkDefault true;
     
     # Power management - using auto-cpufreq instead of power-profiles-daemon
     power-profiles-daemon.enable = false;
@@ -258,7 +260,7 @@
   environment.systemPackages = with pkgs; [
     # Surface-specific utilities
     libwacom-surface  # Wacom drivers for Surface pen
-    # Note: surface-control may not be available in current nixpkgs version
+    surface-control   # Surface hardware control utilities for performance modes
     
     # Hardware monitoring and control
     lm_sensors
