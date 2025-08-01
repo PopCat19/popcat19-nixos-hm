@@ -138,6 +138,9 @@
     # CPU microcode updates
     cpu.intel.updateMicrocode = true;
     
+    # IIO sensor support for accelerometer/gyroscope
+    sensor.iio.enable = true;
+    
     # Additional firmware for WiFi and other hardware
     firmware = with pkgs; [
       linux-firmware
@@ -211,16 +214,9 @@
       };
     };
     
-    # TLP power management (alternative to auto-cpufreq, choose one)
-    # tlp = {
-    #   enable = true;
-    #   settings = {
-    #     CPU_SCALING_GOVERNOR_ON_AC = "performance";
-    #     CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-    #     CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-    #     CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-    #   };
-    # };
+    # TLP power management - disabled by default for Surface devices
+    # as recommended by nixos-hardware to avoid conflicts with auto-cpufreq
+    tlp.enable = false;
     
     # Firmware update service
     fwupd.enable = true;
