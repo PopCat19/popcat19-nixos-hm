@@ -69,6 +69,10 @@
       
       # MSR module for BD-PROCHOT clearing
       "msr"
+      
+      # Backlight support modules
+      "intel_backlight"
+      "video"
     ];
     
     # Surface-specific kernel parameters
@@ -98,9 +102,10 @@
       "mwifiex_pcie.reg_alpha2=US"
       "cfg80211.ieee80211_regdom=US"
       
-      # ACPI and backlight optimizations
+      # ACPI and backlight optimizations - try different backlight methods
       "acpi_osi=Linux"
-      "acpi_backlight=native"
+      "acpi_backlight=video"
+      "video.brightness_switch_enabled=0"
       
       # Additional WiFi stability parameters
       "iwlwifi.power_save=0"
