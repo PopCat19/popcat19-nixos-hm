@@ -16,6 +16,9 @@ in
     # Hardware configuration for Surface
     ./hardware-configuration.nix
     
+    # Comprehensive Surface hardware drivers and configuration
+    ./surface-hardware.nix
+    
     # Surface-specific systemd service
     ./clear-bdprochot.nix
     
@@ -61,9 +64,6 @@ in
     users.${surfaceUserConfig.user.username} = import ./home-packages.nix;
     backupFileExtension = "bak2"; # Custom backup file extension.
   };
-
-  # Use latest kernel for Surface compatibility
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
   # Surface-specific settings
   networking.hostName = "popcat19-surface0";
