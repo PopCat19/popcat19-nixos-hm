@@ -3,7 +3,7 @@
 # This module provides a script to toggle power-saving settings in Hyprland
 # and sets up the necessary keybind (mod+alt+P) to activate it.
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
   # Add libnotify for notifications
