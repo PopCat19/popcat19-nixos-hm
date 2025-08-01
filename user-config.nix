@@ -1,5 +1,8 @@
-# NixOS0 User Configuration File
-# This file contains all user-configurable variables for the NixOS0 system.
+# Global User Configuration File
+# This file contains all user-configurable variables shared across all NixOS hosts.
+# Host-specific overrides can be applied in individual host configurations.
+
+{ hostname ? "popcat19-nixos0" }:
 
 {
   # **HOST CONFIGURATION**
@@ -8,8 +11,8 @@
     # System architecture (x86_64-linux, aarch64-linux, etc.)
     system = "x86_64-linux";
     
-    # Hostname for the system
-    hostname = "popcat19-nixos0";
+    # Hostname for the system (can be overridden by hosts)
+    inherit hostname;
   };
 
   # **ARCHITECTURE DETECTION HELPERS**
@@ -67,6 +70,7 @@
       "video"
       "audio"
       "networkmanager"
+      "i2c"
       "input"
       "libvirtd"
     ];
@@ -147,14 +151,12 @@
   network = {
     # Firewall ports to open
     allowedTCPPorts = [
-      22000  # Syncthing sync protocol
-      8384   # Syncthing web UI
+      53317  # Syncthing
       30071  # Custom port
     ];
     
     allowedUDPPorts = [
-      22000  # Syncthing sync protocol
-      21027  # Syncthing discovery
+      53317  # Syncthing
     ];
     
     # Trusted network interfaces

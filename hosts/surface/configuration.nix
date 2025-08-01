@@ -4,8 +4,8 @@
 { pkgs, inputs, lib, ... }:
 
 let
-  # Import surface-specific user configuration
-  surfaceUserConfig = import ./user-config.nix;
+  # Import global user configuration with surface hostname
+  surfaceUserConfig = import ../../user-config.nix { hostname = "popcat19-surface0"; };
 in
 
 {

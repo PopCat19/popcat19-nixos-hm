@@ -4,8 +4,8 @@
 { pkgs, inputs, lib, ... }:
 
 let
-  # Import nixos0-specific user configuration
-  nixos0UserConfig = import ./user-config.nix;
+  # Import global user configuration with nixos0 hostname
+  nixos0UserConfig = import ../../user-config.nix { hostname = "popcat19-nixos0"; };
 in
 
 {
