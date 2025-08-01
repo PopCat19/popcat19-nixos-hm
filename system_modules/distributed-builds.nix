@@ -10,7 +10,7 @@
   # Configure build machines
   nix.buildMachines = [
     {
-      hostName = "popcat19@192.168.50.172";
+      hostName = "192.168.50.172";
       systems = [ "x86_64-linux" ];
       maxJobs = 12;  # R5 5500 has 6c/12t, use all threads
       speedFactor = 3;  # R5 5500 with 32GB RAM is significantly faster than Surface

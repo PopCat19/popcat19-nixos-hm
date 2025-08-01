@@ -407,7 +407,7 @@
           echo "🏗️  Building $package on nixos0 (192.168.50.172)..."
           echo "⚡ Using R5 5500 (12 threads) for faster builds"
           
-          if nix build "nixpkgs#$package" --builders "ssh://popcat19@192.168.50.172 x86_64-linux" --max-jobs 0
+          if nix build "nixpkgs#$package" --builders "ssh://192.168.50.172 x86_64-linux" --max-jobs 0
               echo "✅ Remote build completed successfully"
               echo "📦 Package built: $package"
           else
