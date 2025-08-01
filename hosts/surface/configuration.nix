@@ -69,6 +69,27 @@ in
   # Surface-specific settings
   networking.hostName = "popcat19-surface0";
 
+  # SSH server configuration for bi-directional access
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      PermitRootLogin = "no";
+    };
+  };
+
+  # Open SSH port in firewall
+  networking.firewall.allowedTCPPorts = [ 22 ];
+
+  # Add nixos0's public key for SSH access
+  users.users.popcat19 = {
+    openssh.authorizedKeys.keys = [
+      # nixos0's public key for bi-directional SSH access
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFvtrt7vEbXSyP8xuOfsfNGgC99Y98s1fmBIp3eZP4zx popcat19@nixos"
+    ];
+  };
+
   # WARNING: DO NOT CHANGE AFTER INITIAL INSTALL.
   system.stateVersion = "25.05";
 }
