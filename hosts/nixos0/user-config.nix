@@ -1,5 +1,5 @@
-# Surface User Configuration File
-# This file contains all user-configurable variables for the Surface NixOS system.
+# NixOS0 User Configuration File
+# This file contains all user-configurable variables for the NixOS0 system.
 
 {
   # **HOST CONFIGURATION**
@@ -9,7 +9,7 @@
     system = "x86_64-linux";
     
     # Hostname for the system
-    hostname = "popcat19-surface0";
+    hostname = "popcat19-nixos0";
   };
 
   # **ARCHITECTURE DETECTION HELPERS**

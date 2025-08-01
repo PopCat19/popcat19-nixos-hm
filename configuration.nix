@@ -33,6 +33,7 @@
     ./system_modules/core-packages.nix
     ./system_modules/packages.nix
     ./system_modules/fonts.nix
+    ./system_modules/distributed-builds-server.nix  # Server-side distributed builds
   ];
 
   # WARNING: DO NOT CHANGE AFTER INITIAL INSTALL.
