@@ -27,7 +27,6 @@
     ./home_modules/theme.nix
     ./home_modules/screenshot.nix
     ./home_modules/mangohud.nix
-    ./hosts/nixos0/hypr_config/hyprland.nix
     ./hypr_config/hyprpanel.nix
     
     # Core system modules
