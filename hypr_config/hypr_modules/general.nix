@@ -3,9 +3,6 @@
 
 {
   wayland.windowManager.hyprland.settings = {
-    # Monitor Configuration
-    monitor = ",preferred,auto,auto";
-
     # General window management
     general = {
       gaps_in = 6;
