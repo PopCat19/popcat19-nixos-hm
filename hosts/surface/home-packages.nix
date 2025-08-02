@@ -116,7 +116,7 @@ in
     ../../home_modules/theme.nix
     ../../home_modules/screenshot.nix
     ../../home_modules/mangohud.nix
-    ../../hypr_config/hyprland.nix
+    ./hypr_config/hyprland.nix
     ../../hypr_config/hyprpanel.nix
 
     # Core system modules
