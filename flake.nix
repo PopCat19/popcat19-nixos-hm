@@ -28,6 +28,13 @@
     # Application-specific inputs
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
+    # Hyprland Wayland compositor
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      # Build packages with the same nixpkgs as the system
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Home management for user-specific configurations.
     home-manager = {
       url = "github:nix-community/home-manager";
