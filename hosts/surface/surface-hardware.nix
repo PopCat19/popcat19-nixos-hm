@@ -84,6 +84,9 @@
       # Enable Surface aggregator bus
       "surface_aggregator.dyndbg=+p"
       
+      # Reduce surface_serial_hub verbosity in dmesg
+      "surface_serial_hub.dyndbg=+pfl"
+      
       # Improve touch responsiveness and graphics performance
       "i915.enable_psr=0"
       "i915.enable_fbc=1"
