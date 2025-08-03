@@ -1,6 +1,8 @@
-# User Configuration File
-# This file contains all user-configurable variables for the NixOS system.
-# Modify these values to customize your system without editing multiple files.
+# Global User Configuration File
+# This file contains all user-configurable variables shared across all NixOS hosts.
+# Host-specific overrides can be applied in individual host configurations.
+
+{ hostname ? "popcat19-nixos0" }:
 
 {
   # **HOST CONFIGURATION**
@@ -9,8 +11,8 @@
     # System architecture (x86_64-linux, aarch64-linux, etc.)
     system = "x86_64-linux";
     
-    # Hostname for the system
-    hostname = "popcat19-nixos0";
+    # Hostname for the system (can be overridden by hosts)
+    inherit hostname;
   };
 
   # **ARCHITECTURE DETECTION HELPERS**
@@ -173,6 +175,7 @@
     # Additional git configuration can be added here
     extraConfig = {
       # Example: init.defaultBranch = "main";
+      credential.helper = "!gh auth git-credential";
     };
   };
 }
