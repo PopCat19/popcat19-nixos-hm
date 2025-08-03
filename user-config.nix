@@ -61,7 +61,7 @@
   # Default applications
   defaultApps = {
     browser = {
-      desktop = "zen-beta.desktop";
+      desktop = "zen-twilight.desktop";
       package = "zen-browser";
     };
     

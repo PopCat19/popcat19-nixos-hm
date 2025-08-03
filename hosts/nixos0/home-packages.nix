@@ -45,7 +45,7 @@ let
     # Browsers (check availability per architecture)
     firefox
   ] ++ (if inputs.zen-browser.packages ? "${system}" then [
-    inputs.zen-browser.packages."${system}".default
+    inputs.zen-browser.packages."${system}".twilight
   ] else []) ++ [
     
     # Media (universal)
@@ -116,6 +116,7 @@ in
     ../../home_modules/theme.nix
     ../../home_modules/screenshot.nix
     ../../home_modules/mangohud.nix
+    ../../home_modules/zen-browser.nix
     ./hypr_config/hyprland.nix
     ./hypr_config/hyprpanel.nix
 
