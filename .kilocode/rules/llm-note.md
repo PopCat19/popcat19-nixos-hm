@@ -4,8 +4,10 @@ We don't use home-manager related commands as it's managed by nixos.
 
 Useful fish functions from `./home-modules/fish.nix`.
 
-Always `git add .` when you create new, untracked files/directories to update git tree for flake evaluation.
+Note that no configurations will date without rebuilding nixos on current host.
 
+Always `git add .` when you create new, untracked files/directories to update git tree for flake evaluation.
+|
 `nixos-commit-rebuild-push` already does this among other git functions, run that instead.
 
 To just rebuild without adding nor commiting, run:
