@@ -1,6 +1,4 @@
-# System Packages Configuration
-# This file contains additional system packages beyond core dependencies
-# Imported by configuration.nix
+# System packages configuration
 
 { pkgs, userConfig, ... }:
 
@@ -12,15 +10,14 @@ let
   
   # Architecture-specific packages
   x86_64Packages = with pkgs; [
-    # ROCm packages (AMD GPU acceleration - x86_64 only)
-    rocmPackages.rpp
+    rocmPackages.rpp  # AMD GPU acceleration
   ];
   
   aarch64Packages = with pkgs; [
-    # ARM64-specific packages could go here
+    # ARM64-specific packages
   ];
   
-  # Virtualization packages (architecture-specific)
+  # Virtualization packages
   virtualizationPackages = with pkgs; [
     docker
     spice-gtk
@@ -29,39 +26,36 @@ let
     virt-manager
     libvirt
   ] ++ (if isX86_64 then [
-    qemu  # Full QEMU support on x86_64
+    qemu
   ] else [
-    qemu  # QEMU also works on ARM64, but with different capabilities
+    qemu
   ]);
 
 in
 {
-  # **ADDITIONAL SYSTEM PACKAGES**
-  # Non-essential packages for enhanced system functionality
+  # Additional system packages
   environment.systemPackages = with pkgs; [
-    # Package management (universal)
+    # Package management
     flatpak-builder
     
-    # Network tools (universal)
+    # Network tools
     protonvpn-gui
     wireguard-tools
     
-    # Hardware tools (universal)
+    # Hardware tools
     i2c-tools
     ddcutil
     usbutils
     
-    # Development tools (universal)
+    # Development tools
     python313Packages.pip
     gh
     
-    # Quick tools (universal)
+    # Quick tools
     quickgui
     quickemu
   ]
-  # Add virtualization packages
   ++ virtualizationPackages
-  # Add architecture-specific packages
   ++ (if isX86_64 then x86_64Packages else [])
   ++ (if isAarch64 then aarch64Packages else []);
 }

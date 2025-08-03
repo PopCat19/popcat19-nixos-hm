@@ -1,8 +1,6 @@
 { pkgs, ... }:
 
 {
-  # **BOOT & KERNEL CONFIGURATION**
-  # Defines boot loader, kernel, and filesystem support settings.
   boot = {
     loader = {
       systemd-boot.enable = true;

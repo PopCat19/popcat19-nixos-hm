@@ -1,6 +1,4 @@
-# Home Manager Package Configuration
-# This file contains all user packages for the home configuration
-# Imported by home.nix
+# Home Manager package configuration
 
 {
   pkgs,
@@ -10,27 +8,25 @@
 }:
 
 let
-  # Architecture detection helpers
+  # Architecture detection
   isX86_64 = system == "x86_64-linux";
   isAarch64 = system == "aarch64-linux";
   
-  # Helper function to conditionally include packages
+  # Helper functions
   onlyX86_64 = packages: if isX86_64 then packages else [];
   onlyAarch64 = packages: if isAarch64 then packages else [];
   
-  # Architecture-specific package selections
+  # Architecture-specific packages
   systemMonitoring = if isX86_64 then [ pkgs.btop-rocm ] else [ pkgs.btop ];
   hardwareControl = if isX86_64 then [
     pkgs.ddcui
     pkgs.openrgb-with-all-plugins
-  ] else [
-    # ARM64 alternatives or empty list
-  ];
+  ] else [];
   
 in
 with pkgs;
 [
-  # Terminal & Core Tools (universal)
+  # Terminal & Core Tools
   kitty
   fuzzel
   micro
@@ -38,57 +34,56 @@ with pkgs;
   starship
   wl-clipboard
   
-  # Browsers (check availability per architecture)
+  # Browsers
   firefox
 ] ++ (if inputs.zen-browser.packages ? "${system}" then [
   inputs.zen-browser.packages."${system}".default
 ] else []) ++ [
   
-  # Media (universal)
+  # Media
   mpv
   audacious
   audacious-plugins
   
-  # Hyprland Essentials (check ARM64 compatibility)
+  # Hyprland Essentials
   hyprpanel
   hyprshade
   hyprpolkitagent
   hyprutils
-  # quickshell - now provided by modules/quickshell.nix using flake input
   
-  # Communication (universal)
+  # Communication
   vesktop
   keepassxc
   
-  # System Monitoring (architecture-specific)
+  # System Monitoring
 ] ++ systemMonitoring ++ [
   fastfetch
   
-  # Audio & Hardware Control (architecture-specific)
+  # Audio & Hardware Control
   pavucontrol
   playerctl
 ] ++ hardwareControl ++ [
   glances
   
-  # File Sharing (universal)
+  # File Sharing
   localsend
   zrok
   
-  # Notifications (universal)
+  # Notifications
   dunst
   libnotify
   zenity
   
-  # Development Editors (universal)
+  # Development Editors
   vscodium
   
-  # Nix Development (universal)
+  # Nix Development
   nil
   nixd
 ] ++
 # Architecture-specific packages
 onlyX86_64 [
-  # x86_64-specific packages that may not be available on ARM64
+  # x86_64-specific packages
 ] ++
 onlyAarch64 [
   # ARM64-specific packages

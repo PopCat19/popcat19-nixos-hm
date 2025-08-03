@@ -1,12 +1,11 @@
 { userConfig, ... }:
 
 {
-  # **SYSTEM ENVIRONMENT CONFIGURATION**
-  # Defines system-level environment variables and Nix settings.
-  # Note: User-specific environment variables are configured in home_modules/environment.nix
-  # Note: System packages are now configured in core-packages.nix and packages.nix
+  # System environment configuration
+  # User-specific environment variables are in home_modules/environment.nix
+  # System packages are in core-packages.nix and packages.nix
   
-  # **NIX CONFIGURATION**
+  # Nix configuration
   nixpkgs.config.allowUnfree = true;
   nix.settings = {
     substituters = [ "https://ezkea.cachix.org" ];
@@ -14,7 +13,7 @@
     download-buffer-size = 67108864;
   };
 
-  # **SYSTEM ENVIRONMENT VARIABLES**
+  # System environment variables
   environment.sessionVariables = {
     # Wayland support
     NIXOS_OZONE_WL = "1";
@@ -22,7 +21,7 @@
     GST_PLUGIN_SYSTEM_PATH_1_0 = "/run/current-system/sw/lib/gstreamer-1.0";
     GDK_PIXBUF_MODULE_FILE = "/run/current-system/sw/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache";
 
-    # Default applications (also defined in home_modules for user-specific overrides)
+    # Default applications
     TERMINAL = userConfig.defaultApps.terminal.command;
     EDITOR = userConfig.defaultApps.editor.command;
     VISUAL = userConfig.defaultApps.editor.command;
