@@ -1,17 +1,12 @@
 { pkgs, ... }:
 
 {
-  # **DISPLAY STACK CONFIGURATION**
-  # Defines X11, Wayland, Hyprland, and display manager settings.
-  
-  # **X11 SERVER**
   services.xserver = {
     enable = true;
     xkb.layout = "us";
     desktopManager.runXdgAutostartIfNone = true;
   };
 
-  # **HYPRLAND WAYLAND COMPOSITOR**
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -19,7 +14,6 @@
   };
   programs.uwsm.enable = true;
 
-  # **XDG PORTAL CONFIGURATION**
   xdg = {
     mime.enable = true;
     portal = {
@@ -28,7 +22,6 @@
     };
   };
 
-  # **DISPLAY MANAGER (SDDM)**
   services.displayManager.sddm = {
     enable = true;
     settings.Theme = {
@@ -37,6 +30,5 @@
     };
   };
 
-  # **DCONF CONFIGURATION**
   programs.dconf.enable = true;
 }

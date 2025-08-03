@@ -1,26 +1,22 @@
 { pkgs, ... }:
 
 {
-  # **SYSTEM SERVICES CONFIGURATION**
-  # Defines various system services and their settings.
+  # System services configuration
   
-  # **JOURNALD CONFIGURATION**
+  # Journald configuration
   services.journald.extraConfig = ''
-    # Rotate after 3 days
     MaxRetentionSec=3day
-    # Size & free-space limits
     SystemMaxUse=500M
     SystemKeepFree=100M
     Compress=yes
-    # Do not forward
     ForwardToSyslog=no
     ForwardToWall=no
   '';
 
-  # **INPUT SERVICES**
+  # Input services
   services.libinput.enable = true;
 
-  # **SYSTEM SERVICES**
+  # System services
   services = {
     # Storage / Packaging
     udisks2.enable = true;
@@ -43,7 +39,7 @@
     dbus.enable = true;
   };
 
-  # **SECURITY & AUTHENTICATION**
+  # Security & authentication
   security.polkit.enable = true;
   security.rtkit.enable = true;
 }

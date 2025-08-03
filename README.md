@@ -1,105 +1,56 @@
 # NixOS Configuration
 
-A modern, gaming-focused NixOS configuration with Hyprland Wayland compositor and Rose Pine theming.
+Personal NixOS configuration with Hyprland Wayland compositor and Rose Pine theming.
 
-## 🚀 Quick Start
+## Overview
 
-1. **Install NixOS** - Follow our [installation guide](docs/installation.md)
-2. **Configure** - Edit [`user-config.nix`](user-config.nix) with your settings
-3. **Rebuild** - Run `nixos-rebuild switch --flake .#$(hostname)`
+This is a personal dotfiles repository for a NixOS setup focused on:
+- Modern Wayland desktop with Hyprland compositor
+- Gaming-optimized environment with Steam, Proton, and gaming tools
+- Development-ready setup with VS Code, language servers, and containers
+- Consistent Rose Pine theming across all applications
+- Modular design for easy customization
 
-## ✨ Features
+## Architecture
 
-- **Modern Wayland desktop** with Hyprland compositor
-- **Gaming-optimized** with Steam, Proton, and gaming tools
-- **Development-ready** with VS Code, language servers, and containers
-- **Beautiful theming** with Rose Pine color scheme
-- **Modular design** for easy customization
-
-## 📚 Documentation
-
-- **[Installation Guide](docs/installation.md)** - Fresh NixOS installation
-- **[Configuration Guide](docs/configuration.md)** - System configuration
-- **[Features Overview](docs/features.md)** - What's included
-- **[Customization Guide](docs/customization.md)** - Personalize your setup
-- **[Troubleshooting](docs/troubleshooting.md)** - Solve common issues
-
-## 🛠️ Quick Commands
-
-```bash
-# Rebuild system
-nixos-rebuild switch --flake .#$(hostname)
-
-# Update packages
-nix flake update
-
-# Check system
-nix flake check
-
-# Rollback
-sudo nixos-rebuild switch --rollback
-```
-
-## 🎯 Quick Configuration
-
-Edit [`user-config.nix`](user-config.nix):
-
-```nix
-{
-  user = {
-    username = "your-username";
-    fullName = "Your Name";
-    email = "your@email.com";
-  };
-  
-  host = {
-    hostname = "your-computer";
-    system = "x86_64-linux";
-  };
-}
-```
-
-## 🎮 Gaming Features
-
-- **Steam** with Proton support
-- **Lutris** for non-Steam games
-- **MangoHUD** performance overlay
-- **GameMode** optimization
-- **Discord** for gaming communication
-
-## 💻 Development Tools
-
-- **VS Code** with extensions
-- **Docker** container support
-- **Language servers** for multiple languages
-- **Git** with GUI tools
-- **Terminal** with fish shell
-
-## 🎨 Theming
-
-- **Rose Pine** color scheme
-- **GTK themes** and icons
-- **Hyprland** animations
-- **Consistent** appearance across apps
-
-## 🔧 System Architecture
+The configuration follows a modular structure:
 
 ```
 nixos-config/
-├── system_modules/     # System-level config
-├── home_modules/       # User-level config
+├── system_modules/     # System-level configuration
+├── home_modules/       # User-level configuration
 ├── hypr_config/        # Hyprland settings
-├── docs/              # Documentation
-├── user-config.nix    # Your settings
-└── flake.nix          # Nix flake
+├── hosts/             # Host-specific configurations
+├── overlays/          # Custom package overlays
+└── user-config.nix    # Central user configuration
 ```
 
-## 🆘 Getting Help
+## Key Components
 
-- **Documentation**: Browse [docs/](docs/)
-- **Issues**: Report on GitHub
-- **Community**: NixOS and Hyprland communities
+### Desktop Environment
+- Hyprland Wayland compositor with custom configuration
+- Rose Pine theming for GTK, Qt, and cursor themes
+- QuickShell status bar with system monitoring
+- Fuzzel application launcher
 
----
+### Gaming Support
+- Steam with Proton compatibility
+- Lutris and Heroic Game Launcher
+- MangoHUD performance overlay
+- GameMode optimization
 
-**Ready to get started?** Check out the [installation guide](docs/installation.md) or dive into [customization](docs/customization.md)!
+### Development Tools
+- VS Code with language servers
+- Docker and Podman support
+- Multiple programming languages (Python, Node.js, Rust, Go, Java)
+- Git with custom configuration
+
+### System Features
+- PipeWire audio server
+- Distributed builds between machines
+- Syncthing file synchronization
+- Custom fish shell functions and aliases
+
+## Note
+
+This repository is under active development and may have breaking changes at any time. It's intended as a personal dotfiles collection, with plans to eventually convert it into a proper distribution.

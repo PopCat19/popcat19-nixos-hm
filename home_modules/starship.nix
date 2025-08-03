@@ -1,7 +1,6 @@
 { pkgs, ... }:
 
 {
-  # Starship Prompt: a cross-shell prompt with Rose Pine theme.
   programs.starship = {
     enable = true;
     settings = {

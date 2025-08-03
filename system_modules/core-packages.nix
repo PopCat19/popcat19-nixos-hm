@@ -1,12 +1,9 @@
-# System Core Packages Configuration
-# This file contains essential system packages and dependencies
-# Imported by configuration.nix
+# System core packages configuration
 
 { pkgs, ... }:
 
 {
-  # **CORE SYSTEM PACKAGES**
-  # Essential packages required for basic system functionality
+  # Core system packages
   environment.systemPackages = with pkgs; [
     # Core utilities
     vim

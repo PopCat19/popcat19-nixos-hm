@@ -1,4 +1,4 @@
-# ~/nixos-config/home.nix
+# Home Manager configuration
 {
   pkgs,
   config,
@@ -10,27 +10,23 @@
 }:
 
 {
-  # **BASIC HOME CONFIGURATION**
-  # Sets up basic user home directory parameters.
+  # Basic home configuration
   home.username = userConfig.user.username;
   home.homeDirectory = userConfig.directories.home;
-  home.stateVersion = "24.05"; # Home Manager state version.
+  home.stateVersion = "24.05";
 
-  # ═══════════════════════════════════════════════════════════════════════════════
-  # 🎨 THEME CONFIGURATION
-  # ═══════════════════════════════════════════════════════════════════════════════
-  # All theme-related configurations are imported from home-theme.nix
-  # This includes GTK, Qt, cursors, fonts, and all theming components
+  # Theme configuration
+  # All theme-related configurations are imported from theme.nix
 
   imports = [
-    # Theme and UI configurations
+    # Theme and UI
     ./home_modules/theme.nix
     ./home_modules/screenshot.nix
     ./home_modules/mangohud.nix
     ./hypr_config/hyprland.nix
     ./hypr_config/hyprpanel.nix
     
-    # Core system modules
+    # Core system
     ./home_modules/environment.nix
     ./home_modules/services.nix
     ./home_modules/git.nix
@@ -57,7 +53,6 @@
     ./syncthing_config/home.nix
   ];
 
-  # **INSTALLED PACKAGES**
-  # All user packages are imported from home_modules/packages.nix for better organization
+  # User packages
   home.packages = import ./home_modules/packages.nix { inherit pkgs inputs system userConfig; };
 }
