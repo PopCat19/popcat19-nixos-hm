@@ -45,10 +45,6 @@ in
     # Development tools (universal)
     python313Packages.pip
     gh
-    
-    # Quick tools (universal)
-    quickgui
-    quickemu
   ]
   # Add virtualization packages
   ++ virtualizationPackages
