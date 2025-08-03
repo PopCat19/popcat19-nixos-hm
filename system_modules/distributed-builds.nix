@@ -19,22 +19,6 @@
     }
   ];
 
-  # SSH configuration
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-      PermitRootLogin = "no";
-    };
-    extraConfig = ''
-      SetEnv PATH=/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    '';
-  };
-
-  # Open SSH port in firewall
-  networking.firewall.allowedTCPPorts = [ 22 ];
-
   # Configure Nix for remote building
   nix.settings = {
     trusted-users = [ "root" "popcat19" ];
@@ -48,13 +32,6 @@
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
-  };
-
-  # User configuration for SSH keys
-  users.users.popcat19 = {
-    openssh.authorizedKeys.keys = [
-      # Populated with public key from nixos0
     ];
   };
 

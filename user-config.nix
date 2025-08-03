@@ -118,12 +118,13 @@
   # Network configuration
   network = {
     allowedTCPPorts = [
-      53317  # Syncthing
-      30071  # Custom port
+      22      # SSH
+      53317   # Syncthing
+      30071   # Custom port
     ];
     
     allowedUDPPorts = [
-      53317  # Syncthing
+      53317   # Syncthing
     ];
     
     trustedInterfaces = [ "lo" ];
