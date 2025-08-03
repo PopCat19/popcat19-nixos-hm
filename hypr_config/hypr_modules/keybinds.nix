@@ -10,7 +10,7 @@
     "$term" = "kitty";
     "$editor" = "micro";
     "$file" = "dolphin";
-    "$browser" = "zen";
+    "$browser" = "zen-beta";
     "$menu" = "fuzzel";
 
     # Key bindings
