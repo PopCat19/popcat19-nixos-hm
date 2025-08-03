@@ -121,6 +121,7 @@
       22      # SSH
       53317   # Syncthing
       30071   # Custom port
+      3845    # Figma Dev Mode MCP server
     ];
     
     allowedUDPPorts = [
@@ -128,5 +129,10 @@
     ];
     
     trustedInterfaces = [ "lo" ];
+    
+    # Allow local loopback connections for MCP servers
+    allowedTCPPortRanges = [
+      { from = 3000; to = 4000; }  # Range for local development servers
+    ];
   };
 }
