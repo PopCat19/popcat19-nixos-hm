@@ -4,45 +4,55 @@ We don't use home-manager related commands as it's managed by nixos.
 
 Useful fish functions from `./home-modules/fish.nix`.
 
-Note that no configurations will date without rebuilding nixos on current host.
+Note that no configurations will update without rebuilding nixos on the current host. If you're working on configurations for another host, ask user to rebuild the said host before proceeding.
 
 Always `git add .` when you create new, untracked files/directories to update git tree for flake evaluation.
 |
-`nixos-commit-rebuild-push` already does this among other git functions, run that instead.
+`nixos-commit-rebuild-push` already does this among other git functions, run this to commit (adhering commit rules), rebuild, and push:
+```
+nixos-commit-rebuild-push "<[feat|fix|refactor|docs]:4/5-word-summary>"
+```
 
-To just rebuild without adding nor commiting, run:
+To just rebuild without git (warn: won't git add . for flakes):
 ```
 nixos-rebuild-basic
 ```
+|
+If you receive ENOENT flake errors, check `git status` for uncommited changes and then `git add .` if untracked.
 
-Preferably for nixos flakes, to commit, rebuild, and push, run:
-```
-nixos-commit-rebuild-push '<4/5-word-commit>'
-```
-
-To test a machine configuration, run:
+To test a machine configuration:
 ```
 nixos-rebuild dry-run --flake .#<hostname>
 ```
 
-To check flakes/configurations, run:
+To check flakes/configurations:
 ```
 nix flake check
 ```
 
-To query nixpkgs, run:
+To query nixpkgs:
 ```
 nix search nixpkgs <package>
 ```
 
-To check hyprland errors, run:
+To check hyprland errors:
 ```
 hyprctl configerrors
 ```
 
-To check the current system logs, run:
+Other hyprctl commands can be discovered via:
 ```
-whoami && hostname && journalctl | tail -80 && sudo dmesg | tail -40
+hyprctl -h
 ```
 
-Note that you can `-h`, `--help`, `tldr`, and `man` a command to discover possible args.
+To check the current system:
+```
+whoami && hostname && fastfetch
+```
+
+To check recent logs for current system:
+```
+journalctl | tail -80 && sudo dmesg | tail -40
+```
+
+Note that you can `-h`, `--help`, `tldr`, and `man` any command to discover possible args.
