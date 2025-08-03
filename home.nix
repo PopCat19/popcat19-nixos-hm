@@ -40,7 +40,7 @@ in
       ./home_modules/screenshot.nix
       ./home_modules/mangohud.nix
       ./hypr_config/hyprland.nix
-      ./hypr_config/hyprpanel.nix
+      ./hypr_config/hyprpanel-home.nix
       
       # Core system
       ./home_modules/environment.nix

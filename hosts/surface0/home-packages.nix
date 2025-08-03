@@ -116,7 +116,7 @@ in
     ../../home_modules/mangohud.nix
     ../../home_modules/zen-browser.nix
     ./hypr_config/hyprland.nix
-    ./hypr_config/hyprpanel.nix
+    ./hypr_config/hyprpanel-home.nix
 
     # Core system modules
     ../../home_modules/environment.nix
