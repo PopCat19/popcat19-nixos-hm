@@ -55,7 +55,7 @@ in
       ./home_modules/android-tools.nix
       ./home_modules/shimboot-project.nix
       ./home_modules/desktop-theme.nix
-      ./home_modules/kde.nix
+      ./home_modules/dolphin.nix
       ./home_modules/qt-gtk-config.nix
       ./home_modules/fuzzel-config.nix
       ./home_modules/kitty.nix
@@ -63,7 +63,6 @@ in
       ./home_modules/starship.nix
       ./home_modules/micro.nix
       ./home_modules/fcitx5.nix
-      ./home_modules/rose-pine-checker.nix
       ./quickshell_config/quickshell.nix
       ./syncthing_config/home.nix
     ] else []);
