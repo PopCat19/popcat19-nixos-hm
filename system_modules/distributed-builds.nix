@@ -1,10 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
-  # **DISTRIBUTED BUILDS CONFIGURATION**
-  # Enables using remote machines for building packages
+  # Distributed builds configuration
   
-  # Enable distributed builds
   nix.distributedBuilds = true;
   
   # Configure build machines
@@ -12,8 +10,8 @@
     {
       hostName = "192.168.50.172";
       systems = [ "x86_64-linux" ];
-      maxJobs = 12;  # R5 5500 has 6c/12t, use all threads
-      speedFactor = 3;  # R5 5500 with 32GB RAM is significantly faster than Surface
+      maxJobs = 12;
+      speedFactor = 3;
       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
       mandatoryFeatures = [ ];
       sshUser = "popcat19";
@@ -21,7 +19,7 @@
     }
   ];
 
-  # SSH configuration for distributed builds
+  # SSH configuration
   services.openssh = {
     enable = true;
     settings = {
@@ -29,7 +27,6 @@
       KbdInteractiveAuthentication = false;
       PermitRootLogin = "no";
     };
-    # Ensure Nix is available in SSH sessions
     extraConfig = ''
       SetEnv PATH=/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     '';
@@ -40,13 +37,9 @@
 
   # Configure Nix for remote building
   nix.settings = {
-    # Trust the build user for remote builds
     trusted-users = [ "root" "popcat19" ];
-    
-    # Enable experimental features needed for flakes and distributed builds
     experimental-features = [ "nix-command" "flakes" ];
     
-    # Configure substituters and trusted public keys
     substituters = [
       "https://cache.nixos.org/"
       "https://nix-community.cachix.org"
@@ -61,14 +54,13 @@
   # User configuration for SSH keys
   users.users.popcat19 = {
     openssh.authorizedKeys.keys = [
-      # This will be populated with the public key from nixos0
-      # For now, we'll add our own public key to allow self-connection testing
+      # Populated with public key from nixos0
     ];
   };
 
-  # Environment packages needed for distributed builds
+  # Environment packages
   environment.systemPackages = with pkgs; [
     openssh
-    git  # Needed for flake operations
+    git
   ];
 }

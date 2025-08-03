@@ -1,12 +1,7 @@
-# General Settings for Hyprland
-# ==============================
-
 {
   wayland.windowManager.hyprland.settings = {
-    # Monitor Configuration
     monitor = ",preferred,auto,auto";
 
-    # General window management
     general = {
       gaps_in = 6;
       gaps_out = 12;
@@ -18,7 +13,6 @@
       layout = "dwindle";
     };
 
-    # Window decoration
     decoration = {
       rounding = 12;
       active_opacity = 1.0;
@@ -39,7 +33,6 @@
       };
     };
 
-    # Layout configuration
     dwindle = {
       pseudotile = true;
       preserve_split = true;
@@ -49,19 +42,16 @@
       new_status = "master";
     };
 
-    # Miscellaneous settings
     misc = {
       force_default_wallpaper = -1;
       disable_hyprland_logo = false;
       vfr = true;
     };
 
-    # Debug settings
     debug = {
       damage_tracking = 0;
     };
 
-    # Layer rules
     layerrule = [
       "blur,bar-0"
       "blur,bar-1"

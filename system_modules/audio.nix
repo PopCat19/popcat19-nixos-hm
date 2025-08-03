@@ -1,8 +1,6 @@
 { ... }:
 
 {
-  # **AUDIO CONFIGURATION**
-  # Defines PipeWire audio system settings.
   services.pipewire = {
     enable = true;
     alsa = {

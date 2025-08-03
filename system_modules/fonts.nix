@@ -1,8 +1,7 @@
 { pkgs, ... }:
 
 {
-  # **FONTS CONFIGURATION**
-  # Defines system fonts and font configuration.
+  # Fonts configuration
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans
