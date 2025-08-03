@@ -25,6 +25,7 @@ in
     ../../system_modules/core-packages.nix
     ./packages.nix
     ../../system_modules/fonts.nix
+    ../../system_modules/ssh.nix
     ../../system_modules/distributed-builds.nix
     inputs.home-manager.nixosModules.home-manager
   ];
@@ -44,23 +45,6 @@ in
   };
 
   networking.hostName = "popcat19-surface0";
-
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-      PermitRootLogin = "no";
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [ 22 ];
-
-  users.users.popcat19 = {
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFvtrt7vEbXSyP8xuOfsfNGgC99Y98s1fmBIp3eZP4zx popcat19@nixos"
-    ];
-  };
 
   system.stateVersion = "25.05";
 }
