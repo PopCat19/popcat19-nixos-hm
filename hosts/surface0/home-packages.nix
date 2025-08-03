@@ -44,9 +44,7 @@ let
     
     # Browsers (check availability per architecture)
     firefox
-  ] ++ (if inputs.zen-browser.packages ? "${system}" then [
-    inputs.zen-browser.packages."${system}".twilight
-  ] else []) ++ [
+  ] ++ [
     
     # Media (universal)
     mpv

@@ -36,9 +36,7 @@ with pkgs;
   
   # Browsers
   firefox
-] ++ (if inputs.zen-browser.packages ? "${system}" then [
-  inputs.zen-browser.packages."${system}".twilight
-] else []) ++ [
+] ++ [
   
   # Media
   mpv
