@@ -6,7 +6,7 @@
   home.sessionVariables = {
     EDITOR = "micro"; # Default terminal editor.
     VISUAL = "$EDITOR"; # Visual editor alias.
-    BROWSER = "zen-beta"; # Default web browser.
+    BROWSER = "zen-twilight"; # Default web browser.
     TERMINAL = "kitty";
     FILE_MANAGER = "dolphin";
     # Ensure thumbnails work properly
