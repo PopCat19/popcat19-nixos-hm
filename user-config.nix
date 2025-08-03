@@ -129,14 +129,4 @@
     
     trustedInterfaces = [ "lo" ];
   };
-
-  # Git configuration
-  git = {
-    userName = "PopCat19";
-    userEmail = "atsuo11111@gmail.com";
-    
-    extraConfig = {
-      credential.helper = "!gh auth git-credential";
-    };
-  };
 }

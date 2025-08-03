@@ -45,7 +45,6 @@ in
       # Core system
       ./home_modules/environment.nix
       ./home_modules/services.nix
-      ./home_modules/git.nix
       ./home_modules/ssh.nix
       ./home_modules/home-files.nix
       ./home_modules/systemd-services.nix
