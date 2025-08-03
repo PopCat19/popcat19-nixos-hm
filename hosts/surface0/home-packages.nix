@@ -125,7 +125,7 @@ in
     ./gaming-surface0.nix  # surface0-specific gaming with only osu-lazer-bin
     ../../home_modules/android-tools.nix  # kept as requested for Waydroid
     ../../home_modules/desktop-theme.nix
-    ../../home_modules/kde.nix  # kept as requested for dolphin configs
+    ../../home_modules/dolphin.nix  # kept as requested for dolphin configs
     ../../home_modules/qt-gtk-config.nix
     ../../home_modules/fuzzel-config.nix
     ../../home_modules/kitty.nix
@@ -133,7 +133,6 @@ in
     ../../home_modules/starship.nix
     ../../home_modules/micro.nix
     ../../home_modules/fcitx5.nix
-    ../../home_modules/rose-pine-checker.nix
     ../../quickshell_config/quickshell.nix
     ../../syncthing_config/home.nix
   ];
