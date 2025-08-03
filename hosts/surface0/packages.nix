@@ -1,6 +1,6 @@
 # System Packages Configuration for Surface
 # This file contains additional system packages beyond core dependencies
-# Imported by hosts/surface/configuration.nix
+# Imported by hosts/surface0/configuration.nix
 
 { pkgs, userConfig, ... }:
 
@@ -45,10 +45,6 @@ in
     # Development tools (universal)
     python313Packages.pip
     gh
-    
-    # Quick tools (universal)
-    quickgui
-    quickemu
   ]
   # Add virtualization packages
   ++ virtualizationPackages

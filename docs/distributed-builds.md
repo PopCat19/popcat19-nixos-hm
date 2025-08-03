@@ -11,7 +11,7 @@ This document explains how to set up distributed builds between `popcat19-nixos0
 
 ### Client Side (surface0)
 - `system_modules/distributed-builds.nix` - Client configuration for using remote builders
-- `hosts/surface/configuration.nix` - Includes distributed builds configuration
+- `hosts/surface0/configuration.nix` - Includes distributed builds configuration
 
 ### Server Side (nixos0)
 - `system_modules/distributed-builds-server.nix` - Server configuration for accepting builds
