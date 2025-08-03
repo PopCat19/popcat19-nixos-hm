@@ -1,5 +1,5 @@
-# home-hyprpanel-base.nix
-# HyprPanel base configuration with Rose Pine theme integration
+# hyprpanel-common.nix
+# HyprPanel common configuration with Rose Pine theme integration
 # This contains all shared settings except bar.layouts which are host-specific
 # Based on documentation: https://hyprpanel.com/
 { ... }:

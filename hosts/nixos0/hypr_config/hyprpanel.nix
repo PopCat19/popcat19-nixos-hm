@@ -8,7 +8,7 @@
 {
   # Import the shared hyprpanel base configuration
   imports = [
-    ../../../hypr_config/hyprpanel-base.nix
+    ../../../hypr_config/hyprpanel-common.nix
   ];
 
   # Add nixos0-specific bar.layouts configuration

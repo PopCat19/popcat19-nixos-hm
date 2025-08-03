@@ -21,7 +21,7 @@ in
     ../../system_modules/environment.nix
     ../../system_modules/core-packages.nix
     ../../system_modules/packages.nix
-    ./packages.nix
+    ./system-packages.nix
     ../../system_modules/fonts.nix
     ../../system_modules/ssh.nix
     ./distributed-builds-server.nix
