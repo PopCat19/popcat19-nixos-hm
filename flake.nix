@@ -144,7 +144,7 @@
     {
       # Host-specific NixOS configurations
       nixosConfigurations = {
-        popcat19-surface0 = mkHostConfig "popcat19-surface0" "x86_64-linux" ./hosts/surface/configuration.nix;
+        popcat19-surface0 = mkHostConfig "popcat19-surface0" "x86_64-linux" ./hosts/surface0/configuration.nix;
         popcat19-nixos0 = mkHostConfig "popcat19-nixos0" "x86_64-linux" ./hosts/nixos0/configuration.nix;
       };
     };
