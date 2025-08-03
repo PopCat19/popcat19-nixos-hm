@@ -6,32 +6,31 @@ let
   isX86_64 = system == "x86_64-linux";
   isAarch64 = system == "aarch64-linux";
   
-  # Architecture-specific QEMU package selection
+  # Architecture-specific QEMU package
   qemuPackage = if isX86_64 then pkgs.qemu_kvm else pkgs.qemu;
   
   # Architecture-specific OVMF packages
   ovmfPackages = if isX86_64 then
     [ pkgs.OVMFFull.fd ]
   else if isAarch64 then
-    [ pkgs.OVMF.fd ] # ARM64 OVMF
+    [ pkgs.OVMF.fd ]
   else
     [ ];
 
 in
 {
-  # **VIRTUALISATION CONFIGURATION**
-  # Defines Docker, libvirt, and other virtualisation settings.
+  # Virtualisation configuration
   virtualisation = {
-    # Waydroid (Android emulation) - works on both architectures
+    # Waydroid (Android emulation)
     waydroid.enable = true;
     
-    # Docker - universal support
+    # Docker
     docker.enable = true;
     
-    # libvirt/QEMU - architecture-specific configuration
+    # libvirt/QEMU
     libvirtd.enable = true;
     libvirtd.qemu = {
-      package = qemuPackage; # KVM on x86_64, regular QEMU on ARM64
+      package = qemuPackage;
       runAsRoot = true;
       swtpm.enable = true;
       ovmf = {
@@ -40,7 +39,7 @@ in
       };
     };
     
-    # SPICE USB redirection - universal support
+    # SPICE USB redirection
     spiceUSBRedirection.enable = true;
   };
 }
