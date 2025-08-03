@@ -59,10 +59,10 @@
     # ─── GTK THEME ───
     # Main visual theme for all GTK applications
     # This theme is built as a package and provides the Rose Pine color scheme
-    # theme = {
-    #   name = "Rose-Pine-Main-BL";           # Must match GTK_THEME environment variable
-    #   package = pkgs.rose-pine-gtk-theme-full;  # Custom package built in pkgs/
-    # };
+    theme = {
+      name = "Rose-Pine-Main-BL";           # Must match GTK_THEME environment variable
+      package = pkgs.rose-pine-gtk-theme-full;  # Custom package built in overlays/
+    };
 
     # ─── ICON THEME ───
     # Dark icon theme that complements Rose Pine colors
@@ -128,7 +128,7 @@
     enable = true;
     style = {
       name = "kvantum";  # Must match QT_STYLE_OVERRIDE environment variable
-      package = pkgs.libsForQt5.qtstyleplugin-kvantum;  # Kvantum style plugin for Qt5
+      package = pkgs.kdePackages.qtstyleplugin-kvantum;  # Kvantum style plugin for Qt6
     };
   };
 
@@ -469,11 +469,12 @@
     libsForQt5.qt5ct                   # Qt5 configuration tool
     qt6ct                              # Qt6 configuration tool (used in environment vars)
     themechanger                       # Theme switching utility
-    kdePackages.qtstyleplugin-kvantum  # Qt style plugin for Kvantum themes
+    kdePackages.qtstyleplugin-kvantum  # Qt6 style plugin for Kvantum themes
+    libsForQt5.qtstyleplugin-kvantum   # Qt5 style plugin for Kvantum themes (for compatibility)
 
     # ─── ROSE PINE THEME PACKAGES ───
     rose-pine-kvantum                  # Kvantum Rose Pine themes
-    # rose-pine-gtk-theme-full           # Complete Rose Pine GTK theme (custom package)
+    rose-pine-gtk-theme-full           # Complete Rose Pine GTK theme (custom package)
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # Rose Pine cursors
 
     # ─── ADDITIONAL THEME PACKAGES ───

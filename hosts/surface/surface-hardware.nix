@@ -84,11 +84,16 @@
       # Enable Surface aggregator bus
       "surface_aggregator.dyndbg=+p"
       
+      # Reduce surface_serial_hub verbosity in dmesg
+      "surface_serial_hub.dyndbg=+pfl"
+      
       # Improve touch responsiveness and graphics performance
       "i915.enable_psr=0"
       "i915.enable_fbc=1"
       "i915.fastboot=1"
       "i915.enable_guc=2"
+      "i915.enable_dc=0"  # Disable display C-states for better performance
+      "i915.disable_power_well=0"  # Keep power wells active
       
       # Power management optimizations - use intel_pstate for better performance
       "intel_pstate=active"
@@ -156,11 +161,48 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
+        # Intel Mesa drivers for optimal graphics performance
+        mesa
+        
         # Intel graphics drivers
         intel-media-driver
         intel-vaapi-driver
         libvdpau-va-gl
         intel-compute-runtime
+        
+        # OpenCL support for Intel CPUs and GPUs
+        # intel-compute-runtime-legacy1  # Removed due to conflict with intel-compute-runtime
+        intel-ocl  # OpenCL support
+        
+        # Vulkan drivers for modern graphics
+        vulkan-loader
+        vulkan-validation-layers
+        vulkan-extension-layer
+        
+        # Additional Intel graphics packages
+        vpl-gpu-rt # QSV on 11th gen or newer
+        # intel-media-sdk removed due to security vulnerabilities
+        
+        # WebGL and hardware acceleration support
+        libGL
+        libGLU
+        freeglut
+        glxinfo
+        
+        # VDPAU support
+        libva
+        libva-utils
+        vdpauinfo
+      ];
+      
+      # 32-bit support for Intel graphics
+      extraPackages32 = with pkgs.pkgsi686Linux; [
+        mesa
+        intel-vaapi-driver
+        intel-media-driver
+        libGL
+        libGLU
+        vulkan-loader
       ];
     };
     
@@ -208,7 +250,7 @@
           governor = "schedutil";
           turbo = "auto";
           scaling_min_freq = 400000;
-          scaling_max_freq = 2800000;
+          scaling_max_freq = 4200000;
         };
         charger = {
           governor = "performance";
@@ -301,6 +343,32 @@
   
   # WiFi firmware and driver optimizations
   networking.wireless.enable = false; # Let NetworkManager handle WiFi
+
+  # **INTEL GRAPHICS ENVIRONMENT VARIABLES**
+  # Set environment variables for Intel graphics drivers
+  environment.sessionVariables = {
+    # Use Intel HD Media Driver for VAAPI
+    LIBVA_DRIVER_NAME = "iHD";
+    
+    # WebGL and hardware acceleration support
+    MESA_LOADER_DRIVER_OVERRIDE = "iris";
+    
+    # Enable hardware acceleration in browsers
+    MOZ_ENABLE_WAYLAND = "1";
+    MOZ_USE_XINPUT2 = "1";
+    
+    # Vulkan driver selection
+    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
+    
+    # OpenCL support
+    OCL_ICD_VENDORS = "/run/opengl-driver/etc/OpenCL/vendors";
+    
+    # Enable Intel GPU debugging if needed
+    # INTEL_DEBUG = "all";
+    
+    # Set DRI_PRIME for hybrid graphics if needed
+    # DRI_PRIME = "1";
+  };
 
   # **SURFACE DISPLAY CONFIGURATION**
   # High DPI display support

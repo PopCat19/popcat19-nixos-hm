@@ -23,6 +23,11 @@ To test a machine configuration, run:
 nixos-rebuild dry-run --flake .#<hostname>
 ```
 
+To check flakes/configurations, run:
+```
+nix flake check
+```
+
 To query nixpkgs, run:
 ```
 nix search nixpkgs <package>

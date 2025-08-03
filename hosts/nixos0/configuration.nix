@@ -4,8 +4,8 @@
 { pkgs, inputs, lib, ... }:
 
 let
-  # Import nixos0-specific user configuration
-  nixos0UserConfig = import ./user-config.nix;
+  # Import global user configuration with nixos0 hostname
+  nixos0UserConfig = import ../../user-config.nix { hostname = "popcat19-nixos0"; };
 in
 
 {
@@ -16,26 +16,24 @@ in
     # Hardware configuration for nixos0
     ./hardware-configuration.nix
     
-    # Backup system (creates configuration.nix.bak with system_modules inlined)
-    ../../backup-config.nix
-    
     # External configurations
     ../../syncthing_config/system.nix
     
-    # System modules (shared with main configuration)
-    ./boot.nix  # nixos0-specific boot configuration
-    ./hardware.nix  # nixos0-specific hardware configuration
+    # System modules (complete set from root configuration)
+    ./boot.nix  # nixos0-specific boot configuration (overrides system_modules/boot.nix)
+    ./hardware.nix  # nixos0-specific hardware configuration (overrides system_modules/hardware.nix)
     ../../system_modules/networking.nix
     ../../system_modules/localization.nix
     ../../system_modules/services.nix
     ../../system_modules/display.nix
     ../../system_modules/audio.nix
     ../../system_modules/users.nix
-    ./virtualisation.nix  # nixos0-specific virtualization
+    ./virtualisation.nix  # nixos0-specific virtualization (overrides system_modules/virtualisation.nix)
     ../../system_modules/programs.nix
     ../../system_modules/environment.nix
     ../../system_modules/core-packages.nix
-    ./packages.nix  # nixos0-specific packages configuration
+    ../../system_modules/packages.nix  # This contains hyprshade and other packages
+    ./packages.nix  # nixos0-specific additional packages
     ../../system_modules/fonts.nix
     ./distributed-builds-server.nix  # Server-side distributed builds config
     
@@ -57,7 +55,7 @@ in
       userConfig = nixos0UserConfig;
       system = "x86_64-linux";
     };
-    users.${nixos0UserConfig.user.username} = import ./home-packages.nix;
+    users.${nixos0UserConfig.user.username} = import ../../home.nix;
     backupFileExtension = "bak2"; # Custom backup file extension.
   };
 
