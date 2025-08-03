@@ -4,26 +4,6 @@
   # **DISTRIBUTED BUILDS SERVER CONFIGURATION**
   # Configures nixos0 to act as a build server for other machines
   
-  # SSH server configuration for accepting build requests
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-      PermitRootLogin = "no";
-      # Allow multiple concurrent connections for parallel builds
-      MaxSessions = 20;
-      MaxStartups = "20:30:100";
-    };
-    # Ensure Nix is available in SSH sessions
-    extraConfig = ''
-      SetEnv PATH=/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    '';
-  };
-
-  # Open SSH port in firewall
-  networking.firewall.allowedTCPPorts = [ 22 ];
-
   # Configure Nix for serving as a build machine
   nix.settings = {
     # Trust users that can perform builds

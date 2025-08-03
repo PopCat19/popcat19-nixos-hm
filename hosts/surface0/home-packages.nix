@@ -117,12 +117,11 @@ in
     ../../home_modules/screenshot.nix
     ../../home_modules/mangohud.nix
     ./hypr_config/hyprland.nix
-    ../../hypr_config/hyprpanel.nix
+    ./hypr_config/hyprpanel.nix
 
     # Core system modules
     ../../home_modules/environment.nix
     ../../home_modules/services.nix
-    ../../home_modules/git.nix
     ../../home_modules/home-files.nix
     ../../home_modules/systemd-services.nix
 
