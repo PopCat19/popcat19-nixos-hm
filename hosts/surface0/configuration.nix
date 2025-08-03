@@ -47,4 +47,14 @@ in
   networking.hostName = "popcat19-surface0";
 
   system.stateVersion = "25.05";
+  
+  # Add nixos0's SSH public key to surface0's authorized_keys
+  users.users.${surfaceUserConfig.user.username} = {
+    openssh.authorizedKeys.keys = [
+      # Default SSH key from system_modules/ssh.nix
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFvtrt7vEbXSyP8xuOfsfNGgC99Y98s1fmBIp3eZP4zx popcat19@nixos"
+      # nixos0's SSH public key for SSH access from nixos0 to surface0
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFvtrt7vEbXSyP8xuOfsfNGgC99Y98s1fmBIp3eZP4zx popcat19@nixos0"
+    ];
+  };
 }
