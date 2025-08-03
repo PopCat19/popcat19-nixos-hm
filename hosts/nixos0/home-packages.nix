@@ -44,9 +44,7 @@ let
     
     # Browsers (check availability per architecture)
     firefox
-  ] ++ (if inputs.zen-browser.packages ? "${system}" then [
-    inputs.zen-browser.packages."${system}".default
-  ] else []) ++ [
+  ] ++ [
     
     # Media (universal)
     mpv
@@ -116,6 +114,7 @@ in
     ../../home_modules/theme.nix
     ../../home_modules/screenshot.nix
     ../../home_modules/mangohud.nix
+    ../../home_modules/zen-browser.nix
     ./hypr_config/hyprland.nix
     ./hypr_config/hyprpanel.nix
 
