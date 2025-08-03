@@ -32,7 +32,7 @@
       autoStart = true;
       capSysAdmin = true;
       openFirewall = true;
-      settings.output_name = "1";
+      settings.output_name = "DP-3";
     };
 
     # D-Bus service
