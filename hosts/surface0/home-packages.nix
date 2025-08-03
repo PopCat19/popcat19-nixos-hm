@@ -25,7 +25,6 @@ let
   systemMonitoring = if isX86_64 then [ pkgs.btop-rocm ] else [ pkgs.btop ];
   hardwareControl = if isX86_64 then [
     # ddcui removed for Surface - no DDC support needed
-    pkgs.openrgb-with-all-plugins
     pkgs.brightnessctl  # Brightness control for Surface display
   ] else [
     # ARM64 alternatives or empty list
@@ -43,13 +42,14 @@ let
     wl-clipboard
     
     # Browsers (check availability per architecture)
-    firefox
+    # firefox removed - using Zen browser instead
+    
   ] ++ [
     
     # Media (universal)
-    mpv
-    audacious
-    audacious-plugins
+    mpv  # kept as requested
+    audacious  # kept as requested
+    audacious-plugins  # kept as requested
     
     # Hyprland Essentials (check ARM64 compatibility)
     hyprpanel
@@ -70,11 +70,8 @@ let
     pavucontrol
     playerctl
   ] ++ hardwareControl ++ [
-    glances
-    
-    # File Sharing (universal)
-    localsend
-    zrok
+    localsend  # kept as requested
+    # zrok removed - networking tool not needed
     
     # Notifications (universal)
     libnotify
@@ -112,8 +109,8 @@ in
   imports = [
     # Theme and UI configurations
     ../../home_modules/theme.nix
-    ../../home_modules/screenshot.nix
-    ../../home_modules/mangohud.nix
+    ../../home_modules/screenshot.nix  # kept as requested
+    ../../home_modules/mangohud.nix  # kept as requested
     ../../home_modules/zen-browser.nix
     ./hypr_config/hyprland.nix
     ./hypr_config/hyprpanel.nix
@@ -125,12 +122,10 @@ in
     ../../home_modules/systemd-services.nix
 
     # Application and feature modules
-    ../../home_modules/gaming.nix
-    ../../home_modules/development.nix
-    ../../home_modules/android-tools.nix
-    ../../home_modules/shimboot-project.nix
+    ../../home_modules/gaming.nix  # kept as requested
+    ../../home_modules/android-tools.nix  # kept as requested for Waydroid
     ../../home_modules/desktop-theme.nix
-    ../../home_modules/kde.nix
+    ../../home_modules/kde.nix  # kept as requested for dolphin configs
     ../../home_modules/qt-gtk-config.nix
     ../../home_modules/fuzzel-config.nix
     ../../home_modules/kitty.nix
