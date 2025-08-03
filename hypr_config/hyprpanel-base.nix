@@ -93,7 +93,7 @@
 
       # Dashboard shortcuts
       "menus.dashboard.shortcuts.left.shortcut1.icon" = "";
-      "menus.dashboard.shortcuts.left.shortcut1.command" = "zen-beta";
+      "menus.dashboard.shortcuts.left.shortcut1.command" = "zen-twilight";
       "menus.dashboard.shortcuts.left.shortcut1.tooltip" = "Zen Browser";
       "menus.dashboard.shortcuts.left.shortcut2.command" = "kitty";
       "menus.dashboard.shortcuts.left.shortcut2.icon" = "";
