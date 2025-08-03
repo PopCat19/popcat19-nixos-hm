@@ -13,7 +13,7 @@ let
   # Architecture-specific packages
   x86_64Packages = with pkgs; [
     # ROCm packages (AMD GPU acceleration - x86_64 only)
-    rocmPackages.rpp
+    # rocmPackages.rpp removed - AMD GPU acceleration not needed
   ];
   
   aarch64Packages = with pkgs; [
@@ -32,19 +32,17 @@ in
   # Non-essential packages for enhanced system functionality
   environment.systemPackages = with pkgs; [
     # Package management (universal)
-    flatpak-builder
+    # flatpak-builder removed - not needed for basic Flatpak usage
     
     # Network tools (universal)
-    protonvpn-gui
-    wireguard-tools
+    # protonvpn-gui removed - VPN client not needed
+    # wireguard-tools removed - VPN tools not needed
     
     # Hardware tools (universal)
-    # i2c-tools and ddcutil removed for Surface
     usbutils
     
     # Development tools (universal)
-    python313Packages.pip
-    gh
+    gh  # GitHub CLI - kept as requested
   ]
   # Add virtualization packages
   ++ virtualizationPackages

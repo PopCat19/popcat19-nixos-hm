@@ -3,7 +3,7 @@
 {
   home.packages = with pkgs; [
     jdk
-    nodejs
+    nodejs_latest
     yarn-berry
     rustup
   ];
