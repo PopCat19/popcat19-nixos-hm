@@ -122,7 +122,7 @@ in
     ../../home_modules/systemd-services.nix
 
     # Application and feature modules
-    ../../home_modules/gaming.nix  # kept as requested
+    ./gaming-surface0.nix  # surface0-specific gaming with only osu-lazer-bin
     ../../home_modules/android-tools.nix  # kept as requested for Waydroid
     ../../home_modules/desktop-theme.nix
     ../../home_modules/kde.nix  # kept as requested for dolphin configs
