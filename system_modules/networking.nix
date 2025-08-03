@@ -33,6 +33,7 @@
       trustedInterfaces = userConfig.network.trustedInterfaces;
       allowedTCPPorts = userConfig.network.allowedTCPPorts;
       allowedUDPPorts = userConfig.network.allowedUDPPorts;
+      allowedTCPPortRanges = userConfig.network.allowedTCPPortRanges or [];
       checkReversePath = false;
     };
   };
