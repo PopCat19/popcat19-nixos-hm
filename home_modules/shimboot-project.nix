@@ -11,5 +11,6 @@
     nixos-install-tools
     nixos-generators
     sshpass
+    coreutils-full
   ];
 }
