@@ -10,5 +10,6 @@
     squashfsTools
     nixos-install-tools
     nixos-generators
+    sshpass
   ];
 }
