@@ -43,5 +43,10 @@ in
   };
 
   networking.hostName = "popcat19-nixos0";
+  
+  nix.extraOptions = ''
+    experimental-features = fetch-tree flakes nix-command impure-derivations
+  '';
+  
   system.stateVersion = "25.05";
 }
