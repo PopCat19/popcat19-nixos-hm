@@ -74,6 +74,7 @@ with pkgs;
   
   # Development Editors
   vscodium
+  zed-editor
   
   # Nix Development
   nil
