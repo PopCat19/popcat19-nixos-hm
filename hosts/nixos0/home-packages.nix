@@ -82,7 +82,7 @@ let
     
     # Development Editors (universal)
     vscodium
-    zed
+    zeditor
     
     # Nix Development (universal)
     nil
