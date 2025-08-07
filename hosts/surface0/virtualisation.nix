@@ -13,11 +13,5 @@
     
     # Docker - keep this enabled
     docker.enable = true;
-    
-    # Disable libvirt/QEMU completely
-    libvirtd.enable = false;
-    
-    # Disable SPICE USB redirection (not needed without QEMU)
-    spiceUSBRedirection.enable = false;
   };
 }
