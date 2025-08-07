@@ -46,7 +46,9 @@ in
     i2c-tools
     ddcutil
     usbutils
-    
+    util-linux
+    e2fsprogs
+
     # Development tools
     python313Packages.pip
     gh
