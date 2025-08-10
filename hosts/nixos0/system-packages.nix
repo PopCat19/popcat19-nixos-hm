@@ -60,9 +60,6 @@ in
     htop
     iotop
     nethogs
-
-    # Music
-    zrythm
   ]
   # Add virtualization packages
   ++ virtualizationPackages
