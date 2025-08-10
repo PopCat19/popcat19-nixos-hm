@@ -71,6 +71,7 @@ let
     playerctl
   ] ++ hardwareControl ++ [
     glances
+    zrythm
     
     # File Sharing (universal)
     localsend
