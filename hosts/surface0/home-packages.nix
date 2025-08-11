@@ -60,7 +60,6 @@ let
     
     # Communication (universal)
     vesktop
-    keepassxc
     
     # System Monitoring (architecture-specific)
   ] ++ systemMonitoring ++ [
