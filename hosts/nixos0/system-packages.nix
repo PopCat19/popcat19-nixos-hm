@@ -47,7 +47,6 @@ in
     i2c-tools
     ddcutil
     usbutils
-    opentabletdriver
     
     # Development tools (universal)
     python313Packages.pip
