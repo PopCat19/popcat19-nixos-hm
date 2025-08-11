@@ -9,9 +9,9 @@
   # Surface-specific: Only Waydroid and Docker, no QEMU/KVM
   virtualisation = {
     # Waydroid (Android emulation) - keep this enabled
-    waydroid.enable = true;
+    # waydroid.enable = true;
     
     # Docker - keep this enabled
-    docker.enable = true;
+    # docker.enable = true;
   };
 }

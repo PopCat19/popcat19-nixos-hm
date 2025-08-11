@@ -12,5 +12,8 @@
     nixos-generators
     sshpass
     coreutils-full
+    util-linux
+    e2fsprogs
+    file
   ];
 }
