@@ -20,7 +20,7 @@ in
     ../../system_modules/audio.nix
     ../../system_modules/users.nix
     ./virtualisation.nix
-    ../../system_modules/programs.nix
+    ./system-programs.nix
     ../../system_modules/environment.nix
     ../../system_modules/core-packages.nix
     ./system-packages.nix
