@@ -16,7 +16,7 @@ let
   # Determine which host-specific configuration to import
   hostHomeConfig = 
     if hostname == "popcat19-surface0" then ./hosts/surface0/home-packages.nix
-    else if hostname == "popcat19-nixos0" then ./hosts/nixos0/home-packages.nix
+    else if hostname == "popcat19-nixos0" then ./hosts/nixos0/home.nix
     else null;
 in
 

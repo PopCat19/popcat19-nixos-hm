@@ -38,7 +38,7 @@
   home.file = {
     # Copy the Surface-specific monitors.conf file
     ".config/hypr/monitors.conf".source = ./monitors.conf;
-    ".config/hypr/userprefs.conf".source = ./userprefs.conf;
+    ".config/hypr/userprefs.conf".source = ../../../hypr_config/userprefs.conf;
     
     # Copy shared hyprpaper.conf (not device-specific)
     ".config/hypr/hyprpaper.conf".source = ../../../hypr_config/hyprpaper.conf;
