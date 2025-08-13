@@ -71,11 +71,7 @@
   };
 
   # USER GROUPS FOR HARDWARE ACCESS
-  users.users = {
-    popcat19 = {
-      extraGroups = [ "video" "surface-control" ];
-    };
-  };
+  # User groups moved to system_modules/users.nix (configured via user-config.nix)
 
   # SURFACE-SPECIFIC PACKAGES
   environment.systemPackages = with pkgs; [
@@ -131,4 +127,3 @@
     OCL_ICD_VENDORS = "/run/opengl-driver/etc/OpenCL/vendors";
   };
 }
-
