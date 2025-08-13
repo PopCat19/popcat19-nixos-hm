@@ -30,10 +30,20 @@
     };
     firewall = {
       enable = true;
-      trustedInterfaces = userConfig.network.trustedInterfaces;
-      allowedTCPPorts = userConfig.network.allowedTCPPorts;
-      allowedUDPPorts = userConfig.network.allowedUDPPorts;
-      allowedTCPPortRanges = userConfig.network.allowedTCPPortRanges or [];
+      # network overrides deprecated — use canonical defaults here
+      trustedInterfaces = [ "lo" ];
+      allowedTCPPorts = [
+        22      # SSH
+        53317   # Syncthing
+        30071   # Custom port
+        3845    # Figma Dev Mode MCP server
+      ];
+      allowedUDPPorts = [
+        53317   # Syncthing
+      ];
+      allowedTCPPortRanges = [
+        { from = 3000; to = 4000; }  # Range for local development servers
+      ];
       checkReversePath = false;
     };
   };

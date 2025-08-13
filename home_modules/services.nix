@@ -6,8 +6,7 @@ let
   isAarch64 = system == "aarch64-linux";
   
   # Architecture-specific acceleration settings
-  ollamaAcceleration = if isX86_64 then "rocm" else null; # ROCm only on x86_64
-  
+  # moved to ../../home_modules/generative.nix
 in
 {
   # **SYSTEM SERVICES**
@@ -26,11 +25,6 @@ in
     # Clipboard Management.
     cliphist.enable = true; # Clipboard history manager.
 
-    # AI/ML Services.
-    ollama = {
-      enable = true;
-      # Architecture-specific acceleration
-      acceleration = ollamaAcceleration; # ROCm on x86_64, CPU on ARM64
-    };
+    # AI/ML Services moved to ../../home_modules/generative.nix
   };
 }

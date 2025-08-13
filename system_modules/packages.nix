@@ -17,29 +17,14 @@ let
     # ARM64-specific packages
   ];
   
-  # Virtualization packages
-  virtualizationPackages = with pkgs; [
-    docker
-    spice-gtk
-    win-virtio
-    win-spice
-    virt-manager
-    libvirt
-  ] ++ (if isX86_64 then [
-    qemu
-  ] else [
-    qemu
-  ]);
+  # Virtualization packages moved to system_modules/virtualisation.nix
+  # See system_modules/virtualisation.nix for virtualization-related packages
 
 in
 {
   # Additional system packages
   environment.systemPackages = with pkgs; [
-    # Package management
-    flatpak-builder
-    
     # Network tools
-    protonvpn-gui
     wireguard-tools
     
     # Hardware tools
@@ -48,16 +33,12 @@ in
     usbutils
     util-linux
     e2fsprogs
+    eza
 
     # Development tools
     python313Packages.pip
     gh
-    
-    # Quick tools
-    quickgui
-    quickemu
   ]
-  ++ virtualizationPackages
   ++ (if isX86_64 then x86_64Packages else [])
   ++ (if isAarch64 then aarch64Packages else []);
 }
