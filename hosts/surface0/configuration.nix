@@ -44,6 +44,9 @@ in
 
   networking.hostName = "popcat19-surface0";
 
+  # Add hyprshade to system packages for surface0 (package provided via overlays/hyprshade.nix)
+  environment.systemPackages = with pkgs; (config.environment.systemPackages or []) ++ [ hyprshade ];
+
   system.stateVersion = "25.05";
   
   # Add nixos0's SSH public key to surface0's authorized_keys
