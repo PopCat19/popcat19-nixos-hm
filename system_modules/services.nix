@@ -23,7 +23,6 @@
     flatpak.enable = true;
 
     # Hardware
-    hardware.openrgb.enable = true;
     upower.enable = true;
 
     # Game streaming
