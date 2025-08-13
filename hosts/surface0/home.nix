@@ -9,10 +9,6 @@
   ...
 }:
 
-let
-  # Host-specific package list is provided by hosts/surface0/home_modules/packages.nix
-  hostPackages = import ./home_modules/packages.nix { inherit pkgs inputs system userConfig; };
-in
 {
   home.username = userConfig.user.username;
   home.homeDirectory = userConfig.directories.home;
@@ -34,7 +30,6 @@ in
     ../../home_modules/gaming.nix
     ../../home_modules/development.nix
     ../../home_modules/android-tools.nix
-    ../../home_modules/shimboot-project.nix
     ../../home_modules/desktop-theme.nix
     ../../home_modules/dolphin.nix
     ../../home_modules/qt-gtk-config.nix
@@ -47,7 +42,4 @@ in
     ../../quickshell_config/quickshell.nix
     ../../syncthing_config/home.nix
   ];
-
-  # Use host-local package list so surface-specific overrides are possible
-  home.packages = hostPackages;
 }
