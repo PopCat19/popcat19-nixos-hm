@@ -26,6 +26,8 @@ let
     virt-manager
     libvirt
     qemu
+    quickgui
+    quickemu
   ];
  
 in
@@ -54,6 +56,6 @@ in
     spiceUSBRedirection.enable = true;
   };
 
-  # Add virtualization packages and quick tools to systemPackages
-  environment.systemPackages = with pkgs; virtualizationPackages ++ [ quickgui quickemu ];
+  # Add virtualization-related packages to systemPackages (quick tools included above)
+  environment.systemPackages = virtualizationPackages;
 }
