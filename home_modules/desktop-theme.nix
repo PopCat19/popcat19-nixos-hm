@@ -13,7 +13,6 @@
     hyprpicker
     hyprls
     mangayomi
-    ollama-rocm
     appimage-run
   ];
 }

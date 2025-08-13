@@ -24,6 +24,7 @@
 
     ../../home_modules/environment.nix
     ../../home_modules/services.nix
+    ../../home_modules/generative.nix
     ../../home_modules/home-files.nix
     ../../home_modules/systemd-services.nix
 
