@@ -34,6 +34,7 @@ in
     ../../home_modules/systemd-services.nix
 
     ../../home_modules/gaming.nix
+    ../../home_modules/stream.nix
     ../../home_modules/development.nix
     ../../home_modules/android-tools.nix
     ../../home_modules/shimboot-project.nix

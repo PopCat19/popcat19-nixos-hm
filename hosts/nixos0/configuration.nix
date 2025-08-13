@@ -13,6 +13,7 @@ in
     ../../system_modules/networking.nix
     ../../system_modules/localization.nix
     ../../system_modules/services.nix
+    ../../system_modules/stream.nix
     ../../system_modules/display.nix
     ../../system_modules/audio.nix
     ../../system_modules/users.nix
@@ -23,6 +24,8 @@ in
     ../../system_modules/packages.nix
     ../../system_modules/fonts.nix
     ../../system_modules/ssh.nix
+    ../../system_modules/tablet.nix
+    ../../system_modules/openrgb.nix
     ./distributed-builds-server.nix
     inputs.home-manager.nixosModules.home-manager
   ];
