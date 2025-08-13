@@ -19,7 +19,6 @@ in
     ../../system_modules/display.nix
     ../../system_modules/audio.nix
     ../../system_modules/users.nix
-    ../../system_modules/virtualisation.nix
     ../../system_modules/programs.nix
     ../../system_modules/environment.nix
     ../../system_modules/core-packages.nix
