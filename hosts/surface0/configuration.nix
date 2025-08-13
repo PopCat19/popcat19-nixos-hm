@@ -8,22 +8,22 @@ in
   imports = [
     ./hardware-configuration.nix
     ./surface-hardware.nix
-    ./clear-bdprochot.nix
-    ./thermal-config.nix
+    ./system_modules/clear-bdprochot.nix
+    ./system_modules/thermal-config.nix
     ../../syncthing_config/system.nix
-    ./boot.nix
-    ./hardware.nix
+    ./system_modules/boot.nix
+    ./system_modules/hardware.nix
     ../../system_modules/networking.nix
     ../../system_modules/localization.nix
     ../../system_modules/services.nix
     ../../system_modules/display.nix
     ../../system_modules/audio.nix
     ../../system_modules/users.nix
-    ./virtualisation.nix
-    ./system-programs.nix
+    ./system_modules/virtualisation.nix
+    ./system_modules/system-programs.nix
     ../../system_modules/environment.nix
     ../../system_modules/core-packages.nix
-    ./system-packages.nix
+    ./system_modules/system-packages.nix
     ../../system_modules/fonts.nix
     ../../system_modules/ssh.nix
     ../../system_modules/distributed-builds.nix
