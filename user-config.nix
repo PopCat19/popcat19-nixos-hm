@@ -115,24 +115,7 @@
     syncthing = "/home/popcat19/syncthing-shared";
   };
 
-  # Network configuration
-  network = {
-    allowedTCPPorts = [
-      22      # SSH
-      53317   # Syncthing
-      30071   # Custom port
-      3845    # Figma Dev Mode MCP server
-    ];
-    
-    allowedUDPPorts = [
-      53317   # Syncthing
-    ];
-    
-    trustedInterfaces = [ "lo" ];
-    
-    # Allow local loopback connections for MCP servers
-    allowedTCPPortRanges = [
-      { from = 3000; to = 4000; }  # Range for local development servers
-    ];
-  };
+  # Network configuration moved to system_modules/networking.nix
+  # Host-specific overrides may still set `network` in userConfig if needed.
+
 }
