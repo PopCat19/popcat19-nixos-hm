@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-
+{ config, pkgs, lib, ... }:
 {
   # **BOOT & KERNEL CONFIGURATION**
   # Defines boot loader, kernel, and filesystem support settings for Surface.
@@ -72,7 +71,7 @@
       "intel_backlight"
       "video"
     ];
-    
+
     # Surface-specific kernel parameters
     kernelParams = [
       "mem_sleep_default=deep"
@@ -104,7 +103,7 @@
     ];
 
     # Additional module packages for Surface hardware (kept empty placeholder to allow overrides)
-    extraModulePackages = with config.boot.kernelPackages; [
+    extraModulePackages = with pkgs; [
       # Surface-specific drivers that may not be in mainline kernel
     ];
 
