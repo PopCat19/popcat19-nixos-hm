@@ -7,7 +7,7 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    ./surface-hardware.nix
+    ./system_modules/surface-hardware.nix
     ./system_modules/clear-bdprochot.nix
     ./system_modules/thermal-config.nix
     ../../syncthing_config/system.nix
