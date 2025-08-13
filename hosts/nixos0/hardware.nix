@@ -9,7 +9,6 @@
       powerOnBoot = true;
     };
     opentabletdriver.enable = true;
-    opentabletdriver.daemon.enable = true;
     i2c.enable = true;
   };
 
