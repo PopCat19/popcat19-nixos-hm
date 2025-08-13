@@ -25,15 +25,6 @@
     # Hardware
     upower.enable = true;
 
-    # Game streaming
-    sunshine = {
-      enable = true;
-      autoStart = true;
-      capSysAdmin = true;
-      openFirewall = true;
-      settings.output_name = "DP-3";
-    };
-
     # D-Bus service
     dbus.enable = true;
   };
