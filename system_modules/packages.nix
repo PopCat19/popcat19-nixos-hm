@@ -33,6 +33,7 @@ in
     usbutils
     util-linux
     e2fsprogs
+    eza
 
     # Development tools
     python313Packages.pip
