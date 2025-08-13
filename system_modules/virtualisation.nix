@@ -16,7 +16,18 @@ let
     [ pkgs.OVMF.fd ]
   else
     [ ];
-
+ 
+  # Virtualization-related packages (moved here)
+  virtualizationPackages = with pkgs; [
+    docker
+    spice-gtk
+    win-virtio
+    win-spice
+    virt-manager
+    libvirt
+    qemu
+  ];
+ 
 in
 {
   # Virtualisation configuration
@@ -42,4 +53,7 @@ in
     # SPICE USB redirection
     spiceUSBRedirection.enable = true;
   };
+
+  # Add virtualization packages and quick tools to systemPackages
+  environment.systemPackages = with pkgs; virtualizationPackages ++ [ quickgui quickemu ];
 }
