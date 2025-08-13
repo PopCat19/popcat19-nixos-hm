@@ -55,7 +55,7 @@
       "i2c"
       "input"
       "libvirtd"
-    ];
+    ] ++ (if hostname == "popcat19-surface0" then [ "surface-control" ] else []);
   };
 
   # Default applications
