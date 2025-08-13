@@ -1,27 +1,5 @@
 { userConfig, ... }:
 
-let
-  # Network defaults (previously in user-config.nix)
-  network = userConfig.network or {
-    allowedTCPPorts = [
-      22      # SSH
-      53317   # Syncthing
-      30071   # Custom port
-      3845    # Figma Dev Mode MCP server
-    ];
-
-    allowedUDPPorts = [
-      53317   # Syncthing
-    ];
-
-    trustedInterfaces = [ "lo" ];
-
-    # Allow local loopback connections for MCP servers / development servers
-    allowedTCPPortRanges = [
-      { from = 3000; to = 4000; }  # Range for local development servers
-    ];
-  };
-in
 {
   # Networking and firewall configuration
   networking = {
@@ -52,10 +30,20 @@ in
     };
     firewall = {
       enable = true;
-      trustedInterfaces = network.trustedInterfaces;
-      allowedTCPPorts = network.allowedTCPPorts;
-      allowedUDPPorts = network.allowedUDPPorts;
-      allowedTCPPortRanges = network.allowedTCPPortRanges or [];
+      # Use per-host overrides from userConfig.network when present, otherwise fall back to sensible defaults.
+      trustedInterfaces = (userConfig.network and userConfig.network.trustedInterfaces) or [ "lo" ];
+      allowedTCPPorts = (userConfig.network and userConfig.network.allowedTCPPorts) or [
+        22      # SSH
+        53317   # Syncthing
+        30071   # Custom port
+        3845    # Figma Dev Mode MCP server
+      ];
+      allowedUDPPorts = (userConfig.network and userConfig.network.allowedUDPPorts) or [
+        53317   # Syncthing
+      ];
+      allowedTCPPortRanges = (userConfig.network and userConfig.network.allowedTCPPortRanges) or [
+        { from = 3000; to = 4000; }  # Range for local development servers
+      ];
       checkReversePath = false;
     };
   };
