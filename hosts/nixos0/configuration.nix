@@ -13,6 +13,7 @@ in
     ../../system_modules/networking.nix
     ../../system_modules/localization.nix
     ../../system_modules/services.nix
+    ../../system_modules/stream.nix
     ../../system_modules/display.nix
     ../../system_modules/audio.nix
     ../../system_modules/users.nix
