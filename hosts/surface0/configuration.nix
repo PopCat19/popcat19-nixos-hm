@@ -19,11 +19,11 @@ in
     ../../system_modules/display.nix
     ../../system_modules/audio.nix
     ../../system_modules/users.nix
-    ./system_modules/virtualisation.nix
-    ./system_modules/system-programs.nix
+    ../../system_modules/virtualisation.nix
+    ../../system_modules/programs.nix
     ../../system_modules/environment.nix
     ../../system_modules/core-packages.nix
-    ./system_modules/system-packages.nix
+    ../../system_modules/packages.nix
     ../../system_modules/fonts.nix
     ../../system_modules/ssh.nix
     ../../system_modules/distributed-builds.nix
@@ -40,7 +40,7 @@ in
       userConfig = surfaceUserConfig;
       system = "x86_64-linux";
     };
-    users.${surfaceUserConfig.user.username} = import ./home-packages.nix;
+    users.${surfaceUserConfig.user.username} = import ./home.nix;
     backupFileExtension = "bak2";
   };
 
