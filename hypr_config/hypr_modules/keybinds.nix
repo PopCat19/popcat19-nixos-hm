@@ -12,6 +12,7 @@
     "$file" = "dolphin";
     "$browser" = "zen-twilight";
     "$menu" = "fuzzel";
+    "$launcher" = "vicinae";
 
     # Key bindings
     bind = [
@@ -32,7 +33,7 @@
       "$mainMod, E, exec, $file"
       "$mainMod, C, exec, $editor"
       "$mainMod, F, exec, $browser"
-      "$mainMod, A, exec, $menu"
+      "$mainMod, A, exec, $launcher"
 
       # Utilities
       "$mainMod+Shift, C, exec, hyprpicker -a"
