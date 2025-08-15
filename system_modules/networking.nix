@@ -36,7 +36,6 @@
         22      # SSH
         53317   # Syncthing
         30071   # Custom port
-        3845    # Figma Dev Mode MCP server
       ];
       allowedUDPPorts = [
         53317   # Syncthing
