@@ -14,7 +14,7 @@
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.vicinae}/bin/vicinae server";
-      Restart = "on-failure";
+      Restart = "always";
       RestartSec = 5;
       # Environment variables to help with NixOS compatibility
       Environment = [
