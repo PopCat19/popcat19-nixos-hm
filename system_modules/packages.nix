@@ -39,9 +39,6 @@ in
     python313Packages.pip
     gh
     unzip
-    
-    # Applications
-    vicinae  # High-performance native launcher for Linux
   ]
   ++ (if isX86_64 then x86_64Packages else [])
   ++ (if isAarch64 then aarch64Packages else []);
