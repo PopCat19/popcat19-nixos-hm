@@ -6,6 +6,12 @@
     # Core Nixpkgs repository
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # Nix User Repository
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # System extensions
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
