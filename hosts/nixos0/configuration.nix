@@ -26,6 +26,7 @@ in
     ../../system_modules/ssh.nix
     ../../system_modules/tablet.nix
     ../../system_modules/openrgb.nix
+    ../../system_modules/vicinae.nix
     ./distributed-builds-server.nix
     inputs.home-manager.nixosModules.home-manager
   ];
