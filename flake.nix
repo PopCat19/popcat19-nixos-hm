@@ -70,6 +70,22 @@
 
     in
     {
+      # Packages output
+      packages = nixpkgs.lib.genAttrs supportedSystems (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = import ./flake_modules/overlays.nix system;
+          };
+        in
+        {
+          vicinae = pkgs.vicinae;
+        }
+      );
+
+      # Default package
+      defaultPackage = nixpkgs.lib.genAttrs supportedSystems (system: self.packages.${system}.vicinae);
+
       # Host-specific NixOS configurations
       nixosConfigurations = {
         popcat19-surface0 = hosts.mkHostConfig "popcat19-surface0" "x86_64-linux" ./hosts/surface0/configuration.nix {
