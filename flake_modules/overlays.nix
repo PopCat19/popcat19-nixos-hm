@@ -15,4 +15,5 @@ system: [
   # Import overlays
   (import ../overlays/zrok.nix)
   (import ../overlays/quickemu.nix)
+  (import ../overlays/crush.nix)
 ]
