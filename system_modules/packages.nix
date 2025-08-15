@@ -38,6 +38,7 @@ in
     # Development tools
     python313Packages.pip
     gh
+    unzip
   ]
   ++ (if isX86_64 then x86_64Packages else [])
   ++ (if isAarch64 then aarch64Packages else []);

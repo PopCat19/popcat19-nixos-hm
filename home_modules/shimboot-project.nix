@@ -15,5 +15,6 @@
     util-linux
     e2fsprogs
     file
+    squashfsTools
   ];
 }
