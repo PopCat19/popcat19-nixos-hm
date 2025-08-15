@@ -33,6 +33,7 @@ with pkgs;
   eza
   starship
   wl-clipboard
+  pkgs.nur.repos.charmbracelet.crush
   
   # Browsers
   firefox
