@@ -43,6 +43,7 @@ with pkgs;
   mpv
   audacious
   audacious-plugins
+  pureref
   
   # Hyprland Essentials
   hyprpanel
