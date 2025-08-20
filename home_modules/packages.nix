@@ -44,6 +44,7 @@ with pkgs;
   audacious
   audacious-plugins
   pureref
+  youtube-music
   
   # Hyprland Essentials
   hyprpanel
