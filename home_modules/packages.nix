@@ -33,6 +33,7 @@ with pkgs;
   eza
   starship
   wl-clipboard
+  pkgs.nur.repos.charmbracelet.crush
   
   # Browsers
   firefox
@@ -42,6 +43,8 @@ with pkgs;
   mpv
   audacious
   audacious-plugins
+  pureref
+  youtube-music
   
   # Hyprland Essentials
   hyprpanel
