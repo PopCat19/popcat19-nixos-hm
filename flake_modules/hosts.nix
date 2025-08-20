@@ -6,7 +6,7 @@
     specialArgs = { inherit inputs userConfig; };
 
     modules = [
-      { nixpkgs.overlays = import ./overlays.nix system; }
+      { nixpkgs.overlays = (import ./overlays.nix system) ++ [ inputs.nur.overlays.default ]; }
 
       # External modules
       inputs.chaotic.nixosModules.default
@@ -28,7 +28,7 @@
     specialArgs = { inherit inputs; };
 
     modules = [
-      { nixpkgs.overlays = import ./overlays.nix system; }
+      { nixpkgs.overlays = (import ./overlays.nix system) ++ [ inputs.nur.overlays.default ]; }
 
       # Host-specific configuration
       hostConfigPath
