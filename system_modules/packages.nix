@@ -26,7 +26,7 @@ in
   environment.systemPackages = with pkgs; [
     # Network tools
     wireguard-tools
-    
+
     # Hardware tools
     i2c-tools
     ddcutil
@@ -34,6 +34,10 @@ in
     util-linux
     e2fsprogs
     eza
+    brightnessctl
+
+    # GUI / launcher tools
+    fuzzel
 
     # Development tools
     python313Packages.pip

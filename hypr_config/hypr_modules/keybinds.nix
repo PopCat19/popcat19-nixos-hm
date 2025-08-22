@@ -1,6 +1,5 @@
 # Key Bindings for Hyprland
 # ==========================
-
 {
   wayland.windowManager.hyprland.settings = {
     # Main modifier key
@@ -11,8 +10,8 @@
     "$editor" = "micro";
     "$file" = "dolphin";
     "$browser" = "zen-twilight";
-    "$menu" = "fuzzel";
-    "$launcher" = "vicinae";
+    "$menu" = "fuzzel --dmenu";
+    "$launcher" = "fuzzel";
 
     # Key bindings
     bind = [
@@ -33,7 +32,8 @@
       "$mainMod, E, exec, $file"
       "$mainMod, C, exec, $editor"
       "$mainMod, F, exec, $browser"
-      "$mainMod, A, exec, $launcher"
+      # Mod+A summons the fuzzel launcher (vicinae deprecated)
+      "$mainMod, A, exec, $menu"
 
       # Utilities
       "$mainMod+Shift, C, exec, hyprpicker -a"

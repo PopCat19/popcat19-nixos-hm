@@ -10,9 +10,6 @@ system: [
     hyprshade = prev.python3Packages.callPackage ../overlays/hyprshade.nix {
       hyprland = prev.hyprland;
     };
-
-    # Vicinae - High-performance native launcher for Linux
-    vicinae = prev.callPackage ../overlays/vicinae.nix { };
   })
 
   # Import overlays
