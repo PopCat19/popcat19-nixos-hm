@@ -1,7 +1,7 @@
 { pkgs, inputs, lib, ... }:
 
 let
-  nixos0UserConfig = import ../../user-config.nix { hostname = "popcat19-nixos0"; };
+  thinkpadUserConfig = import ../../user-config.nix { hostname = "popcat19-thinkpad0"; };
 in
 
 {
@@ -26,25 +26,25 @@ in
     ../../system_modules/ssh.nix
     ../../system_modules/tablet.nix
     ../../system_modules/openrgb.nix
-   ./distributed-builds-server.nix
+    ./distributed-builds-server.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
-  _module.args.userConfig = nixos0UserConfig;
+  _module.args.userConfig = thinkpadUserConfig;
   
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
       inherit inputs;
-      userConfig = nixos0UserConfig;
+      userConfig = thinkpadUserConfig;
       system = "x86_64-linux";
     };
-    users.${nixos0UserConfig.user.username} = import ./home.nix;
+    users.${thinkpadUserConfig.user.username} = import ./home.nix;
     backupFileExtension = "bak2";
   };
 
-  networking.hostName = "popcat19-nixos0";
+  networking.hostName = "popcat19-thinkpad0";
   
   nix.extraOptions = ''
     experimental-features = fetch-tree flakes nix-command impure-derivations ca-derivations
