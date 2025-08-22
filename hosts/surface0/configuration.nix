@@ -26,7 +26,6 @@ in
     ../../system_modules/ssh.nix
     ../../system_modules/tablet.nix
     ../../system_modules/distributed-builds.nix
-    ../../system_modules/vicinae.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 

@@ -76,7 +76,7 @@
 
     in
     {
-      # Packages output
+      # Packages output (no vicinae now that the overlay was removed)
       packages = nixpkgs.lib.genAttrs supportedSystems (system:
         let
           pkgs = import nixpkgs {
@@ -85,12 +85,9 @@
           };
         in
         {
-          vicinae = pkgs.vicinae;
+          # no custom packages exported here
         }
       );
-
-      # Default package
-      defaultPackage = nixpkgs.lib.genAttrs supportedSystems (system: self.packages.${system}.vicinae);
 
       # Host-specific NixOS configurations
       nixosConfigurations = {
@@ -98,6 +95,9 @@
           inherit inputs nixpkgs modules;
         };
         popcat19-nixos0 = hosts.mkHostConfig "popcat19-nixos0" "x86_64-linux" ./hosts/nixos0/configuration.nix {
+          inherit inputs nixpkgs modules;
+        };
+        popcat19-thinkpad0 = hosts.mkHostConfig "popcat19-thinkpad0" "x86_64-linux" ./hosts/thinkpad0/configuration.nix {
           inherit inputs nixpkgs modules;
         };
       };
