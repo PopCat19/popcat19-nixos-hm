@@ -32,8 +32,7 @@
       "$mainMod, E, exec, $file"
       "$mainMod, C, exec, $editor"
       "$mainMod, F, exec, $browser"
-      # Mod+A summons the fuzzel launcher (vicinae deprecated)
-      "$mainMod, A, exec, $menu"
+      "$mainMod, A, exec, $launcher"
 
       # Utilities
       "$mainMod+Shift, C, exec, hyprpicker -a"
