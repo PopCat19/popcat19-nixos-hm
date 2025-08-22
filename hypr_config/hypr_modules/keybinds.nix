@@ -1,6 +1,5 @@
 # Key Bindings for Hyprland
 # ==========================
-
 {
   wayland.windowManager.hyprland.settings = {
     # Main modifier key
@@ -11,7 +10,7 @@
     "$editor" = "micro";
     "$file" = "dolphin";
     "$browser" = "zen-twilight";
-    "$menu" = "fuzzel";
+    "$menu" = "fuzzel --dmenu";
     "$launcher" = "vicinae";
 
     # Key bindings
