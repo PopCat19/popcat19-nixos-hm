@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   # Game streaming services configuration
@@ -6,7 +6,7 @@
   services = {
     # Sunshine game streaming server
     sunshine = {
-      enable = true;
+      enable = lib.mkDefault true;
       autoStart = true;
       capSysAdmin = true;
       openFirewall = true;
