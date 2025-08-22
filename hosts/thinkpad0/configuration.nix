@@ -46,6 +46,11 @@ in
 
   networking.hostName = "popcat19-thinkpad0";
   
+  # Disable Sunshine game-streaming service on this host
+  services.sunshine = {
+    enable = false;
+  };
+  
   nix.extraOptions = ''
     experimental-features = fetch-tree flakes nix-command impure-derivations ca-derivations
   '';
