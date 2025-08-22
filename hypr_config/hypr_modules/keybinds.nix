@@ -11,8 +11,7 @@
     "$file" = "dolphin";
     "$browser" = "zen-twilight";
     "$menu" = "fuzzel --dmenu";
-    # Use $menu (fuzzel) as the launcher; vicinae is deprecated.
-    "$launcher" = "$menu";
+    "$launcher" = "fuzzel";
 
     # Key bindings
     bind = [
