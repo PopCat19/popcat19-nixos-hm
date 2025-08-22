@@ -11,7 +11,8 @@
     "$file" = "dolphin";
     "$browser" = "zen-twilight";
     "$menu" = "fuzzel --dmenu";
-    "$launcher" = "vicinae";
+    # Use $menu (fuzzel) as the launcher; vicinae is deprecated.
+    "$launcher" = "$menu";
 
     # Key bindings
     bind = [
@@ -32,7 +33,8 @@
       "$mainMod, E, exec, $file"
       "$mainMod, C, exec, $editor"
       "$mainMod, F, exec, $browser"
-      "$mainMod, A, exec, $launcher"
+      # Mod+A summons the fuzzel launcher (vicinae deprecated)
+      "$mainMod, A, exec, $menu"
 
       # Utilities
       "$mainMod+Shift, C, exec, hyprpicker -a"
