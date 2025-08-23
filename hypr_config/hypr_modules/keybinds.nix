@@ -36,7 +36,10 @@
 
       # Utilities
       "$mainMod+Shift, C, exec, hyprpicker -a"
-      "$mainMod, V, exec, cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.1 && wtype -M ctrl -k v"
+      # Clipboard: quick-paste latest entry (no menu)
+      "$mainMod, V, exec, bash -lc 'cliphist list | head -n1 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v'"
+      # Clipboard: open picker to choose entry, then paste
+      "$mainMod+Shift, V, exec, bash -lc \"cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v\""
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
 
       # Screenshots - Clipboard screenshots (primary keybindings)

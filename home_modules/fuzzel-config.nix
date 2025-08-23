@@ -7,8 +7,6 @@
     settings = {
       main = {
         layer = "overlay"; # Display as an overlay.
-        exit-on-click = true; # Close on click outside.
-        prompt = "  "; # Unicode search icon with space.
         placeholder = "Search applications...";
         width = 50; # Width in characters.
         lines = 12; # Number of lines to display.
@@ -18,15 +16,10 @@
         image-size-ratio = 0.8; # Size ratio for application icons.
         show-actions = true; # Show application actions.
         terminal = "kitty"; # Terminal for launching terminal applications.
-        launch-prefix = ""; # Prefix for launching applications.
         filter-desktop = true; # Filter desktop files.
         icon-theme = "Papirus-Dark"; # Icon theme to use.
         icons-enabled = true; # Enable application icons.
-        fields = "name,generic,comment,categories,filename,keywords"; # Search fields.
         password-character = "*"; # Character for password fields.
-        tab-cycles = true; # Tab cycles through results.
-        match-mode = "fzf"; # Use fuzzy matching algorithm.
-        sort-result = true; # Sort search results.
         list-executables-in-path = false; # Don't list PATH executables.
       };
       colors = {
@@ -57,11 +50,8 @@
         delete-prev-word = "Mod1+BackSpace Control+w";
         delete-next = "Delete Control+d";
         delete-next-word = "Mod1+d";
-        delete-line = "Control+k";
         prev = "Up Control+p";
         next = "Down Control+n";
-        page-up = "Page_Up Control+v";
-        page-down = "Page_Down Mod1+v";
         first = "Control+Home";
         last = "Control+End";
       };
