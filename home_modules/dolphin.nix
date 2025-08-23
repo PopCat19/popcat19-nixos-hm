@@ -22,37 +22,40 @@
 
   # Dolphin file manager bookmarks
   home.file.".local/share/user-places.xbel".text = ''
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE xbel PUBLIC "+//IDN python.org//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://www.python.org/topics/xml/dtds/xbel-1.0.dtd">
-    <xbel version="1.0">
-     <bookmark href="file:///home/${config.home.username}">
-      <title>Home</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Documents">
-      <title>Documents</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Downloads">
-      <title>Downloads</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Pictures">
-      <title>Pictures</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Videos">
-      <title>Videos</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Music">
-      <title>Music</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/syncthing-shared">
-      <title>Syncthing Shared</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Desktop">
-      <title>Desktop</title>
-     </bookmark>
-     <bookmark href="trash:/">
-      <title>Trash</title>
-     </bookmark>
-    </xbel>
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;!DOCTYPE xbel PUBLIC "+//IDN python.org//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://www.python.org/topics/xml/dtds/xbel-1.0.dtd"&gt;
+    &lt;xbel version="1.0"&gt;
+     &lt;bookmark href="file:///home/${config.home.username}"&gt;
+      &lt;title&gt;Home&lt;/title&gt;
+     &lt;/bookmark&gt;
+     &lt;bookmark href="file:///home/${config.home.username}/Documents"&gt;
+      &lt;title&gt;Documents&lt;/title&gt;
+     &lt;/bookmark&gt;
+     &lt;bookmark href="file:///home/${config.home.username}/Downloads"&gt;
+      &lt;title&gt;Downloads&lt;/title&gt;
+     &lt;/bookmark&gt;
+     &lt;bookmark href="file:///home/${config.home.username}/Pictures"&gt;
+      &lt;title&gt;Pictures&lt;/title&gt;
+     &lt;/bookmark&gt;
+     &lt;bookmark href="file:///home/${config.home.username}/Videos"&gt;
+      &lt;title&gt;Videos&lt;/title&gt;
+     &lt;/bookmark&gt;
+     &lt;bookmark href="file:///home/${config.home.username}/Music"&gt;
+      &lt;title&gt;Music&lt;/title&gt;
+     &lt;/bookmark&gt;
+     &lt;bookmark href="file:///home/${config.home.username}/syncthing-shared"&gt;
+      &lt;title&gt;Syncthing Shared&lt;/title&gt;
+     &lt;/bookmark&gt;
+     &lt;bookmark href="file:///home/${config.home.username}/Desktop"&gt;
+      &lt;title&gt;Desktop&lt;/title&gt;
+     &lt;/bookmark&gt;
+     &lt;bookmark href="file:///home/${config.home.username}/nixos-config"&gt;
+      &lt;title&gt;nixos-config&lt;/title&gt;
+     &lt;/bookmark&gt;
+     &lt;bookmark href="trash:/"/&gt;
+      &lt;title&gt;Trash&lt;/title&gt;
+     &lt;/bookmark&gt;
+    &lt;/xbel&gt;
   '';
 
   # Dolphin configuration with enhanced thumbnails and better opacity
