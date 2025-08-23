@@ -35,7 +35,7 @@
       MODE="''${1:-monitor}"
       EXTRA_ACTION="''${2:-}"   # "save" to save+copy; default is copy-only
       SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
-      "${XDG_SCREENSHOTS_DIR:=$SCREENSHOT_DIR}"
+      XDG_SCREENSHOTS_DIR="${XDG_SCREENSHOTS_DIR:-$SCREENSHOT_DIR}"
        
       # Ensure screenshot directory exists
       mkdir -p "$SCREENSHOT_DIR"
