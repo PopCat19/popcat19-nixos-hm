@@ -32,21 +32,23 @@
       "$mainMod, E, exec, $file"
       "$mainMod, C, exec, $editor"
       "$mainMod, F, exec, $browser"
-      # Mod+A summons the fuzzel launcher (vicinae deprecated)
-      "$mainMod, A, exec, $menu"
+      "$mainMod, A, exec, $launcher"
 
       # Utilities
       "$mainMod+Shift, C, exec, hyprpicker -a"
-      "$mainMod, V, exec, cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.1 && wtype -M ctrl -k v"
+      # Clipboard: quick-paste latest entry (no menu)
+      "$mainMod, V, exec, bash -lc 'cliphist list | head -n1 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v'"
+      # Clipboard: open picker to choose entry, then paste
+      "$mainMod+Shift, V, exec, bash -lc \"cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v\""
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
 
       # Screenshots - Clipboard screenshots (primary keybindings)
-      "$mainMod, P, exec, ~/.local/bin/screenshot monitor"
-      "$mainMod+Ctrl, P, exec, ~/.local/bin/screenshot region"
+      "$mainMod, P, exec, ~/.local/bin/screenshot monitor save"
+      "$mainMod+Ctrl, P, exec, ~/.local/bin/screenshot region save"
 
       # Screenshots - Save to file screenshots (secondary keybindings)
-      "$mainMod+Shift, P, exec, ~/.local/bin/screenshot monitor save"
-      "$mainMod+Shift+Ctrl, P, exec, ~/.local/bin/screenshot region save"
+      "$mainMod+Shift, P, exec, ~/.local/bin/screenshot monitor"
+      "$mainMod+Shift+Ctrl, P, exec, ~/.local/bin/screenshot region"
 
       # Media playback
       ",XF86AudioPlay, exec, playerctl play-pause"

@@ -5,119 +5,112 @@
 
   home.packages = with pkgs; [
     # Core screenshot tools
-    grimblast                          # Primary screenshot tool for Hyprland
+    hyprshot                           # Primary screenshot tool for Hyprland
     kdePackages.gwenview               # Image viewer
     libnotify                          # Desktop notifications (notify-send)
+    jq                                 # For parsing hyprctl JSON (app name)
   ];
 
   # Create Screenshots directory
   home.file."Pictures/Screenshots/.keep".text = "";
 
-  # Screenshot wrapper script for grimblast with hyprshade integration
+  # Screenshot wrapper script for hyprshot with hyprshade integration
   home.file.".local/bin/screenshot" = {
     executable = true;
     text = ''
       #!/usr/bin/env bash
-      
-      # Screenshot wrapper using grimblast with hyprshade integration
-      # Usage: screenshot [monitor|region] [save]
+
+      # Screenshot wrapper using hyprshot with hyprshade integration
+      # Usage: screenshot [monitor|region]
       #
-      # Features:
-      # - Temporarily disables hyprshade for accurate color capture
-      # - Uses grimblast native monitor detection and region selection
-      # - Copies to clipboard by default, optionally saves to file
-      # - Restores hyprshade state after screenshot
-      
+      # Behavior:
+      # - Uses hyprshot with --freeze for clean capture
+      # - Always saves to ~/Pictures/Screenshots AND copies to clipboard
+      # - Filename: appname_yyyymmdd-count.png (count increments per day/app)
+      # - Temporarily disables hyprshade around the capture, then restores it
+
       set -euo pipefail
-      
+
       MODE="''${1:-monitor}"
-      SAVE_FILE="''${2:-}"
       SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
-      
+      XDG_SCREENSHOTS_DIR="''${XDG_SCREENSHOTS_DIR:-$SCREENSHOT_DIR}"
+
       # Ensure screenshot directory exists
-      mkdir -p "$SCREENSHOT_DIR"
-      
-      # Function to restore hyprshade on exit (cleanup)
-      cleanup() {
-        if [[ -n "''${SAVED_SHADER:-}" && "$SAVED_SHADER" != "Off" ]]; then
-          hyprshade on "$SAVED_SHADER" 2>/dev/null || true
+      mkdir -p "$XDG_SCREENSHOTS_DIR"
+
+      # Determine active app name (class) and sanitize to lowercase alnum-plus
+      get_app_name() {
+        local app="screen"
+        if command -v hyprctl >/dev/null 2>&1; then
+          local cls
+          cls="$(hyprctl activewindow -j 2>/dev/null | jq -r '.class // empty' || true)"
+          if [[ -n "''${cls:-}" ]]; then
+            app="$cls"
+          fi
+        fi
+        app="$(echo "$app" | tr '[:upper:]' '[:lower:]')"
+        # keep only [a-z0-9-_], convert spaces to dashes
+        app="''${app// /-}"
+        app="$(echo "$app" | sed -E 's/[^a-z0-9._-]+/-/g' | sed -E 's/-+/-/g' | sed -E 's/^-+|-+$//g')"
+        echo "''${app:-screen}"
+      }
+
+      # Generate next filename with incremental count: app_YYYYMMDD-N.png
+      next_filename() {
+        local app="$1"
+        local date="$(date +%Y%m%d)"
+        local prefix="''${app}_''${date}-"
+        local max=0
+        shopt -s nullglob
+        for f in "$XDG_SCREENSHOTS_DIR"/"$prefix"*".png"; do
+          # extract numeric suffix before .png
+          local base="$(basename "$f")"
+          if [[ "$base" =~ ^''${app}_''${date}-([0-9]+)\.png$ ]]; then
+            local n="''${BASH_REMATCH[1]}"
+            if (( n > max )); then max=$n; fi
+          fi
+        done
+        shopt -u nullglob
+        local next=$((max + 1))
+        echo "''${app}_''${date}-''${next}.png"
+      }
+
+      # Toggle hyprshade off during capture, then restore
+      run_with_hyprshade_workaround() {
+        local cmd_pid shader
+        ( "$@" ) & cmd_pid=$!
+        shader="$(hyprshade current 2>/dev/null || true)"
+        if [[ -n "$shader" && "$shader" != "Off" ]]; then
+          # Give hyprshot a moment to initialize framebuffer, then disable shader
+          sleep 0.01 && hyprshade off >/dev/null 2>&1 &
+          wait $cmd_pid
+          hyprshade on "$shader" >/dev/null 2>&1 || true
+        else
+          wait $cmd_pid
         fi
       }
-      
-      # Set trap to restore shader on script exit
-      trap cleanup EXIT INT TERM
-      
-      # Save current shader state
-      SAVED_SHADER=$(hyprshade current 2>/dev/null || echo "Off")
-      
-      # Disable hyprshade for clean capture
-      if [[ "$SAVED_SHADER" != "Off" ]]; then
-        hyprshade off 2>/dev/null || true
-        sleep 0.1  # Brief delay to ensure shader is off
-      fi
-      
+
+      APP_NAME="$(get_app_name)"
+      FILENAME="$(next_filename "$APP_NAME")"
+
       case "$MODE" in
         "monitor"|"full")
-          if [[ "$SAVE_FILE" == "save" ]]; then
-            # Save to file with timestamp
-            FILENAME="screenshot_$(date +%Y%m%d_%H%M%S).png"
-            FILEPATH="$SCREENSHOT_DIR/$FILENAME"
-            if grimblast save output "$FILEPATH"; then
-              notify-send "Screenshot" "Monitor screenshot saved to $FILENAME" -i camera-photo || true
-              echo "Screenshot saved: $FILEPATH"
-            else
-              notify-send "Screenshot Error" "Failed to save monitor screenshot" -i dialog-error || true
-              exit 1
-            fi
-          else
-            # Copy to clipboard (default)
-            if grimblast copy output; then
-              notify-send "Screenshot" "Monitor screenshot copied to clipboard" -i camera-photo || true
-              echo "Monitor screenshot copied to clipboard"
-            else
-              notify-send "Screenshot Error" "Failed to capture monitor screenshot" -i dialog-error || true
-              exit 1
-            fi
-          fi
+          # Save and copy: default hyprshot behavior (no --clipboard-only)
+          run_with_hyprshade_workaround hyprshot --freeze --silent -m output -o "$XDG_SCREENSHOTS_DIR" -f "$FILENAME"
+          notify-send "Screenshot" "Monitor screenshot saved and copied: $FILENAME" -i camera-photo || true
+          echo "Saved and copied: $XDG_SCREENSHOTS_DIR/$FILENAME"
           ;;
         "region"|"area")
-          if [[ "$SAVE_FILE" == "save" ]]; then
-            # Save to file with timestamp
-            FILENAME="screenshot_region_$(date +%Y%m%d_%H%M%S).png"
-            FILEPATH="$SCREENSHOT_DIR/$FILENAME"
-            if grimblast save area "$FILEPATH"; then
-              notify-send "Screenshot" "Region screenshot saved to $FILENAME" -i camera-photo || true
-              echo "Screenshot saved: $FILEPATH"
-            else
-              notify-send "Screenshot Error" "Failed to save region screenshot" -i dialog-error || true
-              exit 1
-            fi
-          else
-            # Copy to clipboard (default)
-            if grimblast copy area; then
-              notify-send "Screenshot" "Region screenshot copied to clipboard" -i camera-photo || true
-              echo "Region screenshot copied to clipboard"
-            else
-              notify-send "Screenshot Error" "Failed to capture region screenshot" -i dialog-error || true
-              exit 1
-            fi
-          fi
+          run_with_hyprshade_workaround hyprshot --freeze --silent -m region -o "$XDG_SCREENSHOTS_DIR" -f "$FILENAME"
+          notify-send "Screenshot" "Region screenshot saved and copied: $FILENAME" -i camera-photo || true
+          echo "Saved and copied: $XDG_SCREENSHOTS_DIR/$FILENAME"
           ;;
         *)
-          echo "Usage: screenshot [monitor|region] [save]"
+          echo "Usage: screenshot [monitor|region]"
           echo ""
           echo "Modes:"
           echo "  monitor - Screenshot current monitor (default)"
           echo "  region  - Screenshot selected region"
-          echo ""
-          echo "Options:"
-          echo "  save    - Save to ~/Pictures/Screenshots/ instead of clipboard"
-          echo ""
-          echo "Examples:"
-          echo "  screenshot                    # Monitor screenshot to clipboard"
-          echo "  screenshot region             # Region screenshot to clipboard"
-          echo "  screenshot monitor save       # Monitor screenshot to file"
-          echo "  screenshot region save        # Region screenshot to file"
           exit 1
           ;;
       esac

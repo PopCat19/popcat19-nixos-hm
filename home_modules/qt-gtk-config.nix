@@ -71,6 +71,7 @@
     file://${userConfig.directories.music} Music
     file://${userConfig.directories.syncthing} Syncthing Shared
     file://${userConfig.directories.desktop} Desktop
+    file://${userConfig.directories.home}/nixos-config nixos-config
     trash:/// Trash
   '';
 

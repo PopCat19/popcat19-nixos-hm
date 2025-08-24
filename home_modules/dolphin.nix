@@ -28,6 +28,9 @@
      <bookmark href="file:///home/${config.home.username}">
       <title>Home</title>
      </bookmark>
+     <bookmark href="file:///home/${config.home.username}/Desktop">
+      <title>Desktop</title>
+     </bookmark>
      <bookmark href="file:///home/${config.home.username}/Documents">
       <title>Documents</title>
      </bookmark>
@@ -37,17 +40,17 @@
      <bookmark href="file:///home/${config.home.username}/Pictures">
       <title>Pictures</title>
      </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Videos">
-      <title>Videos</title>
-     </bookmark>
      <bookmark href="file:///home/${config.home.username}/Music">
       <title>Music</title>
+     </bookmark>
+     <bookmark href="file:///home/${config.home.username}/Videos">
+      <title>Videos</title>
      </bookmark>
      <bookmark href="file:///home/${config.home.username}/syncthing-shared">
       <title>Syncthing Shared</title>
      </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Desktop">
-      <title>Desktop</title>
+     <bookmark href="file:///home/${config.home.username}/nixos-config">
+      <title>nixos-config</title>
      </bookmark>
      <bookmark href="trash:/">
       <title>Trash</title>
@@ -152,6 +155,6 @@
     Name=Open Terminal Here
     Name[en_US]=Open Terminal Here
     Icon=utilities-terminal
-    Exec=kitty --working-directory %f
+    Exec=kitty --working-directory "%f"
   '';
 }

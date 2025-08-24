@@ -36,13 +36,18 @@ in
           name = "s23u";
           addresses = [ "dynamic" ];
         };
+        "thinkpad0" = {
+          id = "42CXYWA-6XSQBIG-LSZTRGK-RKT7NJT-WRD4DN4-SJGOPDJ-K2MSTBG-DEWBJAL";
+          name = "popcat19-thinkpad0";
+          addresses = [ "dynamic" ];
+        };
       };
       folders = {
         keepass-vault = {
           id = "keepass-vault";
           label = "KeePass Vault";
           path = syncthingPaths.passwords;
-          devices = [ "surface0" "nixos0" "s23u" ];
+          devices = [ "surface0" "nixos0" "s23u" "thinkpad0" ];
           type = "sendreceive";
           rescanIntervalS = 60;
           ignorePerms = true;
@@ -51,7 +56,7 @@ in
           id = "syncthing-shared";
           label = "Syncthing Shared";
           path = syncthingPaths.shared;
-          devices = [ "surface0" "nixos0" "s23u" ];
+          devices = [ "surface0" "nixos0" "s23u" "thinkpad0" ];
           type = "sendreceive";
           rescanIntervalS = 300;
           ignorePerms = true;
