@@ -1,5 +1,4 @@
 #version 320 es
-
 precision highp float;
 
 // Input texture coordinates
@@ -15,21 +14,21 @@ uniform float time;
 // [Debug Toggles]
 #define DEBUG_CA       1       // Toggle chromatic aberration effect
 #define DEBUG_BLOOM    1       // Toggle bloom effect
-#define DEBUG_VIGNETTE 1       // Toggle vignette effect
+#define DEBUG_VIGNETTE 0       // Toggle vignette effect
 #define DEBUG_PIXEL    0       // Toggle pixelation effect
 #define COLOR_DEPTH_ENABLED 0  // Enable color depth reduction
 #define DEBUG_SCANLINE 0       // Toggle scanline effect
-#define DEBUG_VHS_OVERLAY 1    // Toggle VHS effect
-#define DEBUG_GLITCH   1       // Toggle glitch effect
+#define DEBUG_VHS_OVERLAY 0    // Toggle VHS effect
+#define DEBUG_GLITCH   0       // Toggle glitch effect
 #define DEBUG_DRIFT    0       // Toggle drifting effect
-#define DEBUG_COLOR_TEMP 1     // Toggle color temperature adjustment
-#define DEBUG_VIBRATION 1      // Toggle CRT buzz vibration effect
+#define DEBUG_COLOR_TEMP 0     // Toggle color temperature adjustment
+#define DEBUG_VIBRATION 0      // Toggle CRT buzz vibration effect
 #define DEBUG_GRAIN     0      // Toggle cinematic grain effect
 
 // [Effect Parameters]
 // Bloom Parameters
-#define BLOOM_INTENSITY       0.24
-#define BLOOM_RADIUS          0.006
+#define BLOOM_INTENSITY       0.16
+#define BLOOM_RADIUS          0.008
 #define BLOOM_SAMPLES         64
 #define BLOOM_TINT            vec3(1.1, 0.9, 0.9)
 #define BLOOM_THRESHOLD       0.0
@@ -89,7 +88,7 @@ const float COLOR_TEMPERATURE_STRENGTH = 1.0;
 // Pixelation Effect
 #define PIXEL_GRID_SIZE 360.0
 
-// VHS Overlay Parameters (Rewritten)
+// VHS Overlay Parameters
 #define VHS_INTENSITY        0.35
 #define VHS_JITTER_STRENGTH  0.004
 #define VHS_WAVE_FREQ        2.0
@@ -206,29 +205,42 @@ vec3 applyChromaticAberration(vec2 uv, out float alpha) {
     );
 }
 
-// --- Optimized Bloom Function ---
+// --- Bloom ---
 vec3 calculateBloom(vec2 uv) {
     vec3 color = vec3(0.0);
     float total = 0.0;
     const float goldenAngle = 2.39996;
     float currentAngle = 0.0;
-    for(int i = 0; i < BLOOM_SAMPLES; i++) {
-        float ratio = sqrt(float(i)/float(BLOOM_SAMPLES));
-        float radius = ratio * BLOOM_RADIUS;
-        currentAngle += goldenAngle;
-        vec2 dir = vec2(cos(currentAngle), sin(currentAngle)) * radius;
-        vec2 sampleUV = uv + dir;
-        vec3 sampleColor = texture(tex, sampleUV).rgb;
-        float luminance = dot(sampleColor, vec3(0.299, 0.587, 0.114));
-        float softThreshold = smoothstep(
-            BLOOM_THRESHOLD - BLOOM_SOFT_THRESHOLD,
-            BLOOM_THRESHOLD + BLOOM_SOFT_THRESHOLD,
-            luminance
-        );
-        float weight = exp(-(radius * radius) * BLOOM_FALLOFF_CURVE) * softThreshold;
-        color += sampleColor * weight;
-        total += weight;
+
+    const int SCALES = 3;
+    float scaleRadius[SCALES];
+    scaleRadius[0] = BLOOM_RADIUS * 0.5;
+    scaleRadius[1] = BLOOM_RADIUS * 1.5;
+    scaleRadius[2] = BLOOM_RADIUS * 3.0;
+
+    for (int s = 0; s < SCALES; s++) {
+        for (int i = 0; i < BLOOM_SAMPLES / SCALES; i++) {
+            float ratio = sqrt(float(i) / float(BLOOM_SAMPLES / SCALES));
+            float radius = ratio * scaleRadius[s];
+            currentAngle += goldenAngle;
+            vec2 dir = vec2(cos(currentAngle), sin(currentAngle)) * radius;
+            vec2 sampleUV = uv + dir;
+
+            vec3 sampleColor = texture(tex, sampleUV).rgb;
+            float luminance = dot(sampleColor, vec3(0.299, 0.587, 0.114));
+
+            float softThreshold = smoothstep(
+                BLOOM_THRESHOLD - BLOOM_SOFT_THRESHOLD,
+                BLOOM_THRESHOLD + BLOOM_SOFT_THRESHOLD,
+                luminance
+            );
+
+            float weight = exp(-(radius * radius) * BLOOM_FALLOFF_CURVE) * softThreshold;
+            color += sampleColor * weight;
+            total += weight;
+        }
     }
+
     return (color / max(total, 0.001)) * BLOOM_INTENSITY * BLOOM_TINT;
 }
 
@@ -239,29 +251,33 @@ float applyScanlines(vec2 uv, float time) {
     return 1.0 - scan * SCANLINE_OPACITY;
 }
 
-// --- VHS Effect (Rewritten) ---
+// --- VHS Effect ---
 vec3 applyVHSEffect(vec2 uv, float time, vec3 originalColor) {
 #if DEBUG_VHS_OVERLAY
     float jitter = (random(vec2(time, uv.y)) - 0.5) * VHS_JITTER_STRENGTH;
     uv.x += jitter;
+
     uv.y += sin(uv.x * VHS_WAVE_FREQ + time * 1.5) * VHS_WAVE_AMPLITUDE;
+
     vec3 vhsColor = vec3(
         texture(tex, uv + vec2( VHS_COLOR_SHIFT, 0.0)).r,
         texture(tex, uv).g,
         texture(tex, uv - vec2( VHS_COLOR_SHIFT, 0.0)).b
     );
+
     float bandNoise = step(1.0 - VHS_NOISE_BAND_FREQ, random(vec2(time, floor(uv.y * 480.0))));
     if (bandNoise > 0.5) {
         float noise = (random(uv * time) - 0.5) * VHS_NOISE_BAND_STRENGTH;
         vhsColor += vec3(noise);
     }
+
     return mix(originalColor, vhsColor, VHS_INTENSITY);
 #else
     return originalColor;
 #endif
 }
 
-// --- Drifting Effect ---
+// --- Drift ---
 vec2 applyDrift(vec2 uv, float time) {
     vec2 driftOffset = vec2(0.0);
     #if DRIFT_MODE == 0
@@ -276,7 +292,7 @@ vec2 applyDrift(vec2 uv, float time) {
     return uv + driftOffset;
 }
 
-// --- CRT Buzz Vibration ---
+// --- CRT Buzz ---
 vec2 applyCRTVibration(vec2 uv, float time) {
 #if DEBUG_VIBRATION
     float buzz = sin(time * VIBRATION_BASE_FREQ) * VIBRATION_AMPLITUDE;
@@ -288,7 +304,7 @@ vec2 applyCRTVibration(vec2 uv, float time) {
     return uv;
 }
 
-// --- Analog-Style Glitch Effect (Bouncy) ---
+// --- Glitch ---
 vec3 applyAnalogGlitch(vec2 uv, float time, vec3 color, float isActive, float tInInterval) {
     if (isActive < 0.5) return color;
     float bounce = sin(tInInterval * GLITCH_SPEED * PI);
@@ -308,7 +324,7 @@ vec3 applyAnalogGlitch(vec2 uv, float time, vec3 color, float isActive, float tI
     return mix(color, analogColor, strength);
 }
 
-// --- Main Shader ---
+// --- Main ---
 void main() {
     float alpha;
     vec3 color;
