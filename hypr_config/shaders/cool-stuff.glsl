@@ -19,7 +19,7 @@ uniform float time;
 #define COLOR_DEPTH_ENABLED 0  // Enable color depth reduction
 #define DEBUG_SCANLINE 0       // Toggle scanline effect
 #define DEBUG_VHS_OVERLAY 0    // Toggle VHS effect
-#define DEBUG_GLITCH   0       // Toggle glitch effect
+#define DEBUG_GLITCH   1       // Toggle glitch effect
 #define DEBUG_DRIFT    0       // Toggle drifting effect
 #define DEBUG_COLOR_TEMP 0     // Toggle color temperature adjustment
 #define DEBUG_VIBRATION 0      // Toggle CRT buzz vibration effect
