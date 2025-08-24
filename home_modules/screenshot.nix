@@ -50,7 +50,7 @@
         fi
         app="$(echo "$app" | tr '[:upper:]' '[:lower:]')"
         # keep only [a-z0-9-_], convert spaces to dashes
-        app="${app// /-}"
+        app="''${app// /-}"
         app="$(echo "$app" | sed -E 's/[^a-z0-9._-]+/-/g' | sed -E 's/-+/-/g' | sed -E 's/^-+|-+$//g')"
         echo "''${app:-screen}"
       }
@@ -59,20 +59,20 @@
       next_filename() {
         local app="$1"
         local date="$(date +%Y%m%d)"
-        local prefix="${app}_${date}-"
+        local prefix="''${app}_''${date}-"
         local max=0
         shopt -s nullglob
         for f in "$XDG_SCREENSHOTS_DIR"/"$prefix"*".png"; do
           # extract numeric suffix before .png
           local base="$(basename "$f")"
-          if [[ "$base" =~ ^${app}_${date}-([0-9]+)\.png$ ]]; then
+          if [[ "$base" =~ ^''${app}_''${date}-([0-9]+)\.png$ ]]; then
             local n="''${BASH_REMATCH[1]}"
             if (( n > max )); then max=$n; fi
           fi
         done
         shopt -u nullglob
         local next=$((max + 1))
-        echo "${app}_${date}-${next}.png"
+        echo "''${app}_''${date}-''${next}.png"
       }
 
       # Toggle hyprshade off during capture, then restore
