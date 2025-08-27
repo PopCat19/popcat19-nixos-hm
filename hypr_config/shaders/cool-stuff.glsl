@@ -18,7 +18,7 @@ uniform float time;
 #define DEBUG_PIXEL    0       // Toggle pixelation effect
 #define COLOR_DEPTH_ENABLED 0  // Enable color depth reduction
 #define DEBUG_SCANLINE 0       // Toggle scanline effect
-#define DEBUG_VHS_OVERLAY 0    // Toggle VHS effect
+#define DEBUG_VHS_OVERLAY 1    // Toggle VHS effect
 #define DEBUG_GLITCH   1       // Toggle glitch effect
 #define DEBUG_DRIFT    0       // Toggle drifting effect
 #define DEBUG_COLOR_TEMP 0     // Toggle color temperature adjustment
@@ -89,7 +89,7 @@ const float COLOR_TEMPERATURE_STRENGTH = 1.0;
 #define PIXEL_GRID_SIZE 360.0
 
 // VHS Overlay Parameters
-#define VHS_INTENSITY        0.35
+#define VHS_INTENSITY        0.08
 #define VHS_JITTER_STRENGTH  0.004
 #define VHS_WAVE_FREQ        2.0
 #define VHS_WAVE_AMPLITUDE   0.003
