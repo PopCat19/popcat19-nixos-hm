@@ -89,7 +89,7 @@ const float COLOR_TEMPERATURE_STRENGTH = 1.0;
 #define PIXEL_GRID_SIZE 360.0
 
 // VHS Overlay Parameters
-#define VHS_INTENSITY        0.08
+#define VHS_INTENSITY        0.16
 #define VHS_JITTER_STRENGTH  0.004
 #define VHS_WAVE_FREQ        2.0
 #define VHS_WAVE_AMPLITUDE   0.003
