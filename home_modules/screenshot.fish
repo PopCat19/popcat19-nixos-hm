@@ -73,7 +73,7 @@ set APP_NAME (get_app_name)
 set FILENAME (next_filename $APP_NAME)
 
 switch $MODE
-        case monitor full
+    case monitor full
         # Save and copy: default hyprshot behavior (no --clipboard-only)
         set screenshot_path "$XDG_SCREENSHOTS_DIR/$FILENAME"
         if run_with_hyprshade_workaround hyprshot --freeze --silent -m output -o $XDG_SCREENSHOTS_DIR -f $FILENAME
@@ -92,9 +92,8 @@ switch $MODE
             else
                 echo "Screenshot cancelled"
             end
-        end</search>
-</search_and_replace>
-        case region area
+        end
+    case region area
         set screenshot_path "$XDG_SCREENSHOTS_DIR/$FILENAME"
         if run_with_hyprshade_workaround hyprshot --freeze --silent -m region -o $XDG_SCREENSHOTS_DIR -f $FILENAME
             # Check if file was actually created (in case of weird edge cases)
@@ -112,8 +111,7 @@ switch $MODE
             else
                 echo "Screenshot cancelled"
             end
-        end</search>
-</search_and_replace>
+        end
     case '*'
         echo "Usage: screenshot [monitor|region]"
         echo ""
