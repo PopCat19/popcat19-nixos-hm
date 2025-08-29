@@ -16,7 +16,6 @@ with pkgs;
   lua-language-server
   nodePackages_latest.typescript-language-server
   nodePackages_latest.vscode-langservers-extracted
-  rust-analyzer
 
   # Code Formatters
   black
