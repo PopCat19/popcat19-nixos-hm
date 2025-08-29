@@ -10,8 +10,5 @@ with pkgs;
   hyprutils
 
   # Screenshot and input tools
-  grim
-  slurp
-  wtype
   hyprpicker
 ]
