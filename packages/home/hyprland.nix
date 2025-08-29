@@ -8,4 +8,10 @@ with pkgs;
   hyprshade
   hyprpolkitagent
   hyprutils
+
+  # Screenshot and input tools
+  grim
+  slurp
+  wtype
+  hyprpicker
 ]

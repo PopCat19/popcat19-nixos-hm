@@ -25,4 +25,6 @@ with pkgs;
   ripgrep
   fd
   lazygit
+  git-lfs
+  hyprls
 ]
