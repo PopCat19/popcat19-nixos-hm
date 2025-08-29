@@ -3,20 +3,15 @@
 { pkgs, userConfig, ... }:
 
 let
+  # Import architecture-specific modules
+  x86_64Packages = import ./x86_64-packages.nix { inherit pkgs; };
+  aarch64Packages = import ./aarch64-packages.nix { inherit pkgs; };
+
   # Architecture detection
   system = userConfig.host.system;
   isX86_64 = system == "x86_64-linux";
   isAarch64 = system == "aarch64-linux";
-  
-  # Architecture-specific packages
-  x86_64Packages = with pkgs; [
-    rocmPackages.rpp  # AMD GPU acceleration
-  ];
-  
-  aarch64Packages = with pkgs; [
-    # ARM64-specific packages
-  ];
-  
+
   # Virtualization packages moved to system_modules/virtualisation.nix
   # See system_modules/virtualisation.nix for virtualization-related packages
 
