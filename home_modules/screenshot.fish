@@ -17,11 +17,7 @@ function get_app_name
             set app $cls
         end
     end
-    set app (echo $app | tr '[:upper:]' '[:lower:]')
-    # keep only [a-z0-9-_], convert spaces to dashes
-    set app (echo $app | sed 's/ /-/g')
-    set app (echo $app | sed -E 's/[^a-z0-9._-]+/-/g' | sed -E 's/-+/-/g' | sed -E 's/^-+|-+$//g')
-    echo (test -n "$app"; and echo $app; or echo "screen")
+    echo $app | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g; s/[^a-z0-9._-]/-/g; s/-+/-/g; s/^-+|-+$//g'
 end
 
 function next_filename
@@ -43,22 +39,34 @@ function next_filename
         end
     end
 
-    set next (math $max + 1)
-    echo "{$app}_{$date}-{$next}.png"
+    echo "{$app}_{$date}-"(math $max + 1)".png"
 end
 
 function run_with_hyprshade_workaround
     set shader (hyprshade current 2>/dev/null; or echo "")
     if test -n "$shader" -a "$shader" != "Off"
-        # Turn off hyprshade before hyprshot starts
         hyprshade off >/dev/null 2>&1
-        # Run the screenshot command
         $argv
-        # Restore the shader after hyprshot completes
         hyprshade on $shader >/dev/null 2>&1; or true
     else
-        # No shader active, just run the command
         $argv
+    end
+end
+
+function take_screenshot
+    set mode $argv[1]
+    set screenshot_path "$XDG_SCREENSHOTS_DIR/$FILENAME"
+
+    if run_with_hyprshade_workaround hyprshot --freeze --silent -m $mode -o $XDG_SCREENSHOTS_DIR -f $FILENAME
+        if test -f $screenshot_path
+            notify-send "Screenshot" "$mode screenshot saved and copied: $FILENAME" -i camera-photo; or true
+            echo "Saved and copied: $screenshot_path"
+        else
+            echo "Screenshot cancelled - no file created"
+        end
+    else
+        test -f $screenshot_path; and rm -f $screenshot_path
+        echo "Screenshot cancelled"(test -f $screenshot_path; and echo " - cleaned up partial file"; or echo "")
     end
 end
 
@@ -66,7 +74,6 @@ set MODE (set -q argv[1]; and echo $argv[1]; or echo "monitor")
 set SCREENSHOT_DIR "$HOME/Pictures/Screenshots"
 set XDG_SCREENSHOTS_DIR (set -q XDG_SCREENSHOTS_DIR; and echo $XDG_SCREENSHOTS_DIR; or echo $SCREENSHOT_DIR)
 
-# Ensure screenshot directory exists
 mkdir -p $XDG_SCREENSHOTS_DIR
 
 set APP_NAME (get_app_name)
@@ -74,44 +81,9 @@ set FILENAME (next_filename $APP_NAME)
 
 switch $MODE
     case monitor full
-        # Save and copy: default hyprshot behavior (no --clipboard-only)
-        set screenshot_path "$XDG_SCREENSHOTS_DIR/$FILENAME"
-        if run_with_hyprshade_workaround hyprshot --freeze --silent -m output -o $XDG_SCREENSHOTS_DIR -f $FILENAME
-            # Check if file was actually created
-            if test -f $screenshot_path
-                notify-send "Screenshot" "Monitor screenshot saved and copied: $FILENAME" -i camera-photo; or true
-                echo "Saved and copied: $screenshot_path"
-            else
-                echo "Screenshot cancelled - no file created"
-            end
-        else
-            # Command failed - check if a partial file was created and clean it up
-            if test -f $screenshot_path
-                rm -f $screenshot_path
-                echo "Screenshot cancelled - cleaned up partial file"
-            else
-                echo "Screenshot cancelled"
-            end
-        end
+        take_screenshot output
     case region area
-        set screenshot_path "$XDG_SCREENSHOTS_DIR/$FILENAME"
-        if run_with_hyprshade_workaround hyprshot --freeze --silent -m region -o $XDG_SCREENSHOTS_DIR -f $FILENAME
-            # Check if file was actually created (in case of weird edge cases)
-            if test -f $screenshot_path
-                notify-send "Screenshot" "Region screenshot saved and copied: $FILENAME" -i camera-photo; or true
-                echo "Saved and copied: $screenshot_path"
-            else
-                echo "Screenshot cancelled - no file created"
-            end
-        else
-            # Command failed - check if a partial file was created and clean it up
-            if test -f $screenshot_path
-                rm -f $screenshot_path
-                echo "Screenshot cancelled - cleaned up partial file"
-            else
-                echo "Screenshot cancelled"
-            end
-        end
+        take_screenshot region
     case '*'
         echo "Usage: screenshot [monitor|region]"
         echo ""
