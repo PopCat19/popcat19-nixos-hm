@@ -27,4 +27,10 @@ with pkgs;
   lazygit
   git-lfs
   hyprls
+
+  # Android Development Tools
+  universal-android-debloater
+  android-tools
+  scrcpy
+  sidequest
 ]

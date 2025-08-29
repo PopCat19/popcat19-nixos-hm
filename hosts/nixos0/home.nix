@@ -36,7 +36,6 @@ in
     ../../home_modules/gaming.nix
     ../../home_modules/stream.nix
     ../../home_modules/development.nix
-    ../../home_modules/android-tools.nix
     ../../home_modules/shimboot-project.nix
     ../../home_modules/dolphin.nix
     ../../home_modules/qt-gtk-config.nix
