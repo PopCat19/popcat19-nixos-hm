@@ -37,4 +37,9 @@
     ../../quickshell_config/quickshell.nix
     ../../syncthing_config/home.nix
   ];
+
+  # Use the centralized packages list from home_modules/packages.nix.
+  # This is the canonical source; per-host package overrides can still be
+  # implemented here if necessary.
+  home.packages = import ../../home_modules/packages.nix { inherit pkgs inputs system userConfig; };
 }
