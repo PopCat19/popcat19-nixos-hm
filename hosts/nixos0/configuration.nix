@@ -29,8 +29,8 @@ in
   ];
 
   _module.args.userConfig = nixos0UserConfig;
-  
-    home-manager = {
+
+  home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
@@ -42,15 +42,13 @@ in
       imports = [ ./home.nix ];
       home-manager.backupFileExtension = "backup";
     };
-  };</search>
-<replace>
-</search_and_replace>
+  };
 
   networking.hostName = "popcat19-nixos0";
-  
+
   nix.extraOptions = ''
     experimental-features = fetch-tree flakes nix-command impure-derivations ca-derivations
   '';
-  
+
   system.stateVersion = "25.05";
 }
