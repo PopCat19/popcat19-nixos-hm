@@ -59,19 +59,19 @@
     };
   };
 
-  home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/themes/rose-pine";
+  home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/themes/rose-pine-rose";
 
   home.file.".config/Kvantum/kvantum.kvconfig".text = ''
     [General]
-    theme=rose-pine
+    theme=rose-pine-rose
 
     [Applications]
-    dolphin=rose-pine
-    ark=rose-pine
-    gwenview=rose-pine
-    systemsettings=rose-pine
-    kate=rose-pine
-    kwrite=rose-pine
+    dolphin=rose-pine-rose
+    ark=rose-pine-rose
+    gwenview=rose-pine-rose
+    systemsettings=rose-pine-rose
+    kate=rose-pine-rose
+    kwrite=rose-pine-rose
   '';
 
   home.file.".config/kdeglobals" = {
