@@ -69,6 +69,7 @@
     theme=rose-pine-rose
 
     [Applications]
+    # KDE Applications
     dolphin=rose-pine-rose
     dolphin.exe=rose-pine-rose
     org.kde.dolphin=rose-pine-rose
@@ -77,96 +78,90 @@
     systemsettings=rose-pine-rose
     kate=rose-pine-rose
     kwrite=rose-pine-rose
+    okular=rose-pine-rose
+    konsole=rose-pine-rose
+    kcalc=rose-pine-rose
+    kcharselect=rose-pine-rose
+    kcolorchooser=rose-pine-rose
+    kdf=rose-pine-rose
+    keditbookmarks=rose-pine-rose
+    kfind=rose-pine-rose
+    kgpg=rose-pine-rose
+    kleopatra=rose-pine-rose
+    klipper=rose-pine-rose
+    kmag=rose-pine-rose
+    kmousetool=rose-pine-rose
+    kmouth=rose-pine-rose
+    knotes=rose-pine-rose
+    kruler=rose-pine-rose
+    ksysguard=rose-pine-rose
+    ktimer=rose-pine-rose
+    kwalletmanager=rose-pine-rose
+    plasma-discover=rose-pine-rose
+    spectacle=rose-pine-rose
+
+    # Qt Applications
+    qtcreator=rose-pine-rose
+    qterminal=rose-pine-rose
+    featherpad=rose-pine-rose
+    lxqt-config=rose-pine-rose
+
+    # Generic fallbacks
+    *=rose-pine-rose
   '';
 
+  # Kvantum theme configuration for better KDE integration
+  xdg.configFile."Kvantum/themes/rose-pine-rose.kvconfig".text = ''
+    [General]
+    author=rose-pine
+    comment=Rose Pine theme for Kvantum
+    name=rose-pine-rose
+
+    [Hacks]
+    align_menuitem_arrows=0
+    blur_translucent=0
+    centered_forms=0
+    combo_menu=0
+    compositing=0
+    force_size_grip=0
+    gtk_menubar_hack=0
+    iconless_menu=0
+    iconless_pushbutton=0
+    kde_globals_following=1
+    left_tabs_on_bottom=0
+    lock_kde_globals=0
+    menu_blur=0
+    menu_separator_height=0
+    merge_menubar_with_toolbar=0
+    no_selection_inactive=0
+    opaque_resize_grip=0
+    respect_darkness=1
+    scroll_jump_workaround=0
+    scroll_minimal=0
+    scrollbar_in_view=0
+    submenu_overlap=0
+    tint_on_mouseover=0
+    transparent_dolphin_view=1
+    transparent_ktitle_label=0
+    transparent_menutitle=0
+    unify_spin_buttons=0
+  '';
+
+  # Ensure Kvantum Manager starts with KDE applications
+  xdg.configFile."autostart/kvantummanager.desktop".text = ''
+    [Desktop Entry]
+    Name=Kvantum Manager
+    Comment=Qt Style Manager
+    Exec=kvantummanager
+    Icon=kvantum
+    Terminal=false
+    Type=Application
+    Categories=Qt;Settings;
+    StartupNotify=false
+    X-KDE-autostart-after=panel
+  '';</search></search></search>
+
   xdg.configFile."kdeglobals".text = ''
-    [ColorScheme]
-    Name=Rose-Pine-Main-BL
-
-    [Colors:Button]
-    BackgroundAlternate=49,46,77
-    BackgroundNormal=49,46,77
-    DecorationFocus=156,207,216
-    DecorationHover=156,207,216
-    ForegroundActive=224,222,244
-    ForegroundInactive=144,140,170
-    ForegroundLink=156,207,216
-    ForegroundNegative=235,111,146
-    ForegroundNeutral=246,193,119
-    ForegroundNormal=224,222,244
-    ForegroundPositive=156,207,216
-    ForegroundVisited=196,167,231
-
-    [Colors:Selection]
-    BackgroundAlternate=82,79,103
-    BackgroundNormal=64,61,82
-    DecorationFocus=156,207,216
-    DecorationHover=156,207,216
-    ForegroundActive=224,222,244
-    ForegroundInactive=144,140,170
-    ForegroundLink=156,207,216
-    ForegroundNegative=235,111,146
-    ForegroundNeutral=246,193,119
-    ForegroundNormal=224,222,244
-    ForegroundPositive=156,207,216
-    ForegroundVisited=196,167,231
-
-    [Colors:Tooltip]
-    BackgroundAlternate=25,23,36
-    BackgroundNormal=25,23,36
-    DecorationFocus=156,207,216
-    DecorationHover=156,207,216
-    ForegroundActive=224,222,244
-    ForegroundInactive=144,140,170
-    ForegroundLink=156,207,216
-    ForegroundNegative=235,111,146
-    ForegroundNeutral=246,193,119
-    ForegroundNormal=224,222,244
-    ForegroundPositive=156,207,216
-    ForegroundVisited=196,167,231
-
-    [Colors:View]
-    BackgroundAlternate=31,29,46
-    BackgroundNormal=25,23,36
-    DecorationFocus=156,207,216
-    DecorationHover=156,207,216
-    ForegroundActive=224,222,244
-    ForegroundInactive=144,140,170
-    ForegroundLink=156,207,216
-    ForegroundNegative=235,111,146
-    ForegroundNeutral=246,193,119
-    ForegroundNormal=224,222,244
-    ForegroundPositive=156,207,216
-    ForegroundVisited=196,167,231
-
-    [Colors:Window]
-    BackgroundAlternate=31,29,46
-    BackgroundNormal=25,23,36
-    DecorationFocus=156,207,216
-    DecorationHover=156,207,216
-    ForegroundActive=224,222,244
-    ForegroundInactive=144,140,170
-    ForegroundLink=156,207,216
-    ForegroundNegative=235,111,146
-    ForegroundNeutral=246,193,119
-    ForegroundNormal=224,222,244
-    ForegroundPositive=156,207,216
-    ForegroundVisited=196,167,231
-
-    [Colors:Complementary]
-    BackgroundAlternate=49,46,77
-    BackgroundNormal=38,35,58
-    DecorationFocus=235,188,186
-    DecorationHover=235,188,186
-    ForegroundActive=224,222,244
-    ForegroundInactive=110,106,134
-    ForegroundLink=156,207,216
-    ForegroundNegative=235,111,146
-    ForegroundNeutral=246,193,119
-    ForegroundNormal=224,222,244
-    ForegroundPositive=156,207,216
-    ForegroundVisited=196,167,231
-
     [General]
     ColorScheme=Rose-Pine-Main-BL
     Name=Rose-Pine-Main-BL
@@ -179,6 +174,103 @@
     contrast=4
     widgetStyle=kvantum
   '';
+
+  # KDE Color Scheme file
+  xdg.dataFile."color-schemes/Rose-Pine-Main-BL.colors".text = ''
+    [ColorScheme]
+    Name=Rose-Pine-Main-BL
+    Description=Rose Pine color scheme integrated with Kvantum
+
+    [General]
+    shadeSortColumn=true
+
+    [KDE]
+    contrast=4
+
+    [Colors:View]
+    BackgroundNormal=25,23,36
+    BackgroundAlternate=31,29,46
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Window]
+    BackgroundNormal=25,23,36
+    BackgroundAlternate=31,29,46
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Button]
+    BackgroundNormal=49,46,77
+    BackgroundAlternate=49,46,77
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Selection]
+    BackgroundNormal=64,61,82
+    BackgroundAlternate=82,79,103
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Tooltip]
+    BackgroundNormal=25,23,36
+    BackgroundAlternate=25,23,36
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Complementary]
+    BackgroundNormal=38,35,58
+    BackgroundAlternate=49,46,77
+    DecorationFocus=235,188,186
+    DecorationHover=235,188,186
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=110,106,134
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+  '';</search>
 
   home.file.".config/qt6ct/qt6ct.conf" = {
     text = ''
