@@ -73,21 +73,47 @@ set APP_NAME (get_app_name)
 set FILENAME (next_filename $APP_NAME)
 
 switch $MODE
-    case monitor full
+        case monitor full
         # Save and copy: default hyprshot behavior (no --clipboard-only)
+        set screenshot_path "$XDG_SCREENSHOTS_DIR/$FILENAME"
         if run_with_hyprshade_workaround hyprshot --freeze --silent -m output -o $XDG_SCREENSHOTS_DIR -f $FILENAME
-            notify-send "Screenshot" "Monitor screenshot saved and copied: $FILENAME" -i camera-photo; or true
-            echo "Saved and copied: $XDG_SCREENSHOTS_DIR/$FILENAME"
+            # Check if file was actually created
+            if test -f $screenshot_path
+                notify-send "Screenshot" "Monitor screenshot saved and copied: $FILENAME" -i camera-photo; or true
+                echo "Saved and copied: $screenshot_path"
+            else
+                echo "Screenshot cancelled - no file created"
+            end
         else
-            echo "Screenshot cancelled"
-        end
-    case region area
+            # Command failed - check if a partial file was created and clean it up
+            if test -f $screenshot_path
+                rm -f $screenshot_path
+                echo "Screenshot cancelled - cleaned up partial file"
+            else
+                echo "Screenshot cancelled"
+            end
+        end</search>
+</search_and_replace>
+        case region area
+        set screenshot_path "$XDG_SCREENSHOTS_DIR/$FILENAME"
         if run_with_hyprshade_workaround hyprshot --freeze --silent -m region -o $XDG_SCREENSHOTS_DIR -f $FILENAME
-            notify-send "Screenshot" "Region screenshot saved and copied: $FILENAME" -i camera-photo; or true
-            echo "Saved and copied: $XDG_SCREENSHOTS_DIR/$FILENAME"
+            # Check if file was actually created (in case of weird edge cases)
+            if test -f $screenshot_path
+                notify-send "Screenshot" "Region screenshot saved and copied: $FILENAME" -i camera-photo; or true
+                echo "Saved and copied: $screenshot_path"
+            else
+                echo "Screenshot cancelled - no file created"
+            end
         else
-            echo "Screenshot cancelled"
-        end
+            # Command failed - check if a partial file was created and clean it up
+            if test -f $screenshot_path
+                rm -f $screenshot_path
+                echo "Screenshot cancelled - cleaned up partial file"
+            else
+                echo "Screenshot cancelled"
+            end
+        end</search>
+</search_and_replace>
     case '*'
         echo "Usage: screenshot [monitor|region]"
         echo ""
