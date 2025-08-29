@@ -1,12 +1,10 @@
 { pkgs, config, ... }:
 
 {
-  # Dolphin and KDE file management packages
+  # KDE applications and utilities (no desktop environment)
   home.packages = with pkgs; [
-    # Core file manager
+    # Dolphin and KDE file management packages
     kdePackages.dolphin
-
-    # KDE applications for file handling
     kdePackages.ark          # Archive manager
     kdePackages.gwenview     # Image viewer
     kdePackages.okular       # Document viewer
@@ -21,7 +19,43 @@
     poppler_utils           # PDF thumbnails
     libgsf                 # OLE/MSO thumbnails
     webp-pixbuf-loader     # WebP image support
+
+    # KDE utilities
+    kdePackages.kdialog      # Dialog boxes from shell scripts
+    kdePackages.keditbookmarks # Bookmark editor
+    kdePackages.kleopatra    # Certificate manager and GUI for GnuPG
+    kdePackages.kwalletmanager # Wallet management tool
+
+    # Qt theming
+    qt6Packages.qtstyleplugin-kvantum
+    libsForQt5.qtstyleplugin-kvantum
   ];
+
+  # KDE configuration files
+  home.file.".config/kdeglobals".text = ''
+    [General]
+    XftAntialias=true
+    XftHintStyle=hintslight
+    XftSubPixel=rgb
+
+    [Icons]
+    Theme=breeze
+
+    [KDE]
+    widgetStyle=kvantum
+  '';
+
+  # Kvantum theme configuration
+  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
+    [General]
+    theme=rose-pine-rose
+  '';
+
+  # Qt environment variables for Kvantum
+  home.sessionVariables = {
+    QT_STYLE_OVERRIDE = "kvantum";
+    QT_QPA_PLATFORMTHEME = "kvantum";
+  };
 
   # Dolphin file manager bookmarks
   home.file.".local/share/user-places.xbel".text = ''
