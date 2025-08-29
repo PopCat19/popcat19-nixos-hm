@@ -15,5 +15,8 @@
   home.file."Pictures/Screenshots/.keep".text = "";
 
   # Screenshot wrapper script for hyprshot with hyprshade integration
-  home.file.".local/bin/screenshot".source = ./screenshot.fish;
+  home.file.".local/bin/screenshot" = {
+    source = ./screenshot.fish;
+    executable = true;
+  };
 }
