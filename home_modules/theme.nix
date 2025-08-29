@@ -2,7 +2,6 @@
 
 {
   home.sessionVariables = {
-    QT_QPA_PLATFORMTHEME = "qt6ct";
     QT_STYLE_OVERRIDE = "kvantum";
     QT_QPA_PLATFORM = "wayland;xcb";
     GTK_THEME = "Rose-Pine-Main-BL";

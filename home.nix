@@ -12,13 +12,12 @@
 let
   # Get the hostname from userConfig
   hostname = userConfig.host.hostname;
-  
+
   # Determine which host-specific configuration to import
-  hostHomeConfig = 
-    if hostname == "popcat19-surface0" then ./hosts/surface0/home-packages.nix
-    else if hostname == "popcat19-nixos0" then ./hosts/nixos0/home.nix
+  hostHomeConfig =
+    if hostname == "popcat19-nixos0" then ./hosts/nixos0/home.nix
     else null;
-in
+in</search>
 
 {
   # Basic home configuration
@@ -29,31 +28,26 @@ in
   # Theme configuration
   # All theme-related configurations are imported from theme.nix
 
-  imports = 
+  imports =
     # Import host-specific configuration if available
     (if hostHomeConfig != null then [ hostHomeConfig ] else []) ++
-    
-    # Default imports for hosts without specific configurations
+
+    # Default imports for hosts without specific configurations (surface0, thinkpad0)
     (if hostHomeConfig == null then [
       # Theme and UI
       ./home_modules/theme.nix
       ./home_modules/screenshot.nix
-      ./home_modules/mangohud.nix
+      ./home_modules/zen-browser.nix
       ./hypr_config/hyprland.nix
       ./hypr_config/hyprpanel-home.nix
-      
+
       # Core system
       ./home_modules/environment.nix
       ./home_modules/services.nix
-      ./home_modules/ssh.nix
       ./home_modules/home-files.nix
       ./home_modules/systemd-services.nix
 
-      # Application and feature modules
-      ./home_modules/gaming.nix
-      ./home_modules/development.nix
-      ./home_modules/android-tools.nix
-      ./home_modules/shimboot-project.nix
+      # Application and feature modules (minimal set for laptops)
       ./home_modules/desktop-theme.nix
       ./home_modules/dolphin.nix
       ./home_modules/qt-gtk-config.nix

@@ -16,6 +16,9 @@
   # System environment variables
   environment.sessionVariables = {
     # Wayland support
+     # QT/Kvantum theme support
+     QT_QPA_PLATFORMTHEME = "qt6ct";
+     QT_STYLE_OVERRIDE = "kvantum";
     NIXOS_OZONE_WL = "1";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     GST_PLUGIN_SYSTEM_PATH_1_0 = "/run/current-system/sw/lib/gstreamer-1.0";
