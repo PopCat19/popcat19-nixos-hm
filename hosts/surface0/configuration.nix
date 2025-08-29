@@ -23,8 +23,6 @@ in
     ../../system_modules/core-packages.nix
     ../../system_modules/packages.nix
     ../../system_modules/fonts.nix
-    ../../system_modules/ssh.nix
-    ../../system_modules/distributed-builds.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
