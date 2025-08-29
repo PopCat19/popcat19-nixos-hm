@@ -43,12 +43,10 @@
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
 
       # Screenshots - Clipboard screenshots (primary keybindings)
-      "$mainMod, P, exec, ~/.local/bin/screenshot monitor save"
-      "$mainMod+Ctrl, P, exec, ~/.local/bin/screenshot region save"
+      "$mainMod, P, exec, ~/.local/bin/screenshot region save"
 
       # Screenshots - Save to file screenshots (secondary keybindings)
       "$mainMod+Shift, P, exec, ~/.local/bin/screenshot monitor"
-      "$mainMod+Shift+Ctrl, P, exec, ~/.local/bin/screenshot region"
 
       # Media playback
       ",XF86AudioPlay, exec, playerctl play-pause"
