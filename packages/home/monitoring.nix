@@ -5,5 +5,4 @@
 with pkgs;
 [
   fastfetch
-  glances
 ]
