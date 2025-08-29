@@ -34,8 +34,8 @@
     papirus-icon-theme
   ];
 
-  # KDE configuration files
-  home.file.".config/kdeglobals".text = ''
+  # KDE configuration files using xdg.configFile for better mutability
+  xdg.configFile."kdeglobals".text = ''
     [General]
     XftAntialias=true
     XftHintStyle=hintslight
@@ -49,7 +49,7 @@
   '';
 
   # Kvantum theme configuration
-  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
+  xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
     [General]
     theme=rose-pine-rose
   '';
@@ -99,7 +99,7 @@
   '';
 
   # Dolphin configuration with enhanced thumbnails and better opacity
-  home.file.".config/dolphinrc".text = ''
+  xdg.configFile."dolphinrc".text = ''
     [General]
     BrowseThroughArchives=true
     EditableUrl=false
