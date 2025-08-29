@@ -16,6 +16,9 @@
   home.homeDirectory = userConfig.directories.home;
   home.stateVersion = "24.05";
 
+  # Fix backup file conflicts by setting custom backup extension
+  home-manager.backupFileExtension = "backup";
+
   # Imports (shared home modules + host-local hypr configs)
   imports = [
     ../../home_modules/theme.nix
