@@ -37,7 +37,7 @@ in
           addresses = [ "dynamic" ];
         };
         "thinkpad0" = {
-          id = "42CXYWA-6XSQBIG-LSZTRGK-RKT7NJT-WRD4DN4-SJGOPDJ-K2MSTBG-DEWBJAL";
+          id = "77NUF7I-XOXG3XA-LZDKCTC-ORPOQYO-4YBTFUW-RKIHOOZ-UYP7VOP-RBRUWQV";
           name = "thinkpad0";
           addresses = [ "dynamic" ];
         };
