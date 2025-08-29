@@ -55,6 +55,10 @@
       ",XF86AudioNext, exec, playerctl next"
       ",XF86AudioPrev, exec, playerctl previous"
       ",XF86AudioStop, exec, playerctl stop"
+       # Custom media keys
+       "Alt, F8, exec, playerctl play-pause"
+       "Alt, F6, exec, playerctl previous"
+       "Alt, F7, exec, playerctl next"
 
       # Window Focus
       "$mainMod, Left, movefocus, l"
