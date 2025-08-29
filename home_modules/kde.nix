@@ -40,7 +40,10 @@
   home.sessionVariables = {
     QT_STYLE_OVERRIDE = "kvantum";
     QT_QPA_PLATFORMTHEME = "kvantum";
-  };
+    QT_PLATFORM_PLUGIN = "kvantum";
+    QT_PLATFORMTHEME = "kvantum";
+    XDG_CURRENT_DESKTOP = "KDE";
+  };</search>
 
   # Dolphin file manager bookmarks
   home.file.".local/share/user-places.xbel".text = ''
