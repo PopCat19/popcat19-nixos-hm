@@ -81,7 +81,7 @@ with pkgs;
 
    # Neovim and Language Servers
    neovim
-   rust-analyzer
+   
    pyright
    lua-language-server
    nodePackages_latest.typescript-language-server
