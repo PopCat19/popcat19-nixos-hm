@@ -1,15 +1,18 @@
 { pkgs, config, system, lib, inputs, ... }:
 
 {
-  home.sessionVariables = {
+    home.sessionVariables = {
     QT_STYLE_OVERRIDE = "kvantum";
     QT_QPA_PLATFORM = "wayland;xcb";
     GTK_THEME = "Rose-Pine-Main-BL";
     GDK_BACKEND = "wayland,x11,*";
     XCURSOR_THEME = "rose-pine-hyprcursor";
     XCURSOR_SIZE = "24";
+    # Additional variables for KDE/Qt applications
+    QT_QUICK_CONTROLS_STYLE = "Kvantum";
+    QT_QUICK_CONTROLS_MATERIAL_THEME = "Dark";
   };
-
+  
   gtk = {
     enable = true;
     cursorTheme = {
@@ -67,13 +70,15 @@
 
     [Applications]
     dolphin=rose-pine-rose
+    dolphin.exe=rose-pine-rose
+    org.kde.dolphin=rose-pine-rose
     ark=rose-pine-rose
     gwenview=rose-pine-rose
     systemsettings=rose-pine-rose
     kate=rose-pine-rose
     kwrite=rose-pine-rose
   '';
-
+  
   home.file.".config/kdeglobals" = {
     text = ''
       [ColorScheme]
