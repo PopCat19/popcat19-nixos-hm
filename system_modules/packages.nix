@@ -15,30 +15,18 @@ let
   # Virtualization packages moved to system_modules/virtualisation.nix
   # See system_modules/virtualisation.nix for virtualization-related packages
 
+  # Import categorized package modules
+  networkPackages = import ../packages/system/network.nix { inherit pkgs; };
+  hardwarePackages = import ../packages/system/hardware.nix { inherit pkgs; };
+  guiPackages = import ../packages/system/gui.nix { inherit pkgs; };
+  developmentPackages = import ../packages/system/development.nix { inherit pkgs; };
 in
 {
-  # Additional system packages
-  environment.systemPackages = with pkgs; [
-    # Network tools
-    wireguard-tools
-
-    # Hardware tools
-    i2c-tools
-    ddcutil
-    usbutils
-    util-linux
-    e2fsprogs
-    eza
-    brightnessctl
-
-    # GUI / launcher tools
-    fuzzel
-
-    # Development tools
-    python313Packages.pip
-    gh
-    unzip
-  ]
+  # All packages are now organized in categorized modules
+  environment.systemPackages = networkPackages
+  ++ hardwarePackages
+  ++ guiPackages
+  ++ developmentPackages
   ++ (if isX86_64 then x86_64Packages else [])
   ++ (if isAarch64 then aarch64Packages else []);
 }
