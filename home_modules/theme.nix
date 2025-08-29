@@ -12,7 +12,7 @@
     QT_QUICK_CONTROLS_STYLE = "Kvantum";
     QT_QUICK_CONTROLS_MATERIAL_THEME = "Dark";
   };
-  
+
   gtk = {
     enable = true;
     cursorTheme = {
@@ -159,7 +159,7 @@
     Categories=Qt;Settings;
     StartupNotify=false
     X-KDE-autostart-after=panel
-  '';</search></search></search>
+  '';
 
   xdg.configFile."kdeglobals".text = ''
     [General]
@@ -270,7 +270,7 @@
     ForegroundNegative=235,111,146
     ForegroundNeutral=246,193,119
     ForegroundPositive=156,207,216
-  '';</search>
+  '';
 
   home.file.".config/qt6ct/qt6ct.conf" = {
     text = ''
