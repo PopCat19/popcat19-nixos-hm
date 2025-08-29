@@ -38,7 +38,7 @@ in
         };
         "thinkpad0" = {
           id = "42CXYWA-6XSQBIG-LSZTRGK-RKT7NJT-WRD4DN4-SJGOPDJ-K2MSTBG-DEWBJAL";
-          name = "popcat19-thinkpad0";
+          name = "thinkpad0";
           addresses = [ "dynamic" ];
         };
       };
