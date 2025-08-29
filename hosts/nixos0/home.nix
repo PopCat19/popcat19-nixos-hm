@@ -33,10 +33,6 @@ in
     ../../home_modules/home-files.nix
     ../../home_modules/systemd-services.nix
 
-    ../../home_modules/gaming.nix
-    ../../home_modules/stream.nix
-    ../../home_modules/development.nix
-    ../../home_modules/shimboot-project.nix
     ../../home_modules/dolphin.nix
     ../../home_modules/qt-gtk-config.nix
     ../../home_modules/fuzzel-config.nix

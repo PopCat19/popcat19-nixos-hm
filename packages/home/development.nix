@@ -33,4 +33,15 @@ with pkgs;
   android-tools
   scrcpy
   sidequest
+
+  # Programming Languages and Runtimes
+  jdk
+  nodejs_latest
+  yarn-berry
+  rustup
+
+  # Hardware Development Tools
+  sunxi-tools
+  binwalk
+  vboot_reference
 ]
