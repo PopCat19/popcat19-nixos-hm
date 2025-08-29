@@ -1,36 +1,61 @@
 { pkgs, config, system, lib, inputs, ... }:
 
+let
+  theme = {
+    gtkThemeName = "Rose-Pine-Main-BL";
+    iconTheme = "Papirus-Dark";
+    cursorTheme = "rose-pine-hyprcursor";
+    cursorSize = 24;
+    kvantumTheme = "rose-pine-rose";
+    kdeColorSchemeName = "Rose-Pine-Main-BL";
+    fontMain = "Rounded Mplus 1c Medium";
+    fontMono = "JetBrainsMono Nerd Font";
+    fuzzelFontSize = 14;
+    kittyFontSize = 11;
+    gtkFontSize = 11;
+  };
+
+  cursorPackage = inputs.rose-pine-hyprcursor.packages.${system}.default;
+  kvantumPkg = pkgs.kdePackages.qtstyleplugin-kvantum;
+  rosePineKvantum = pkgs.rose-pine-kvantum;
+  rosePineGtk = pkgs.rose-pine-gtk-theme-full;
+
+  gtkCss = ''
+    * {
+      font-family: "${theme.fontMain}";
+    }
+  '';
+in
 {
-    home.sessionVariables = {
+  home.sessionVariables = {
     QT_STYLE_OVERRIDE = "kvantum";
     QT_QPA_PLATFORM = "wayland;xcb";
-    GTK_THEME = "Rose-Pine-Main-BL";
+    GTK_THEME = theme.gtkThemeName;
     GDK_BACKEND = "wayland,x11,*";
-    XCURSOR_THEME = "rose-pine-hyprcursor";
-    XCURSOR_SIZE = "24";
-    # Additional variables for KDE/Qt applications
+    XCURSOR_THEME = theme.cursorTheme;
+    XCURSOR_SIZE = builtins.toString theme.cursorSize;
     QT_QUICK_CONTROLS_STYLE = "Kvantum";
     QT_QUICK_CONTROLS_MATERIAL_THEME = "Dark";
   };
-  
+
   gtk = {
     enable = true;
     cursorTheme = {
-      name = "rose-pine-hyprcursor";
-      size = 24;
-      package = inputs.rose-pine-hyprcursor.packages.${system}.default;
+      name = theme.cursorTheme;
+      size = theme.cursorSize;
+      package = cursorPackage;
     };
     theme = {
-      name = "Rose-Pine-Main-BL";
-      package = pkgs.rose-pine-gtk-theme-full;
+      name = theme.gtkThemeName;
+      package = rosePineGtk;
     };
     iconTheme = {
-      name = "Papirus-Dark";
+      name = theme.iconTheme;
       package = pkgs.papirus-icon-theme;
     };
     font = {
-      name = "Rounded Mplus 1c Medium";
-      size = 11;
+      name = theme.fontMain;
+      size = theme.gtkFontSize;
     };
     gtk3.extraConfig = {
       gtk-decoration-layout = "appmenu:minimize,maximize,close";
@@ -42,159 +67,237 @@
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
     };
-    gtk3.extraCss = ''
-      * {
-        font-family: "Rounded Mplus 1c Medium";
-      }
-    '';
-    gtk4.extraCss = ''
-      * {
-        font-family: "Rounded Mplus 1c Medium";
-      }
-    '';
+    gtk3.extraCss = gtkCss;
+    gtk4.extraCss = gtkCss;
   };
 
   qt = {
     enable = true;
     style = {
       name = "kvantum";
-      package = pkgs.kdePackages.qtstyleplugin-kvantum;
+      package = kvantumPkg;
     };
   };
 
-  home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/themes/rose-pine-rose";
+  home.file.".config/Kvantum/RosePine".source = "${rosePineKvantum}/share/Kvantum/themes/${theme.kvantumTheme}";
 
-  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
+  xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
     [General]
-    theme=rose-pine-rose
+    theme=${theme.kvantumTheme}
 
     [Applications]
-    dolphin=rose-pine-rose
-    dolphin.exe=rose-pine-rose
-    org.kde.dolphin=rose-pine-rose
-    ark=rose-pine-rose
-    gwenview=rose-pine-rose
-    systemsettings=rose-pine-rose
-    kate=rose-pine-rose
-    kwrite=rose-pine-rose
+    # KDE Applications
+    dolphin=${theme.kvantumTheme}
+    dolphin.exe=${theme.kvantumTheme}
+    org.kde.dolphin=${theme.kvantumTheme}
+    ark=${theme.kvantumTheme}
+    gwenview=${theme.kvantumTheme}
+    systemsettings=${theme.kvantumTheme}
+    kate=${theme.kvantumTheme}
+    kwrite=${theme.kvantumTheme}
+    okular=${theme.kvantumTheme}
+    konsole=${theme.kvantumTheme}
+    kcalc=${theme.kvantumTheme}
+    kcharselect=${theme.kvantumTheme}
+    kcolorchooser=${theme.kvantumTheme}
+    kdf=${theme.kvantumTheme}
+    keditbookmarks=${theme.kvantumTheme}
+    kfind=${theme.kvantumTheme}
+    kgpg=${theme.kvantumTheme}
+    kleopatra=${theme.kvantumTheme}
+    klipper=${theme.kvantumTheme}
+    kmag=${theme.kvantumTheme}
+    kmousetool=${theme.kvantumTheme}
+    kmouth=${theme.kvantumTheme}
+    knotes=${theme.kvantumTheme}
+    kruler=${theme.kvantumTheme}
+    ksysguard=${theme.kvantumTheme}
+    ktimer=${theme.kvantumTheme}
+    kwalletmanager=${theme.kvantumTheme}
+    plasma-discover=${theme.kvantumTheme}
+    spectacle=${theme.kvantumTheme}
+
+    # Qt Applications
+    qtcreator=${theme.kvantumTheme}
+    qterminal=${theme.kvantumTheme}
+    featherpad=${theme.kvantumTheme}
+    lxqt-config=${theme.kvantumTheme}
+
+    # Generic fallbacks
+    *=${theme.kvantumTheme}
   '';
-  
-  home.file.".config/kdeglobals" = {
-    text = ''
-      [ColorScheme]
-      Name=Rose-Pine-Main-BL
 
-      [Colors:Button]
-      BackgroundAlternate=49,46,77
-      BackgroundNormal=49,46,77
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=224,222,244
-      ForegroundInactive=144,140,170
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
+  xdg.configFile."Kvantum/themes/${theme.kvantumTheme}.kvconfig".text = ''
+    [General]
+    author=rose-pine
+    comment=Rose Pine theme for Kvantum
+    name=${theme.kvantumTheme}
 
-      [Colors:Selection]
-      BackgroundAlternate=82,79,103
-      BackgroundNormal=64,61,82
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=224,222,244
-      ForegroundInactive=144,140,170
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
+    [Hacks]
+    align_menuitem_arrows=0
+    blur_translucent=0
+    centered_forms=0
+    combo_menu=0
+    compositing=0
+    force_size_grip=0
+    gtk_menubar_hack=0
+    iconless_menu=0
+    iconless_pushbutton=0
+    kde_globals_following=1
+    left_tabs_on_bottom=0
+    lock_kde_globals=0
+    menu_blur=0
+    menu_separator_height=0
+    merge_menubar_with_toolbar=0
+    no_selection_inactive=0
+    opaque_resize_grip=0
+    respect_darkness=1
+    scroll_jump_workaround=0
+    scroll_minimal=0
+    scrollbar_in_view=0
+    submenu_overlap=0
+    tint_on_mouseover=0
+    transparent_dolphin_view=1
+    transparent_ktitle_label=0
+    transparent_menutitle=0
+    unify_spin_buttons=0
+  '';
 
-      [Colors:Tooltip]
-      BackgroundAlternate=25,23,36
-      BackgroundNormal=25,23,36
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=224,222,244
-      ForegroundInactive=144,140,170
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
+  xdg.configFile."autostart/kvantummanager.desktop".text = ''
+    [Desktop Entry]
+    Name=Kvantum Manager
+    Comment=Qt Style Manager
+    Exec=kvantummanager
+    Icon=kvantum
+    Terminal=false
+    Type=Application
+    Categories=Qt;Settings;
+    StartupNotify=false
+    X-KDE-autostart-after=panel
+  '';
 
-      [Colors:View]
-      BackgroundAlternate=31,29,46
-      BackgroundNormal=25,23,36
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=224,222,244
-      ForegroundInactive=144,140,170
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
+  xdg.configFile."kdeglobals".text = ''
+    [General]
+    ColorScheme=${theme.kdeColorSchemeName}
+    Name=${theme.kdeColorSchemeName}
+    shadeSortColumn=true
 
-      [Colors:Window]
-      BackgroundAlternate=31,29,46
-      BackgroundNormal=25,23,36
-      DecorationFocus=156,207,216
-      DecorationHover=156,207,216
-      ForegroundActive=224,222,244
-      ForegroundInactive=144,140,170
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
+    [Icons]
+    Theme=${theme.iconTheme}
 
-      [Colors:Complementary]
-      BackgroundAlternate=49,46,77
-      BackgroundNormal=38,35,58
-      DecorationFocus=235,188,186
-      DecorationHover=235,188,186
-      ForegroundActive=224,222,244
-      ForegroundInactive=110,106,134
-      ForegroundLink=156,207,216
-      ForegroundNegative=235,111,146
-      ForegroundNeutral=246,193,119
-      ForegroundNormal=224,222,244
-      ForegroundPositive=156,207,216
-      ForegroundVisited=196,167,231
+    [KDE]
+    contrast=4
+    widgetStyle=kvantum
+  '';
 
-      [General]
-      ColorScheme=Rose-Pine-Main-BL
-      Name=Rose-Pine-Main-BL
-      shadeSortColumn=true
+  xdg.dataFile."color-schemes/${theme.kdeColorSchemeName}.colors".text = ''
+    [ColorScheme]
+    Name=${theme.kdeColorSchemeName}
+    Description=Rose Pine color scheme integrated with Kvantum
 
-      [Icons]
-      Theme=Papirus-Dark
+    [General]
+    shadeSortColumn=true
 
-      [KDE]
-      contrast=4
-      widgetStyle=kvantum
-    '';
-    force = true;
-  };
+    [KDE]
+    contrast=4
+
+    [Colors:View]
+    BackgroundNormal=25,23,36
+    BackgroundAlternate=31,29,46
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Window]
+    BackgroundNormal=25,23,36
+    BackgroundAlternate=31,29,46
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Button]
+    BackgroundNormal=49,46,77
+    BackgroundAlternate=49,46,77
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Selection]
+    BackgroundNormal=64,61,82
+    BackgroundAlternate=82,79,103
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Tooltip]
+    BackgroundNormal=25,23,36
+    BackgroundAlternate=25,23,36
+    DecorationFocus=156,207,216
+    DecorationHover=156,207,216
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=144,140,170
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+
+    [Colors:Complementary]
+    BackgroundNormal=38,35,58
+    BackgroundAlternate=49,46,77
+    DecorationFocus=235,188,186
+    DecorationHover=235,188,186
+    ForegroundNormal=224,222,244
+    ForegroundActive=224,222,244
+    ForegroundInactive=110,106,134
+    ForegroundLink=156,207,216
+    ForegroundVisited=196,167,231
+    ForegroundNegative=235,111,146
+    ForegroundNeutral=246,193,119
+    ForegroundPositive=156,207,216
+  '';
 
   home.file.".config/qt6ct/qt6ct.conf" = {
     text = ''
       [Appearance]
       color_scheme_path=
       custom_palette=false
-      icon_theme=Papirus-Dark
+      icon_theme=${theme.iconTheme}
       standard_dialogs=default
       style=kvantum
 
       [Fonts]
-      fixed="JetBrainsMono Nerd Font,11,-1,5,50,0,0,0,0,0"
-      general="Rounded Mplus 1c Medium,11,-1,5,50,0,0,0,0,0"
+      fixed="${theme.fontMono},11,-1,5,50,0,0,0,0,0"
+      general="${theme.fontMain},${builtins.toString theme.gtkFontSize},-1,5,50,0,0,0,0,0"
 
       [Interface]
       activate_item_on_single_click=1
@@ -218,18 +321,18 @@
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      cursor-theme = "rose-pine-hyprcursor";
-      cursor-size = 24;
-      gtk-theme = "Rose-Pine-Main-BL";
-      icon-theme = "Papirus-Dark";
-      font-name = "Rounded Mplus 1c Medium 11";
-      document-font-name = "Rounded Mplus 1c Medium 11";
-      monospace-font-name = "JetBrainsMono Nerd Font 11";
+      cursor-theme = theme.cursorTheme;
+      cursor-size = theme.cursorSize;
+      gtk-theme = theme.gtkThemeName;
+      icon-theme = theme.iconTheme;
+      font-name = "${theme.fontMain} ${builtins.toString theme.gtkFontSize}";
+      document-font-name = "${theme.fontMain} ${builtins.toString theme.gtkFontSize}";
+      monospace-font-name = "${theme.fontMono} ${builtins.toString theme.kittyFontSize}";
       color-scheme = "prefer-dark";
     };
 
-    "org/gnome/desktop/wm/preferences" = {
-      theme = "Rose-Pine-Main-BL";
+   "org/gnome/desktop/wm/preferences" = {
+      theme = theme.gtkThemeName;
     };
 
     "org/gnome/desktop/thumbnailers" = {
@@ -270,14 +373,12 @@
     };
   };
 
-
-
   programs.kitty.font = {
-    name = "JetBrainsMono Nerd Font";
-    size = 11;
+    name = theme.fontMono;
+    size = theme.kittyFontSize;
   };
 
-  programs.fuzzel.settings.main.font = "Rounded Mplus 1c Medium:size=14";
+  programs.fuzzel.settings.main.font = "${theme.fontMain}:size=${builtins.toString theme.fuzzelFontSize}";
 
   home.file.".config/fontconfig/fonts.conf".text = ''
     <?xml version="1.0"?>
@@ -286,11 +387,11 @@
       <alias>
         <family>sans-serif</family>
         <prefer>
-          <family>Rounded Mplus 1c Medium</family>
+          <family>${theme.fontMain}</family>
         </prefer>
       </alias>
       <alias>
-        <family>Rounded Mplus 1c Medium</family>
+        <family>${theme.fontMain}</family>
         <default>
           <family>sans-serif</family>
         </default>
@@ -320,14 +421,12 @@
     libsForQt5.qtstyleplugin-kvantum
     rose-pine-kvantum
     rose-pine-gtk-theme-full
-    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
+    cursorPackage
     catppuccin-gtk
     catppuccin-cursors
     papirus-icon-theme
     adwaita-icon-theme
     polkit_gnome
     gsettings-desktop-schemas
-    # TODO: Fix the check-rose-pine-theme script syntax issues
-    # For now, we'll comment it out to get the basic configuration working
   ];
 }
