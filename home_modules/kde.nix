@@ -29,6 +29,9 @@
     # Qt theming
     qt6Packages.qtstyleplugin-kvantum
     libsForQt5.qtstyleplugin-kvantum
+
+    # Papirus icons
+    papirus-icon-theme
   ];
 
   # KDE configuration files
@@ -39,7 +42,7 @@
     XftSubPixel=rgb
 
     [Icons]
-    Theme=breeze
+    Theme=Papirus-Dark
 
     [KDE]
     widgetStyle=kvantum
