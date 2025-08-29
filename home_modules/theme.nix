@@ -64,7 +64,7 @@
 
   home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/themes/rose-pine-rose";
 
-  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
+  xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
     [General]
     theme=rose-pine-rose
 
@@ -78,9 +78,8 @@
     kate=rose-pine-rose
     kwrite=rose-pine-rose
   '';
-  
-  home.file.".config/kdeglobals" = {
-    text = ''
+
+  xdg.configFile."kdeglobals".text = ''
       [ColorScheme]
       Name=Rose-Pine-Main-BL
 

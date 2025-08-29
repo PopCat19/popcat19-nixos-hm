@@ -34,25 +34,7 @@
     papirus-icon-theme
   ];
 
-  # KDE configuration files using xdg.configFile for better mutability
-  xdg.configFile."kdeglobals".text = ''
-    [General]
-    XftAntialias=true
-    XftHintStyle=hintslight
-    XftSubPixel=rgb
-
-    [Icons]
-    Theme=Papirus-Dark
-
-    [KDE]
-    widgetStyle=kvantum
-  '';
-
-  # Kvantum theme configuration
-  xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
-    [General]
-    theme=rose-pine-rose
-  '';
+  # KDE configuration files - keeping minimal config here, main theme config in theme.nix
 
   # Qt environment variables for Kvantum
   home.sessionVariables = {
