@@ -33,6 +33,7 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+    backupFileExtension = "backup";
     extraSpecialArgs = {
       inherit inputs;
       userConfig = nixos0UserConfig;
@@ -40,7 +41,6 @@ in
     };
     users.${nixos0UserConfig.user.username} = {
       imports = [ ./home.nix ];
-      home-manager.backupFileExtension = "backup";
     };
   };
 
