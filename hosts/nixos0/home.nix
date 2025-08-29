@@ -38,7 +38,6 @@ in
     ../../home_modules/development.nix
     ../../home_modules/android-tools.nix
     ../../home_modules/shimboot-project.nix
-    ../../home_modules/desktop-theme.nix
     ../../home_modules/dolphin.nix
     ../../home_modules/qt-gtk-config.nix
     ../../home_modules/fuzzel-config.nix
