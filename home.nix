@@ -54,9 +54,6 @@ in</search>
       ./home_modules/kitty.nix
       ./home_modules/fish.nix
       ./home_modules/starship.nix
-       ./home_modules/micro.nix
-       ./home_modules/neovim.nix
-       ./home_modules/fcitx5.nix
       ./home_modules/micro.nix
       ./home_modules/fcitx5.nix
       ./quickshell_config/quickshell.nix

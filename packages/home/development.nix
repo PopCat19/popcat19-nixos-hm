@@ -16,6 +16,7 @@ with pkgs;
   lua-language-server
   nodePackages_latest.typescript-language-server
   nodePackages_latest.vscode-langservers-extracted
+  rust-analyzer
 
   # Code Formatters
   black
@@ -39,6 +40,10 @@ with pkgs;
   nodejs_latest
   yarn-berry
   rustup
+  python3
+
+  # System Utilities
+  libnotify
 
   # Hardware Development Tools
   sunxi-tools
