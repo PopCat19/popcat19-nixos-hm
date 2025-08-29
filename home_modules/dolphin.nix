@@ -77,6 +77,10 @@
     UseTabForSwitchingSplitView=false
     Version=202
     ViewPropsTimestamp=2024,1,1,0,0,0
+     [Qt]
+     style=Kvantum
+
+     [KFileDialog Settings]
 
     [KFileDialog Settings]
     Places Icons Auto-resize=false
