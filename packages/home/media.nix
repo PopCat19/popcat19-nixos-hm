@@ -9,4 +9,5 @@ with pkgs;
   audacious-plugins
   pureref
   youtube-music
+  mangayomi
 ]

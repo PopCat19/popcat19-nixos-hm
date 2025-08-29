@@ -11,4 +11,10 @@ with pkgs;
   # File Sharing
   localsend
   zrok
+
+  # System Utilities
+  appstream
+  jq
+  tree
+  appimage-run
 ]
