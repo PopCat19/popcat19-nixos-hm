@@ -33,8 +33,8 @@ function next_filename
     for f in $XDG_SCREENSHOTS_DIR/$prefix*.png
         if test -f $f
             set base (basename $f)
-            if string match -r "^$app\_$date\-([0-9]+)\.png$" $base >/dev/null
-                set match (string match -r "^$app\_$date\-([0-9]+)\.png$" $base)
+            if string match -r "^$app\\_$date\\-([0-9]+)\\.png\$" $base >/dev/null
+                set match (string match -r "^$app\\_$date\\-([0-9]+)\\.png\$" $base)
                 set n $match[2]
                 if test $n -gt $max
                     set max $n
