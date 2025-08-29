@@ -65,7 +65,7 @@
       hosts = import ./flake_modules/hosts.nix;
       
       # Supported systems
-      supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
+      supportedSystems = [ "x86_64-linux" ];
       
       # User configuration
       userConfig = import ./user-config.nix { };

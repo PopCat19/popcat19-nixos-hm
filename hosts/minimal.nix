@@ -80,7 +80,7 @@ in
       inherit inputs;
       inherit userConfig;
       # TODO: Set the correct system architecture for this host
-      system = "x86_64-linux";  # or "aarch64-linux"
+      system = "x86_64-linux";
     };
     # TODO: Create and import your home.nix file (copy from home-minimal.nix)
     users.${userConfig.user.username} = import ./home.nix;
