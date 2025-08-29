@@ -18,6 +18,7 @@
       # System Actions
       "$mainMod, Q, killactive"
       "Alt, F4, killactive"
+      "$mainMod+Ctrl, Q, exec, hyprctl kill"
       "$mainMod, Delete, exit"
       "$mainMod, L, exec, swaylock"
 
