@@ -2,7 +2,6 @@
 
 {
   home.sessionVariables = {
-    QT_QPA_PLATFORMTHEME = "qt6ct";
     QT_STYLE_OVERRIDE = "kvantum";
     QT_QPA_PLATFORM = "wayland;xcb";
     GTK_THEME = "Rose-Pine-Main-BL";
@@ -60,19 +59,19 @@
     };
   };
 
-  home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/themes/rose-pine-rose";
+  home.file.".config/Kvantum/RosePine".source = "${pkgs.rose-pine-kvantum}/share/Kvantum/themes/rose-pine";
 
   home.file.".config/Kvantum/kvantum.kvconfig".text = ''
     [General]
-    theme=rose-pine-rose
+    theme=rose-pine
 
     [Applications]
-    dolphin=rose-pine-rose
-    ark=rose-pine-rose
-    gwenview=rose-pine-rose
-    systemsettings=rose-pine-rose
-    kate=rose-pine-rose
-    kwrite=rose-pine-rose
+    dolphin=rose-pine
+    ark=rose-pine
+    gwenview=rose-pine
+    systemsettings=rose-pine
+    kate=rose-pine
+    kwrite=rose-pine
   '';
 
   home.file.".config/kdeglobals" = {
