@@ -30,7 +30,7 @@ in
 
   _module.args.userConfig = nixos0UserConfig;
   
-  home-manager = {
+    home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
@@ -38,9 +38,13 @@ in
       userConfig = nixos0UserConfig;
       system = "x86_64-linux";
     };
-    users.${nixos0UserConfig.user.username} = import ./home.nix;
-    backupFileExtension = "bak2";
-  };
+    users.${nixos0UserConfig.user.username} = {
+      imports = [ ./home.nix ];
+      home-manager.backupFileExtension = "backup";
+    };
+  };</search>
+<replace>
+</search_and_replace>
 
   networking.hostName = "popcat19-nixos0";
   
