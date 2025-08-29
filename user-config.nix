@@ -1,18 +1,33 @@
 # Global user configuration file
 # Contains all user-configurable variables shared across NixOS hosts
 
-{ hostname ? "popcat19-nixos0" }:
+{ hostname ? null, system ? "x86_64-linux", username ? "popcat19", machine ? "nixos0" }:
 
-{
+rec {
   # Host configuration
   host = {
-    system = "x86_64-linux";
-    inherit hostname;
+    inherit system;
+    hostname = if hostname == null then "${username}-${machine}" else hostname;
+  };
+
+  # Hosts metadata and helpers
+  hosts = rec {
+    # Machines defined under ./hosts/
+    machines = [ "nixos0" "surface0" "thinkpad0" ];
+    owner = username;
+    defaultMachine = "nixos0";
+    mk = m: "${owner}-${m}";
+    isValid = m: builtins.elem m machines;
+    # Selected machine (argument 'machine' may be overridden by callers)
+    selectedMachine =
+      if isValid machine then machine else defaultMachine;
+    # Derived hostname for the selected machine
+    derivedHostname = mk selectedMachine;
   };
 
   # Architecture detection helpers
   arch = let
-    current = "x86_64-linux";
+    current = system;
   in rec {
     inherit current;
 
@@ -21,7 +36,7 @@
 
     # Hardware capabilities
     supportsROCm = isX86_64;
-    supportsVirtualization = true;
+    supportsVirtualization = isX86_64;
     supportsGaming = isX86_64;
 
     # Package preferences
@@ -34,7 +49,7 @@
 
   # User credentials
   user = {
-    username = "popcat19";
+    inherit username;
     fullName = "PopCat19";
     email = "atsuo11111@gmail.com";
     shell = "fish";
@@ -47,7 +62,7 @@
       "i2c"
       "input"
       "libvirtd"
-    ] ++ (if hostname == "popcat19-surface0" then [ "surface-control" ] else []);
+    ] ++ (if host.hostname == "${username}-surface0" then [ "surface-control" ] else []);
   };
 
   # Default applications
@@ -96,15 +111,24 @@
   };
 
   # System directories
-  directories = {
-    home = "/home/popcat19";
-    documents = "/home/popcat19/Documents";
-    downloads = "/home/popcat19/Downloads";
-    pictures = "/home/popcat19/Pictures";
-    videos = "/home/popcat19/Videos";
-    music = "/home/popcat19/Music";
-    desktop = "/home/popcat19/Desktop";
-    syncthing = "/home/popcat19/syncthing-shared";
+  directories = let
+    home = "/home/${username}";
+  in {
+    inherit home;
+    documents = "${home}/Documents";
+    downloads = "${home}/Downloads";
+    pictures = "${home}/Pictures";
+    videos = "${home}/Videos";
+    music = "${home}/Music";
+    desktop = "${home}/Desktop";
+    syncthing = "${home}/syncthing-shared";
+  };
+
+  # Git configuration (used by home_modules/git.nix)
+  git = {
+    userName = user.fullName;
+    userEmail = user.email;
+    extraConfig = { };
   };
 
   # Network configuration moved to system_modules/networking.nix
