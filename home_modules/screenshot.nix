@@ -98,14 +98,20 @@
       case "$MODE" in
         "monitor"|"full")
           # Save and copy: default hyprshot behavior (no --clipboard-only)
-          run_with_hyprshade_workaround hyprshot --freeze --silent -m output -o "$XDG_SCREENSHOTS_DIR" -f "$FILENAME"
-          notify-send "Screenshot" "Monitor screenshot saved and copied: $FILENAME" -i camera-photo || true
-          echo "Saved and copied: $XDG_SCREENSHOTS_DIR/$FILENAME"
+          if run_with_hyprshade_workaround hyprshot --freeze --silent -m output -o "$XDG_SCREENSHOTS_DIR" -f "$FILENAME"; then
+            notify-send "Screenshot" "Monitor screenshot saved and copied: $FILENAME" -i camera-photo || true
+            echo "Saved and copied: $XDG_SCREENSHOTS_DIR/$FILENAME"
+          else
+            echo "Screenshot cancelled"
+          fi
           ;;
         "region"|"area")
-          run_with_hyprshade_workaround hyprshot --freeze --silent -m region -o "$XDG_SCREENSHOTS_DIR" -f "$FILENAME"
-          notify-send "Screenshot" "Region screenshot saved and copied: $FILENAME" -i camera-photo || true
-          echo "Saved and copied: $XDG_SCREENSHOTS_DIR/$FILENAME"
+          if run_with_hyprshade_workaround hyprshot --freeze --silent -m region -o "$XDG_SCREENSHOTS_DIR" -f "$FILENAME"; then
+            notify-send "Screenshot" "Region screenshot saved and copied: $FILENAME" -i camera-photo || true
+            echo "Saved and copied: $XDG_SCREENSHOTS_DIR/$FILENAME"
+          else
+            echo "Screenshot cancelled"
+          fi
           ;;
         *)
           echo "Usage: screenshot [monitor|region]"
@@ -115,7 +121,7 @@
           echo "  region  - Screenshot selected region"
           exit 1
           ;;
-      esac
+      esac</search>
     '';
   };
 }
