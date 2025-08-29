@@ -11,5 +11,4 @@ with pkgs;
   e2fsprogs
   eza
   brightnessctl
-  tlp
 ]

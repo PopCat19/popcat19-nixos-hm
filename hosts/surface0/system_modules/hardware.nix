@@ -109,7 +109,6 @@
     enable = true;
     powertop.enable = true;
     cpuFreqGovernor = "schedutil";
-    scsiLinkPolicy = "med_power_with_dipm";
   };
 
   # SURFACE NETWORKING (hardware-level WiFi tweaks)
