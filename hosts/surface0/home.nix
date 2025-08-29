@@ -17,20 +17,15 @@
   imports = [
     ../../home_modules/theme.nix
     ../../home_modules/screenshot.nix
-    ../../home_modules/mangohud.nix
     ../../home_modules/zen-browser.nix
     ./hypr_config/hyprland.nix
     ./hypr_config/hyprpanel.nix
 
     ../../home_modules/environment.nix
     ../../home_modules/services.nix
-    ../../home_modules/generative.nix
     ../../home_modules/home-files.nix
     ../../home_modules/systemd-services.nix
 
-    ../../home_modules/gaming.nix
-    ../../home_modules/development.nix
-    ../../home_modules/android-tools.nix
     ../../home_modules/desktop-theme.nix
     ../../home_modules/dolphin.nix
     ../../home_modules/qt-gtk-config.nix
