@@ -39,6 +39,10 @@ with pkgs;
   nodejs_latest
   yarn-berry
   rustup
+  python3
+
+  # System Utilities
+  libnotify
 
   # Hardware Development Tools
   sunxi-tools
