@@ -17,4 +17,18 @@ with pkgs;
   jq
   tree
   appimage-run
+
+  # Gaming
+  lutris
+  osu-lazer-bin
+
+  # Shimboot Project Tools
+  pv
+  parted
+  squashfsTools
+  nixos-install-tools
+  nixos-generators
+  sshpass
+  coreutils-full
+  file
 ]
