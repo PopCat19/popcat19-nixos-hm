@@ -77,16 +77,18 @@
 
       # Toggle hyprshade off during capture, then restore
       run_with_hyprshade_workaround() {
-        local cmd_pid shader
-        ( "$@" ) & cmd_pid=$!
+        local shader
         shader="$(hyprshade current 2>/dev/null || true)"
         if [[ -n "$shader" && "$shader" != "Off" ]]; then
-          # Give hyprshot a moment to initialize framebuffer, then disable shader
-          sleep 0.01 && hyprshade off >/dev/null 2>&1 &
-          wait $cmd_pid
+          # Turn off hyprshade before hyprshot starts
+          hyprshade off >/dev/null 2>&1
+          # Run the screenshot command
+          "$@"
+          # Restore the shader after hyprshot completes
           hyprshade on "$shader" >/dev/null 2>&1 || true
         else
-          wait $cmd_pid
+          # No shader active, just run the command
+          "$@"
         fi
       }
 
