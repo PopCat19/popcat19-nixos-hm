@@ -10,7 +10,7 @@ with pkgs;
   pureref
   youtube-music
   mangayomi
-  gwenview
+  kdePackages.gwenview
 
   # Streaming and Gaming
   obs-studio
