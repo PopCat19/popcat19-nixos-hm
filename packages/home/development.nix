@@ -9,14 +9,6 @@ with pkgs;
   nixd
   nixfmt-rfc-style
 
-  # Neovim and Language Servers
-  neovim
-
-  pyright
-  lua-language-server
-  nodePackages_latest.typescript-language-server
-  nodePackages_latest.vscode-langservers-extracted
-
   # Code Formatters
   black
   prettierd
@@ -28,7 +20,7 @@ with pkgs;
   git-lfs
   hyprls
 
-  # Android Development Tools
+  # Android Tools
   universal-android-debloater
   android-tools
   scrcpy

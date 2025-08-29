@@ -10,6 +10,7 @@ with pkgs;
   pureref
   youtube-music
   mangayomi
+  gwenview
 
   # Streaming and Gaming
   obs-studio
