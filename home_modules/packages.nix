@@ -8,21 +8,17 @@
 }:
 
 let
+  # Import architecture-specific modules
+  x86_64Packages = import ./x86_64-packages.nix { inherit pkgs; };
+  aarch64Packages = import ./aarch64-packages.nix { inherit pkgs; };
+
   # Architecture detection
   isX86_64 = system == "x86_64-linux";
   isAarch64 = system == "aarch64-linux";
-  
-  # Helper functions
-  onlyX86_64 = packages: if isX86_64 then packages else [];
-  onlyAarch64 = packages: if isAarch64 then packages else [];
-  
-  # Architecture-specific packages
-  systemMonitoring = if isX86_64 then [ pkgs.btop-rocm ] else [ pkgs.btop ];
-  hardwareControl = if isX86_64 then [
-    pkgs.ddcui
-    pkgs.openrgb-with-all-plugins
-  ] else [];
-  
+
+  # Select appropriate packages based on architecture
+  archSpecificPackages = if isX86_64 then x86_64Packages else aarch64Packages;
+
 in
 with pkgs;
 [
@@ -57,13 +53,12 @@ with pkgs;
   keepassxc
   
   # System Monitoring
-] ++ systemMonitoring ++ [
   fastfetch
   
   # Audio & Hardware Control
   pavucontrol
   playerctl
-] ++ hardwareControl ++ [
+] ++ archSpecificPackages ++ [
   glances
   
   # File Sharing
@@ -82,11 +77,4 @@ with pkgs;
   # Nix Development
   nil
   nixd
-] ++
-# Architecture-specific packages
-onlyX86_64 [
-  # x86_64-specific packages
-] ++
-onlyAarch64 [
-  # ARM64-specific packages
 ]
