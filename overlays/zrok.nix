@@ -49,7 +49,7 @@ in {
       homepage = "https://zrok.io";
       license = licenses.asl20;
       maintainers = with maintainers; [ ];
-      platforms = [ "x86_64-linux" "aarch64-linux" ];
+      platforms = [ "x86_64-linux" ];
       sourceProvenance = with prev.lib.sourceTypes; [ binaryNativeCode ];
       mainProgram = "zrok";
     };

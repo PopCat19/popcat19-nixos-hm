@@ -10,14 +10,12 @@
 let
   # Import architecture-specific modules
   x86_64Packages = import ./x86_64-packages.nix { inherit pkgs; };
-  aarch64Packages = import ./aarch64-packages.nix { inherit pkgs; };
 
   # Architecture detection
   isX86_64 = system == "x86_64-linux";
-  isAarch64 = system == "aarch64-linux";
 
   # Select appropriate packages based on architecture
-  archSpecificPackages = if isX86_64 then x86_64Packages else aarch64Packages;
+  archSpecificPackages = x86_64Packages;
 
   # Import categorized package modules
   terminalPackages = import ../packages/home/terminal.nix { inherit pkgs; };

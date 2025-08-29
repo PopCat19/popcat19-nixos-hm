@@ -15,29 +15,21 @@
     current = "x86_64-linux";
   in rec {
     inherit current;
-    
+
     # Architecture detection
     isX86_64 = current == "x86_64-linux";
-    isAarch64 = current == "aarch64-linux";
-    isArm = isAarch64;
-    
+
     # Hardware capabilities
     supportsROCm = isX86_64;
     supportsVirtualization = true;
     supportsGaming = isX86_64;
-    
+
     # Package preferences
     preferredVideoPlayer = "mpv";
     preferredTerminal = "kitty";
-    
+
     # Helper functions
     onlyX86_64 = packages: if isX86_64 then packages else [];
-    onlyAarch64 = packages: if isAarch64 then packages else [];
-    
-    selectByArch = { x86_64 ? null, aarch64 ? null, fallback ? null }:
-      if isX86_64 && x86_64 != null then x86_64
-      else if isAarch64 && aarch64 != null then aarch64
-      else fallback;
   };
 
   # User credentials

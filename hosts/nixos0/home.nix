@@ -9,10 +9,7 @@
   ...
 }:
 
-let
-  isX86_64 = system == "x86_64-linux";
-  isAarch64 = system == "aarch64-linux";
-in
+
 {
   # Basic home configuration
   home.username = userConfig.user.username;
