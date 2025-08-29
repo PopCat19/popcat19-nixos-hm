@@ -83,55 +83,8 @@
     </xbel>
   '';
 
-  # Dolphin configuration with enhanced thumbnails and better opacity
-  xdg.configFile."dolphinrc".text = ''
-    [General]
-    BrowseThroughArchives=true
-    EditableUrl=false
-    GlobalViewProps=false
-    HomeUrl=file:///home/${config.home.username}
-    ModifiedStartupSettings=true
-    OpenExternallyCalledFolderInNewTab=false
-    RememberOpenedTabs=true
-    ShowFullPath=false
-    ShowFullPathInTitlebar=false
-    ShowSpaceInfo=false
-    ShowZoomSlider=true
-    SortingChoice=CaseSensitiveSorting
-    SplitView=false
-    UseTabForSwitchingSplitView=false
-    Version=202
-    ViewPropsTimestamp=2024,1,1,0,0,0
-
-    [KFileDialog Settings]
-    Places Icons Auto-resize=false
-    Places Icons Static Size=22
-
-    [MainWindow]
-    MenuBar=Disabled
-    ToolBarsMovable=Disabled
-
-    [PlacesPanel]
-    IconSize=22
-
-    [PreviewSettings]
-    Plugins=appimagethumbnail,audiothumbnail,blenderthumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,fontthumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,mobithumbnail,opendocumentthumbnail,gsthumbnail,rawthumbnail,svgthumbnail,textthumbnail,ffmpegthumbs
-    MaximumSize=10485760
-    EnableRemoteFolderThumbnail=false
-    MaximumRemoteSize=0
-
-    [DesktopIcons]
-    Size=48
-
-    [CompactMode]
-    PreviewSize=32
-
-    [DetailsMode]
-    PreviewSize=32
-
-    [IconsMode]
-    PreviewSize=64
-  '';
+  # Dolphin configuration - removed to allow Dolphin to manage its own config file
+  # This prevents the "configuration file not writable" error
 
   # Simple thumbnail cache clearing script
   home.file.".local/bin/update-thumbnails".text = ''
