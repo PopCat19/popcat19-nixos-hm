@@ -64,7 +64,7 @@
     # ../../home_modules/qt-gtk-config.nix
 
     # Desktop applications
-    # ../../home_modules/dolphin.nix
+    # ../../home_modules/kde.nix
     # ../../home_modules/fuzzel-config.nix
     # ../../home_modules/zen-browser.nix
 

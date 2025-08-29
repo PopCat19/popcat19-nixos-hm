@@ -48,7 +48,7 @@ in</search>
       ./home_modules/systemd-services.nix
 
       # Application and feature modules (minimal set for laptops)
-      ./home_modules/dolphin.nix
+      ./home_modules/kde.nix
       ./home_modules/qt-gtk-config.nix
       ./home_modules/fuzzel-config.nix
       ./home_modules/kitty.nix
