@@ -163,18 +163,7 @@ in
     unify_spin_buttons=0
   '';
 
-  xdg.configFile."autostart/kvantummanager.desktop".text = ''
-    [Desktop Entry]
-    Name=Kvantum Manager
-    Comment=Qt Style Manager
-    Exec=kvantummanager
-    Icon=kvantum
-    Terminal=false
-    Type=Application
-    Categories=Qt;Settings;
-    StartupNotify=false
-    X-KDE-autostart-after=panel
-  '';
+  
 
   xdg.configFile."kdeglobals".text = ''
     [General]
