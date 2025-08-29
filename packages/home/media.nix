@@ -10,4 +10,8 @@ with pkgs;
   pureref
   youtube-music
   mangayomi
+
+  # Streaming and Gaming
+  obs-studio
+  moonlight-qt
 ]
