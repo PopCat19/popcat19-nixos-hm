@@ -70,6 +70,7 @@ rec {
     browser = {
       desktop = "zen-twilight.desktop";
       package = "zen-browser";
+      command = "zen-twilight";
     };
     
     terminal = {
@@ -87,6 +88,7 @@ rec {
     fileManager = {
       desktop = "org.kde.dolphin.desktop";
       package = "kdePackages.dolphin";
+      command = "dolphin";
     };
     
     imageViewer = {
@@ -107,6 +109,12 @@ rec {
     pdfViewer = {
       desktop = "org.kde.okular.desktop";
       package = "kdePackages.okular";
+    };
+
+    launcher = {
+      desktop = "fuzzel.desktop";
+      package = "fuzzel";
+      command = "fuzzel";
     };
   };
 
@@ -134,4 +142,13 @@ rec {
   # Network configuration moved to system_modules/networking.nix
   # Host-specific overrides may still set `network` in userConfig if needed.
 
+  # UI components and panels
+  panel = {
+    weather = {
+      enabled = true;
+      location = "Suffolk";
+      key = "dde14cc79e324028be572340252405";
+      unit = "metric";
+    };
+  };
 }
