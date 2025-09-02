@@ -2,7 +2,7 @@
 # HyprPanel common configuration with Rose Pine theme integration
 # This contains all shared settings except bar.layouts which are host-specific
 # Based on documentation: https://hyprpanel.com/
-{ ... }:
+{ userConfig, ... }:
 {
   # HyprPanel is available in nixpkgs and has a home-manager module
   # No need for separate flake input - just enable the program
@@ -67,10 +67,10 @@
       # Clock and weather
       "menus.clock.time.military" = true;
       "menus.clock.time.hideSeconds" = true;
-      "menus.clock.weather.enabled" = true;
-      "menus.clock.weather.location" = "Suffolk";
-      "menus.clock.weather.key" = "dde14cc79e324028be572340252405";
-      "menus.clock.weather.unit" = "metric";
+      "menus.clock.weather.enabled" = userConfig.panel.weather.enabled;
+      "menus.clock.weather.location" = userConfig.panel.weather.location;
+      "menus.clock.weather.key" = userConfig.panel.weather.key;
+      "menus.clock.weather.unit" = userConfig.panel.weather.unit;
 
       # Menu transitions
       "menus.transition" = "crossfade";
@@ -93,14 +93,14 @@
 
       # Dashboard shortcuts
       "menus.dashboard.shortcuts.left.shortcut1.icon" = "";
-      "menus.dashboard.shortcuts.left.shortcut1.command" = "zen-twilight";
-      "menus.dashboard.shortcuts.left.shortcut1.tooltip" = "Zen Browser";
-      "menus.dashboard.shortcuts.left.shortcut2.command" = "kitty";
+      "menus.dashboard.shortcuts.left.shortcut1.command" = userConfig.defaultApps.browser.command;
+      "menus.dashboard.shortcuts.left.shortcut1.tooltip" = userConfig.defaultApps.browser.package;
+      "menus.dashboard.shortcuts.left.shortcut2.command" = userConfig.defaultApps.terminal.command;
       "menus.dashboard.shortcuts.left.shortcut2.icon" = "";
-      "menus.dashboard.shortcuts.left.shortcut2.tooltip" = "Kitty Terminal";
+      "menus.dashboard.shortcuts.left.shortcut2.tooltip" = userConfig.defaultApps.terminal.package;
       "menus.dashboard.shortcuts.left.shortcut3.command" = "vesktop";
       "menus.dashboard.shortcuts.left.shortcut3.tooltip" = "Vesktop";
-      "menus.dashboard.shortcuts.left.shortcut4.command" = "fuzzel";
+      "menus.dashboard.shortcuts.left.shortcut4.command" = userConfig.defaultApps.launcher.command;
 
       # Notifications
       "notifications.showActionsOnHover" = false;

@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, userConfig, ... }:
 
 {
   # KDE applications and utilities (no desktop environment)
@@ -108,6 +108,6 @@
     Name=Open Terminal Here
     Name[en_US]=Open Terminal Here
     Icon=utilities-terminal
-    Exec=kitty --working-directory "%f"
+    Exec=${userConfig.defaultApps.terminal.command} --working-directory "%f"
   '';
 }

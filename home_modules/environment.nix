@@ -1,14 +1,14 @@
-{ lib, ... }:
+{ lib, userConfig, ... }:
 
 {
   # **ENVIRONMENT VARIABLES**
   # Defines user-specific environment variables for various applications.
   home.sessionVariables = {
-    EDITOR = "micro"; # Default terminal editor.
-    VISUAL = "$EDITOR"; # Visual editor alias.
-    BROWSER = "zen-twilight"; # Default web browser.
-    TERMINAL = "kitty";
-    FILE_MANAGER = "dolphin";
+    EDITOR = userConfig.defaultApps.editor.command; # Default terminal editor.
+    VISUAL = userConfig.defaultApps.editor.command; # Visual editor alias.
+    BROWSER = userConfig.defaultApps.browser.command; # Default web browser.
+    TERMINAL = userConfig.defaultApps.terminal.command;
+    FILE_MANAGER = userConfig.defaultApps.fileManager.command;
     # Ensure thumbnails work properly
     WEBKIT_DISABLE_COMPOSITING_MODE = "1";
 

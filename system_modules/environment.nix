@@ -11,7 +11,7 @@
     substituters = [ "https://ezkea.cachix.org" ];
     trusted-public-keys = [ "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI=" ];
     download-buffer-size = 67108864;
-    trusted-users = [ "root" "popcat19" ];
+    trusted-users = [ "root" userConfig.user.username ];
   };
 
   # System environment variables
@@ -29,7 +29,7 @@
     TERMINAL = userConfig.defaultApps.terminal.command;
     EDITOR = userConfig.defaultApps.editor.command;
     VISUAL = userConfig.defaultApps.editor.command;
-    BROWSER = userConfig.defaultApps.browser.package;
+    BROWSER = userConfig.defaultApps.browser.command;
     FILECHOOSER = userConfig.defaultApps.fileManager.package;
 
     # NixOS configuration paths
