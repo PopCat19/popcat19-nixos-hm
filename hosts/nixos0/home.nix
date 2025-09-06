@@ -18,7 +18,6 @@
 
   # Imports (shared home modules + host-local hypr configs)
   imports = [
-    ../../home_modules/theme.nix
     ../../home_modules/screenshot.nix
     ../../home_modules/mangohud.nix
     ../../home_modules/zen-browser.nix
@@ -31,7 +30,6 @@
     ../../home_modules/systemd-services.nix
 
     ../../home_modules/kde.nix
-    ../../home_modules/qt-gtk-config.nix
     ../../home_modules/fuzzel-config.nix
     ../../home_modules/kitty.nix
     ../../home_modules/fish.nix

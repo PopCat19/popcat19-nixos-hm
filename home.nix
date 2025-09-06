@@ -35,7 +35,6 @@ in
     # Default imports for hosts without specific configurations (surface0, thinkpad0)
     (if hostHomeConfig == null then [
       # Theme and UI
-      ./home_modules/theme.nix
       ./home_modules/fonts.nix
       ./home_modules/screenshot.nix
       ./home_modules/zen-browser.nix
@@ -50,7 +49,6 @@ in
 
       # Application and feature modules (minimal set for laptops)
       ./home_modules/kde.nix
-      ./home_modules/qt-gtk-config.nix
       ./home_modules/fuzzel-config.nix
       ./home_modules/kitty.nix
       ./home_modules/fish.nix

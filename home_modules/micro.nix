@@ -5,7 +5,7 @@
   programs.micro = {
     enable = true;
     settings = {
-      colorscheme = "rose-pine";
+      colorscheme = "default";
       mkparents = true;
       softwrap = true;
       wordwrap = true;
@@ -25,8 +25,4 @@
     };
   };
 
-  # Micro editor colorscheme
-  home.file.".config/micro/colorschemes/rose-pine.micro" = {
-    source = ../micro_config/rose-pine.micro;
-  };
 }
