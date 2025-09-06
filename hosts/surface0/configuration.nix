@@ -23,7 +23,8 @@ in
     ../../system_modules/core-packages.nix
     ../../system_modules/packages.nix
     ../../system_modules/fonts.nix
-    # ../../system_modules/vpn.nix
+    ../../system_modules/privacy.nix
+    ../../system_modules/vpn.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
