@@ -13,23 +13,12 @@
     cursorSize = 24;
     kvantumTheme = "rose-pine-rose";
     kdeColorSchemeName = "Rose-Pine-Main-BL";
-    fontMain = "Rounded Mplus 1c Medium";
-    fontMono = "JetBrainsMono Nerd Font";
-    fuzzelFontSize = 14;
-    kittyFontSize = 11;
-    gtkFontSize = 11;
   };
 
   cursorPackage = inputs.rose-pine-hyprcursor.packages.${system}.default;
   kvantumPkg = pkgs.kdePackages.qtstyleplugin-kvantum;
   rosePineKvantum = pkgs.rose-pine-kvantum;
   rosePineGtk = pkgs.rose-pine-gtk-theme-full;
-
-  gtkCss = ''
-    * {
-      font-family: "${theme.fontMain}";
-    }
-  '';
 in {
   home.sessionVariables = {
     QT_STYLE_OVERRIDE = "kvantum";
@@ -57,10 +46,6 @@ in {
       name = theme.iconTheme;
       package = pkgs.papirus-icon-theme;
     };
-    font = {
-      name = theme.fontMain;
-      size = theme.gtkFontSize;
-    };
     gtk3.extraConfig = {
       gtk-decoration-layout = "appmenu:minimize,maximize,close";
       gtk-enable-animations = true;
@@ -71,8 +56,6 @@ in {
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
     };
-    gtk3.extraCss = gtkCss;
-    gtk4.extraCss = gtkCss;
   };
 
   qt = {
@@ -285,10 +268,6 @@ in {
       standard_dialogs=default
       style=kvantum
 
-      [Fonts]
-      fixed="${theme.fontMono},11,-1,5,50,0,0,0,0,0"
-      general="${theme.fontMain},${builtins.toString theme.gtkFontSize},-1,5,50,0,0,0,0,0"
-
       [Interface]
       activate_item_on_single_click=1
       buttonbox_layout=0
@@ -315,9 +294,6 @@ in {
       cursor-size = theme.cursorSize;
       gtk-theme = theme.gtkThemeName;
       icon-theme = theme.iconTheme;
-      font-name = "${theme.fontMain} ${builtins.toString theme.gtkFontSize}";
-      document-font-name = "${theme.fontMain} ${builtins.toString theme.gtkFontSize}";
-      monospace-font-name = "${theme.fontMono} ${builtins.toString theme.kittyFontSize}";
       color-scheme = "prefer-dark";
     };
 
@@ -363,45 +339,12 @@ in {
     };
   };
 
-  programs.kitty.font = {
-    name = theme.fontMono;
-    size = theme.kittyFontSize;
-  };
-
-  programs.fuzzel.settings.main.font = "${theme.fontMain}:size=${builtins.toString theme.fuzzelFontSize}";
-
-  home.file.".config/fontconfig/fonts.conf".text = ''
-    <?xml version="1.0"?>
-    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-    <fontconfig>
-      <alias>
-        <family>sans-serif</family>
-        <prefer>
-          <family>${theme.fontMain}</family>
-        </prefer>
-      </alias>
-      <alias>
-        <family>${theme.fontMain}</family>
-        <default>
-          <family>sans-serif</family>
-        </default>
-      </alias>
-    </fontconfig>
-  '';
 
   home.packages = with pkgs; [
-    google-fonts
     vim
     firefox
     htop
     neofetch
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.caskaydia-cove
-    nerd-fonts.fantasque-sans-mono
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-emoji
-    font-awesome
     nwg-look
     dconf-editor
     libsForQt5.qt5ct
