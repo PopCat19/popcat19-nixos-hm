@@ -24,7 +24,6 @@
     kdePackages.kdialog      # Dialog boxes from shell scripts
     kdePackages.keditbookmarks # Bookmark editor
     kdePackages.kleopatra    # Certificate manager and GUI for GnuPG
-    kdePackages.kwalletmanager # Wallet management tool
 
     # Qt theming
     qt6Packages.qtstyleplugin-kvantum

@@ -6,6 +6,9 @@
 
 { config, pkgs, lib, ... }:
 
+let
+  wallpaper = import ../../../hypr_config/wallpaper.nix { inherit lib pkgs; };
+in
 {
   imports = [
     # Import all shared Hyprland configuration modules from the main config
@@ -40,8 +43,8 @@
     ".config/hypr/monitors.conf".source = ./monitors.conf;
     ".config/hypr/userprefs.conf".source = ../../../hypr_config/userprefs.conf;
     
-    # Copy shared hyprpaper.conf (not device-specific)
-    ".config/hypr/hyprpaper.conf".source = ../../../hypr_config/hyprpaper.conf;
+    # Generated hyprpaper.conf from local wallpapers
+    ".config/hypr/hyprpaper.conf".source = wallpaper.hyprpaperConf;
     
     # Copy shared shaders directory
     ".config/hypr/shaders" = {
