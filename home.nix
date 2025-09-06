@@ -17,7 +17,7 @@ let
   hostHomeConfig =
     if hostname == "popcat19-nixos0" then ./hosts/nixos0/home.nix
     else null;
-in</search>
+in
 
 {
   # Basic home configuration
@@ -56,13 +56,14 @@ in</search>
       ./home_modules/starship.nix
       ./home_modules/micro.nix
       ./home_modules/fcitx5.nix
+      ./home_modules/privacy.nix
       ./quickshell_config/quickshell.nix
       ./syncthing_config/home.nix
     ] else []);
 
   # User packages - only for hosts without specific configurations
-  home.packages = 
-    if hostHomeConfig == null 
+  home.packages =
+    if hostHomeConfig == null
     then import ./home_modules/packages.nix { inherit pkgs inputs system userConfig; }
     else [];
 }

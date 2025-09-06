@@ -25,6 +25,8 @@ in
     ../../system_modules/fonts.nix
     ../../system_modules/tablet.nix
     ../../system_modules/openrgb.nix
+    ../../system_modules/privacy.nix
+    ../../system_modules/vpn.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
