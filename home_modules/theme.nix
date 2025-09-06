@@ -113,7 +113,6 @@ in
     kruler=${theme.kvantumTheme}
     ksysguard=${theme.kvantumTheme}
     ktimer=${theme.kvantumTheme}
-    kwalletmanager=${theme.kvantumTheme}
     plasma-discover=${theme.kvantumTheme}
     spectacle=${theme.kvantumTheme}
 
