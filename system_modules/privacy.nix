@@ -5,6 +5,10 @@
   # DBus is required for the Secret Service API (org.freedesktop.secrets).
   services.dbus.enable = true;
 
+  # Explicitly disable KWallet PAM when this module is imported so KeePassXC/Secret Service
+  # can take precedence for secrets. Using mkForce ensures this overrides any defaults.
+  security.pam.services.kwallet.enable = lib.mkForce false;
+
   # Since we're on Hyprland (no KDE session), kwallet shouldn't be in use.
   # As a safeguard, mask KWallet autostart desktop files (best-effort).
   environment.etc."xdg/autostart/kwalletmanager5.desktop".text = "";
