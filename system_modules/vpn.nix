@@ -1,0 +1,34 @@
+# System-level Mullvad VPN module
+{ config, pkgs, lib, ... }:
+
+{
+  # Enable Mullvad VPN service (daemon)
+  services.mullvad-vpn = {
+    enable = true;
+
+    # Use the default package from nixpkgs; override here if you pin a custom version
+    # package = pkgs.mullvad-vpn;
+
+    # Whether to wrap commands to bypass the VPN. Keep disabled by default for privacy.
+    # See `nixos-options services.mullvad-vpn.enableExcludeWrapper`
+    enableExcludeWrapper = lib.mkDefault false;
+  };
+
+  # Install Mullvad VPN GUI for controlling connections
+  environment.systemPackages = [
+    pkgs.mullvad-vpn
+  ];
+
+  # If you rely on NetworkManager, keep it enabled elsewhere as usual.
+  # Mullvad integrates fine with NM. No special OpenVPN/WireGuard toggles needed;
+  # Mullvad handles that internally via its daemon.
+  #
+  # Example (do not force here to avoid changing your networking module decisions):
+  # networking.networkmanager.enable = lib.mkDefault true;
+
+  # Firewall/Killswitch:
+  # Mullvad's daemon configures firewall rules at runtime. If you want a strict
+  # system-level killswitch, consider adding explicit nftables/iptables rules or
+  # Mullvad's `block_when_disconnected` via GUI/cli. Not enforced here to keep the
+  # module minimally invasive.
+}
