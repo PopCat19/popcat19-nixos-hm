@@ -30,8 +30,19 @@
     requires = [ "mullvad-daemon.service" ];
     serviceConfig = {
       Type = "oneshot";
-      # Idempotent; will just set the preference each boot and exit silently
-      ExecStart = "${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on";
+      TimeoutStartSec = 15;
+      # Wait for mullvad-daemon to accept CLI, then enable auto-connect.
+      # This avoids "Management RPC server or client error" during early boot.
+      ExecStart = "${pkgs.writeShellScript "mullvad-autoconnect.sh" ''
+        set -euo pipefail
+        for i in $(seq 1 30); do
+          if ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
+            break
+          fi
+          sleep 0.5
+        done
+        ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
+      ''}";
     };
   };
 
