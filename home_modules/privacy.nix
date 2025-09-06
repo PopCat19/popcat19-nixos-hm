@@ -31,16 +31,18 @@ in
 
 
   # Autostart KeePassXC (via wrapper) after login on Hyprland sessions so Secret Service is ready.
-  # Start minimized to stay silent in background, avoiding duplicate Hyprland exec-once.
+  # Keep it running even if the GUI is closed via Super+Q by letting systemd restart it unconditionally.
   systemd.user.services."kpxc-autostart" = {
     Unit = {
-      Description = "Auto-start KeePassXC with synced DB if present (minimized)";
+      Description = "Auto-start KeePassXC with synced DB if present (minimized, persistent)";
       After = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
+      Type = "simple";
       ExecStart = "${kpxcWrapper}/bin/kpxc --minimize";
-      Restart = "on-failure";
+      # If the user quits the app window (exit code 0), restart anyway to keep Secret Service available.
+      Restart = "always";
       RestartSec = 2;
       # Ensure DBus is available in the user session (it is under Hyprland with system dbus)
       Environment = [
