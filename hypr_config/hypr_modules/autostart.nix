@@ -14,7 +14,6 @@
       "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       
       # Hardware specific
-      "/usr/lib/pam_kwallet_init"
       "openrgb -p orang-full"
       
       # Wallpaper (SWWW)
