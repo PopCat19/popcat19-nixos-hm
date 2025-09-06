@@ -39,15 +39,15 @@ in
   '';
 
   # Autostart KeePassXC (via wrapper) after login on Hyprland sessions so Secret Service is ready.
-  # This is the supported approach as KeePassXC does not provide a PAM module.
+  # Start minimized to stay silent in background, avoiding duplicate Hyprland exec-once.
   systemd.user.services."kpxc-autostart" = {
     Unit = {
-      Description = "Auto-start KeePassXC with synced DB if present";
+      Description = "Auto-start KeePassXC with synced DB if present (minimized)";
       After = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
-      ExecStart = "${kpxcWrapper}/bin/kpxc";
+      ExecStart = "${kpxcWrapper}/bin/kpxc --minimize";
       Restart = "on-failure";
       RestartSec = 2;
       # Ensure DBus is available in the user session (it is under Hyprland with system dbus)
