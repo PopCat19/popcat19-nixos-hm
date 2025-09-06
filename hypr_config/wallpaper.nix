@@ -25,12 +25,9 @@ let
 
   hyprpaperText =
     let
-      preloads = map (p: "preload = ${p}") images;
-      wallpaperLine =
-        if images == [] then
-          []
-        else
-          [ "wallpaper = , ${builtins.elemAt images 0}" ];
+      specificImage = "${wallpaperDir}/kasane_teto_utau_drawn_by_yananami_numata220.jpg";
+      preloads = [ "preload = ${specificImage}" ];
+      wallpaperLine = [ "wallpaper = , ${specificImage}" ];
     in lib.concatStringsSep "\n" (preloads ++ wallpaperLine) + "\n";
 
   hyprpaperConf = pkgs.writeText "hyprpaper.conf" hyprpaperText;
