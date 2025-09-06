@@ -25,6 +25,8 @@
     description = "Ensure Mullvad auto-connect is enabled";
     wantedBy = [ "multi-user.target" ];
     after = [ "network-online.target" "mullvad-daemon.service" ];
+    # Add Wants to satisfy ordering constraints and remove the evaluation warning
+    wants = [ "network-online.target" ];
     requires = [ "mullvad-daemon.service" ];
     serviceConfig = {
       Type = "oneshot";
