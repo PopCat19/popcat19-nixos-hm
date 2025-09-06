@@ -19,6 +19,9 @@
     # Firefox/Zen Browser specific for Wayland input method
     MOZ_ENABLE_WAYLAND = "1";
     GTK4_IM_MODULE = "fcitx5";
+
+    # GTK/scale defaults
+    GDK_SCALE = "1";
   };
 
   # Add local bin to PATH

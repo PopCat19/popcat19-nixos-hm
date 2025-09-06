@@ -29,14 +29,6 @@ in
     mkdir -p ${passwordsDir}
   '';
 
-  # Seed KeePassXC config to remember the synced DB path, so GUI shows it in Recent Databases
-  home.file.".config/keepassxc/keepassxc.ini".text = ''
-    [General]
-    ConfigVersion=2
-
-    [RecentDatabases]
-    ${keepassDb}=${keepassDb}
-  '';
 
   # Autostart KeePassXC (via wrapper) after login on Hyprland sessions so Secret Service is ready.
   # Start minimized to stay silent in background, avoiding duplicate Hyprland exec-once.
