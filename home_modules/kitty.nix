@@ -58,5 +58,9 @@
       dynamic_background_opacity = "yes";
       background_blur = 16;
     };
+    # Include walrs-generated colors
+    extraConfig = ''
+      include ~/.cache/wal/colors-kitty.conf
+    '';
   };
 }
