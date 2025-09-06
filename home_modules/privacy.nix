@@ -28,27 +28,4 @@ in
   home.activation.createPasswordsDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p ${passwordsDir}
   '';
-
-
-  # Autostart KeePassXC (via wrapper) after login on Hyprland sessions so Secret Service is ready.
-  # Start minimized to stay silent in background, avoiding duplicate Hyprland exec-once.
-  systemd.user.services."kpxc-autostart" = {
-    Unit = {
-      Description = "Auto-start KeePassXC with synced DB if present (minimized)";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${kpxcWrapper}/bin/kpxc --minimize";
-      Restart = "on-failure";
-      RestartSec = 2;
-      # Ensure DBus is available in the user session (it is under Hyprland with system dbus)
-      Environment = [
-        "XDG_RUNTIME_DIR=%t"
-      ];
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
 }
