@@ -7,6 +7,9 @@ system: [
     hyprshade = prev.python3Packages.callPackage ../overlays/hyprshade.nix {
       hyprland = prev.hyprland;
     };
+
+    # Walrs - Generate colorscheme from image
+    walrs = prev.callPackage ../overlays/walrs.nix {};
   })
 
   # Import overlays
