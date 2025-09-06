@@ -19,6 +19,20 @@
     pkgs.mullvad-vpn
   ];
 
+  # Ensure Mullvad daemon is up and auto-connect is enabled silently on boot.
+  # This keeps VPN active in the background without popping up a GUI.
+  systemd.services.mullvad-autoconnect = {
+    description = "Ensure Mullvad auto-connect is enabled";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" "mullvad-daemon.service" ];
+    requires = [ "mullvad-daemon.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      # Idempotent; will just set the preference each boot and exit silently
+      ExecStart = "${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on";
+    };
+  };
+
   # If you rely on NetworkManager, keep it enabled elsewhere as usual.
   # Mullvad integrates fine with NM. No special OpenVPN/WireGuard toggles needed;
   # Mullvad handles that internally via its daemon.
