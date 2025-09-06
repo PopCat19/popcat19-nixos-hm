@@ -5,7 +5,7 @@
   wayland.windowManager.hyprland.settings = {
     "exec-once" = [
       # Core services
-      "hyprpaper"
+      "hyprpaper -c ~/.config/hypr/hyprpaper.conf"
       "/run/current-system/sw/libexec/polkit-gnome-authentication-agent-1"
       
       # Desktop integration
@@ -16,9 +16,6 @@
       # Hardware specific
       "openrgb -p orang-full"
       
-      # Wallpaper (SWWW)
-      "swww init"
-      "swww img ~/.config/hypr/wallpapers/your-default-wallpaper.jpg"
     ];
   };
 }
