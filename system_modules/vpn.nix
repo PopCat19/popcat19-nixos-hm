@@ -17,6 +17,7 @@
   # Install Mullvad VPN GUI for controlling connections
   environment.systemPackages = [
     pkgs.mullvad-vpn
+    pkgs.shadowsocks-rust
   ];
 
   # Ensure Mullvad daemon is up and auto-connect is enabled silently on boot.
