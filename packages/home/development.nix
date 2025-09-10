@@ -33,9 +33,6 @@ with pkgs;
   rustup
   python3
 
-  # System Utilities
-  libnotify
-
   # Hardware Development Tools
   sunxi-tools
   binwalk
