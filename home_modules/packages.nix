@@ -8,35 +8,30 @@
 }:
 
 let
-  # Import architecture-specific modules
+  # Architecture-specific packages
   x86_64Packages = import ./x86_64-packages.nix { inherit pkgs; };
 
-  # Architecture detection
-  isX86_64 = system == "x86_64-linux";
+  # Maintain ordering while reducing boilerplate
+  earlyPackageFiles = [
+    ../packages/home/terminal.nix
+    ../packages/home/browsers.nix
+    ../packages/home/media.nix
+    ../packages/home/hyprland.nix
+    ../packages/home/communication.nix
+  ];
 
-  # Select appropriate packages based on architecture
-  archSpecificPackages = x86_64Packages;
+  latePackageFiles = [
+    ../packages/home/monitoring.nix
+    ../packages/home/utilities.nix
+    ../packages/home/notifications.nix
+    ../packages/home/editors.nix
+    ../packages/home/development.nix
+  ];
 
-  # Import categorized package modules
-  terminalPackages = import ../packages/home/terminal.nix { inherit pkgs; };
-  browserPackages = import ../packages/home/browsers.nix { inherit pkgs; };
-  mediaPackages = import ../packages/home/media.nix { inherit pkgs; };
-  hyprlandPackages = import ../packages/home/hyprland.nix { inherit pkgs; };
-  communicationPackages = import ../packages/home/communication.nix { inherit pkgs; };
-  monitoringPackages = import ../packages/home/monitoring.nix { inherit pkgs; };
-  utilityPackages = import ../packages/home/utilities.nix { inherit pkgs; };
-  notificationPackages = import ../packages/home/notifications.nix { inherit pkgs; };
-  editorPackages = import ../packages/home/editors.nix { inherit pkgs; };
-  developmentPackages = import ../packages/home/development.nix { inherit pkgs; };
+  importPackages = path: import path { inherit pkgs; };
+  earlyPackages = map importPackages earlyPackageFiles;
+  latePackages = map importPackages latePackageFiles;
 in
-terminalPackages ++
-browserPackages ++
-mediaPackages ++
-hyprlandPackages ++
-communicationPackages ++
-archSpecificPackages ++
-monitoringPackages ++
-utilityPackages ++
-notificationPackages ++
-editorPackages ++
-developmentPackages
+builtins.concatLists earlyPackages
+++ x86_64Packages
+++ builtins.concatLists latePackages
