@@ -30,20 +30,6 @@ in {
     inputs.home-manager.nixosModules.home-manager
   ];
 
-  _module.args.userConfig = surfaceUserConfig;
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs = {
-      inherit inputs;
-      userConfig = surfaceUserConfig;
-      system = "x86_64-linux";
-    };
-    users.${surfaceUserConfig.user.username} = import ./home.nix;
-    backupFileExtension = "bak2";
-  };
-
   networking.hostName = "popcat19-surface0";
 
   # Disable Sunshine game-streaming service on this host
