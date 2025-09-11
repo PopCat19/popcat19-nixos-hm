@@ -13,15 +13,15 @@
   # Home Manager configuration module
   mkHomeManagerModule = system: {
     userConfig,
-    username,
+    inputs,
   }: {
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
       extraSpecialArgs = {
-        inherit system userConfig;
+        inherit system userConfig inputs;
       };
-      users.${username} = import ../home.nix;
+      users.${userConfig.user.username} = import ../home.nix;
       backupFileExtension = "bak2";
     };
   };
