@@ -1,8 +1,5 @@
 # System core packages configuration
-
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # Core system packages
   environment.systemPackages = with pkgs; [
     # Core utilities
@@ -11,12 +8,12 @@
     wget
     curl
     git
-    
+
     # System utilities
     xdg-utils
     shared-mime-info
     fuse
-    
+
     # Shell
     starship
   ];

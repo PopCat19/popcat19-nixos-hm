@@ -1,7 +1,10 @@
 # System-level Mullvad VPN module
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # Enable Mullvad VPN service (daemon)
   services.mullvad-vpn = {
     enable = true;
@@ -24,11 +27,11 @@
   # This keeps VPN active in the background without popping up a GUI.
   systemd.services.mullvad-autoconnect = {
     description = "Ensure Mullvad auto-connect is enabled";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network-online.target" "mullvad-daemon.service" ];
+    wantedBy = ["multi-user.target"];
+    after = ["network-online.target" "mullvad-daemon.service"];
     # Add Wants to satisfy ordering constraints and remove the evaluation warning
-    wants = [ "network-online.target" ];
-    requires = [ "mullvad-daemon.service" ];
+    wants = ["network-online.target"];
+    requires = ["mullvad-daemon.service"];
     serviceConfig = {
       Type = "oneshot";
       TimeoutStartSec = 15;

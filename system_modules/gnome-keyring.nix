@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # Enable GNOME Keyring globally (Secret Service provider)
   services.gnome.gnome-keyring.enable = true;
 

@@ -1,8 +1,5 @@
 # Network tools
-
-{ pkgs, ... }:
-
-with pkgs;
-[
+{pkgs, ...}:
+with pkgs; [
   wireguard-tools
 ]

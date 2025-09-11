@@ -8,7 +8,6 @@
   hyprland,
   makeWrapper,
 }:
-
 buildPythonPackage rec {
   pname = "hyprshade";
   version = "4.0.0";
@@ -34,7 +33,7 @@ buildPythonPackage rec {
   postFixup = ''
     wrapProgram $out/bin/hyprshade \
       --set HYPRSHADE_SHADERS_DIR $out/share/hyprshade/shaders \
-      --prefix PATH : ${lib.makeBinPath [ hyprland ]}
+      --prefix PATH : ${lib.makeBinPath [hyprland]}
   '';
 
   meta = with lib; {
@@ -42,7 +41,7 @@ buildPythonPackage rec {
     description = "Hyprland shade configuration tool";
     mainProgram = "hyprshade";
     license = licenses.mit;
-    maintainers = with maintainers; [ willswats ];
+    maintainers = with maintainers; [willswats];
     platforms = platforms.linux;
   };
 }

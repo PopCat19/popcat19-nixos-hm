@@ -1,9 +1,6 @@
 # Hardware tools and utilities
-
-{ pkgs, ... }:
-
-with pkgs;
-[
+{pkgs, ...}:
+with pkgs; [
   i2c-tools
   ddcutil
   usbutils

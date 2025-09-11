@@ -1,10 +1,11 @@
-{ pkgs, inputs, lib, ... }:
-
-let
-  nixos0UserConfig = import ../../user-config.nix { hostname = "popcat19-nixos0"; };
-in
-
 {
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
+  nixos0UserConfig = import ../../user-config.nix {hostname = "popcat19-nixos0";};
+in {
   imports = [
     ./hardware-configuration.nix
     ../../syncthing_config/system.nix
@@ -31,27 +32,7 @@ in
     inputs.home-manager.nixosModules.home-manager
   ];
 
-  _module.args.userConfig = nixos0UserConfig;
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "backup";
-    extraSpecialArgs = {
-      inherit inputs;
-      userConfig = nixos0UserConfig;
-      system = "x86_64-linux";
-    };
-    users.${nixos0UserConfig.user.username} = {
-      imports = [ ./home.nix ];
-    };
-  };
-
   networking.hostName = "popcat19-nixos0";
-
-  nix.extraOptions = ''
-    experimental-features = fetch-tree flakes nix-command impure-derivations ca-derivations
-  '';
 
   system.stateVersion = "25.05";
 }

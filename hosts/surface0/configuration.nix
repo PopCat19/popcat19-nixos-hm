@@ -1,10 +1,11 @@
-{ pkgs, inputs, lib, ... }:
-
-let
-  surfaceUserConfig = import ../../user-config.nix { hostname = "popcat19-surface0"; };
-in
-
 {
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
+  surfaceUserConfig = import ../../user-config.nix {hostname = "popcat19-surface0";};
+in {
   imports = [
     ./hardware-configuration.nix
     ./system_modules/clear-bdprochot.nix
@@ -29,20 +30,6 @@ in
     inputs.home-manager.nixosModules.home-manager
   ];
 
-  _module.args.userConfig = surfaceUserConfig;
-  
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs = {
-      inherit inputs;
-      userConfig = surfaceUserConfig;
-      system = "x86_64-linux";
-    };
-    users.${surfaceUserConfig.user.username} = import ./home.nix;
-    backupFileExtension = "bak2";
-  };
-
   networking.hostName = "popcat19-surface0";
 
   # Disable Sunshine game-streaming service on this host
@@ -51,10 +38,10 @@ in
   };
 
   # Add hyprshade to system packages for surface0 (package provided via overlays/hyprshade.nix)
-  environment.systemPackages = with pkgs; (config.environment.systemPackages or []) ++ [ hyprshade ];
+  environment.systemPackages = with pkgs; (config.environment.systemPackages or []) ++ [hyprshade];
 
   system.stateVersion = "25.05";
-  
+
   # Add nixos0's SSH public key to surface0's authorized_keys
   users.users.${surfaceUserConfig.user.username} = {
     openssh.authorizedKeys.keys = [
