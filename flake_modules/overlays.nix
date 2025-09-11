@@ -3,7 +3,7 @@ system: [
   # Custom packages overlay
   (final: prev: {
     # Rose Pine GTK theme
-    rose-pine-gtk-theme-full = prev.callPackage ../overlays/rose-pine-gtk-theme-full.nix { };
+    rose-pine-gtk-theme-full = prev.callPackage ../overlays/rose-pine-gtk-theme-full.nix {};
 
     # Hyprshade 4.0.0 - Hyprland shade configuration tool
     # Updates shaders to GLES version 3.0, can auto-configure on schedule

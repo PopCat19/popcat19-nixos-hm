@@ -8,7 +8,6 @@
 #
 # This template includes the most commonly used home modules.
 # Uncomment or add modules as needed for your specific host.
-
 {
   pkgs,
   config,
@@ -17,11 +16,7 @@
   inputs,
   userConfig,
   ...
-}:
-
-
-
-{
+}: {
   # ============================================================================
   # BASIC HOME CONFIGURATION
   # ============================================================================

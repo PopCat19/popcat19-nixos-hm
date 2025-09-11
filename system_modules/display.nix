@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   services.xserver = {
     enable = true;
     xkb.layout = "us";
@@ -18,7 +16,7 @@
     mime.enable = true;
     portal = {
       enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+      extraPortals = [pkgs.xdg-desktop-portal-hyprland];
     };
   };
 

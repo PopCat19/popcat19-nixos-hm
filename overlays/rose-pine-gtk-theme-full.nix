@@ -9,7 +9,6 @@
   gtk_engines,
   sassc,
 }:
-
 stdenvNoCC.mkDerivation rec {
   pname = "rose-pine-gtk-theme-full";
   version = "2024-12-21";
@@ -146,6 +145,6 @@ stdenvNoCC.mkDerivation rec {
     homepage = "https://github.com/Fausto-Korpsvart/Rose-Pine-GTK-Theme";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
-    maintainers = with maintainers; [ ];
+    maintainers = with maintainers; [];
   };
 }

@@ -1,6 +1,4 @@
-{ userConfig, ... }:
-
-{
+{userConfig, ...}: {
   # Networking and firewall configuration
   networking = {
     hostName = userConfig.host.hostname;
@@ -31,17 +29,20 @@
     firewall = {
       enable = true;
       # network overrides deprecated — use canonical defaults here
-      trustedInterfaces = [ "lo" ];
+      trustedInterfaces = ["lo"];
       allowedTCPPorts = [
-        22      # SSH
-        53317   # Syncthing
-        30071   # Custom port
+        22 # SSH
+        53317 # Syncthing
+        30071 # Custom port
       ];
       allowedUDPPorts = [
-        53317   # Syncthing
+        53317 # Syncthing
       ];
       allowedTCPPortRanges = [
-        { from = 3000; to = 4000; }  # Range for local development servers
+        {
+          from = 3000;
+          to = 4000;
+        } # Range for local development servers
       ];
       checkReversePath = false;
     };

@@ -1,9 +1,6 @@
 # Terminal & Core Tools
-
-{ pkgs, ... }:
-
-with pkgs;
-[
+{pkgs, ...}:
+with pkgs; [
   kitty
   fuzzel
   micro

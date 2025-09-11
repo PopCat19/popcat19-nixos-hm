@@ -1,8 +1,5 @@
 # System monitoring packages
-
-{ pkgs, ... }:
-
-with pkgs;
-[
+{pkgs, ...}:
+with pkgs; [
   fastfetch
 ]

@@ -52,54 +52,54 @@
     };
   };
 
-  outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      home-manager,
-      ...
-    }:
-    let
-      # Import modules
-      modules = import ./flake_modules/modules.nix;
-      hosts = import ./flake_modules/hosts.nix;
-      
-      # Supported systems
-      supportedSystems = [ "x86_64-linux" ];
-      
-      # User configuration
-      userConfig = import ./user-config.nix { };
-      
-      # Extract commonly used values
-      hostname = userConfig.host.hostname;
-      username = userConfig.user.username;
+  outputs = inputs @ {
+    self,
+    nixpkgs,
+    home-manager,
+    ...
+  }: let
+    # Import modules
+    modules = import ./flake_modules/modules.nix;
+    hosts = import ./flake_modules/hosts.nix;
 
-    in
-    {
-      # Packages output (no vicinae now that the overlay was removed)
-      packages = nixpkgs.lib.genAttrs supportedSystems (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = import ./flake_modules/overlays.nix system;
-          };
-        in
-        {
-          # no custom packages exported here
-        }
-      );
+    # Supported systems
+    supportedSystems = ["x86_64-linux"];
 
-      # Host-specific NixOS configurations
-      nixosConfigurations = {
-        popcat19-surface0 = hosts.mkHostConfig "popcat19-surface0" "x86_64-linux" ./hosts/surface0/configuration.nix {
-          inherit inputs nixpkgs modules;
+    # User configuration
+    userConfig = import ./user-config.nix {};
+
+    # Extract commonly used values
+    hostname = userConfig.host.hostname;
+    username = userConfig.user.username;
+  in {
+    # Packages output (no vicinae now that the overlay was removed)
+    packages = nixpkgs.lib.genAttrs supportedSystems (
+      system: let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = import ./flake_modules/overlays.nix system;
         };
-        popcat19-nixos0 = hosts.mkHostConfig "popcat19-nixos0" "x86_64-linux" ./hosts/nixos0/configuration.nix {
-          inherit inputs nixpkgs modules;
-        };
-        popcat19-thinkpad0 = hosts.mkHostConfig "popcat19-thinkpad0" "x86_64-linux" ./hosts/thinkpad0/configuration.nix {
-          inherit inputs nixpkgs modules;
-        };
+      in {
+        # no custom packages exported here
+      }
+    );
+
+    # Formatter for 'nix fmt'
+    formatter = nixpkgs.lib.genAttrs supportedSystems (
+      system:
+        nixpkgs.legacyPackages.${system}.alejandra
+    );
+    # Host-specific NixOS configurations
+    nixosConfigurations = {
+      popcat19-surface0 = hosts.mkHostConfig "popcat19-surface0" "x86_64-linux" ./hosts/surface0/configuration.nix {
+        inherit inputs nixpkgs modules;
+      };
+      popcat19-nixos0 = hosts.mkHostConfig "popcat19-nixos0" "x86_64-linux" ./hosts/nixos0/configuration.nix {
+        inherit inputs nixpkgs modules;
+      };
+      popcat19-thinkpad0 = hosts.mkHostConfig "popcat19-thinkpad0" "x86_64-linux" ./hosts/thinkpad0/configuration.nix {
+        inherit inputs nixpkgs modules;
       };
     };
+  };
 }

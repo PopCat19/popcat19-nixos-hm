@@ -1,5 +1,9 @@
-{ config, pkgs, lib, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # **BOOT & KERNEL CONFIGURATION**
   # Defines boot loader, kernel, and filesystem support settings for Surface.
   boot = {
@@ -7,7 +11,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    supportedFilesystems = [ "ntfs" ];
+    supportedFilesystems = ["ntfs"];
 
     # Let nixos-hardware common module provide the patched linux-surface kernel
     # kernelPackages = pkgs.linuxPackages_latest;  # Removed to avoid conflict with nixos-hardware
@@ -20,12 +24,12 @@
       "surface_aggregator_hub"
       "surface_hid_core"
       "surface_hid"
-      
+
       # Surface ACPI drivers
       "surface_acpi_notify"
       "surface_platform_profile"
       "surface_gpe"
-      
+
       # Surface input drivers (touch and pen)
       "surface_kbd"
       "surface_hotplug"
@@ -33,40 +37,40 @@
       "pinctrl_tigerlake"
       "intel_lpss"
       "intel_lpss_acpi"
-      
+
       # Surface camera drivers
       "ipu3_cio2"
       "ipu3_imgu"
       "ov5693"
       "ov8865"
-      
+
       # Surface audio drivers
       "snd_soc_skl"
       "snd_soc_skl_hda_dsp_generic"
       "snd_hda_codec_realtek"
       "snd_soc_rt5682_i2c"
       "snd_soc_max98357a"
-      
+
       # Surface thermal management
       "intel_rapl_msr"
       "intel_rapl_common"
       "intel_powerclamp"
       "coretemp"
-      
+
       # Surface power management
       "intel_pstate"
       "processor_thermal_device"
       "intel_soc_dts_iosf"
-      
+
       # WiFi and networking modules
       "mwifiex"
       "mwifiex_pcie"
       "cfg80211"
       "mac80211"
-      
+
       # MSR module for BD-PROCHOT clearing
       "msr"
-      
+
       # Backlight support modules
       "intel_backlight"
       "video"
@@ -109,7 +113,7 @@
 
     # Blacklist problematic modules that might interfere with mwifiex
     blacklistedKernelModules = [
-      "ideapad_laptop"  # Can interfere with WiFi on some devices
+      "ideapad_laptop" # Can interfere with WiFi on some devices
     ];
   };
 }

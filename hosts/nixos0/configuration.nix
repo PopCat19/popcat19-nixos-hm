@@ -1,10 +1,11 @@
-{ pkgs, inputs, lib, ... }:
-
-let
-  nixos0UserConfig = import ../../user-config.nix { hostname = "popcat19-nixos0"; };
-in
-
 {
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
+  nixos0UserConfig = import ../../user-config.nix {hostname = "popcat19-nixos0";};
+in {
   imports = [
     ./hardware-configuration.nix
     ../../syncthing_config/system.nix
@@ -43,7 +44,7 @@ in
       system = "x86_64-linux";
     };
     users.${nixos0UserConfig.user.username} = {
-      imports = [ ./home.nix ];
+      imports = [./home.nix];
     };
   };
 

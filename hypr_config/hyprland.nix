@@ -1,9 +1,11 @@
-{ config, pkgs, lib, ... }:
-
-let
-  wallpaper = import ./wallpaper.nix { inherit lib pkgs; };
-in
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
+  wallpaper = import ./wallpaper.nix {inherit lib pkgs;};
+in {
   imports = [
     ./hypr_modules/colors.nix
     ./hypr_modules/environment.nix
@@ -17,7 +19,7 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
     package = pkgs.hyprland;
-    
+
     settings = {
       source = [
         "~/.config/hypr/monitors.conf"

@@ -1,34 +1,37 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # **DISTRIBUTED BUILDS SERVER CONFIGURATION**
   # Configures this machine to act as a build server for other machines
-  
+
   # Configure Nix for serving as a build machine
   nix.settings = {
     # Trust users that can perform builds
-    trusted-users = [ "root" "popcat19" ];
-    
+    trusted-users = ["root" "popcat19"];
+
     # Enable experimental features needed for flakes and distributed builds
-    experimental-features = [ "nix-command" "flakes" ];
-    
+    experimental-features = ["nix-command" "flakes"];
+
     # Configure substituters and trusted public keys
     substituters = [
       "https://cache.nixos.org/"
       "https://nix-community.cachix.org"
     ];
-    
+
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
-    
+
     # Optimize for build server performance (R5 5500 6c/12t)
-    max-jobs = 12;  # Use all threads
-    cores = 6;      # Physical cores
-    
+    max-jobs = 12; # Use all threads
+    cores = 6; # Physical cores
+
     # Allow building for other architectures if needed
-    extra-platforms = [ "i686-linux" ];
+    extra-platforms = ["i686-linux"];
   };
 
   # User configuration for SSH keys
@@ -42,7 +45,7 @@
   # Environment packages needed for distributed builds
   environment.systemPackages = with pkgs; [
     openssh
-    git  # Needed for flake operations
+    git # Needed for flake operations
     # Additional build tools
     gcc
     binutils

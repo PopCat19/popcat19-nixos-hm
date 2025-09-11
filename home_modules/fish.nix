@@ -1,11 +1,13 @@
-{ pkgs, userConfig, ... }:
-
 {
+  pkgs,
+  userConfig,
+  ...
+}: {
   # Fish shell configuration
   programs.fish.enable = true;
-  
+
   # Import fish functions and abbreviations
-  imports = [ ./fish-functions.nix ];
+  imports = [./fish-functions.nix];
 
   # Fish configuration files
   home.file.".config/fish/themes" = {

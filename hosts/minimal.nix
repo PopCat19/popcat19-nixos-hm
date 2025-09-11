@@ -9,16 +9,16 @@
 # 4. Create corresponding home.nix file (see template below)
 # 5. Add the new host to flake.nix nixosConfigurations
 # 6. Run: nixos-rebuild dry-run --flake .#your-hostname
-
-{ pkgs, inputs, lib, ... }:
-
-let
+{
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
   # TODO: Replace with your hostname (should match flake.nix entry)
   hostname = "your-hostname-here";
-  userConfig = import ../user-config.nix { inherit hostname; };
-in
-
-{
+  userConfig = import ../user-config.nix {inherit hostname;};
+in {
   # ============================================================================
   # ESSENTIAL SYSTEM MODULES
   # These are the core modules that most NixOS systems will need
