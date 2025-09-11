@@ -1,6 +1,4 @@
-{ config, ... }:
-
-{
+{config, ...}: {
   # **CONFIGURATION FILE MANAGEMENT**
   # Manages symlinks for configuration files.
   home.file.".config/hypr" = {

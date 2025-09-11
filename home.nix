@@ -7,40 +7,42 @@
   inputs,
   userConfig,
   ...
-}:
-
-let
+}: let
   # Get the hostname from userConfig
   hostname = userConfig.host.hostname;
 
-  # Determine which host-specific configuration to import
-  hostHomeConfig =
-    if hostname == "popcat19-nixos0" then ./hosts/nixos0/home.nix
-    else null;
-in
-
-{
+  # Host-specific Hypr imports
+  hyprImports =
+    if hostname == "popcat19-nixos0" then [
+      ./hosts/nixos0/hypr_config/hyprland.nix
+      ./hosts/nixos0/hypr_config/hyprpanel.nix
+    ] else if hostname == "popcat19-surface0" then [
+      ./hosts/surface0/hypr_config/hyprland.nix
+      ./hosts/surface0/hypr_config/hyprpanel.nix
+    ] else if hostname == "popcat19-thinkpad0" then [
+      ./hosts/thinkpad0/hypr_config/hyprland.nix
+      ./hosts/thinkpad0/hypr_config/hyprpanel.nix
+    ] else [
+      # Fallback to shared home hypr config
+      ./hypr_config/hyprland.nix
+      ./hypr_config/hyprpanel-home.nix
+    ];
+in {
   # Basic home configuration
   home.username = userConfig.user.username;
   home.homeDirectory = userConfig.directories.home;
   home.stateVersion = "24.05";
 
-  # Theme configuration
-  # All theme-related configurations are imported from theme.nix
-
+  # Imports
   imports =
-    # Import host-specific configuration if available
-    (if hostHomeConfig != null then [ hostHomeConfig ] else []) ++
-
-    # Default imports for hosts without specific configurations (surface0, thinkpad0)
-    (if hostHomeConfig == null then [
+    [
       # Theme and UI
       ./home_modules/theme.nix
       ./home_modules/screenshot.nix
       ./home_modules/zen-browser.nix
-      ./hypr_config/hyprland.nix
-      ./hypr_config/hyprpanel-home.nix
-
+    ]
+    ++ hyprImports
+    ++ [
       # Core system
       ./home_modules/environment.nix
       ./home_modules/services.nix
@@ -59,11 +61,8 @@ in
       ./home_modules/privacy.nix
       ./quickshell_config/quickshell.nix
       ./syncthing_config/home.nix
-    ] else []);
+    ];
 
-  # User packages - only for hosts without specific configurations
-  home.packages =
-    if hostHomeConfig == null
-    then import ./home_modules/packages.nix { inherit pkgs inputs system userConfig; }
-    else [];
+  # User packages
+  home.packages = import ./home_modules/packages.nix { inherit pkgs inputs system userConfig; };
 }

@@ -2,10 +2,12 @@
 # ========================================
 # This module imports the shared hyprpanel base configuration
 # and adds nixos0-specific bar.layouts for desktop dual-monitor setup
-
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # Import the shared hyprpanel base configuration
   imports = [
     ../../../hypr_config/hyprpanel-common.nix
@@ -17,9 +19,9 @@
     # Layout configuration - Configure bar layouts for nixos0 desktop dual-monitor setup
     "bar.layouts" = {
       "*" = {
-        left = [ "dashboard" "workspaces" "media" ];
-        middle = [ ];
-        right = [ "cputemp" "network" "bluetooth" "volume" "systray" "clock" "notifications" ];
+        left = ["dashboard" "workspaces" "media"];
+        middle = [];
+        right = ["cputemp" "network" "bluetooth" "volume" "systray" "clock" "notifications"];
       };
     };
   };

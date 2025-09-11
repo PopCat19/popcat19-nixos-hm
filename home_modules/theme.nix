@@ -1,6 +1,11 @@
-{ pkgs, config, system, lib, inputs, ... }:
-
-let
+{
+  pkgs,
+  config,
+  system,
+  lib,
+  inputs,
+  ...
+}: let
   theme = {
     gtkThemeName = "Rose-Pine-Main-BL";
     iconTheme = "Papirus-Dark";
@@ -25,8 +30,7 @@ let
       font-family: "${theme.fontMain}";
     }
   '';
-in
-{
+in {
   home.sessionVariables = {
     QT_STYLE_OVERRIDE = "kvantum";
     QT_QPA_PLATFORM = "wayland;xcb";
@@ -161,8 +165,6 @@ in
     transparent_menutitle=0
     unify_spin_buttons=0
   '';
-
-  
 
   xdg.configFile."kdeglobals".text = ''
     [General]
@@ -319,7 +321,7 @@ in
       color-scheme = "prefer-dark";
     };
 
-   "org/gnome/desktop/wm/preferences" = {
+    "org/gnome/desktop/wm/preferences" = {
       theme = theme.gtkThemeName;
     };
 
@@ -348,9 +350,9 @@ in
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
     Unit = {
       Description = "polkit-gnome-authentication-agent-1";
-      Wants = [ "graphical-session.target" ];
-      WantedBy = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
+      Wants = ["graphical-session.target"];
+      WantedBy = ["graphical-session.target"];
+      After = ["graphical-session.target"];
     };
     Service = {
       Type = "simple";

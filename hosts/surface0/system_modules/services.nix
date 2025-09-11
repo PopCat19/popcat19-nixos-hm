@@ -1,6 +1,8 @@
-{ pkgs, lib, ... }:
-
 {
+  pkgs,
+  lib,
+  ...
+}: {
   # Journald configuration
   services.journald.extraConfig = ''
     MaxRetentionSec=3day
@@ -105,8 +107,8 @@
   # WiFi stability systemd service
   systemd.services.wifi-powersave-off = {
     description = "Turn off WiFi power saving";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;

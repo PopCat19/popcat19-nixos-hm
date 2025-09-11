@@ -3,13 +3,14 @@
 # This module imports all shared Hyprland configuration sub-modules
 # but uses Surface-specific configuration files for monitors and userprefs
 # to avoid conflicts with the desktop configuration
-
-{ config, pkgs, lib, ... }:
-
-let
-  wallpaper = import ../../../hypr_config/wallpaper.nix { inherit lib pkgs; };
-in
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
+  wallpaper = import ../../../hypr_config/wallpaper.nix {inherit lib pkgs;};
+in {
   imports = [
     # Import all shared Hyprland configuration modules from the main config
     ../../../hypr_config/hypr_modules/colors.nix
@@ -25,7 +26,7 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
     package = pkgs.hyprland;
-    
+
     # Additional settings that need to be at the top level
     settings = {
       # Configuration imports (Surface-specific files)
@@ -42,10 +43,10 @@ in
     # Copy the Surface-specific monitors.conf file
     ".config/hypr/monitors.conf".source = ./monitors.conf;
     ".config/hypr/userprefs.conf".source = ../../../hypr_config/userprefs.conf;
-    
+
     # Generated hyprpaper.conf from local wallpapers
     ".config/hypr/hyprpaper.conf".source = wallpaper.hyprpaperConf;
-    
+
     # Copy shared shaders directory
     ".config/hypr/shaders" = {
       source = ../../../hypr_config/shaders;

@@ -1,25 +1,27 @@
-{ userConfig, ... }:
-
-{
+{userConfig, ...}: {
   # System environment configuration
   # User-specific environment variables are in home_modules/environment.nix
   # System packages are in core-packages.nix and packages.nix
-  
+
   # Nix configuration
   nixpkgs.config.allowUnfree = true;
   nix.settings = {
-    substituters = [ "https://ezkea.cachix.org" ];
-    trusted-public-keys = [ "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI=" ];
+    substituters = ["https://ezkea.cachix.org"];
+    trusted-public-keys = ["ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="];
     download-buffer-size = 67108864;
-    trusted-users = [ "root" userConfig.user.username ];
+    trusted-users = ["root" userConfig.user.username];
   };
+
+  nix.extraOptions = ''
+    experimental-features = fetch-tree flakes nix-command impure-derivations ca-derivations
+  '';
 
   # System environment variables
   environment.sessionVariables = {
     # Wayland support
-     # QT/Kvantum theme support
-     QT_QPA_PLATFORMTHEME = "qt6ct";
-     QT_STYLE_OVERRIDE = "kvantum";
+    # QT/Kvantum theme support
+    QT_QPA_PLATFORMTHEME = "qt6ct";
+    QT_STYLE_OVERRIDE = "kvantum";
     NIXOS_OZONE_WL = "1";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     GST_PLUGIN_SYSTEM_PATH_1_0 = "/run/current-system/sw/lib/gstreamer-1.0";

@@ -7,10 +7,7 @@
   inputs,
   userConfig,
   ...
-}:
-
-
-{
+}: {
   # Basic home configuration
   home.username = userConfig.user.username;
   home.homeDirectory = userConfig.directories.home;
@@ -46,5 +43,5 @@
   # Use the centralized packages list from home_modules/packages.nix.
   # This is the canonical source; per-host package overrides can still be
   # implemented here if necessary.
-  home.packages = import ../../home_modules/packages.nix { inherit pkgs inputs system userConfig; };
+  home.packages = import ../../home_modules/packages.nix {inherit pkgs inputs system userConfig;};
 }

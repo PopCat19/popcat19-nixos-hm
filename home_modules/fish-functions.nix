@@ -1,6 +1,8 @@
-{ pkgs, userConfig, ... }:
-
 {
+  pkgs,
+  userConfig,
+  ...
+}: {
   programs.fish.shellInit = ''
     set -Ux NIXOS_CONFIG_DIR $HOME/nixos-config
     set -Ux NIXOS_FLAKE_HOSTNAME ${userConfig.host.hostname}

@@ -1,13 +1,9 @@
-{ system, ... }:
-
-let
+{system, ...}: let
   # Architecture detection
   isX86_64 = system == "x86_64-linux";
-
   # Architecture-specific acceleration settings
   # moved to ../../home_modules/generative.nix
-in
-{
+in {
   # **SYSTEM SERVICES**
   # Enables user-level services.
   services = {

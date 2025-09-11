@@ -1,8 +1,10 @@
-{ pkgs, userConfig, ... }:
-
 {
+  pkgs,
+  userConfig,
+  ...
+}: {
   # Users and tmpfiles configuration
-  
+
   # User account
   users.users.${userConfig.user.username} = {
     isNormalUser = true;

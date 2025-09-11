@@ -1,9 +1,6 @@
 # Notification packages
-
-{ pkgs, ... }:
-
-with pkgs;
-[
+{pkgs, ...}:
+with pkgs; [
   dunst
   libnotify
   zenity

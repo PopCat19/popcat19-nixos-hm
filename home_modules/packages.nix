@@ -1,15 +1,12 @@
 # Home Manager package configuration
-
 {
   pkgs,
   inputs,
   system,
   userConfig,
-}:
-
-let
+}: let
   # Architecture-specific packages
-  x86_64Packages = import ./x86_64-packages.nix { inherit pkgs; };
+  x86_64Packages = import ./x86_64-packages.nix {inherit pkgs;};
 
   # Maintain ordering while reducing boilerplate
   earlyPackageFiles = [
@@ -28,10 +25,10 @@ let
     ../packages/home/development.nix
   ];
 
-  importPackages = path: import path { inherit pkgs; };
+  importPackages = path: import path {inherit pkgs;};
   earlyPackages = map importPackages earlyPackageFiles;
   latePackages = map importPackages latePackageFiles;
 in
-builtins.concatLists earlyPackages
-++ x86_64Packages
-++ builtins.concatLists latePackages
+  builtins.concatLists earlyPackages
+  ++ x86_64Packages
+  ++ builtins.concatLists latePackages

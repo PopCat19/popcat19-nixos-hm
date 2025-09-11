@@ -4,7 +4,6 @@
 # Cross-DE or application-global variables should live in:
 # - system_modules/environment.nix (system-wide)
 # - home_modules/environment.nix (user-wide)
-
 {
   wayland.windowManager.hyprland.settings = {
     env = [
