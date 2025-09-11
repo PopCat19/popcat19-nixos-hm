@@ -1,13 +1,16 @@
-{ pkgs, config, userConfig, ... }:
-
 {
+  pkgs,
+  config,
+  userConfig,
+  ...
+}: {
   # KDE applications and utilities (no desktop environment)
   home.packages = with pkgs; [
     # Dolphin and KDE file management packages
     kdePackages.dolphin
-    kdePackages.ark          # Archive manager
-    kdePackages.gwenview     # Image viewer
-    kdePackages.okular       # Document viewer
+    kdePackages.ark # Archive manager
+    kdePackages.gwenview # Image viewer
+    kdePackages.okular # Document viewer
 
     # KDE file system integration and thumbnails
     kdePackages.kdegraphics-thumbnailers
@@ -15,15 +18,15 @@
     kdePackages.kio-extras
 
     # Additional thumbnail support
-    ffmpegthumbnailer        # Video thumbnails
-    poppler_utils           # PDF thumbnails
-    libgsf                 # OLE/MSO thumbnails
-    webp-pixbuf-loader     # WebP image support
+    ffmpegthumbnailer # Video thumbnails
+    poppler_utils # PDF thumbnails
+    libgsf # OLE/MSO thumbnails
+    webp-pixbuf-loader # WebP image support
 
     # KDE utilities
-    kdePackages.kdialog      # Dialog boxes from shell scripts
+    kdePackages.kdialog # Dialog boxes from shell scripts
     kdePackages.keditbookmarks # Bookmark editor
-    kdePackages.kleopatra    # Certificate manager and GUI for GnuPG
+    kdePackages.kleopatra # Certificate manager and GUI for GnuPG
 
     # Qt theming
     qt6Packages.qtstyleplugin-kvantum

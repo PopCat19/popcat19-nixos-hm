@@ -1,10 +1,11 @@
-{ pkgs, inputs, lib, ... }:
-
-let
-  thinkpadUserConfig = import ../../user-config.nix { hostname = "popcat19-thinkpad0"; };
-in
-
 {
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
+  thinkpadUserConfig = import ../../user-config.nix {hostname = "popcat19-thinkpad0";};
+in {
   imports = [
     ./hardware-configuration.nix
     ../../syncthing_config/system.nix
@@ -30,7 +31,7 @@ in
   ];
 
   _module.args.userConfig = thinkpadUserConfig;
-  
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -44,15 +45,15 @@ in
   };
 
   networking.hostName = "popcat19-thinkpad0";
-  
+
   # Disable Sunshine game-streaming service on this host
   services.sunshine = {
     enable = false;
   };
-  
+
   nix.extraOptions = ''
     experimental-features = fetch-tree flakes nix-command impure-derivations ca-derivations
   '';
-  
+
   system.stateVersion = "25.05";
 }

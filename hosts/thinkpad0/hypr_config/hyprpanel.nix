@@ -2,10 +2,12 @@
 # ========================================
 # This module imports the shared hyprpanel base configuration
 # and adds ThinkPad-specific bar.layouts for laptop single-screen setup
-
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # Import the shared hyprpanel base configuration
   imports = [
     ../../../hypr_config/hyprpanel-common.nix
@@ -17,9 +19,9 @@
     # Layout configuration - Configure bar layouts for ThinkPad laptop single-screen setup
     "bar.layouts" = {
       "*" = {
-        left = [ "dashboard" "workspaces" ];
-        middle = [ "media" ];
-        right = [ "cputemp" "battery" "network" "bluetooth" "volume" "systray" "clock" "notifications" ];
+        left = ["dashboard" "workspaces"];
+        middle = ["media"];
+        right = ["cputemp" "battery" "network" "bluetooth" "volume" "systray" "clock" "notifications"];
       };
     };
   };

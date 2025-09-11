@@ -1,10 +1,12 @@
 # Home Manager MangoHUD Configuration
 # This file contains MangoHUD gaming performance overlay configuration and packages
 # Imported by home.nix
-
-{ config, pkgs, userConfig, ... }:
-
 {
+  config,
+  pkgs,
+  userConfig,
+  ...
+}: {
   # ═══════════════════════════════════════════════════════════════════════════════
   # 🎮 MANGOHUD GAMING PERFORMANCE OVERLAY SYSTEM
   # ═══════════════════════════════════════════════════════════════════════════════

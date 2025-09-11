@@ -1,9 +1,6 @@
 # Communication and security packages
-
-{ pkgs, ... }:
-
-with pkgs;
-[
+{pkgs, ...}:
+with pkgs; [
   vesktop
   keepassxc
 ]

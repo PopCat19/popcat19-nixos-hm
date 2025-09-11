@@ -1,6 +1,8 @@
-{ pkgs, userConfig, ... }:
-
-let
+{
+  pkgs,
+  userConfig,
+  ...
+}: let
   # Architecture detection
   system = userConfig.host.system;
   isX86_64 = system == "x86_64-linux";
@@ -9,8 +11,8 @@ let
   qemuPackage = pkgs.qemu_kvm;
 
   # Architecture-specific OVMF packages
-  ovmfPackages = [ pkgs.OVMFFull.fd ];
- 
+  ovmfPackages = [pkgs.OVMFFull.fd];
+
   # Virtualization-related packages (moved here)
   virtualizationPackages = with pkgs; [
     docker
@@ -23,17 +25,15 @@ let
     quickgui
     quickemu
   ];
- 
-in
-{
+in {
   # Virtualisation configuration
   virtualisation = {
     # Waydroid (Android emulation)
     waydroid.enable = true;
-    
+
     # Docker
     docker.enable = true;
-    
+
     # libvirt/QEMU
     libvirtd.enable = true;
     libvirtd.qemu = {
@@ -41,11 +41,11 @@ in
       runAsRoot = true;
       swtpm.enable = true;
       ovmf = {
-        enable = (ovmfPackages != []);
+        enable = ovmfPackages != [];
         packages = ovmfPackages;
       };
     };
-    
+
     # SPICE USB redirection
     spiceUSBRedirection.enable = true;
   };

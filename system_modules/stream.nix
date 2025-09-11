@@ -1,8 +1,10 @@
-{ pkgs, lib, ... }:
-
 {
+  pkgs,
+  lib,
+  ...
+}: {
   # Game streaming services configuration
-  
+
   services = {
     # Sunshine game streaming server
     sunshine = {

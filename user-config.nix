@@ -1,26 +1,33 @@
 # Global user configuration file
 # Contains all user-configurable variables shared across NixOS hosts
-
-{ hostname ? null, system ? "x86_64-linux", username ? "popcat19", machine ? "nixos0" }:
-
-rec {
+{
+  hostname ? null,
+  system ? "x86_64-linux",
+  username ? "popcat19",
+  machine ? "nixos0",
+}: rec {
   # Host configuration
   host = {
     inherit system;
-    hostname = if hostname == null then "${username}-${machine}" else hostname;
+    hostname =
+      if hostname == null
+      then "${username}-${machine}"
+      else hostname;
   };
 
   # Hosts metadata and helpers
   hosts = rec {
     # Machines defined under ./hosts/
-    machines = [ "nixos0" "surface0" "thinkpad0" ];
+    machines = ["nixos0" "surface0" "thinkpad0"];
     owner = username;
     defaultMachine = "nixos0";
     mk = m: "${owner}-${m}";
     isValid = m: builtins.elem m machines;
     # Selected machine (argument 'machine' may be overridden by callers)
     selectedMachine =
-      if isValid machine then machine else defaultMachine;
+      if isValid machine
+      then machine
+      else defaultMachine;
     # Derived hostname for the selected machine
     derivedHostname = mk selectedMachine;
   };
@@ -44,7 +51,10 @@ rec {
     preferredTerminal = "kitty";
 
     # Helper functions
-    onlyX86_64 = packages: if isX86_64 then packages else [];
+    onlyX86_64 = packages:
+      if isX86_64
+      then packages
+      else [];
   };
 
   # User credentials
@@ -53,16 +63,22 @@ rec {
     fullName = "PopCat19";
     email = "atsuo11111@gmail.com";
     shell = "fish";
-    
-    extraGroups = [
-      "wheel"
-      "video"
-      "audio"
-      "networkmanager"
-      "i2c"
-      "input"
-      "libvirtd"
-    ] ++ (if host.hostname == "${username}-surface0" then [ "surface-control" ] else []);
+
+    extraGroups =
+      [
+        "wheel"
+        "video"
+        "audio"
+        "networkmanager"
+        "i2c"
+        "input"
+        "libvirtd"
+      ]
+      ++ (
+        if host.hostname == "${username}-surface0"
+        then ["surface-control"]
+        else []
+      );
   };
 
   # Default applications
@@ -72,40 +88,40 @@ rec {
       package = "zen-browser";
       command = "zen-twilight";
     };
-    
+
     terminal = {
       desktop = "kitty.desktop";
       package = "kitty";
       command = "kitty";
     };
-    
+
     editor = {
       desktop = "micro.desktop";
       package = "micro";
       command = "micro";
     };
-    
+
     fileManager = {
       desktop = "org.kde.dolphin.desktop";
       package = "kdePackages.dolphin";
       command = "dolphin";
     };
-    
+
     imageViewer = {
       desktop = "org.kde.gwenview.desktop";
       package = "kdePackages.gwenview";
     };
-    
+
     videoPlayer = {
       desktop = "mpv.desktop";
       package = "mpv";
     };
-    
+
     archiveManager = {
       desktop = "org.kde.ark.desktop";
       package = "kdePackages.ark";
     };
-    
+
     pdfViewer = {
       desktop = "org.kde.okular.desktop";
       package = "kdePackages.okular";
@@ -136,7 +152,7 @@ rec {
   git = {
     userName = user.fullName;
     userEmail = user.email;
-    extraConfig = { };
+    extraConfig = {};
   };
 
   # Network configuration moved to system_modules/networking.nix

@@ -1,8 +1,5 @@
 # GUI and launcher tools
-
-{ pkgs, ... }:
-
-with pkgs;
-[
+{pkgs, ...}:
+with pkgs; [
   fuzzel
 ]
