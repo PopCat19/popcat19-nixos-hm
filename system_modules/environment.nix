@@ -12,6 +12,10 @@
     trusted-users = ["root" userConfig.user.username];
   };
 
+  nix.extraOptions = ''
+    experimental-features = fetch-tree flakes nix-command impure-derivations ca-derivations
+  '';
+
   # System environment variables
   environment.sessionVariables = {
     # Wayland support
