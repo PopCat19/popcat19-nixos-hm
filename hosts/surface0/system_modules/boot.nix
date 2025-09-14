@@ -74,6 +74,9 @@
       # Backlight support modules
       "intel_backlight"
       "video"
+
+      # I2C userspace access for DDC/CI
+      "i2c-dev"
     ];
 
     # Surface-specific kernel parameters

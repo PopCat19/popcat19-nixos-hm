@@ -100,6 +100,10 @@
     iw
     wpa_supplicant
     wirelesstools
+
+    # DDC/CI and I2C tools for monitor control
+    i2c-tools
+    ddcutil
   ];
 
   # SURFACE POWER MANAGEMENT
