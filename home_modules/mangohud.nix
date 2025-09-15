@@ -33,12 +33,21 @@
   # DEPENDENCIES:
   # • Vulkan/OpenGL compatible graphics drivers
   # • Compatible games/applications
+  # • Additional Vulkan tools and validation layers for enhanced functionality
+  # • OBS Vulkan capture plugin for streaming/recording
+  # • GPU viewer utilities for system information
   # ═══════════════════════════════════════════════════════════════════════════════
 
   home.packages = with pkgs; [
     # ─── CORE MANGOHUD PACKAGES ───
     mangohud # Gaming performance overlay with system metrics
     goverlay # MangoHUD configuration GUI for easy setup
+    mangojuice # Alternative MangoHUD configuration tool
+
+    # ─── GAMING ENHANCEMENT TOOLS ───
+    vkBasalt # Vulkan post-processing layer for visual enhancements
+    obs-studio-plugins.obs-vkcapture # Vulkan/OpenGL game capture for OBS
+    gpu-viewer # Frontend to glxinfo, vulkaninfo, clinfo and es2_info
 
     # Note: MangoHUD automatically integrates with Steam and most gaming platforms
     # Additional gaming tools can be found in home-packages.nix under gaming section
