@@ -9,6 +9,7 @@
     # Dolphin and KDE file management packages
     kdePackages.dolphin
     kdePackages.ark # Archive manager
+    unrar # RAR archive support
     kdePackages.gwenview # Image viewer
     kdePackages.okular # Document viewer
 
