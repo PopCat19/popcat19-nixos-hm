@@ -99,19 +99,25 @@
 
   home.file.".local/bin/update-thumbnails".executable = true;
 
-  # Dolphin service menu for opening terminal in current directory
-  home.file.".local/share/kio/servicemenus/open-terminal-here.desktop".text = ''
-    [Desktop Entry]
-    Type=Service
-    ServiceTypes=KonqPopupMenu/Plugin
-    MimeType=inode/directory;
-    Actions=openTerminalHere;
+  # Configure KDE's default terminal so Terminal=true apps and Dolphin's "Open in Terminal" use the user's terminal
+  home.file.".config/kdeglobals".text = ''
+    [General]
+    TerminalApplication=${userConfig.defaultApps.terminal.command}
+    TerminalService=${userConfig.defaultApps.terminal.desktop}
+  '';
 
-    [Desktop Action openTerminalHere]
-    Name=Open Terminal Here
-    Name[en_US]=Open Terminal Here
-    Icon=utilities-terminal
-    Exec=${userConfig.defaultApps.terminal.command} --working-directory "%f"
+  # Provide a desktop entry for Micro that launches inside the user's terminal
+  home.file.".local/share/applications/micro.desktop".text = ''
+    [Desktop Entry]
+    Name=Micro
+    GenericName=Text Editor
+    Comment=Terminal-based text editor
+    Exec=${userConfig.defaultApps.terminal.command} -e micro %F
+    Terminal=false
+    Type=Application
+    Categories=Utility;TextEditor;
+    MimeType=text/plain;text/x-python;text/x-shellscript;text/x-markdown;text/x-c++src;text/x-csrc;text/x-go;text/x-rust;text/x-java;text/x-php;text/x-ruby;text/x-perl;text/x-yaml;application/json;
+    Icon=micro
   '';
   # XDG MIME associations so Dolphin opens files with user-configured defaults
   xdg.mimeApps = let
