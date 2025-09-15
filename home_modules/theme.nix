@@ -4,6 +4,7 @@
   system,
   lib,
   inputs,
+  userConfig,
   ...
 }: let
   theme = {
@@ -171,6 +172,9 @@ in {
     ColorScheme=${theme.kdeColorSchemeName}
     Name=${theme.kdeColorSchemeName}
     shadeSortColumn=true
+
+    TerminalApplication=${userConfig.defaultApps.terminal.command}
+    TerminalService=${userConfig.defaultApps.terminal.desktop}
 
     [Icons]
     Theme=${theme.iconTheme}

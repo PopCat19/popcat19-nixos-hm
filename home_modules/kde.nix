@@ -99,21 +99,16 @@
 
   home.file.".local/bin/update-thumbnails".executable = true;
 
-  # Configure KDE's default terminal so Terminal=true apps and Dolphin's "Open in Terminal" use the user's terminal
-  home.file.".config/kdeglobals".text = ''
-    [General]
-    TerminalApplication=${userConfig.defaultApps.terminal.command}
-    TerminalService=${userConfig.defaultApps.terminal.desktop}
-  '';
+  # KDE default terminal configured in theme.nix (xdg.configFile."kdeglobals")
 
-  # Provide a desktop entry for Micro that launches inside the user's terminal
+  # Provide a desktop entry for Micro that uses KDE's configured terminal (Terminal=true)
   home.file.".local/share/applications/micro.desktop".text = ''
     [Desktop Entry]
     Name=Micro
     GenericName=Text Editor
     Comment=Terminal-based text editor
-    Exec=${userConfig.defaultApps.terminal.command} -e micro %F
-    Terminal=false
+    Exec=micro %F
+    Terminal=true
     Type=Application
     Categories=Utility;TextEditor;
     MimeType=text/plain;text/x-python;text/x-shellscript;text/x-markdown;text/x-c++src;text/x-csrc;text/x-go;text/x-rust;text/x-java;text/x-php;text/x-ruby;text/x-perl;text/x-yaml;application/json;
