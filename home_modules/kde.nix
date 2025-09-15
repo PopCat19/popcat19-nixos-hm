@@ -113,4 +113,57 @@
     Icon=utilities-terminal
     Exec=${userConfig.defaultApps.terminal.command} --working-directory "%f"
   '';
+  # XDG MIME associations so Dolphin opens files with user-configured defaults
+  xdg.mimeApps = let
+    browser = userConfig.defaultApps.browser.desktop;
+    editor = userConfig.defaultApps.editor.desktop;
+    fm = userConfig.defaultApps.fileManager.desktop;
+    img = userConfig.defaultApps.imageViewer.desktop;
+    video = userConfig.defaultApps.videoPlayer.desktop;
+    ark = userConfig.defaultApps.archiveManager.desktop;
+    pdf = userConfig.defaultApps.pdfViewer.desktop;
+  in {
+    enable = true;
+    defaultApplications = {
+      # Core types
+      "inode/directory" = [ fm ];
+      "text/plain" = [ editor ];
+      "application/x-shellscript" = [ editor ];
+      "text/x-python" = [ editor ];
+
+      # Web/browser
+      "text/html" = [ browser ];
+      "x-scheme-handler/http" = [ browser ];
+      "x-scheme-handler/https" = [ browser ];
+      "x-scheme-handler/about" = [ browser ];
+      "x-scheme-handler/unknown" = [ browser ];
+
+      # Documents
+      "application/pdf" = [ pdf ];
+
+      # Images
+      "image/jpeg" = [ img ];
+      "image/png" = [ img ];
+      "image/webp" = [ img ];
+      "image/gif" = [ img ];
+      "image/bmp" = [ img ];
+      "image/tiff" = [ img ];
+
+      # Video
+      "video/mp4" = [ video ];
+      "video/x-matroska" = [ video ];
+      "video/webm" = [ video ];
+      "video/x-msvideo" = [ video ];
+      "video/quicktime" = [ video ];
+
+      # Archives
+      "application/zip" = [ ark ];
+      "application/x-7z-compressed" = [ ark ];
+      "application/x-rar" = [ ark ];
+      "application/x-bzip" = [ ark ];
+      "application/x-xz" = [ ark ];
+      "application/x-tar" = [ ark ];
+      "application/gzip" = [ ark ];
+    };
+  };
 }
