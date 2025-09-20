@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 
 # Screenshot wrapper using hyprshot with hyprshade integration
-# Usage: screenshot [monitor|region|window]
+# Usage: screenshot [monitor|region|window|both]
 #
 # Behavior:
 # - Uses hyprshot with --freeze for clean capture
@@ -9,6 +9,7 @@
 # - Copies PNG to clipboard when wl-copy/xclip are available
 # - Filename: appname_yyyymmdd-N.png (N increments per day/app)
 # - Temporarily disables hyprshade during capture (restores after)
+# - 'both' mode: takes both monitor and region screenshots
 
 function _slugify_app_name --description 'Normalize string to filesystem-safe slug'
     set -l s $argv
@@ -18,7 +19,7 @@ function _slugify_app_name --description 'Normalize string to filesystem-safe sl
     end
     set -l out (string lower -- $s)
     set out (string replace -ra '[^a-z0-9._-]' '-' -- $out)
-    set out (string replace -ra '-+' '-' -- $out)
+    set out (string replace -ra -- '-+' '-' $out)
     set out (string trim -c '-' -- $out)
     if test -z "$out"
         echo "screen"
@@ -69,7 +70,7 @@ end
 
 function copy_to_clipboard --description 'Copy PNG to clipboard if tools available'
     set -l path $argv[1]
-    if test -z "$path" -o not -f "$path"
+    if test -z "$path"; or not test -f "$path"
         return 1
     end
     if type -q wl-copy
@@ -113,6 +114,20 @@ function take_screenshot --description 'Perform capture using hyprshot'
     end
 end
 
+function take_both_screenshots --description 'Take both monitor and region screenshots'
+    # args: <dir> <base_filename>
+    set -l dir $argv[1]
+    set -l base_filename $argv[2]
+
+    # Take monitor screenshot
+    set -l monitor_filename (string replace ".png" "_monitor.png" "$base_filename")
+    take_screenshot output "$dir" "$monitor_filename"
+
+    # Take region screenshot
+    set -l region_filename (string replace ".png" "_region.png" "$base_filename")
+    take_screenshot region "$dir" "$region_filename"
+end
+
 # Parameters and defaults
 set -l MODE (set -q argv[1]; and echo $argv[1]; or echo "monitor")
 set -l DEFAULT_DIR "$HOME/Pictures/Screenshots"
@@ -130,12 +145,15 @@ switch $MODE
         take_screenshot region "$XDG_SCREENSHOTS_DIR" "$FILENAME"
     case window active
         take_screenshot window "$XDG_SCREENSHOTS_DIR" "$FILENAME"
+    case both
+        take_both_screenshots "$XDG_SCREENSHOTS_DIR" "$FILENAME"
     case '*'
-        echo "Usage: screenshot [monitor|region|window]"
+        echo "Usage: screenshot [monitor|region|window|both]"
         echo ""
         echo "Modes:"
         echo "  monitor - Screenshot current monitor (default)"
         echo "  region  - Screenshot selected region"
         echo "  window  - Screenshot active window"
+        echo "  both    - Screenshot both monitor and region"
         exit 1
 end
