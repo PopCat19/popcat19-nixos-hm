@@ -7,7 +7,7 @@
   wallpaper = import ./wallpaper.nix {inherit lib pkgs;};
 in {
   imports = [
-    ./hypr_modules/colors.nix
+    # colors provided by Matugen template via ~/.config/hypr/colors.conf
     ./hypr_modules/environment.nix
     ./hypr_modules/autostart.nix
     ./hypr_modules/general.nix
@@ -22,6 +22,7 @@ in {
 
     settings = {
       source = [
+        "~/.config/hypr/colors.conf"
         "~/.config/hypr/monitors.conf"
         "~/.config/hypr/userprefs.conf"
       ];

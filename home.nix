@@ -36,8 +36,12 @@ in {
   # Imports
   imports =
     [
+      # Import Matugen NixOS/Home Manager module
+      inputs.matugen.nixosModules.default
+
       # Theme and UI
       ./home_modules/theme.nix
+      ./home_modules/matugen.nix
       ./home_modules/screenshot.nix
       ./home_modules/zen-browser.nix
     ]

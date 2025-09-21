@@ -50,6 +50,13 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Dynamic Material You theming
+    matugen = {
+      url = "github:InioX/Matugen";
+      # If you need a specific version:
+      # ref = "refs/tags/matugen-v0.10.0";
+    };
   };
 
   outputs = inputs @ {

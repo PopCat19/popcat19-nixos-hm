@@ -9,7 +9,6 @@
 in {
   imports = [
     # Import all shared Hyprland configuration modules from the main config
-    ../../../hypr_config/hypr_modules/colors.nix
     ../../../hypr_config/hypr_modules/environment.nix
     ../../../hypr_config/hypr_modules/autostart.nix
     ../../../hypr_config/hypr_modules/general.nix
@@ -27,6 +26,7 @@ in {
     settings = {
       # Configuration imports (thinkpad0-specific files)
       source = [
+        "~/.config/hypr/colors.conf"
         # host-specific monitor configuration
         "~/.config/hypr/monitors.conf"
         "~/.config/hypr/userprefs.conf"
