@@ -15,8 +15,8 @@ in
   programs.matugen = {
     enable = true;
 
-    # Use Matugen from nixpkgs-unstable to avoid upstream module packaging issues
-    package = pkgs.matugen;
+    # Use Matugen from the flake input to match the module's expected CLI flags
+    package = inputs.matugen.packages.${system}.default;
 
     # Use either source_color (takes precedence) or wallpaper to derive palette
     # source_color = "#ff8a65"; # example override
