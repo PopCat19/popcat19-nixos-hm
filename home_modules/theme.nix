@@ -167,28 +167,9 @@ in {
     </fontconfig>
   '';
 
-  home.packages = with pkgs; [
-    # Fonts
-    google-fonts
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.caskaydia-cove
-    nerd-fonts.fantasque-sans-mono
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-emoji
-    font-awesome
-
-    # Theme tools
-    nwg-look
-    libsForQt5.qt5ct
-    qt6ct
-    kdePackages.qtstyleplugin-kvantum
+  # Use centralized package list from lib/theme.nix and add module-specific extras
+  # Avoid duplicating cursorPackage (already included in commonPackages)
+  home.packages = with pkgs; commonPackages ++ [
     rose-pine-kvantum
-    rose-pine-gtk-theme-full
-    cursorPackage
-    papirus-icon-theme
-    adwaita-icon-theme
-    polkit_gnome
-    gsettings-desktop-schemas
   ];
 }
