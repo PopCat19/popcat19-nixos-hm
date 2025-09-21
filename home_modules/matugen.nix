@@ -83,5 +83,27 @@ in
 
     mv "$COLORS".tmp "$COLORS"
     echo "[matugen] Wrote $COLORS" >&2
+
+    # ----------------------------------------------------------------------------
+    # Render Fuzzel colors (native Matugen variables) into ~/.config/fuzzel/fuzzel.ini
+    # ----------------------------------------------------------------------------
+    mkdir -p "$HOME/.config/fuzzel"
+    FUZZEL_INI="$HOME/.config/fuzzel/fuzzel.ini"
+
+    jq -r --arg mode "${mode}" '
+      def hx($k): (.colors[$mode][$k] // "ffffff");
+      "[colors]\n" +
+      "background="       + (hx("surface"))           + "f0\n" +
+      "text="             + (hx("on_surface"))        + "ff\n" +
+      "match="            + (hx("primary"))           + "ff\n" +
+      "selection="        + (hx("surface_variant"))   + "ff\n" +
+      "selection-text="   + (hx("on_surface"))        + "ff\n" +
+      "selection-match="  + (hx("secondary"))         + "ff\n" +
+      "border="           + (hx("outline"))           + "ff\n" +
+      "placeholder="      + (hx("on_surface_variant"))+ "ff\n"
+    ' "$JSON_OUT" > "$FUZZEL_INI".tmp
+
+    mv "$FUZZEL_INI".tmp "$FUZZEL_INI"
+    echo "[matugen] Wrote $FUZZEL_INI" >&2
   '';
 }
