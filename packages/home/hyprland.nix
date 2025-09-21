@@ -8,4 +8,5 @@ with pkgs; [
 
   # Screenshot and input tools
   hyprpicker
+  hyprpaper
 ]
