@@ -38,8 +38,8 @@ in {
 
       # Force native Matugen variables for borders
       general = {
-        "col.active_border" = "$primary";
-        "col.inactive_border" = "$surfaceVariant";
+        "col.active_border" = lib.mkForce "$primary";
+        "col.inactive_border" = lib.mkForce "$surfaceVariant";
       };
     };
   };
