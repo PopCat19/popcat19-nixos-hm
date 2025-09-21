@@ -22,9 +22,10 @@ in {
       # The upstream repo contains multiple .tar.gz theme archives.
       # Kvantum expects themes under share/Kvantum/<ThemeName>.
       # Extract all archives directly into $out/share/Kvantum.
-      while IFS= read -r -d '' arch; do
+      # Extract all theme archives into $out/share/Kvantum
+      for arch in $(find . -type f -name '*.tar.gz'); do
         tar -xzf "$arch" -C "$out/share/Kvantum"
-      done < <(find . -type f -name "*.tar.gz" -print0)
+      done
 
       runHook postInstall
     '';
