@@ -32,7 +32,7 @@
     };
 
     # Ensure Hyprland session is selected on login/autologin
-    defaultSession = "hyprland";
+    defaultSession = "hyprland-uwsm";
 
     # Autologin configuration
     autoLogin = {
