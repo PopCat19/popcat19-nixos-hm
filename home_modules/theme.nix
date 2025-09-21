@@ -115,6 +115,10 @@ in {
     '';
   };
 
+  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
+    [General]
+    theme=${selectedVariant.kvantumTheme}
+  '';
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       cursor-theme = selectedVariant.cursorTheme;
