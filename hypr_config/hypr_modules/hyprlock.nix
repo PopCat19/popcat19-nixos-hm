@@ -14,6 +14,10 @@
     $pine = 0xff31748f
     $foam = 0xff9ccfd8
     $iris = 0xffc4a7e7
+    # Highlights (match hyprland colors module)
+    $highlightLow = 0xff21202e
+    $highlightMed = 0xff403d52
+    $highlightHigh = 0xff524f67
 
     general {
       hide_cursor = true
@@ -63,7 +67,7 @@
       outline_thickness = 2
 
       inner_color = $overlay
-      outer_color = $iris
+      outer_color = $highlightHigh
       font_color = $text
 
       placeholder_text = <i>password</i>
@@ -73,6 +77,16 @@
 
       dots_size = 0.2
       dots_spacing = 0.25
+    }
+    # Hint
+    label {
+      text = "Type password to unlock"
+      color = $subtle
+      font_size = 14
+      font_family = "Inter, JetBrainsMono Nerd Font, DejaVu Sans"
+      position = 0, 210
+      halign = center
+      valign = center
     }
   '';
 }
