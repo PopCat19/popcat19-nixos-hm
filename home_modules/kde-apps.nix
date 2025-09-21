@@ -89,6 +89,12 @@
   # Dolphin configuration - removed to allow Dolphin to manage its own config file
   # This prevents the "configuration file not writable" error
 
+  # Explicit Dolphin terminal override to ensure kitty is used for "Open in Terminal"
+  xdg.configFile."dolphinrc".text = ''
+    [General]
+    TerminalApplication=${userConfig.defaultApps.terminal.command}
+  '';
+
   # Simple thumbnail cache clearing script
   home.file.".local/bin/update-thumbnails".text = ''
     #!/usr/bin/env bash
