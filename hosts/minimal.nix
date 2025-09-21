@@ -103,7 +103,6 @@ in {
   # ============================================================================
 
   # Example: Disable certain services on this host
-  # services.sunshine.enable = false;
 
   # Example: Add host-specific packages
   # environment.systemPackages = with pkgs; [

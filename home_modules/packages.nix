@@ -1,4 +1,4 @@
-# Home Manager package configuration
+# Home Manager package configuration (simplified via aggregator)
 {
   pkgs,
   inputs,
@@ -6,29 +6,11 @@
   userConfig,
 }: let
   # Architecture-specific packages
-  x86_64Packages = import ./x86_64-packages.nix {inherit pkgs;};
+  x86_64Packages = import ./x86_64-packages.nix { inherit pkgs; };
 
-  # Maintain ordering while reducing boilerplate
-  earlyPackageFiles = [
-    ../packages/home/terminal.nix
-    ../packages/home/browsers.nix
-    ../packages/home/media.nix
-    ../packages/home/hyprland.nix
-    ../packages/home/communication.nix
-  ];
-
-  latePackageFiles = [
-    ../packages/home/monitoring.nix
-    ../packages/home/utilities.nix
-    ../packages/home/notifications.nix
-    ../packages/home/editors.nix
-    ../packages/home/development.nix
-  ];
-
-  importPackages = path: import path {inherit pkgs;};
-  earlyPackages = map importPackages earlyPackageFiles;
-  latePackages = map importPackages latePackageFiles;
+  # Aggregated home packages with explicit early/late ordering
+  homeAgg = import ../packages/home { inherit pkgs; };
 in
-  builtins.concatLists earlyPackages
+  homeAgg.early
   ++ x86_64Packages
-  ++ builtins.concatLists latePackages
+  ++ homeAgg.late

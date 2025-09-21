@@ -44,6 +44,9 @@
   # Firmware update service
   services.fwupd.enable = true;
 
+  # Ensure ddcutil udev rules are installed
+  services.udev.packages = [ pkgs.ddcutil ];
+
   # Udev rules for Surface hardware
   services.udev.extraRules = ''
     # Surface touch and pen devices
@@ -70,6 +73,9 @@
 
     # Disable USB autosuspend for WiFi devices to prevent disconnections
     ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="11ab", ATTRS{idProduct}=="2b38", ATTR{power/autosuspend}="-1"
+
+    # I2C devices permissions for DDC/CI
+    KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
   '';
 
   # Audio / PipeWire
@@ -103,6 +109,9 @@
     pkcs11.enable = true;
     tctiEnvironment.enable = true;
   };
+
+  # Ensure i2c group exists for DDC access
+  users.groups.i2c = {};
 
   # WiFi stability systemd service
   systemd.services.wifi-powersave-off = {

@@ -9,6 +9,7 @@
     # Dolphin and KDE file management packages
     kdePackages.dolphin
     kdePackages.ark # Archive manager
+    unrar # RAR archive support
     kdePackages.gwenview # Image viewer
     kdePackages.okular # Document viewer
 
@@ -39,13 +40,6 @@
   # KDE configuration files - keeping minimal config here, main theme config in theme.nix
 
   # Qt environment variables for Kvantum
-  home.sessionVariables = {
-    QT_STYLE_OVERRIDE = "kvantum";
-    QT_QPA_PLATFORMTHEME = "kvantum";
-    QT_PLATFORM_PLUGIN = "kvantum";
-    QT_PLATFORMTHEME = "kvantum";
-    XDG_CURRENT_DESKTOP = "KDE";
-  };
 
   # Dolphin file manager bookmarks
   home.file.".local/share/user-places.xbel".text = ''
@@ -85,31 +79,5 @@
     </xbel>
   '';
 
-  # Dolphin configuration - removed to allow Dolphin to manage its own config file
-  # This prevents the "configuration file not writable" error
-
-  # Simple thumbnail cache clearing script
-  home.file.".local/bin/update-thumbnails".text = ''
-    #!/usr/bin/env bash
-    # Clear Dolphin thumbnail cache
-    rm -rf ~/.cache/thumbnails/*
-    echo "Thumbnail cache cleared"
-  '';
-
-  home.file.".local/bin/update-thumbnails".executable = true;
-
-  # Dolphin service menu for opening terminal in current directory
-  home.file.".local/share/kio/servicemenus/open-terminal-here.desktop".text = ''
-    [Desktop Entry]
-    Type=Service
-    ServiceTypes=KonqPopupMenu/Plugin
-    MimeType=inode/directory;
-    Actions=openTerminalHere;
-
-    [Desktop Action openTerminalHere]
-    Name=Open Terminal Here
-    Name[en_US]=Open Terminal Here
-    Icon=utilities-terminal
-    Exec=${userConfig.defaultApps.terminal.command} --working-directory "%f"
-  '';
+  # XDG MIME associations so Dolphin opens files with user-configured defaults
 }
