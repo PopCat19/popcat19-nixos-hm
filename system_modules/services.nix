@@ -39,15 +39,4 @@
   # Security & authentication
   security.polkit.enable = true;
   security.rtkit.enable = true;
-
-  # Add Flathub repository automatically
-  systemd.services.flatpak-repo = {
-    wantedBy = ["multi-user.target"];
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-    path = [pkgs.flatpak];
-    script = ''
-      flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    '';
-  };
 }
