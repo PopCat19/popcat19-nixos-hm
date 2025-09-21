@@ -41,8 +41,8 @@ in {
       }
       // lib.optionalAttrs (rosePineGtk != null) { package = rosePineGtk; };
     iconTheme = {
-      name = selectedVariant.iconTheme;
-      package = rosePineGtk;
+      name = iconTheme;
+      package = pkgs.papirus-icon-theme;
     };
     font = {
       name = fonts.main;
@@ -83,7 +83,7 @@ in {
       [Appearance]
       color_scheme_path=
       custom_palette=false
-      icon_theme=${selectedVariant.iconTheme}
+      icon_theme=${iconTheme}
       standard_dialogs=default
       style=kvantum
 
@@ -118,7 +118,7 @@ in {
       cursor-theme = selectedVariant.cursorTheme;
       cursor-size = cursorSize;
       gtk-theme = selectedVariant.gtkThemeName;
-      icon-theme = selectedVariant.iconTheme;
+      icon-theme = iconTheme;
       font-name = "${fonts.main} ${builtins.toString fonts.sizes.gtk}";
       document-font-name = "${fonts.main} ${builtins.toString fonts.sizes.gtk}";
       monospace-font-name = "${fonts.mono} ${builtins.toString fonts.sizes.kitty}";
@@ -136,7 +136,7 @@ in {
       [Appearance]
       color_scheme_path=
       custom_palette=false
-      icon_theme=${selectedVariant.iconTheme}
+      icon_theme=${iconTheme}
       style=kvantum
 
       [Fonts]
@@ -164,7 +164,7 @@ in {
   # KDE reads ~/.config/kdeglobals for the icon theme.
   home.file.".config/kdeglobals".text = ''
     [Icons]
-    Theme=${selectedVariant.iconTheme}
+    Theme=${iconTheme}
   '';
   programs.kitty.font = {
     name = fonts.mono;
