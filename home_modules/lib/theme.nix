@@ -29,7 +29,6 @@
       iconTheme = "Papirus-Dark";
       cursorTheme = "rose-pine-hyprcursor";
       kvantumTheme = "rose-pine-rose";
-      kdeColorSchemeName = "Rose-Pine-Main-BL";
       # Use base colors for main
       colors = rosePineColors;
     };
@@ -38,7 +37,6 @@
       iconTheme = "Papirus-Dark";
       cursorTheme = "rose-pine-hyprcursor";
       kvantumTheme = "rose-pine-moon";
-      kdeColorSchemeName = "Rose-Pine-Moon-BL";
       # Override for moon (darker variants if needed; extend as required)
       colors = rosePineColors // {
         base = "232136";  # Example darker base; adjust from source
@@ -91,81 +89,6 @@
   '';
 
 
-  # Generate KDE Color Scheme from colors/variant
-  mkKdeColorScheme = { name, colors, ... }: let
-    # Helper to format RGB
-    rgb = c: "${c.r},${c.g},${c.b}";
-
-    # Hex to RGB conversion
-    hexToRgb = hex: let
-      r = "0x${lib.strings.substring 0 2 hex}";
-      g = "0x${lib.strings.substring 2 4 hex}";
-      b = "0x${lib.strings.substring 4 6 hex}";
-    in { inherit r g b; };
-
-    # Base color mappings (RGB tuples)
-    baseColors = {
-      BackgroundNormal = hexToRgb colors.base;
-      BackgroundAlternate = hexToRgb colors.surface;
-      BackgroundInactive = hexToRgb colors.overlay;
-      DecorationFocus = hexToRgb colors.foam;
-      DecorationHover = hexToRgb colors.iris;
-      ForegroundNormal = hexToRgb colors.text;
-      ForegroundActive = hexToRgb colors.text;
-      ForegroundInactive = hexToRgb colors.muted;
-      ForegroundLink = hexToRgb colors.pine;
-      ForegroundVisited = hexToRgb colors.rose;
-      ForegroundNegative = hexToRgb colors.love;
-      ForegroundNeutral = hexToRgb colors.gold;
-      ForegroundPositive = hexToRgb colors.foam;
-      SelectionBackgroundNormal = hexToRgb colors.highlightLow;
-      SelectionForegroundNormal = hexToRgb colors.text;
-      TooltipBackgroundNormal = hexToRgb colors.overlay;
-      TooltipForegroundNormal = hexToRgb colors.text;
-      ButtonBackgroundNormal = hexToRgb colors.surface;
-      ButtonForegroundNormal = hexToRgb colors.text;
-    };
-
-    # Generate lines for a section
-    genSectionLines = sectionName: colorMap: ''
-      [Colors:${sectionName}]
-      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "${k}=${rgb v}") colorMap)}
-    '';
-
-    # Sections with variations
-    sections = {
-      Window = baseColors // { BackgroundActive = hexToRgb colors.surface; };
-      Button = baseColors // { ButtonBackgroundHover = hexToRgb colors.overlay; };
-      View = baseColors // { TextForeground = hexToRgb colors.text; };
-      Selection = {
-        BackgroundNormal = hexToRgb colors.highlightMed;
-        ForegroundNormal = hexToRgb colors.text;
-        BackgroundInactive = hexToRgb colors.highlightLow;
-        ForegroundInactive = hexToRgb colors.muted;
-      };
-      Tooltip = {
-        BackgroundNormal = hexToRgb colors.overlay;
-        ForegroundNormal = hexToRgb colors.text;
-      };
-      Complementary = baseColors // { ComplementaryBackground = hexToRgb colors.surface; };
-    };
-
-    # All section strings
-    allSections = lib.concatStringsSep "\n\n" (lib.mapAttrsToList genSectionLines sections);
-
-  in ''
-    [ColorScheme]
-    Name=${name}
-    Description=Rose Pine color scheme for KDE
-
-    [General]
-    shadeSortColumn=true
-
-    [KDE]
-    contrast=4
-
-    ${allSections}
-  '';
 
   # Session Variables from variant
   mkSessionVariables = variant: sizes: {
@@ -181,5 +104,5 @@
 
 in {
   inherit rosePineColors variants defaultVariant fonts commonPackages;
-  inherit mkGtkCss mkKdeColorScheme mkSessionVariables;
+  inherit mkGtkCss mkSessionVariables;
 }

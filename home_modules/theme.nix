@@ -6,7 +6,7 @@
 , userConfig
 , ...
 }: let
-  inherit (import ./lib/theme.nix { inherit lib pkgs system inputs; }) defaultVariant fonts commonPackages mkGtkCss mkKdeColorScheme mkSessionVariables;
+  inherit (import ./lib/theme.nix { inherit lib pkgs system inputs; }) defaultVariant fonts commonPackages mkGtkCss mkSessionVariables;
 
   # Selected variant (easy to switch here)
   selectedVariant = defaultVariant;  # Change to variants.moon for darker theme
@@ -76,24 +76,7 @@ in {
   xdg.configFile."Kvantum/rose-pine-rose".source = "${rosePineKvantum}/share/Kvantum/rose-pine-rose";
   xdg.configFile."Kvantum/rose-pine-moon".source = "${rosePineKvantum}/share/Kvantum/rose-pine-moon";
 
-  xdg.configFile."kdeglobals".text = ''
-    [General]
-    ColorScheme=${selectedVariant.kdeColorSchemeName}
-    Name=${selectedVariant.kdeColorSchemeName}
-    shadeSortColumn=true
 
-    TerminalApplication=${userConfig.defaultApps.terminal.command}
-    TerminalService=${userConfig.defaultApps.terminal.desktop}
-
-    [Icons]
-    Theme=${iconTheme}
-
-    [KDE]
-    contrast=4
-    widgetStyle=kvantum
-  '';
-
-  xdg.dataFile."color-schemes/${selectedVariant.kdeColorSchemeName}.colors".text = mkKdeColorScheme { name = selectedVariant.kdeColorSchemeName; colors = selectedVariant.colors; };
 
   home.file.".config/qt6ct/qt6ct.conf" = {
     text = ''
