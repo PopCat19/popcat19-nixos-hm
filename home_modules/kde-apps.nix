@@ -40,13 +40,6 @@
   # KDE configuration files - keeping minimal config here, main theme config in theme.nix
 
   # Qt environment variables for Kvantum
-  home.sessionVariables = {
-    QT_STYLE_OVERRIDE = "kvantum";
-    QT_QPA_PLATFORMTHEME = "kvantum";
-    QT_PLATFORM_PLUGIN = "kvantum";
-    QT_PLATFORMTHEME = "kvantum";
-    XDG_CURRENT_DESKTOP = "KDE";
-  };
 
   # Dolphin file manager bookmarks
   home.file.".local/share/user-places.xbel".text = ''
@@ -86,93 +79,5 @@
     </xbel>
   '';
 
-  # Dolphin configuration - removed to allow Dolphin to manage its own config file
-  # This prevents the "configuration file not writable" error
-
-  # Explicit Dolphin terminal override to ensure kitty is used for "Open in Terminal"
-  xdg.configFile."dolphinrc".text = ''
-    [General]
-    TerminalApplication=${userConfig.defaultApps.terminal.command}
-  '';
-  # Force overwrite to avoid Home Manager backup conflicts (existing .bak files)
-  xdg.configFile."dolphinrc".force = true;
-
-  # Simple thumbnail cache clearing script
-  home.file.".local/bin/update-thumbnails".text = ''
-    #!/usr/bin/env bash
-    # Clear Dolphin thumbnail cache
-    rm -rf ~/.cache/thumbnails/*
-    echo "Thumbnail cache cleared"
-  '';
-
-  home.file.".local/bin/update-thumbnails".executable = true;
-
-  # KDE default terminal configured in theme.nix (xdg.configFile."kdeglobals")
-
-  # Provide a desktop entry for Micro that uses KDE's configured terminal (Terminal=true)
-  home.file.".local/share/applications/micro.desktop".text = ''
-    [Desktop Entry]
-    Name=Micro
-    GenericName=Text Editor
-    Comment=Terminal-based text editor
-    Exec=micro %F
-    Terminal=true
-    Type=Application
-    Categories=Utility;TextEditor;
-    MimeType=text/plain;text/x-python;text/x-shellscript;text/x-markdown;text/x-c++src;text/x-csrc;text/x-go;text/x-rust;text/x-java;text/x-php;text/x-ruby;text/x-perl;text/x-yaml;application/json;
-    Icon=micro
-  '';
   # XDG MIME associations so Dolphin opens files with user-configured defaults
-  xdg.mimeApps = let
-    browser = userConfig.defaultApps.browser.desktop;
-    editor = userConfig.defaultApps.editor.desktop;
-    fm = userConfig.defaultApps.fileManager.desktop;
-    img = userConfig.defaultApps.imageViewer.desktop;
-    video = userConfig.defaultApps.videoPlayer.desktop;
-    ark = userConfig.defaultApps.archiveManager.desktop;
-    pdf = userConfig.defaultApps.pdfViewer.desktop;
-  in {
-    enable = true;
-    defaultApplications = {
-      # Core types
-      "inode/directory" = [ fm ];
-      "text/plain" = [ editor ];
-      "application/x-shellscript" = [ editor ];
-      "text/x-python" = [ editor ];
-
-      # Web/browser
-      "text/html" = [ browser ];
-      "x-scheme-handler/http" = [ browser ];
-      "x-scheme-handler/https" = [ browser ];
-      "x-scheme-handler/about" = [ browser ];
-      "x-scheme-handler/unknown" = [ browser ];
-
-      # Documents
-      "application/pdf" = [ pdf ];
-
-      # Images
-      "image/jpeg" = [ img ];
-      "image/png" = [ img ];
-      "image/webp" = [ img ];
-      "image/gif" = [ img ];
-      "image/bmp" = [ img ];
-      "image/tiff" = [ img ];
-
-      # Video
-      "video/mp4" = [ video ];
-      "video/x-matroska" = [ video ];
-      "video/webm" = [ video ];
-      "video/x-msvideo" = [ video ];
-      "video/quicktime" = [ video ];
-
-      # Archives
-      "application/zip" = [ ark ];
-      "application/x-7z-compressed" = [ ark ];
-      "application/x-rar" = [ ark ];
-      "application/x-bzip" = [ ark ];
-      "application/x-xz" = [ ark ];
-      "application/x-tar" = [ ark ];
-      "application/gzip" = [ ark ];
-    };
-  };
 }
