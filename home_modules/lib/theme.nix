@@ -64,10 +64,9 @@
   # Packages (common)
   commonPackages = with pkgs; [
     inputs.rose-pine-hyprcursor.packages.${system}.default
-    rose-pine-gtk-theme-full
+    rose-pine-gtk-theme
     pkgs.kdePackages.qtstyleplugin-kvantum
     papirus-icon-theme
-    adwaita-icon-theme
     nwg-look
     libsForQt5.qt5ct
     qt6ct
