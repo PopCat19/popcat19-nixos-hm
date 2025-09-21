@@ -33,9 +33,9 @@ in
       hypr = {
         # Template file with @{keywords} (we'll add this file next)
         input_path = ./matugen_templates/hypr.conf;
-        # Write under $HOME which the module sets to $out during build
-        # This ensures the file ends up at $out/.config/hypr/colors.conf
-        output_path = ".config/hypr/colors.conf";
+        # Write into $out under a simple path Matugen can create reliably
+        # We'll symlink it to ~/.config/hypr/colors.conf via Home Manager
+        output_path = "hypr/colors.conf";
       };
 
       # Example placeholders to extend later (kitty/gtk/fuzzel/etc)
@@ -65,5 +65,5 @@ in
   # Symlink the generated file into place, per upstream guidance in issue #28
   # Use Home Manager's home.file to place under ~/.config
   home.file.".config/hypr/colors.conf".source =
-    "${config.programs.matugen.theme.files}/.config/hypr/colors.conf";
+    "${config.programs.matugen.theme.files}/hypr/colors.conf";
 }
