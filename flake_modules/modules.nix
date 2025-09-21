@@ -22,7 +22,8 @@
         inherit system userConfig inputs;
       };
       users.${userConfig.user.username} = import ../home.nix;
-      backupFileExtension = "bak2";
+      # Change backup extension to avoid clobbering pre-existing .bak2 files during HM switch
+      backupFileExtension = "bak3";
     };
   };
 }
