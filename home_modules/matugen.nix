@@ -15,8 +15,8 @@ in
   programs.matugen = {
     enable = true;
 
-    # Use the binary provided by the flake input
-    package = inputs.matugen.packages.${system}.default;
+    # Use Matugen from nixpkgs-unstable to avoid upstream module packaging issues
+    package = pkgs.matugen;
 
     # Use either source_color (takes precedence) or wallpaper to derive palette
     # source_color = "#ff8a65"; # example override
@@ -33,9 +33,8 @@ in
       hypr = {
         # Template file with @{keywords} (we'll add this file next)
         input_path = ./matugen_templates/hypr.conf;
-        # Write into $out under a simple path Matugen can create reliably
-        # We'll symlink it to ~/.config/hypr/colors.conf via Home Manager
-        output_path = "hypr/colors.conf";
+        # Write to $HOME so the module (which sets HOME=$out) places it under $out/.config/…
+        output_path = "$HOME/.config/hypr/colors.conf";
       };
 
       # Example placeholders to extend later (kitty/gtk/fuzzel/etc)
@@ -65,5 +64,5 @@ in
   # Symlink the generated file into place, per upstream guidance in issue #28
   # Use Home Manager's home.file to place under ~/.config
   home.file.".config/hypr/colors.conf".source =
-    "${config.programs.matugen.theme.files}/hypr/colors.conf";
+    "${config.programs.matugen.theme.files}/.config/hypr/colors.conf";
 }
