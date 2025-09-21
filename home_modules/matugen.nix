@@ -33,8 +33,9 @@ in
       hypr = {
         # Template file with @{keywords} (we'll add this file next)
         input_path = ./matugen_templates/hypr.conf;
-        # Matugen expands $HOME internally; module sanitizes to '~' per docs
-        output_path = "$HOME/.config/hypr/colors.conf";
+        # Write under $HOME which the module sets to $out during build
+        # This ensures the file ends up at $out/.config/hypr/colors.conf
+        output_path = ".config/hypr/colors.conf";
       };
 
       # Example placeholders to extend later (kitty/gtk/fuzzel/etc)
