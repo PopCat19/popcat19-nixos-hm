@@ -35,8 +35,8 @@ in
   # Write Matugen config under ~/.config
   home.file.${matugenConfigRel}.text = matugenToml;
 
-  # Ensure Hypr config dir exists
-  home.file.".config/hypr/".directory = true;
+  # Ensure Hypr config dir exists at activation time
+  # (We mkdir -p in the activation script below)
 
   # Generate colors at activation time to avoid module incompatibilities
   home.activation.matugenGenerate = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
