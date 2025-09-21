@@ -22,8 +22,8 @@
         inherit system userConfig inputs;
       };
       users.${userConfig.user.username} = import ../home.nix;
-      # Change backup extension to avoid clobbering pre-existing .bak2 files during HM switch
-      backupFileExtension = "bak3";
+      # Change backup extension to avoid clobbering pre-existing backups during HM switch
+      backupFileExtension = "matugen-bak";
     };
   };
 }
