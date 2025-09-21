@@ -31,6 +31,12 @@ in {
         "~/.config/hypr/monitors.conf"
         "~/.config/hypr/userprefs.conf"
       ];
+
+      # Force native Matugen variables for borders
+      general = {
+        "col.active_border" = "$primary";
+        "col.inactive_border" = "$surfaceVariant";
+      };
     };
   };
 
