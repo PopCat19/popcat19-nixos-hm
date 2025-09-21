@@ -17,7 +17,10 @@
   cursorPackage = inputs.rose-pine-hyprcursor.packages.${system}.default;
   kvantumPkg = pkgs.kdePackages.qtstyleplugin-kvantum;
   rosePineKvantum = pkgs.rose-pine-kvantum;
-  rosePineGtk = pkgs.rose-pine-gtk-theme-full;
+  rosePineGtk =
+    if builtins.hasAttr "rose-pine-gtk-theme-full" pkgs then pkgs.rose-pine-gtk-theme-full
+    else if builtins.hasAttr "rose-pine-gtk-theme" pkgs then pkgs.rose-pine-gtk-theme
+    else null;
 
   gtkCss = mkGtkCss fonts.main;
 in {
@@ -32,10 +35,11 @@ in {
       size = cursorSize;
       package = cursorPackage;
     };
-    theme = {
-      name = selectedVariant.gtkThemeName;
-      package = rosePineGtk;
-    };
+    theme =
+      {
+        name = selectedVariant.gtkThemeName;
+      }
+      // lib.optionalAttrs (rosePineGtk != null) { package = rosePineGtk; };
     iconTheme = {
       name = iconTheme;
       package = pkgs.papirus-icon-theme;
