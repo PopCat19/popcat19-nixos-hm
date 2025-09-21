@@ -41,8 +41,8 @@ in {
       }
       // lib.optionalAttrs (rosePineGtk != null) { package = rosePineGtk; };
     iconTheme = {
-      name = iconTheme;
-      package = pkgs.papirus-icon-theme;
+      name = selectedVariant.iconTheme;
+      package = rosePineGtk;
     };
     font = {
       name = fonts.main;
