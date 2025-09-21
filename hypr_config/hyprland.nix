@@ -14,6 +14,7 @@ in {
     ./hypr_modules/animations.nix
     ./hypr_modules/keybinds.nix
     ./hypr_modules/window-rules.nix
+    ./hypr_modules/hyprlock.nix
   ];
 
   wayland.windowManager.hyprland = {

@@ -20,7 +20,7 @@
       "Alt, F4, killactive"
       "$mainMod+Ctrl, Q, exec, hyprctl kill"
       "$mainMod, Delete, exit"
-      "$mainMod, L, exec, swaylock"
+      "$mainMod, L, exec, hyprlock"
 
       # Window Management
       "$mainMod, W, togglefloating"
