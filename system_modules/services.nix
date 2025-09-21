@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   # System services configuration
 
   # Journald configuration
@@ -43,6 +43,8 @@
   # Add Flathub repository automatically
   systemd.services.flatpak-repo = {
     wantedBy = ["multi-user.target"];
+    after = [ "network-online.target" ] ++ lib.optionals config.services.mullvad-vpn.enable [ "mullvad-autoconnect.service" ];
+    wants = [ "network-online.target" ] ++ lib.optionals config.services.mullvad-vpn.enable [ "mullvad-autoconnect.service" ];
     path = [pkgs.flatpak];
     script = ''
       flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
