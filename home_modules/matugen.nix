@@ -78,21 +78,7 @@ in
       "$surfaceVariant  = 0xff" + hx("surface_variant") + "\n" +
       "$outline         = 0xff" + hx("outline") + "\n" +
       "$error           = 0xff" + hx("error") + "\n" +
-      "$onError         = 0xff" + hx("on_error") + "\n" +
-      "\n" +
-      "# Compatibility aliases\n" +
-      "$rose            = $primary\n" +
-      "$muted           = $surfaceVariant\n" +
-      "$text            = $onSurface\n" +
-      "$base            = $background\n" +
-      "$overlay         = $outline\n" +
-      "$highlightLow    = $surface\n" +
-      "$highlightMed    = $secondary\n" +
-      "$highlightHigh   = $tertiary\n" +
-      "$gold            = $tertiary\n" +
-      "$pine            = $secondary\n" +
-      "$foam            = $tertiary\n" +
-      "$iris            = $primary\n"
+      "$onError         = 0xff" + hx("on_error") + "\n"
     ' "$JSON_OUT" > "$COLORS".tmp
 
     mv "$COLORS".tmp "$COLORS"

@@ -6,8 +6,9 @@
       gaps_in = 6;
       gaps_out = 12;
       border_size = 2;
-      "col.active_border" = "$rose";
-      "col.inactive_border" = "$muted";
+      # Use Matugen native variables
+      "col.active_border" = "$primary";
+      "col.inactive_border" = "$surfaceVariant";
       resize_on_border = false;
       allow_tearing = false;
       layout = "dwindle";
