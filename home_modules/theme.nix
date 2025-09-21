@@ -119,6 +119,10 @@ in {
     [General]
     theme=${selectedVariant.kvantumTheme}
   '';
+
+  # Ensure Kvantum can find Rosé Pine themes on all hosts
+  xdg.configFile."Kvantum/rose-pine-rose".source = "${rosePineKvantum}/share/Kvantum/rose-pine-rose";
+  xdg.configFile."Kvantum/rose-pine-moon".source = "${rosePineKvantum}/share/Kvantum/rose-pine-moon";
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       cursor-theme = selectedVariant.cursorTheme;
