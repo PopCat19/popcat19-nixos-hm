@@ -14,7 +14,6 @@ in {
     ../../system_modules/networking.nix
     ../../system_modules/localization.nix
     ../../system_modules/services.nix
-    ../../system_modules/stream.nix
     ../../system_modules/display.nix
     ../../system_modules/audio.nix
     ../../system_modules/users.nix
@@ -32,10 +31,6 @@ in {
 
   networking.hostName = "popcat19-thinkpad0";
 
-  # Disable Sunshine game-streaming service on this host
-  services.sunshine = {
-    enable = false;
-  };
 
   system.stateVersion = "25.05";
 }

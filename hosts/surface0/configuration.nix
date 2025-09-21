@@ -32,10 +32,6 @@ in {
 
   networking.hostName = "popcat19-surface0";
 
-  # Disable Sunshine game-streaming service on this host
-  services.sunshine = {
-    enable = false;
-  };
 
   # Add hyprshade to system packages for surface0 (package provided via overlays/hyprshade.nix)
   environment.systemPackages = with pkgs; (config.environment.systemPackages or []) ++ [hyprshade];
