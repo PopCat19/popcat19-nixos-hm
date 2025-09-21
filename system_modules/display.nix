@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, userConfig, ... }: {
   services.xserver = {
     enable = true;
     xkb.layout = "us";
@@ -20,11 +20,24 @@
     };
   };
 
-  services.displayManager.sddm = {
-    enable = true;
-    settings.Theme = {
-      CursorTheme = "rose-pine-hyprcursor";
-      CursorSize = "24";
+  # SDDM (Wayland) with Hyprland default session and autologin
+  services.displayManager = {
+    sddm = {
+      enable = true;
+      wayland.enable = true;
+      settings.Theme = {
+        CursorTheme = "rose-pine-hyprcursor";
+        CursorSize = "24";
+      };
+    };
+
+    # Ensure Hyprland session is selected on login/autologin
+    defaultSession = "hyprland";
+
+    # Autologin configuration
+    autoLogin = {
+      enable = true;
+      user = userConfig.user.username;
     };
   };
 
