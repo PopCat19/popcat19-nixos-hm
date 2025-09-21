@@ -62,7 +62,7 @@ in
   };
 
   # Symlink the generated file into place, per upstream guidance in issue #28
-  # home.configFile uses XDG config root ("~/.config/…")
-  home.configFile."hypr/colors.conf".source =
+  # Use Home Manager's home.file to place under ~/.config
+  home.file.".config/hypr/colors.conf".source =
     "${config.programs.matugen.theme.files}/.config/hypr/colors.conf";
 }
