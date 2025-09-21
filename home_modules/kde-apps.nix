@@ -94,6 +94,8 @@
     [General]
     TerminalApplication=${userConfig.defaultApps.terminal.command}
   '';
+  # Force overwrite to avoid Home Manager backup conflicts (existing .bak files)
+  xdg.configFile."dolphinrc".force = true;
 
   # Simple thumbnail cache clearing script
   home.file.".local/bin/update-thumbnails".text = ''
