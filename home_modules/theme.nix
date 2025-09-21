@@ -66,6 +66,12 @@ in {
     };
   };
 
+  # Ensure Kvantum can find Rosé Pine themes from our package
+  # Kvantum searches ~/.config/Kvantum and XDG data dirs (share/Kvantum)
+  # These symlinks guarantee availability regardless of XDG_DATA_DIRS.
+  xdg.configFile."Kvantum/rose-pine-rose".source = "${rosePineKvantum}/share/Kvantum/rose-pine-rose";
+  xdg.configFile."Kvantum/rose-pine-moon".source = "${rosePineKvantum}/share/Kvantum/rose-pine-moon";
+
   xdg.configFile."kdeglobals".text = ''
     [General]
     ColorScheme=${selectedVariant.kdeColorSchemeName}
@@ -120,9 +126,6 @@ in {
     theme=${selectedVariant.kvantumTheme}
   '';
 
-  # Ensure Kvantum can find Rosé Pine themes on all hosts
-  xdg.configFile."Kvantum/rose-pine-rose".source = "${rosePineKvantum}/share/Kvantum/rose-pine-rose";
-  xdg.configFile."Kvantum/rose-pine-moon".source = "${rosePineKvantum}/share/Kvantum/rose-pine-moon";
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       cursor-theme = selectedVariant.cursorTheme;
