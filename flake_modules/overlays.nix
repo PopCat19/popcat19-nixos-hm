@@ -15,4 +15,7 @@ system: [
   # Import overlays
   (import ../overlays/zrok.nix)
   (import ../overlays/quickemu.nix)
+
+  # Rosé Pine Kvantum themes (from nixpkgs-unstable recipe)
+  (import ../overlays/rose-pine-kvantum.nix)
 ]
