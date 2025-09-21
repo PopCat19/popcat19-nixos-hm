@@ -92,7 +92,7 @@ in
       "$gold            = $tertiary\n" +
       "$pine            = $secondary\n" +
       "$foam            = $tertiary\n" +
-      "$iris            = $primary
+      "$iris            = $primary\n"
     ' "$JSON_OUT" > "$COLORS".tmp
 
     mv "$COLORS".tmp "$COLORS"
