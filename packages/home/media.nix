@@ -11,5 +11,4 @@ with pkgs; [
 
   # Streaming and Gaming
   obs-studio
-  moonlight-qt
 ]
