@@ -160,6 +160,12 @@ in {
     '';
   };
 
+  # Ensure KDE Frameworks apps (Dolphin, Gwenview, Okular, etc.) use Papirus icons
+  # KDE reads ~/.config/kdeglobals for the icon theme.
+  home.file.".config/kdeglobals".text = ''
+    [Icons]
+    Theme=${selectedVariant.iconTheme}
+  '';
   programs.kitty.font = {
     name = fonts.mono;
     size = fonts.sizes.kitty;
