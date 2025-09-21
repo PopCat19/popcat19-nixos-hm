@@ -23,7 +23,7 @@
       };
       users.${userConfig.user.username} = import ../home.nix;
       # Change backup extension to avoid clobbering pre-existing backups during HM switch
-      backupFileExtension = "matugen-bak";
+      backupFileExtension = "backup";
     };
   };
 }
