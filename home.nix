@@ -38,6 +38,7 @@ in {
     [
       # Theme and UI
       ./home_modules/theme.nix
+      ./home_modules/fonts.nix
       ./home_modules/screenshot.nix
       ./home_modules/zen-browser.nix
     ]

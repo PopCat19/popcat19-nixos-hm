@@ -6,7 +6,7 @@
 , userConfig
 , ...
 }: let
-  inherit (import ./lib/theme.nix { inherit lib pkgs system inputs; }) defaultVariant fonts commonPackages mkGtkCss mkSessionVariables;
+  inherit (import ./lib/theme.nix { inherit lib pkgs system inputs; }) defaultVariant fonts commonPackages mkSessionVariables;
 
   # Selected variant (easy to switch here)
   selectedVariant = defaultVariant;  # Change to variants.moon for darker theme
@@ -21,8 +21,6 @@
     if builtins.hasAttr "rose-pine-gtk-theme-full" pkgs then pkgs.rose-pine-gtk-theme-full
     else if builtins.hasAttr "rose-pine-gtk-theme" pkgs then pkgs.rose-pine-gtk-theme
     else null;
-
-  gtkCss = mkGtkCss fonts.main;
 in {
   home.sessionVariables = mkSessionVariables selectedVariant fonts.sizes // {
     XCURSOR_SIZE = builtins.toString cursorSize;
@@ -44,10 +42,6 @@ in {
       name = iconTheme;
       package = pkgs.papirus-icon-theme;
     };
-    font = {
-      name = fonts.main;
-      size = fonts.sizes.gtk;
-    };
     gtk3.extraConfig = {
       gtk-decoration-layout = "appmenu:minimize,maximize,close";
       gtk-enable-animations = true;
@@ -58,8 +52,6 @@ in {
       gtk-enable-animations = true;
       gtk-primary-button-warps-slider = false;
     };
-    gtk3.extraCss = gtkCss;
-    gtk4.extraCss = gtkCss;
   };
 
   qt = {
@@ -76,38 +68,6 @@ in {
   xdg.configFile."Kvantum/rose-pine-rose".source = "${rosePineKvantum}/share/Kvantum/rose-pine-rose";
   xdg.configFile."Kvantum/rose-pine-moon".source = "${rosePineKvantum}/share/Kvantum/rose-pine-moon";
 
-
-
-  home.file.".config/qt6ct/qt6ct.conf" = {
-    text = ''
-      [Appearance]
-      color_scheme_path=
-      custom_palette=false
-      icon_theme=${iconTheme}
-      standard_dialogs=default
-      style=kvantum
-
-      [Fonts]
-      fixed="${fonts.mono},11,-1,5,50,0,0,0,0,0"
-      general="${fonts.main},${builtins.toString fonts.sizes.gtk},-1,5,50,0,0,0,0,0"
-
-      [Interface]
-      activate_item_on_single_click=1
-      buttonbox_layout=0
-      cursor_flash_time=1000
-      dialog_buttons_have_icons=1
-      double_click_interval=400
-      gui_effects=@Invalid()
-      keyboard_scheme=2
-      menus_have_icons=true
-      show_shortcuts_in_context_menus=true
-      stylesheets=@Invalid()
-      toolbutton_style=4
-      underline_shortcut=1
-      wheel_scroll_lines=3
-    '';
-  };
-
   home.file.".config/Kvantum/kvantum.kvconfig".text = ''
     [General]
     theme=${selectedVariant.kvantumTheme}
@@ -119,9 +79,6 @@ in {
       cursor-size = cursorSize;
       gtk-theme = selectedVariant.gtkThemeName;
       icon-theme = iconTheme;
-      font-name = "${fonts.main} ${builtins.toString fonts.sizes.gtk}";
-      document-font-name = "${fonts.main} ${builtins.toString fonts.sizes.gtk}";
-      monospace-font-name = "${fonts.mono} ${builtins.toString fonts.sizes.kitty}";
       color-scheme = "prefer-dark";
     };
 
@@ -138,10 +95,6 @@ in {
       custom_palette=false
       icon_theme=${iconTheme}
       style=kvantum
-
-      [Fonts]
-      fixed="${fonts.mono},11,-1,5,50,0,0,0,0,0"
-      general="${fonts.main},${builtins.toString fonts.sizes.gtk},-1,5,50,0,0,0,0,0"
 
       [Interface]
       activate_item_on_single_click=1
@@ -165,31 +118,6 @@ in {
   home.file.".config/kdeglobals".text = ''
     [Icons]
     Theme=${iconTheme}
-  '';
-  programs.kitty.font = {
-    name = fonts.mono;
-    size = fonts.sizes.kitty;
-  };
-
-  programs.fuzzel.settings.main.font = "${fonts.main}:size=${builtins.toString fonts.sizes.fuzzel}";
-
-  home.file.".config/fontconfig/fonts.conf".text = ''
-    <?xml version="1.0"?>
-    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-    <fontconfig>
-      <alias>
-        <family>sans-serif</family>
-        <prefer>
-          <family>${fonts.main}</family>
-        </prefer>
-      </alias>
-      <alias>
-        <family>${fonts.main}</family>
-        <default>
-          <family>sans-serif</family>
-        </default>
-      </alias>
-    </fontconfig>
   '';
 
   # Use centralized package list from lib/theme.nix and add module-specific extras
