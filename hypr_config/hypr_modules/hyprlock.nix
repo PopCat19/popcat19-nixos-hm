@@ -2,18 +2,18 @@
 {
   home.file.".config/hypr/hyprlock.conf".text = ''
     # Rosé Pine palette
-    $base = 0x191724ff
-    $surface = 0x1f1d2eff
-    $overlay = 0x26233aff
-    $muted = 0x6e6a86ff
-    $subtle = 0x908caaff
-    $text = 0xe0def4ff
-    $love = 0xeb6f92ff
-    $gold = 0xf6c177ff
-    $rose = 0xebbcbaff
-    $pine = 0x31748fff
-    $foam = 0x9ccfd8ff
-    $iris = 0xc4a7e7ff
+    $base = 0xff191724
+    $surface = 0xff1f1d2e
+    $overlay = 0xff26233a
+    $muted = 0xff6e6a86
+    $subtle = 0xff908caa
+    $text = 0xffe0def4
+    $love = 0xffeb6f92
+    $gold = 0xfff6c177
+    $rose = 0xffebbcba
+    $pine = 0xff31748f
+    $foam = 0xff9ccfd8
+    $iris = 0xffc4a7e7
 
     general {
       hide_cursor = true
@@ -23,7 +23,10 @@
 
     background {
       color = $base
-      blur_passes = 0
+      blur_passes = 3
+      # To use an image background instead of solid color, uncomment and set a path:
+      # path = /nix/store/.../kasane_teto_utau_drawn_by_yananami_numata220.jpg
+      # tip: keep color set as a fallback; blur applies over the image if supported
     }
 
     # Clock (HH:MM)
