@@ -24,16 +24,16 @@ let
   jsonFmt = "strip";            # "rgb" | "rgba" | "hsl" | "hsla" | "hex" | "strip"
   contrast = "0.0";
 
-  # The config file path in XDG config
-  matugenConfigRel = "matugen/config.toml";
-  matugenConfigAbs = "${config.xdg.configHome}/${matugenConfigRel}";
+  # The config file path under $HOME/.config (avoid relying on xdg.* options)
+  matugenConfigRel = ".config/matugen/config.toml";
+  matugenConfigAbs = "$HOME/${matugenConfigRel}";
 in
 {
   # Provide Matugen binary
   home.packages = [ pkgs.matugen ];
 
-  # Write Matugen config under XDG config
-  xdg.configFile.${matugenConfigRel}.text = matugenToml;
+  # Write Matugen config under ~/.config
+  home.file.${matugenConfigRel}.text = matugenToml;
 
   # Ensure Hypr config dir exists
   home.file.".config/hypr/".directory = true;
@@ -51,7 +51,7 @@ in
       --json "${jsonFmt}" \
       --contrast "${contrast}" \
       --quiet \
-      "${WALL}" || {
+      ''${WALL} || {
         echo "[matugen] Generation failed" >&2
         exit 1
       }
