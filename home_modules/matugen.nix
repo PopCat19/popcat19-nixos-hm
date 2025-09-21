@@ -1,68 +1,59 @@
 { lib, pkgs, config, system, inputs, userConfig, ... }:
 let
-  # Use the repo's wallpaper image as Matugen source by default.
-  # You can override via programs.matugen.source_color or programs.matugen.wallpaper elsewhere.
-  defaultWallpaper =
-    let
-      wpDir = builtins.path { path = ../wallpaper; name = "wallpaper"; };
-    in
-      "${wpDir}/kasane_teto_utau_drawn_by_yananami_numata220.jpg";
+  # Default wallpaper to derive palette from
+  wpDir = builtins.path { path = ../wallpaper; name = "wallpaper"; };
+  defaultWallpaper = "${wpDir}/kasane_teto_utau_drawn_by_yananami_numata220.jpg";
+
+  # Absolute template path in store for Matugen
+  hyprTemplate = builtins.toString (./matugen_templates/hypr.conf);
+
+  # Matugen config TOML content (kept minimal)
+  matugenToml = ''
+    [config]
+
+    [templates.hypr]
+    input_path = "${hyprTemplate}"
+    output_path = "~/.config/hypr/colors.conf"
+  '';
+
+  matugenBin = "${pkgs.matugen}/bin/matugen";
+
+  # CLI selections (align with nixpkgs' matugen CLI)
+  mode = "dark";                # "light" | "dark" | "amoled"
+  scheme = "scheme-tonal-spot"; # palette type
+  jsonFmt = "strip";            # "rgb" | "rgba" | "hsl" | "hsla" | "hex" | "strip"
+  contrast = "0.0";
+
+  # The config file path in XDG config
+  matugenConfigRel = "matugen/config.toml";
+  matugenConfigAbs = "${config.xdg.configHome}/${matugenConfigRel}";
 in
 {
-  # Import the Matugen NixOS/Home Manager module is already done at top-level (home.nix).
-  # Here we enable and configure it with a template for Hyprland colors.
+  # Provide Matugen binary
+  home.packages = [ pkgs.matugen ];
 
-  programs.matugen = {
-    enable = true;
+  # Write Matugen config under XDG config
+  xdg.configFile.${matugenConfigRel}.text = matugenToml;
 
-    # Use Matugen from the flake input to match the module's expected CLI flags
-    package = inputs.matugen.packages.${system}.default;
+  # Ensure Hypr config dir exists
+  home.file.".config/hypr/".directory = true;
 
-    # Use either source_color (takes precedence) or wallpaper to derive palette
-    # source_color = "#ff8a65"; # example override
-    wallpaper = defaultWallpaper;
-
-    # Palette generation options
-    variant = "dark";                # "light" | "dark" | "amoled"
-    type = "scheme-tonal-spot";      # per Matugen docs
-    jsonFormat = "strip";            # emits hex without '#'
-    contrast = 0.0;
-
-    # Templates: Generate a Hyprland colors file to be sourced by Hypr config
-    templates = {
-      hypr = {
-        # Template file with @{keywords} (we'll add this file next)
-        input_path = ./matugen_templates/hypr.conf;
-        # Write to $HOME so the module (which sets HOME=$out) places it under $out/.config/…
-        output_path = "$HOME/.config/hypr/colors.conf";
-      };
-
-      # Example placeholders to extend later (kitty/gtk/fuzzel/etc)
-      # kitty = {
-      #   input_path = ./matugen_templates/kitty.conf;
-      #   output_path = "$HOME/.config/kitty/colors.conf";
-      # };
-      # gtk = {
-      #   input_path = ./matugen_templates/gtk.css;
-      #   output_path = "$HOME/.config/gtk-4.0/gtk.css";
-      # };
-    };
-
-    # You can harmonize custom colors if desired
-    # custom_colors.exampleAccent = {
-    #   color = "#ff0000";
-    #   blend = true;
-    # };
-
-    # Pass-through for advanced settings (custom keywords, etc.)
-    config = {
-      # Example:
-      # custom_keywords.font1 = "Rounded Mplus 1c Medium";
-    };
-  };
-
-  # Symlink the generated file into place, per upstream guidance in issue #28
-  # Use Home Manager's home.file to place under ~/.config
-  home.file.".config/hypr/colors.conf".source =
-    "${config.programs.matugen.theme.files}/.config/hypr/colors.conf";
+  # Generate colors at activation time to avoid module incompatibilities
+  home.activation.matugenGenerate = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    echo "[matugen] Generating Material You palette for Hypr colors..." >&2
+    mkdir -p "$HOME/.config/hypr"
+    # Prefer user override if provided via HM extraSpecialArgs/userConfig in the future
+    WALL="${defaultWallpaper}"
+    ${matugenBin} image \
+      --config "${matugenConfigAbs}" \
+      --mode "${mode}" \
+      --type "${scheme}" \
+      --json "${jsonFmt}" \
+      --contrast "${contrast}" \
+      --quiet \
+      "${WALL}" || {
+        echo "[matugen] Generation failed" >&2
+        exit 1
+      }
+  '';
 }
