@@ -13,5 +13,10 @@ in {
 
   networking.hostName = "popcat19-nixos0";
 
+  # Host-specific packages
+  environment.systemPackages = with pkgs; [
+    zluda
+  ];
+
   system.stateVersion = "25.05";
 }
