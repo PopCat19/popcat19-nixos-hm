@@ -107,15 +107,4 @@
     SUBSYSTEM=="hwmon", ATTRS{name}=="thinkpad", MODE="0664", GROUP="users"
   '';
 
-  # Systemd service to set performance governor on boot
-  systemd.services.set-performance-governor = {
-    description = "Set CPU performance governor on boot";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "tlp.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'echo performance > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor 2>/dev/null || true'";
-      RemainAfterExit = true;
-    };
-  };
 }
