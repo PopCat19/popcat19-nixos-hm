@@ -22,17 +22,22 @@
   services.auto-cpufreq = {
     enable = true;
     settings = {
+      # Remove existing turbo settings to allow full boost control
+      # Enhanced battery settings - focus on efficiency
       battery = {
         governor = "schedutil";
-        turbo = "auto";
+        turbo = "never";  # Disable turbo on battery for better efficiency
         scaling_min_freq = 400000;
-        scaling_max_freq = 4200000;
+        scaling_max_freq = 3200000;  # Lower max freq on battery (3.2GHz vs 4.2GHz)
+        energy_performance_preference = "balance_power";
       };
+      # Enhanced charger settings - maximum performance
       charger = {
         governor = "performance";
-        turbo = "auto";
-        scaling_min_freq = 800000;
-        scaling_max_freq = 4200000;
+        turbo = "always";  # Always enable turbo on AC for maximum performance
+        scaling_min_freq = 1200000;  # Higher min freq on AC (1.2GHz vs 800MHz)
+        scaling_max_freq = 4200000;  # Full boost frequency (4.2GHz)
+        energy_performance_preference = "performance";
       };
     };
   };
