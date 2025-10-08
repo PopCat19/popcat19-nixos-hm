@@ -8,6 +8,7 @@
 in {
   imports = [
     ./hardware-configuration.nix
+    ./system_modules/power-management.nix
     ../../syncthing_config/system.nix
   ] ++ (import ../../system_modules/default.nix { });
 
