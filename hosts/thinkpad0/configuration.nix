@@ -28,5 +28,8 @@ in {
     pavucontrol
   ];
 
+  # Disable Waydroid for thinkpad0 (override from virtualisation module)
+  virtualisation.waydroid.enable = lib.mkForce false;
+
   system.stateVersion = "25.05";
 }
