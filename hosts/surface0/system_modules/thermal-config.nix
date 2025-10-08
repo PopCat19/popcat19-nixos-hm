@@ -147,8 +147,9 @@
       wantedBy = ["multi-user.target"];
       after = ["ac-performance-optimizer.service"];
       serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
+        Type = "simple";
+        Restart = "always";
+        RestartSec = "5s";
         ExecStart = "${pkgs.bash}/bin/bash -c ''
           # Monitor AC state changes and optimize accordingly
           while true; do
@@ -165,8 +166,6 @@
           done
         ''";
       };
-      Restart = "always";
-      RestartSec = "5s";
     };
   };
 
