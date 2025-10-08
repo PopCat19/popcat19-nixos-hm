@@ -2,4 +2,5 @@
 {pkgs, ...}:
 with pkgs; [
   fuzzel
+  kdePackages.filelight
 ]
