@@ -130,7 +130,7 @@
         RemainAfterExit = true;
         ExecStart = "${pkgs.bash}/bin/bash -c ''
           # Optimize for AC power when connected
-          if [ -e /sys/class/power_supply/AC/online ] && [ "$(cat /sys/class/power_supply/AC/online)" = "1" ]; then
+          if [ -e /sys/class/power_supply/AC/online ] && [ \"$(cat /sys/class/power_supply/AC/online)\" = \"1\" ]; then
             # Disable power saving features on AC
             echo performance > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor 2>/dev/null || true
             echo 0 > /sys/module/pcie_aspm/parameters/policy 2>/dev/null || true
@@ -153,12 +153,12 @@
           # Monitor AC state changes and optimize accordingly
           while true; do
             if [ -e /sys/class/power_supply/AC/online ]; then
-              if [ "$(cat /sys/class/power_supply/AC/online)" = "1" ]; then
+              if [ \"$(cat /sys/class/power_supply/AC/online)\" = \"1\" ]; then
                 # AC connected - ensure performance mode
                 echo performance > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor 2>/dev/null || true
               else
                 # On battery - let auto-cpufreq handle it
-                echo "On battery - auto-cpufreq managing" > /dev/null
+                echo \"On battery - auto-cpufreq managing\" > /dev/null
               fi
             fi
             sleep 10
