@@ -12,6 +12,12 @@
     trusted-users = ["root" userConfig.user.username];
   };
 
+  nix.gc = {
+    automatic = true;
+    dates = "03:00";
+    options = "--delete-older-than 3d";
+  };
+
   nix.extraOptions = ''
     experimental-features = fetch-tree flakes nix-command impure-derivations ca-derivations
   '';
