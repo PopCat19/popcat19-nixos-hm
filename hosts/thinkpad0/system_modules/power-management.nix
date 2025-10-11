@@ -51,8 +51,9 @@
       RUNTIME_PM_ON_AC = "on";
       RUNTIME_PM_ON_BAT = "auto";
       
-      # USB autosuspend
-      USB_AUTOSUSPEND = "1";
+      # USB autosuspend (disabled on AC to prevent wake issues)
+      USB_AUTOSUSPEND_ON_AC = "0";
+      USB_AUTOSUSPEND_ON_BAT = "1";
       
       # Restore device state on startup
       RESTORE_DEVICE_STATE_ON_STARTUP = "1";
@@ -70,6 +71,22 @@
     };
   };
 
+  # Systemd logind configuration for lid switch handling
+  services.logind.settings = {
+    Login = {
+      # Lid switch handling
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchExternalPower = "suspend";
+      HandleLidSwitchDocked = "ignore";
+      
+      # Ignore lid switch when inhibited (e.g., by media players)
+      LidSwitchIgnoreInhibited = true;
+      
+      # Holdoff timeout for lid events
+      HoldoffTimeoutSec = "5s";
+    };
+  };
+
   # Add CPU frequency monitoring tools
   environment.systemPackages = with pkgs; [
     cpufrequtils
@@ -79,6 +96,13 @@
 
   # Enable CPU frequency scaling
   powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
+
+  # Kernel parameters for Intel iGPU suspend/resume stability
+  boot.kernelParams = [
+    "i915.enable_psr=0"
+    "i915.fastboot=1"
+    "i915.enable_dc=0"
+  ];
   
   # Enable thermald for thermal management
   services.thermald.enable = true;
