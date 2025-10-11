@@ -10,9 +10,6 @@
   # Architecture-specific QEMU package
   qemuPackage = pkgs.qemu_kvm;
 
-  # Architecture-specific OVMF packages
-  ovmfPackages = [pkgs.OVMFFull.fd];
-
   # Virtualization-related packages (moved here)
   virtualizationPackages = with pkgs; [
     docker
@@ -40,10 +37,6 @@ in {
       package = qemuPackage;
       runAsRoot = true;
       swtpm.enable = true;
-      ovmf = {
-        enable = ovmfPackages != [];
-        packages = ovmfPackages;
-      };
     };
 
     # SPICE USB redirection
