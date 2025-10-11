@@ -5,7 +5,7 @@
 
   # Disable conflicting power management services
   services.power-profiles-daemon.enable = false;
-  
+  services.tlp.enable = lib.mkForce false;
   # Configure auto-cpufreq for dynamic CPU scaling
   environment.etc."auto-cpufreq.conf".text = ''
     [settings]
