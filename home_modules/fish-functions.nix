@@ -71,45 +71,86 @@
       git add .
 
       set -l did_commit false
-      if not git diff --cached --quiet
+      set -l commit_failed false
+      set -l nothing_to_commit false
+
+      if git diff --cached --quiet
+          set nothing_to_commit true
+          echo "ℹ️  Nothing to commit; proceeding with rebuild"
+      else
           if git commit -m "$commit_message"
               set did_commit true
           else
+              set commit_failed true
               echo "⚠️  Commit failed; proceeding with rebuild without pushing"
           end
-      else
-          echo "ℹ️  Nothing to commit; proceeding with rebuild"
       end
 
       if sudo nixos-rebuild switch --flake .
-          if test "$did_commit" = "true"
+          if test "$did_commit" = true -o test "$nothing_to_commit" = true
+              if test "$nothing_to_commit" = true
+                  set -l success_msg "✅ Build succeeded, configuration up to date and remote synced"
+                  set -l force_msg "✅ Build succeeded, configuration force-synced to remote"
+                  set -l skip_msg "⚠️  Build succeeded but configuration not pushed to remote"
+              else
+                  set -l success_msg "✅ Build succeeded, changes pushed to remote"
+                  set -l force_msg "✅ Build succeeded, changes force-pushed to remote"
+                  set -l skip_msg "⚠️  Build succeeded but changes not pushed to remote"
+              end
+
+              set -l branch (git branch --show-current)
               if git push 2>/dev/null
-                  echo "✅ Build succeeded, changes pushed to remote"
+                  echo "$success_msg"
               else
                   echo ""
                   echo "⚠️  Normal push failed - likely due to diverged history"
                   echo "💡 This can happen after rollbacks or when remote is ahead"
                   echo ""
 
-                  echo "🚨 Force push required to update remote branch"
-                  for i in (seq 5 -1 1)
-                      printf "\r⏰ Force push in %d seconds... (Ctrl+C to cancel)" $i
-                      sleep 1
+                  echo "🔄 Fetching latest remote changes..."
+                  git fetch origin
+
+                  read -l -P "Try rebase to integrate remote changes? [y/N]: " rebase_choice
+
+                  set -l pushed false
+                  if test "$rebase_choice" = "y" -o "$rebase_choice" = "Y"
+                      echo "🔄 Rebasing local commits onto remote $branch..."
+                      if git pull --rebase origin $branch
+                          echo "✅ Rebase successful, trying push again..."
+                          if git push 2>/dev/null
+                              echo "$success_msg"
+                              set pushed true
+                          else
+                              set pushed false
+                          end
+                      else
+                          echo "❌ Rebase failed (likely merge conflicts)"
+                          set pushed false
+                      end
                   end
-                  echo ""
 
-                  read -l -P "Proceed with force push? [y/N]: " force_push_choice
+                  if test "$pushed" != true
+                      echo ""
+                      echo "🚨 Push failed. Force push required to update remote branch"
+                      for i in (seq 5 -1 1)
+                          printf "\r⏰ Force push in %d seconds... (Ctrl+C to cancel)" $i
+                          sleep 1
+                      end
+                      echo ""
 
-                  if test "$force_push_choice" = "y" -o "$force_push_choice" = "Y"
-                      git push --force-with-lease
-                      echo "✅ Build succeeded, changes force-pushed to remote"
-                  else
-                      echo "⚠️  Build succeeded but changes not pushed to remote"
-                      echo "💡 You can manually push later with: git push --force-with-lease"
+                      read -l -P "Proceed with force push? [y/N]: " force_push_choice
+
+                      if test "$force_push_choice" = "y" -o "$force_push_choice" = "Y"
+                          git push --force-with-lease
+                          echo "$force_msg"
+                      else
+                          echo "$skip_msg"
+                          echo "💡 You can manually push later with: git push --force-with-lease"
+                      end
                   end
               end
           else
-              echo "ℹ️  Skipping git push (no new commit)"
+              echo "⚠️  Build succeeded but skipping push due to commit failure"
           end
       else
           echo "❌ Build failed, changes not pushed"
