@@ -34,71 +34,43 @@
 
   imports = [
     # ==========================================================================
-    # ESSENTIAL MODULES (recommended for all hosts)
+    # FULL HOME MODULES FOR SELECTIVE IMPORT
     # ==========================================================================
 
-    # Environment and basic configuration
-    ../../home_modules/environment.nix
-    ../../home_modules/home-files.nix
+    # Theme and UI
+    ../../home_modules/theme.nix
+    ../../home_modules/fonts.nix
+    ../../home_modules/screenshot.nix
+    ../../home_modules/zen-browser.nix
 
-    # Shell and terminal
+    # Core system
+    ../../home_modules/environment.nix
+    ../../home_modules/services.nix
+    ../../home_modules/home-files.nix
+    ../../home_modules/systemd-services.nix
+
+    # Application and feature modules
+    ../../home_modules/kde-apps.nix
+    ../../home_modules/qt-gtk-config.nix
+    ../../home_modules/fuzzel-config.nix
+    ../../home_modules/kitty.nix
     ../../home_modules/fish.nix
     ../../home_modules/starship.nix
-    ../../home_modules/kitty.nix
-
-    # Editor
     ../../home_modules/micro.nix
+    ../../home_modules/fcitx5.nix
+    ../../home_modules/privacy.nix
+
+    # Cross-repo home configs
+    ../../quickshell_config/quickshell.nix
+    ../../syncthing_config/home.nix
 
     # ==========================================================================
     # DESKTOP ENVIRONMENT MODULES (uncomment if this host has a GUI)
     # ==========================================================================
 
-    # Desktop theming and appearance
-    # ../../home_modules/theme.nix
-    # ../../home_modules/desktop-theme.nix
-    # ../../home_modules/qt-gtk-config.nix
-
-    # Desktop applications
-    # ../../home_modules/kde.nix
-    # ../../home_modules/fuzzel-config.nix
-    # ../../home_modules/zen-browser.nix
-
-    # Window manager (Hyprland)
+    # Window manager (Hyprland) - add host-specific paths as needed
     # ./hypr_config/hyprland.nix
     # ./hypr_config/hyprpanel.nix
-
-    # ==========================================================================
-    # OPTIONAL MODULES (uncomment as needed)
-    # ==========================================================================
-
-    # Development tools
-    # ../../home_modules/development.nix
-
-    # Gaming (x86_64 only)
-    # ../../home_modules/gaming.nix
-    # ../../home_modules/mangohud.nix
-
-    # Streaming and creative tools
-    # ../../home_modules/stream.nix
-
-    # Android development
-    # ../../home_modules/android-tools.nix
-
-    # Input method
-    # ../../home_modules/fcitx5.nix
-
-    # Services and daemons
-    # ../../home_modules/services.nix
-    # ../../home_modules/systemd-services.nix
-
-    # Screenshot tools
-    # ../../home_modules/screenshot.nix
-
-    # Synchronization
-    # ../../syncthing_config/home.nix
-
-    # Alternative shells/widgets
-    # ../../quickshell_config/quickshell.nix
 
     # ==========================================================================
     # HOST-SPECIFIC MODULES (create these as needed)

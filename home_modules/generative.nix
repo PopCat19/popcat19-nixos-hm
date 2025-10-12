@@ -4,22 +4,18 @@
   ...
 }: let
   isX86_64 = system == "x86_64-linux";
-  # ROCm on x86_64 only
-  ollamaAcceleration =
-    if isX86_64
-    then "rocm"
-    else null;
+  # Note: ROCm acceleration currently disabled due to upstream nixpkgs issue with rocmPackages.stdenv
+  # TODO: Re-enable ROCm when upstream issue is resolved
+  ollamaAcceleration = null; # CPU fallback for now
 in {
   # Generative/AI related packages and services
-  home.packages = with pkgs; [
-    ollama-rocm
-  ];
-
+  # Note: ollama package is managed by the service below
+  
   services = {
     # AI/ML Services
     ollama = {
       enable = true;
-      acceleration = ollamaAcceleration; # ROCm on x86_64, CPU on other architectures
+      acceleration = ollamaAcceleration; # Using CPU fallback due to ROCm stdenv issue
     };
   };
 }

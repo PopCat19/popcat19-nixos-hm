@@ -14,6 +14,7 @@
   mkHomeManagerModule = system: {
     userConfig,
     inputs,
+    homePath,
   }: {
     home-manager = {
       useGlobalPkgs = true;
@@ -21,7 +22,7 @@
       extraSpecialArgs = {
         inherit system userConfig inputs;
       };
-      users.${userConfig.user.username} = import ../home.nix;
+      users.${userConfig.user.username} = import homePath;
       backupFileExtension = "bak2";
     };
   };

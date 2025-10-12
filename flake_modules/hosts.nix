@@ -1,6 +1,6 @@
 {
   # Host-specific configuration generator with centralized Home Manager
-  mkHostConfig = hostname: system: hostConfigPath: {
+  mkHostConfig = hostname: system: hostConfigPath: homeConfigPath: {
     inputs,
     nixpkgs,
     modules,
@@ -23,7 +23,7 @@
 
         # Feature modules
         (modules.mkGamingModule system { inherit inputs; })
-        (modules.mkHomeManagerModule system { inherit userConfig inputs; })
+        (modules.mkHomeManagerModule system { inherit userConfig inputs; homePath = homeConfigPath; })
       ];
     };
 }
