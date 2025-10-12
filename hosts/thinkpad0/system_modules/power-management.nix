@@ -2,64 +2,40 @@
 {
   # Optimized power management for ThinkPad T480 on AC power
   # Focus on performance when plugged in, balanced when on battery
-
-  # Disable conflicting power management services
-  services.power-profiles-daemon.enable = false;
-  services.tlp.enable = lib.mkForce false;
-  # Configure auto-cpufreq for dynamic CPU scaling
-  environment.etc."auto-cpufreq.conf".text = ''
-    [settings]
-    battery:
-      governor: schedutil
-      turbo: never
-    
-    charger:
-      governor: performance
-      turbo: always
-  '';
   
-  systemd.services.auto-cpufreq = {
-    description = "auto-cpufreq daemon";
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.auto-cpufreq}/bin/auto-cpufreq --daemon --quiet";
-      Restart = "always";
-    };
-  };
-
-  # Systemd logind configuration for lid switch handling
-  services.logind.settings = {
-    Login = {
-      # Lid switch handling
-      HandleLidSwitch = "suspend";
-      HandleLidSwitchExternalPower = "suspend";
-      HandleLidSwitchDocked = "ignore";
+  # Configure TLP for optimal AC performance
+  services.tlp = {
+    enable = true;
+    settings = {
+      # CPU governor settings
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "schedutil";
       
-      # Ignore lid switch when inhibited (e.g., by media players)
-      LidSwitchIgnoreInhibited = true;
+      # CPU frequency limits (i5-8350U: 1.7GHz base, 3.6GHz boost)
+      CPU_MIN_PERF_ON_AC = "0";
+      CPU_MAX_PERF_ON_AC = "100";
+      CPU_MIN_PERF_ON_BAT = "0";
+      CPU_MAX_PERF_ON_BAT = "100";
       
-      # Holdoff timeout for lid events
-      HoldoffTimeoutSec = "5s";
+      # Energy performance preference
+      ENERGY_PERF_POLICY_ON_AC = "performance";
+      ENERGY_PERF_POLICY_ON_BAT = "balance_power";
+      
+      # PCIe ASPM
+      PCIE_ASPM_ON_AC = "performance";
+      PCIE_ASPM_ON_BAT = "balance_power";
     };
   };
 
   # Add CPU frequency monitoring tools
   environment.systemPackages = with pkgs; [
-    auto-cpufreq
     cpufrequtils
     lm_sensors
     powertop
   ];
 
-  # Let auto-cpufreq handle CPU frequency scaling dynamically
-
-  # Kernel parameters for Intel iGPU suspend/resume stability
-  boot.kernelParams = [
-    "i915.enable_psr=0"
-    "i915.fastboot=1"
-    "i915.enable_dc=0"
-  ];
+  # Enable CPU frequency scaling
+  powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
   
   # Enable thermald for thermal management
   services.thermald.enable = true;
@@ -78,14 +54,4 @@
     options thinkpad_acpi fan_control=1
     options thinkpad_acpi experimental=1
   '';
-
-  # Udev rules for ThinkPad devices
-  services.udev.extraRules = ''
-    # ThinkPad battery and power devices
-    SUBSYSTEM=="power_supply", ATTRS{name}=="*BAT*", MODE="0664", GROUP="users"
-    
-    # ThinkPad fan control
-    SUBSYSTEM=="hwmon", ATTRS{name}=="thinkpad", MODE="0664", GROUP="users"
-  '';
-
 }
