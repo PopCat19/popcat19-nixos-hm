@@ -28,31 +28,27 @@ in {
     # TODO: Add hardware-configuration.nix when you generate it for this host
     # ./hardware-configuration.nix
 
-    # Core system modules (essential for basic functionality)
-    ../system_modules/boot.nix
-    ../system_modules/hardware.nix
-    ../system_modules/networking.nix
+    # Full system modules for selective import
+    ../system_modules/core_modules/boot.nix
+    ../system_modules/core_modules/hardware.nix
+    ../system_modules/core_modules/networking.nix
+    ../system_modules/core_modules/users.nix
     ../system_modules/localization.nix
-    ../system_modules/users.nix
+    ../system_modules/services.nix
+    ../system_modules/display.nix
+    ../system_modules/audio.nix
+    ../system_modules/virtualisation.nix
+    ../system_modules/programs.nix
     ../system_modules/environment.nix
     ../system_modules/core-packages.nix
-
-    # Basic services and programs
-    ../system_modules/services.nix
-    ../system_modules/programs.nix
-
-    # Display and audio (uncomment if this host has a display)
-    # ../system_modules/display.nix
-    # ../system_modules/audio.nix
-
-    # Additional modules (uncomment as needed)
-    # ../system_modules/fonts.nix
-    # ../system_modules/ssh.nix
-    # ../system_modules/virtualisation.nix
-    # ../system_modules/tablet.nix
-    # ../system_modules/openrgb.nix
-    # ../system_modules/stream.nix
-    # ../syncthing_config/system.nix
+    ../system_modules/packages.nix
+    ../system_modules/fonts.nix
+    ../system_modules/tablet.nix
+    ../system_modules/openrgb.nix
+    ../system_modules/privacy.nix
+    ../system_modules/gnome-keyring.nix
+    ../system_modules/vpn.nix
+    # ../syncthing_config/system.nix  # Uncomment if needed
 
     # Host-specific modules (create these as needed)
     # ./system_modules/custom-hardware.nix

@@ -1,4 +1,4 @@
-# System packages configuration (simplified via aggregator)
+# System packages configuration
 {
   pkgs,
   userConfig,
@@ -7,10 +7,15 @@
   # Architecture-specific packages
   x86_64Packages = import ./x86_64-packages.nix { inherit pkgs; };
 
-  # Aggregated system packages preserving previous ordering
-  sysAgg = import ../packages/system { inherit pkgs; };
+  # Import individual system package lists
+  systemPackageLists = [
+    (import ../packages/system/network.nix { inherit pkgs; })
+    (import ../packages/system/hardware.nix { inherit pkgs; })
+    (import ../packages/system/gui.nix { inherit pkgs; })
+    (import ../packages/system/development.nix { inherit pkgs; })
+  ];
 in {
   environment.systemPackages =
-    sysAgg.all
+    (builtins.concatLists systemPackageLists)
     ++ x86_64Packages;
 }
