@@ -87,7 +87,7 @@
       end
 
       if sudo nixos-rebuild switch --flake .
-          if test "$did_commit" = true -o test "$nothing_to_commit" = true
+          if test "$did_commit" = true; or test "$nothing_to_commit" = true
               if test "$nothing_to_commit" = true
                   set -l success_msg "✅ Build succeeded, configuration up to date and remote synced"
                   set -l force_msg "✅ Build succeeded, configuration force-synced to remote"
@@ -113,7 +113,7 @@
                   read -l -P "Try rebase to integrate remote changes? [y/N]: " rebase_choice
 
                   set -l pushed false
-                  if test "$rebase_choice" = "y" -o "$rebase_choice" = "Y"
+                  if test "$rebase_choice" = "y"; or test "$rebase_choice" = "Y"
                       echo "🔄 Rebasing local commits onto remote $branch..."
                       if git pull --rebase origin $branch
                           echo "✅ Rebase successful, trying push again..."
@@ -140,7 +140,7 @@
 
                       read -l -P "Proceed with force push? [y/N]: " force_push_choice
 
-                      if test "$force_push_choice" = "y" -o "$force_push_choice" = "Y"
+                      if test "$force_push_choice" = "y"; or test "$force_push_choice" = "Y"
                           git push --force-with-lease
                           echo "$force_msg"
                       else
@@ -157,7 +157,7 @@
           echo ""
           read -l -P "Do you want to rollback to the previous commit? [y/N]: " rollback_choice
 
-          if test "$rollback_choice" = "y" -o "$rollback_choice" = "Y"
+          if test "$rollback_choice" = "y"; or test "$rollback_choice" = "Y"
               git reset --hard $pre_commit_hash
               echo "🔄 Rolled back to commit: $pre_commit_hash"
               echo "📝 Your changes have been reverted"
