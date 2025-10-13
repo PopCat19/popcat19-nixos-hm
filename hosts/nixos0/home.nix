@@ -22,6 +22,7 @@
     ../../home_modules/screenshot.nix
     ../../home_modules/zen-browser.nix
     ../../home_modules/generative.nix
+    ../../home_modules/ollama-rocm.nix
     ../../home_modules/environment.nix
     ../../home_modules/services.nix
     ../../home_modules/home-files.nix
