@@ -18,4 +18,5 @@ in {
       acceleration = ollamaAcceleration; # Using CPU fallback due to ROCm stdenv issue
     };
   };
+  home.packages = [ pkgs.voicevox ];
 }
