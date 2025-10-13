@@ -6,6 +6,9 @@ with pkgs; [
   hyprpolkitagent
   hyprutils
 
+  # Screen locker
+  hyprlock
+
   # Screenshot and input tools
   hyprpicker
   hyprpaper

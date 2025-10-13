@@ -1,4 +1,16 @@
-# Home Manager configuration
+# DEPRECATED: This file is no longer used
+#
+# Each host now has its own home.nix configuration in hosts/<hostname>/home.nix
+#
+# Host-specific configurations:
+# - hosts/nixos0/home.nix    (includes all modules including generative AI)
+# - hosts/thinkpad0/home.nix (excludes generative AI and OpenRGB)
+# - hosts/surface0/home.nix  (excludes generative AI and OpenRGB)
+#
+# For new hosts, use hosts/home-minimal.nix as a template
+#
+# This file is kept for reference only and will be removed in a future update.
+
 {
   pkgs,
   config,
@@ -7,63 +19,14 @@
   inputs,
   userConfig,
   ...
-}: let
-  # Get the hostname from userConfig
-  hostname = userConfig.host.hostname;
-
-  # Host-specific Hypr imports
-  hyprImports =
-    if hostname == "popcat19-nixos0" then [
-      ./hosts/nixos0/hypr_config/hyprland.nix
-      ./hosts/nixos0/hypr_config/hyprpanel.nix
-    ] else if hostname == "popcat19-surface0" then [
-      ./hosts/surface0/hypr_config/hyprland.nix
-      ./hosts/surface0/hypr_config/hyprpanel.nix
-    ] else if hostname == "popcat19-thinkpad0" then [
-      ./hosts/thinkpad0/hypr_config/hyprland.nix
-      ./hosts/thinkpad0/hypr_config/hyprpanel.nix
-    ] else [
-      # Fallback to shared home hypr config
-      ./hypr_config/hyprland.nix
-      ./hypr_config/hyprpanel-home.nix
-    ];
-in {
-  # Basic home configuration
+}: {
+  # This configuration is deprecated - use host-specific home.nix files instead
   home.username = userConfig.user.username;
   home.homeDirectory = userConfig.directories.home;
   home.stateVersion = "24.05";
-
-  # Imports
-  imports =
-    [
-      # Theme and UI
-      ./home_modules/theme.nix
-      ./home_modules/fonts.nix
-      ./home_modules/screenshot.nix
-      ./home_modules/zen-browser.nix
-    ]
-    ++ hyprImports
-    ++ [
-      # Core system
-      ./home_modules/environment.nix
-      ./home_modules/services.nix
-      ./home_modules/home-files.nix
-      ./home_modules/systemd-services.nix
-
-      # Application and feature modules (minimal set for laptops)
-      ./home_modules/kde-apps.nix
-      ./home_modules/qt-gtk-config.nix
-      ./home_modules/fuzzel-config.nix
-      ./home_modules/kitty.nix
-      ./home_modules/fish.nix
-      ./home_modules/starship.nix
-      ./home_modules/micro.nix
-      ./home_modules/fcitx5.nix
-      ./home_modules/privacy.nix
-      ./quickshell_config/quickshell.nix
-      ./syncthing_config/home.nix
-    ];
-
-  # User packages
-  home.packages = import ./home_modules/packages.nix { inherit pkgs inputs system userConfig; };
+  
+  # See hosts/<hostname>/home.nix for actual configurations
+  imports = [];
+  
+  home.packages = [];
 }
