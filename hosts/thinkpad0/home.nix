@@ -13,7 +13,7 @@
   home.homeDirectory = userConfig.directories.home;
   home.stateVersion = "24.05";
 
-  # Imports (all modules for thinkpad0, excluding generative AI)
+  # Imports (all modules for thinkpad0, including generative AI)
   imports = [
     ./hypr_config/hyprland.nix
     ./hypr_config/hyprpanel.nix
@@ -21,6 +21,7 @@
     ../../home_modules/fonts.nix
     ../../home_modules/screenshot.nix
     ../../home_modules/zen-browser.nix
+    ../../home_modules/generative.nix
     ../../home_modules/environment.nix
     ../../home_modules/services.nix
     ../../home_modules/home-files.nix
