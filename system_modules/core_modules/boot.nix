@@ -11,5 +11,6 @@
     supportedFilesystems = ["ntfs"];
     kernelPackages = pkgs.linuxPackages_zen;
     kernelModules = ["i2c-dev"];
+    blacklistedKernelModules = ["snd_seq_dummy"];
   };
 }
