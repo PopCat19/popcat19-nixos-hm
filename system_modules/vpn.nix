@@ -4,13 +4,17 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+let
+  mullvadPackage = pkgs.mullvad-vpn;
+in {
   # Enable Mullvad VPN service (daemon)
   services.mullvad-vpn = {
     enable = true;
 
-    # Use the default package from nixpkgs; override here if you pin a custom version
-    # package = pkgs.mullvad-vpn;
+    # Force both the daemon and CLI tooling to use the exact same derivation.
+    # This avoids version skew between the service and the packaged CLI.
+    package = mullvadPackage;
 
     # Whether to wrap commands to bypass the VPN. Keep disabled by default for privacy.
     # See `nixos-options services.mullvad-vpn.enableExcludeWrapper`
@@ -19,7 +23,7 @@
 
   # Install Mullvad VPN GUI for controlling connections
   environment.systemPackages = [
-    pkgs.mullvad-vpn
+    mullvadPackage
   ];
 
   # Ensure Mullvad daemon is up and auto-connect is enabled silently on boot.
@@ -39,12 +43,12 @@
       ExecStart = "${pkgs.writeShellScript "mullvad-autoconnect.sh" ''
         set -euo pipefail
         for i in $(seq 1 30); do
-          if ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
+          if ${mullvadPackage}/bin/mullvad status >/dev/null 2>&1; then
             break
           fi
           sleep 0.5
         done
-        ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
+        ${mullvadPackage}/bin/mullvad auto-connect set on
       ''}";
     };
   };
