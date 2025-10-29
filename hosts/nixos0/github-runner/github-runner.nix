@@ -36,9 +36,16 @@
   
   users.groups.github-runner = {};
 
-  # Enable passwordless sudo for wheel group (required for CI)
+  # Keep normal behavior for other users
   security.sudo = {
     enable = true;
-    wheelNeedsPassword = false;
+    wheelNeedsPassword = true; # re-enable for your own user
+    extraRules = [
+      {
+        users = [ "github-runner" ];
+        commands = [ "ALL" ];
+        options = [ "NOPASSWD" ];
+      }
+    ];
   };
 }
