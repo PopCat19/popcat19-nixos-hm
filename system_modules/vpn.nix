@@ -4,8 +4,7 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   mullvadPackage = pkgs.mullvad-vpn;
 in {
   # Enable Mullvad VPN service (daemon)

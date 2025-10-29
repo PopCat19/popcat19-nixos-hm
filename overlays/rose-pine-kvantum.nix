@@ -34,7 +34,7 @@ in {
       description = "Kvantum themes based on Rosé Pine";
       homepage = "https://github.com/rose-pine/kvantum";
       platforms = platforms.linux;
-      maintainers = with maintainers; [ amadaluzia ];
+      maintainers = with maintainers; [amadaluzia];
       license = licenses.mit;
     };
   });

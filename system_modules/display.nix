@@ -1,4 +1,8 @@
-{ pkgs, userConfig, ... }: {
+{
+  pkgs,
+  userConfig,
+  ...
+}: {
   services.xserver = {
     enable = true;
     xkb.layout = "us";

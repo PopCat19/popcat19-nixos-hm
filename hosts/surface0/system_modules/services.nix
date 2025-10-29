@@ -26,17 +26,17 @@
       # Enhanced battery settings - focus on efficiency
       battery = {
         governor = "schedutil";
-        turbo = "never";  # Disable turbo on battery for better efficiency
+        turbo = "never"; # Disable turbo on battery for better efficiency
         scaling_min_freq = 400000;
-        scaling_max_freq = 3200000;  # Lower max freq on battery (3.2GHz vs 4.2GHz)
+        scaling_max_freq = 3200000; # Lower max freq on battery (3.2GHz vs 4.2GHz)
         energy_performance_preference = "balance_power";
       };
       # Enhanced charger settings - maximum performance
       charger = {
         governor = "performance";
-        turbo = "always";  # Always enable turbo on AC for maximum performance
-        scaling_min_freq = 1200000;  # Higher min freq on AC (1.2GHz vs 800MHz)
-        scaling_max_freq = 4200000;  # Full boost frequency (4.2GHz)
+        turbo = "always"; # Always enable turbo on AC for maximum performance
+        scaling_min_freq = 1200000; # Higher min freq on AC (1.2GHz vs 800MHz)
+        scaling_max_freq = 4200000; # Full boost frequency (4.2GHz)
         energy_performance_preference = "performance";
       };
     };
@@ -50,7 +50,7 @@
   services.fwupd.enable = true;
 
   # Ensure ddcutil udev rules are installed
-  services.udev.packages = [ pkgs.ddcutil ];
+  services.udev.packages = [pkgs.ddcutil];
 
   # Udev rules for Surface hardware
   services.udev.extraRules = ''

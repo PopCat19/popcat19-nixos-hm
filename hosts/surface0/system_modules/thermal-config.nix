@@ -82,10 +82,10 @@
     "thermal.governor=step_wise"
 
     # Enhanced performance parameters for AC power
-    "intel_iommu=on"  # Better DMA performance
-    "iommu=pt"        # Pass-through for better device performance
-    "nvme_core.default_ps_max_latency_us=0"  # Disable NVMe power saving on AC
-    "processor.max_cstate=1"  # Limit C-states for better responsiveness on AC
+    "intel_iommu=on" # Better DMA performance
+    "iommu=pt" # Pass-through for better device performance
+    "nvme_core.default_ps_max_latency_us=0" # Disable NVMe power saving on AC
+    "processor.max_cstate=1" # Limit C-states for better responsiveness on AC
   ];
 
   # **THERMAL MONITORING PACKAGES**

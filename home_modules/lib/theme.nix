@@ -1,7 +1,8 @@
-{ lib
-, pkgs
-, system
-, inputs
+{
+  lib,
+  pkgs,
+  system,
+  inputs,
 }: let
   # Core Rose Pine Palette (hex without 0x prefix for easy use)
   rosePineColors = {
@@ -38,10 +39,12 @@
       cursorTheme = "rose-pine-hyprcursor";
       kvantumTheme = "rose-pine-moon";
       # Override for moon (darker variants if needed; extend as required)
-      colors = rosePineColors // {
-        base = "232136";  # Example darker base; adjust from source
-        surface = "2a273f";
-      };
+      colors =
+        rosePineColors
+        // {
+          base = "232136"; # Example darker base; adjust from source
+          surface = "2a273f";
+        };
     };
   };
 
@@ -88,8 +91,6 @@
     }
   '';
 
-
-
   # Session Variables from variant
   mkSessionVariables = variant: sizes: {
     QT_STYLE_OVERRIDE = "kvantum";
@@ -101,7 +102,6 @@
     QT_QUICK_CONTROLS_STYLE = "Kvantum";
     QT_QUICK_CONTROLS_MATERIAL_THEME = "Dark";
   };
-
 in {
   inherit rosePineColors variants defaultVariant fonts commonPackages;
   inherit mkGtkCss mkSessionVariables;

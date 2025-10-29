@@ -12,7 +12,7 @@ in {
   # Ollama with ROCm acceleration configuration
   # This module provides ollama service with ROCm GPU acceleration support
   # Currently using CPU fallback due to ROCm stdenv issue
-  
+
   services = {
     ollama = {
       enable = true;

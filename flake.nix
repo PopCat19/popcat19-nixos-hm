@@ -101,20 +101,21 @@
     # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
     nixosConfigurations = let
       machines = baseUserConfig.hosts.machines;
-    in nixpkgs.lib.listToAttrs (map (m: let
-      perHostConfig =
-        import ./user-config.nix {
-          username = baseUserConfig.user.username;
-          machine = m;
-          system = "x86_64-linux";
-        };
-      hostname = perHostConfig.host.hostname;
-    in {
-      name = hostname;
-      value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {
-        inherit inputs nixpkgs modules;
-        userConfig = perHostConfig;
-      };
-    }) machines);
+    in
+      nixpkgs.lib.listToAttrs (map (m: let
+          perHostConfig = import ./user-config.nix {
+            username = baseUserConfig.user.username;
+            machine = m;
+            system = "x86_64-linux";
+          };
+          hostname = perHostConfig.host.hostname;
+        in {
+          name = hostname;
+          value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {
+            inherit inputs nixpkgs modules;
+            userConfig = perHostConfig;
+          };
+        })
+        machines);
   };
 }
