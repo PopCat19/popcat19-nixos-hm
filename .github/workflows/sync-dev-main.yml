@@ -1,0 +1,127 @@
+# Branch Sync Workflow (Portable)
+#
+# Purpose: Manually merge and sync two branches in any GitHub repo
+# Triggers: Manual dispatch only
+# Dependencies: peter-evans/create-pull-request
+#
+# This workflow:
+# - Attempts automatic merge of one branch → another
+# - Creates PR if merge conflicts occur
+# - Maintains branch synchronization for any pair of branches
+
+name: sync-dev-to-main
+
+on:
+  workflow_dispatch:
+    inputs:
+      from_branch:
+        description: 'Source branch (default: dev)'
+        required: false
+        default: 'dev'
+      to_branch:
+        description: 'Destination branch (default: main)'
+        required: false
+        default: 'main'
+
+jobs:
+  merge-dev-main:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout destination branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.to_branch || 'main' }}
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Verify dev branch exists
+        run: |
+          FROM_BRANCH="${{ github.event.inputs.from_branch || 'dev' }}"
+          TO_BRANCH="${{ github.event.inputs.to_branch || 'main' }}"
+          git fetch origin "${FROM_BRANCH}:${FROM_BRANCH}" || true
+          if ! git show-ref --verify --quiet "refs/heads/${FROM_BRANCH}"; then
+            echo "❌ Source branch ${FROM_BRANCH} missing from remote!"
+            git branch -a
+            exit 1
+          fi
+          echo "✅ ${FROM_BRANCH} branch ready for merge into ${TO_BRANCH}."
+
+      - name: Attempt merge from source branch
+        id: merge
+        continue-on-error: true
+        run: |
+          FROM_BRANCH="${{ github.event.inputs.from_branch || 'dev' }}"
+          TO_BRANCH="${{ github.event.inputs.to_branch || 'main' }}"
+          echo "🚀 Merging ${FROM_BRANCH} into ${TO_BRANCH} (${FROM_BRANCH}-preferred)..."
+          # Use theirs strategy for automatic preference to source changes
+          git merge "origin/${FROM_BRANCH}" --strategy-option=theirs --no-edit || true
+
+          # If conflicts remain after --theirs, abort safe-merge mode
+          if git ls-files -u | grep -q .; then
+            echo "⚠️ Remaining conflicts detected."
+            echo "🧩 Creating backup tag before resolving conflicts..."
+            BACKUP_TAG="premerge-${TO_BRANCH}-$(date +'%Y%m%d-%H%M')"
+            git tag -a "$BACKUP_TAG" -m "Backup before merge attempt ${FROM_BRANCH}→${TO_BRANCH}"
+            git push origin "$BACKUP_TAG"
+            echo "🔒 Backup tag created: $BACKUP_TAG"
+
+            echo "Setting MERGE_CONFLICT=1" >> "$GITHUB_ENV"
+          else
+            echo "🧩 Merge clean — pushing updated destination branch"
+            git push origin HEAD:${TO_BRANCH}
+          fi
+
+      - name: Log merge result
+        run: |
+          FROM_BRANCH="${{ github.event.inputs.from_branch || 'dev' }}"
+          TO_BRANCH="${{ github.event.inputs.to_branch || 'main' }}"
+          if [ "${{ env.MERGE_CONFLICT }}" = "1" ]; then
+            echo "❌ Merge required manual resolution (backup tag created)."
+          else
+            echo "✅ Merge succeeded without conflicts."
+          fi
+
+      - name: Summary output
+        run: |
+          FROM_BRANCH="${{ github.event.inputs.from_branch || 'dev' }}"
+          TO_BRANCH="${{ github.event.inputs.to_branch || 'main' }}"
+          echo "## 🧭 ${FROM_BRANCH} → ${TO_BRANCH} Merge Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Backup tag created before merge attempt" >> $GITHUB_STEP_SUMMARY
+          echo "- '${FROM_BRANCH}' changes preferred automatically (--theirs)" >> $GITHUB_STEP_SUMMARY
+          echo "- If conflicts remain, a PR will be created" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create PR if conflict (fallback)
+        if: env.MERGE_CONFLICT == '1'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: ${{ github.event.inputs.to_branch || 'main' }}
+          branch: ${{ github.event.inputs.from_branch || 'dev' }}
+          title: "chore: sync ${{ github.event.inputs.from_branch || 'dev' }} → ${{ github.event.inputs.to_branch || 'main' }} (conflicts detected)"
+          body: |
+            🔀 Automatic merge failed due to conflicts
+
+            **Action Required:** Please review manually.
+
+            A backup tag has been created for ${{ github.event.inputs.to_branch || 'main' }}:
+            ```
+            git fetch origin
+            git tag --list | grep premerge-${{ github.event.inputs.to_branch || 'main' }}
+            ```
+
+            Manual merge instructions (${{ github.event.inputs.from_branch || 'dev' }} wins by default):
+
+            ```bash
+            git checkout ${{ github.event.inputs.to_branch || 'main' }}
+            git merge origin/${{ github.event.inputs.from_branch || 'dev' }} --strategy-option=theirs
+            git push origin ${{ github.event.inputs.to_branch || 'main' }}
+            ```
