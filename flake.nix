@@ -30,7 +30,6 @@
     # GitHub self-hosted runners
     github-nix-ci = {
       url = "github:juspay/github-nix-ci";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Secrets management
