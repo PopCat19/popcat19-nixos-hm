@@ -6,7 +6,12 @@
   # Nix configuration
   nixpkgs.config.allowUnfree = true;
   nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+      "fetch-tree"
+      "impure-derivations"
+    ];
     accept-flake-config = true;
     auto-optimise-store = true;
     max-jobs = "auto";
@@ -30,10 +35,6 @@
     dates = "03:00";
     options = "--delete-older-than 3d";
   };
-
-  nix.extraOptions = ''
-    experimental-features = fetch-tree impure-derivations ca-derivations
-  '';
 
   # System environment variables
   environment.sessionVariables = {

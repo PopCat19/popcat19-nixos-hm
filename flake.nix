@@ -27,6 +27,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # GitHub self-hosted runners
+    github-nix-ci = {
+      url = "github:juspay/github-nix-ci";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Secrets management
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Application-specific inputs
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
@@ -76,7 +88,8 @@
           overlays = import ./flake_modules/overlays.nix system;
         };
       in {
-        # no custom packages exported here
+        # Export agenix for secret management
+        agenix = inputs.agenix.packages.${system}.default;
       }
     );
 
