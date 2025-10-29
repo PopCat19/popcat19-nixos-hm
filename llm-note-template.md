@@ -120,8 +120,35 @@ feat(networking): add IPv6 firewall configuration
 [ ] No trailing period
 [ ] Active verb ("add" not "added")
 [ ] ≤72 characters total
-[ ] “why” in body if not obvious
+[ ] "why" in body if not obvious
 ```
+
+### 4.6 Multi-Scope and List Format Support
+
+LLMs may include **comma-separated scopes** and **list-based bodies** for multi-component commits.
+
+#### Example — Combined Scopes
+```bash
+feat(home_modules,system_modules): integrate new display and theme modules
+```
+
+#### Example — Documentation Update Across Files
+```bash
+docs(SPEC,llm-note): align commit and validation sections
+```
+
+#### Example — Multi-List Body
+```bash
+feat(hosts): add configurations for new machines
+
+- nixos0: integrate CI runner and gaming stack
+- surface0: include BD-PROCHOT mitigation
+- thinkpad0: enhance power management and thermals
+```
+
+Each `-` line in the body defines a granular change for traceability while sharing a single logical commit.
+
+LLMs should prefer this approach for grouped module or host changes, maintaining both readability and atomic structure.
 
 ---
 
