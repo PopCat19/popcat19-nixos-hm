@@ -1,6 +1,11 @@
-{ pkgs, config, system, lib, inputs, ... }:
-
-let
+{
+  pkgs,
+  config,
+  system,
+  lib,
+  inputs,
+  ...
+}: let
   # Font configuration
   fontMain = "Rounded Mplus 1c Medium";
   fontMono = "JetBrainsMono Nerd Font";
@@ -13,8 +18,7 @@ let
       font-family: "${fontMain}";
     }
   '';
-in
-{
+in {
   gtk = {
     font = {
       name = fontMain;
