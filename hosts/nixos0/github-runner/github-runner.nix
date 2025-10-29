@@ -43,8 +43,12 @@
     extraRules = [
       {
         users = [ "github-runner" ];
-        commands = [ "ALL" ];
-        options = [ "NOPASSWD" ];
+        commands = [
+          {
+            command = "ALL";
+            options = [ "NOPASSWD" ];
+          }
+        ];
       }
     ];
   };
