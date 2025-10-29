@@ -95,6 +95,28 @@ refactor(system_modules): reorganize network stack setup
 ```
 LLM commits failing this regex should trigger correction before finalization.
 
+### Multi-Scope and List Support
+Commits may include **comma-delimited scopes** and **list bodies** for grouped changes.
+
+**Examples**
+```bash
+feat(home_modules,system_modules): add theme and display modules
+```
+
+```bash
+docs(SPEC,llm-note): update validation and commit sections
+```
+
+Multi-line bodies are allowed to describe grouped file updates or features:
+
+```bash
+feat(hosts): add new host configurations
+
+- nixos0: enable GitHub Actions runner
+- thinkpad0: optimize power management
+- surface0: add BD-PROCHOT fix
+```
+
 ---
 
 ## 🧱 Module Header Conventions
