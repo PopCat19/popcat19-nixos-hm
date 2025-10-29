@@ -8,6 +8,7 @@
 in {
   imports = [
     ./hardware-configuration.nix
+    ./github-runner/github-runner.nix
     ../../syncthing_config/system.nix
   ] ++ [
     ../../system_modules/core_modules/boot.nix
