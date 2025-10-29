@@ -27,8 +27,8 @@ nixos0 (Desktop Workstation)
  ├─ Status: Fully Working
  ├─ CPU: AMD Ryzen 5 5500 (6c/12t)
  ├─ GPU: AMD Radeon (ROCm-capable)
- ├─ Role: Primary development + gaming + build server
- └─ Features: Dual monitor (DP-3 1920x1080@165Hz + HDMI-A-1 1920x1080@60Hz rotated), OpenRGB, gaming, AI (Ollama ROCm)
+ ├─ Role: Primary development + gaming + build server + GitHub Actions runner
+ └─ Features: Dual monitor (DP-3 1920x1080@165Hz + HDMI-A-1 1920x1080@60Hz rotated), OpenRGB, gaming, AI (Ollama ROCm), self-hosted GitHub Actions runners
 
  surface0 (Mobile Workstation)
  ├─ Status: Working
@@ -166,6 +166,20 @@ thinkpad0 Power Management
 └─ power-management.nix
    ├─ TLP with AC performance mode
    └─ Reason: Optimize for AC performance while allowing battery balance
+
+Kernel Module Blacklist
+└─ boot.nix
+   ├─ Blacklists snd_seq_dummy kernel module
+   ├─ Reason: Prevents audio system conflicts
+   └─ Applied to: All hosts
+
+GitHub Actions Runner (nixos0)
+└─ github-runner/
+   ├─ Self-hosted runners for personal repositories
+   ├─ Uses agenix for encrypted token management
+   ├─ Docker integration for containerized builds
+   ├─ Repositories: PopCat19/nixos-shimboot (2 runners), PopCat19/popcat19-nixos-hm (1 runner)
+   └─ Source: github-nix-ci flake input
 ```
 
 ---
@@ -192,17 +206,41 @@ chaotic
 ├─ Related: None (system extension)
 └─ Provides: Additional community packages
 
+quickshell
+├─ Purpose: Status bar (alternative to hyprpanel)
+├─ Dependencies: nixpkgs
+├─ Related: quickshell_config/
+└─ Provides: Customizable status bar
+
 zen-browser
 ├─ Purpose: Privacy-focused browser
 ├─ Dependencies: nixpkgs
 ├─ Related: home_modules/zen-browser.nix
 └─ Provides: Zen Browser with PWA support
 
+github-nix-ci
+├─ Purpose: Self-hosted GitHub Actions runners
+├─ Dependencies: nixpkgs
+├─ Related: hosts/nixos0/github-runner/
+└─ Provides: GitHub Actions runner service with Nix support
+
+agenix
+├─ Purpose: Secrets management with age encryption
+├─ Dependencies: nixpkgs
+├─ Related: hosts/nixos0/github-runner/secrets/
+└─ Provides: Encrypted secrets for GitHub runner tokens
+
 rose-pine-hyprcursor
 ├─ Purpose: Cursor theme
 ├─ Dependencies: None
 ├─ Related: home_modules/theme.nix
 └─ Provides: Rose Pine cursor theme package
+
+catppuccin-nix
+├─ Purpose: Catppuccin theme integration
+├─ Dependencies: nixpkgs
+├─ Related: None (available for future use)
+└─ Provides: Catppuccin theme variants
 
 aagl (Anime Game Launcher)
 ├─ Purpose: Gaming support
@@ -247,15 +285,16 @@ packages/*/*.nix
 ### Host Configuration Variants
 ```
 nixos0/ (Desktop Workstation)
-├─ Purpose: Primary development + gaming machine
+├─ Purpose: Primary development + gaming machine + CI/CD server
 ├─ Size Target: Full-featured desktop
 ├─ CPU: AMD Ryzen 5 5500
 ├─ GPU: AMD Radeon RX 6600 XT (ROCm 6.3.3)
 ├─ Display: Dual monitor setup (DP-3, DP-4)
 ├─ Monitors: DP-3 (1920x1080@165Hz primary) + HDMI-A-1 (1920x1080@60Hz portrait)
 ├─ Packages: zluda (CUDA on AMD), OpenRGB, gaming stack
-└─ Features: Gaming, AI (Ollama ROCm), development, distributed builds server, OpenRGB
+└─ Features: Gaming, AI (Ollama ROCm), development, distributed builds server, OpenRGB, self-hosted GitHub Actions runners
 └─ Home Modules: All modules including ollama-rocm, mangohud, generative
+└─ System Modules: github-runner (self-hosted CI/CD)
 
 surface0/ (Mobile Workstation)
 ├─ Purpose: Portable development machine
@@ -372,6 +411,20 @@ user-config.nix (pure function)
 └─ arch.*                      - Architecture-specific helpers
 ```
 
+### Global Nix Settings
+```
+system_modules/environment.nix
+├─ experimental-features        - nix-command, flakes, fetch-tree, impure-derivations
+├─ accept-flake-config          - Automatic flake acceptance
+├─ auto-optimise-store          - Storage optimization
+├─ max-jobs                     - Set to "auto" for optimal build performance
+├─ cores                        - Set to 0 for optimal CPU utilization
+├─ substituters                 - cache.nixos.org, shimboot-systemd-nixos.cachix.org, ezkea.cachix.org
+├─ trusted-public-keys          - Corresponding keys for substituters
+├─ download-buffer-size         - 64MB for faster downloads
+└─ trusted-users                - root + primary user
+```
+
 ### Configuration Layers
 ```
 ┌─────────────────────────────────────┐
@@ -400,7 +453,7 @@ user-config.nix                        - Centralized user metadata
 │
 ├─ system_modules/
 │  ├─ core_modules/
-│  │  ├─ boot.nix                      - Bootloader + kernel
+│  │  ├─ boot.nix                      - Bootloader + kernel + module blacklist
 │  │  ├─ hardware.nix                  - Hardware devices (Bluetooth, i2c)
 │  │  ├─ networking.nix                - Network + firewall rules
 │  │  └─ users.nix                     - User account creation
@@ -411,6 +464,7 @@ user-config.nix                        - Centralized user metadata
 │  ├─ distributed-builds-server.nix    - Remote build server
 │  ├─ ssh.nix                          - SSH server + keys
 │  ├─ vpn.nix                          - Mullvad VPN
+│  ├─ environment.nix                  - Nix settings + system environment
 │  └─ [other].nix                      - Additional system features
 │
 ├─ home_modules/
@@ -433,6 +487,7 @@ user-config.nix                        - Centralized user metadata
 │  ├─ kde-apps.nix                     - Dolphin, Gwenview, Okular
 │  ├─ fuzzel-config.nix                - Application launcher
 │  ├─ privacy.nix                      - KeePassXC + Syncthing integration
+│  ├─ generative.nix                   - AI/ML packages (VOICEVOX)
 │  └─ [other].nix                      - Additional user features
 │
 ├─ hypr_config/                        - Shared Hyprland config
@@ -460,7 +515,11 @@ user-config.nix                        - Centralized user metadata
    │  ├─ monitors.conf                 - Host-specific monitor layout
    │  ├─ hyprpanel.nix                 - Host-specific panel layout
    │  └─ [overrides].nix               - Additional overrides
-   └─ system_modules/                  - Host-specific system modules
+   ├─ system_modules/                  - Host-specific system modules
+   └─ github-runner/                   - GitHub Actions runner (nixos0 only)
+      ├─ github-runner.nix             - Runner service configuration
+      ├─ secrets/                      - Encrypted token management
+      └─ README.md                     - Setup documentation
 ```
 
 ---
@@ -557,7 +616,8 @@ Resource Constraints (surface0, thinkpad0)
 Performance Notes (All Hosts)
 ├─ Hyprland animations tuned for 60Hz displays
 ├─ Theme overlays may slow first rebuild (SCSS compilation)
-└─ Distributed builds require stable LAN connection
+├─ Distributed builds require stable LAN connection
+└─ GitHub runners increase nixos0 resource usage during CI jobs
 ```
 
 ### Input Method (fcitx5)
