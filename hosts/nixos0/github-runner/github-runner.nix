@@ -35,4 +35,10 @@
   };
   
   users.groups.github-runner = {};
+
+  # Enable passwordless sudo for wheel group (required for CI)
+  security.sudo = {
+    enable = true;
+    wheelNeedsPassword = false;
+  };
 }
