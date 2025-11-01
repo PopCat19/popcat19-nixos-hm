@@ -9,7 +9,6 @@ in {
   imports =
     [
       ./hardware-configuration.nix
-      ./system_modules/power-management.nix
       ../../syncthing_config/system.nix
     ]
     ++ [
@@ -19,6 +18,7 @@ in {
       ../../system_modules/core_modules/users.nix
       ../../system_modules/localization.nix
       ../../system_modules/services.nix
+      ../../system_modules/power-management.nix
       ../../system_modules/display.nix
       ../../system_modules/audio.nix
       ../../system_modules/virtualisation.nix
@@ -28,7 +28,6 @@ in {
       ../../system_modules/packages.nix
       ../../system_modules/fonts.nix
       ../../system_modules/tablet.nix
-      # ../../system_modules/openrgb.nix  # Discarded for thinkpad0
       ../../system_modules/privacy.nix
       ../../system_modules/gnome-keyring.nix
       ../../system_modules/vpn.nix
