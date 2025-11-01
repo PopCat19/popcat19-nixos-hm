@@ -29,10 +29,12 @@
         battery = {
           governor = lib.mkDefault "schedutil";
           turbo = lib.mkDefault "auto";
+          energy_performance_preference = lib.mkDefault "balance_power";
         };
         charger = {
           governor = lib.mkDefault "schedutil";
           turbo = lib.mkDefault "auto";
+          energy_performance_preference = lib.mkDefault "performance";
         };
       };
     };
