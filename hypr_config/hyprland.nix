@@ -3,9 +3,7 @@
   pkgs,
   lib,
   ...
-}: let
-  wallpaper = import ./wallpaper.nix {inherit lib pkgs;};
-in {
+}: {
   imports = [
     ./hypr_modules/colors.nix
     ./hypr_modules/environment.nix
@@ -32,7 +30,6 @@ in {
   home.file = {
     ".config/hypr/monitors.conf".source = ./monitors.conf;
     ".config/hypr/userprefs.conf".source = ./userprefs.conf;
-    ".config/hypr/hyprpaper.conf".source = wallpaper.hyprpaperConf;
     ".config/hypr/shaders" = {
       source = ./shaders;
       recursive = true;

@@ -56,6 +56,10 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     # Theming inputs
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
     catppuccin-nix = {
       url = "github:catppuccin/nix";

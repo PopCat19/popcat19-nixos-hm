@@ -6,11 +6,10 @@
       gaps_in = 6;
       gaps_out = 12;
       border_size = 2;
-      "col.active_border" = "$rose";
-      "col.inactive_border" = "$muted";
       resize_on_border = false;
       allow_tearing = false;
       layout = "dwindle";
+      # Colors handled by Stylix from rose-pine color scheme
     };
 
     decoration = {
@@ -22,7 +21,7 @@
         enabled = false;
         range = 4;
         render_power = 3;
-        color = "rgba(1a1a1aee)";
+        # Color handled by Stylix from rose-pine color scheme
       };
 
       blur = {

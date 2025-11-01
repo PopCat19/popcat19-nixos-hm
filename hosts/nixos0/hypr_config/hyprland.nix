@@ -8,9 +8,7 @@
   pkgs,
   lib,
   ...
-}: let
-  wallpaper = import ../../../hypr_config/wallpaper.nix {inherit lib pkgs;};
-in {
+}: {
   imports = [
     # Import all shared Hyprland configuration modules from the main config
     ../../../hypr_config/hypr_modules/colors.nix
@@ -44,8 +42,7 @@ in {
     ".config/hypr/monitors.conf".source = ./monitors.conf;
     ".config/hypr/userprefs.conf".source = ../../../hypr_config/userprefs.conf;
 
-    # Generated hyprpaper.conf from local wallpapers
-    ".config/hypr/hyprpaper.conf".source = wallpaper.hyprpaperConf;
+    # hyprpaper configuration moved to Stylix - Stylix handles wallpaper management
 
     # Copy shared shaders directory
     ".config/hypr/shaders" = {
