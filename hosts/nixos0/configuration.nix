@@ -32,6 +32,7 @@ in {
       ../../system_modules/privacy.nix
       ../../system_modules/gnome-keyring.nix
       ../../system_modules/vpn.nix
+      ../../system_modules/power-management.nix
     ];
 
   networking.hostName = "popcat19-nixos0";
