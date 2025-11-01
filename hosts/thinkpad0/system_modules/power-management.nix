@@ -40,8 +40,6 @@
   # Enable CPU frequency scaling
   powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
 
-  
-
   # Load necessary kernel modules for ThinkPad
   boot.kernelModules = [
     "thinkpad_acpi"

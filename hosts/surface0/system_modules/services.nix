@@ -26,17 +26,13 @@
       # Enhanced battery settings - focus on efficiency
       battery = {
         governor = "schedutil";
-        turbo = "never"; # Disable turbo on battery for better efficiency
-        scaling_min_freq = 400000;
-        scaling_max_freq = 3200000; # Lower max freq on battery (3.2GHz vs 4.2GHz)
+        turbo = "auto";
         energy_performance_preference = "balance_power";
       };
       # Enhanced charger settings - maximum performance
       charger = {
-        governor = "performance";
-        turbo = "always"; # Always enable turbo on AC for maximum performance
-        scaling_min_freq = 1200000; # Higher min freq on AC (1.2GHz vs 800MHz)
-        scaling_max_freq = 4200000; # Full boost frequency (4.2GHz)
+        governor = "schedutil";
+        turbo = "auto";
         energy_performance_preference = "performance";
       };
     };
@@ -107,26 +103,4 @@
   # Security & authentication
   security.polkit.enable = true;
   security.rtkit.enable = true;
-
-  # TPM / Secure Boot support
-  security.tpm2 = {
-    enable = true;
-    pkcs11.enable = true;
-    tctiEnvironment.enable = true;
-  };
-
-  # Ensure i2c group exists for DDC access
-  users.groups.i2c = {};
-
-  # WiFi stability systemd service
-  systemd.services.wifi-powersave-off = {
-    description = "Turn off WiFi power saving";
-    wantedBy = ["multi-user.target"];
-    after = ["network.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${pkgs.bash}/bin/bash -c 'for i in /sys/class/net/wlp*; do [ -e $i/device/power/control ] && echo on > $i/device/power/control; done'";
-    };
-  };
 }
