@@ -10,8 +10,11 @@
 # - Sets up auto-cpufreq with optimized settings for battery and AC power
 # - Provides consistent power management behavior across desktop systems
 # - Designed for systems that should NOT use TLP
-
-{pkgs, lib, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   powerManagement = {
     enable = true;
     cpuFreqGovernor = lib.mkDefault "userspace";
