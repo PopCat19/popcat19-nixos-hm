@@ -70,7 +70,7 @@
     papirus-icon-theme
     nwg-look
     libsForQt5.qt5ct
-    qt6ct
+    qt6Packages.qt6ct
     polkit_gnome
     gsettings-desktop-schemas
     # Fonts
@@ -80,7 +80,7 @@
     nerd-fonts.fantasque-sans-mono
     noto-fonts
     noto-fonts-cjk-sans
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     font-awesome
   ];
 

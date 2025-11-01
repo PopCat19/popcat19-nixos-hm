@@ -35,7 +35,7 @@
         libGL
         libGLU
         freeglut
-        glxinfo
+        mesa-demos
         libva
         libva-utils
         vdpauinfo

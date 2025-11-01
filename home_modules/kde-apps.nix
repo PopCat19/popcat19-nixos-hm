@@ -20,7 +20,7 @@
 
     # Additional thumbnail support
     ffmpegthumbnailer # Video thumbnails
-    poppler_utils # PDF thumbnails
+    poppler-utils # PDF thumbnails
     libgsf # OLE/MSO thumbnails
     webp-pixbuf-loader # WebP image support
 

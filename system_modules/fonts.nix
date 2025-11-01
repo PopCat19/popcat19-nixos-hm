@@ -5,8 +5,8 @@
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
-    noto-fonts-emoji
-    noto-fonts-extra
+    noto-fonts-color-emoji
+    noto-fonts
 
     # Fonts used by applications
     google-fonts # Contains M+ Outline Fonts (Rounded Mplus 1c)

@@ -161,21 +161,6 @@
         "url": "https://flakehub.com/f/DeterminateSystems/flake-schemas/%3D0.1.5.tar.gz"
       }
     },
-    "github-nix-ci": {
-      "locked": {
-        "lastModified": 1754092430,
-        "narHash": "sha256-S4Oe9aZK/UnWuj6zUlVeSDmC/QjEPHJm2gaSk/VMir4=",
-        "owner": "juspay",
-        "repo": "github-nix-ci",
-        "rev": "edd0486a9208524eff40712a8ce835260c5b412a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "juspay",
-        "repo": "github-nix-ci",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -453,7 +438,6 @@
         "agenix": "agenix",
         "catppuccin-nix": "catppuccin-nix",
         "chaotic": "chaotic",
-        "github-nix-ci": "github-nix-ci",
         "home-manager": "home-manager_3",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",

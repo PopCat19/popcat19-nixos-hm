@@ -27,10 +27,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # GitHub self-hosted runners
-    github-nix-ci = {
-      url = "github:juspay/github-nix-ci";
-    };
+    # GitHub self-hosted runners - temporarily disabled due to runCommandNoCC deprecation
+    # github-nix-ci = {
+    #   url = "github:juspay/github-nix-ci";
+    # };
 
     # Secrets management
     agenix = {

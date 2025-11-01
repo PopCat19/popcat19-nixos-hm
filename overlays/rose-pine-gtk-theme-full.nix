@@ -1,7 +1,7 @@
 # Overlay wrapper that exposes rose-pine-gtk-theme-full as pkgs.rose-pine-gtk-theme-full
 final: prev: let
   lib = prev.lib;
-  stdenvNoCC = prev.stdenvNoCC;
+  stdenv = prev.stdenv;
   fetchFromGitHub = prev.fetchFromGitHub;
   gtk3 = prev.gtk3;
   gtk4 = prev.gtk4;
@@ -10,7 +10,7 @@ final: prev: let
   gtk-engine-murrine = prev.gtk-engine-murrine;
   sassc = prev.sassc;
 in {
-  rose-pine-gtk-theme-full = stdenvNoCC.mkDerivation rec {
+  rose-pine-gtk-theme-full = stdenv.mkDerivation rec {
     pname = "rose-pine-gtk-theme-full";
     version = "2024-12-21";
 
