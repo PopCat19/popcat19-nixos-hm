@@ -9,7 +9,7 @@ in {
   imports =
     [
       ./hardware-configuration.nix
-      ./github-runner/github-runner.nix
+      # ./github-runner/github-runner.nix - temporarily disabled
       ../../syncthing_config/system.nix
     ]
     ++ [

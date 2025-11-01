@@ -1,9 +1,9 @@
 final: prev: let
-  stdenvNoCC = prev.stdenvNoCC;
+  stdenv = prev.stdenv;
   fetchFromGitHub = prev.fetchFromGitHub;
   lib = prev.lib;
 in {
-  rose-pine-kvantum = stdenvNoCC.mkDerivation (finalAttrs: {
+  rose-pine-kvantum = stdenv.mkDerivation (finalAttrs: {
     pname = "rose-pine-kvantum";
     version = "0-unstable-2025-04-16";
 
