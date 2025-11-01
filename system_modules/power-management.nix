@@ -1,14 +1,15 @@
-# Global Power Management Configuration
+# Global Power Management Configuration (Non-TLP)
 #
-# Purpose: Provide unified power management across nixos0 and thinkpad0 (excluding surface0)
+# Purpose: Provide unified power management for desktop systems excluding TLP-based setups
 # Dependencies: auto-cpufreq, upower
-# Related: thinkpad0/system_modules/power-management.nix
+# Related: None - standalone global module
 #
 # This module:
 # - Enables CPU frequency scaling with userspace governor
 # - Configures upower for battery management
 # - Sets up auto-cpufreq with optimized settings for battery and AC power
 # - Provides consistent power management behavior across desktop systems
+# - Designed for systems that should NOT use TLP
 
 {pkgs, lib, ...}: {
   powerManagement = {
@@ -37,7 +38,6 @@
   # Add power management tools
   environment.systemPackages = with pkgs; [
     auto-cpufreq
-    upower
     cpufrequtils
   ];
 }

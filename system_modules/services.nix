@@ -30,7 +30,6 @@
 
     # Hardware
     upower.enable = true;
-    tlp.enable = true;
 
     # D-Bus service
     dbus.enable = true;
