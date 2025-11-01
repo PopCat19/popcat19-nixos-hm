@@ -28,7 +28,7 @@ nixos0 (Desktop Workstation)
  ├─ CPU: AMD Ryzen 5 5500 (6c/12t)
  ├─ GPU: AMD Radeon (ROCm-capable)
  ├─ Role: Primary development + gaming + build server + GitHub Actions runner
- └─ Features: Dual monitor (DP-3 1920x1080@165Hz + HDMI-A-1 1920x1080@60Hz rotated), OpenRGB, gaming, AI (Ollama ROCm), self-hosted GitHub Actions runners
+ └─ Features: Dual monitor (DP-3 1920x1080@165Hz + HDMI-A-1 1920x1080@60Hz rotated), OpenRGB, gaming, AI (Ollama ROCm), GitHub Actions runners (temporarily disabled)
 
  surface0 (Mobile Workstation)
  ├─ Status: Working
@@ -103,6 +103,7 @@ nixos-config/ (project root)
 ├─ overlays/                    - Nix package overlays
 │  ├─ rose-pine-*.nix           - Rose Pine theme packages
 │  ├─ rocm-pinned.nix           - ROCm version pinning
+│  ├─ rocm-hipblas.nix          - ROCm hipblas compatibility
 │  └─ fcitx5-fix.nix            - Input method fixes
 │
 ├─ packages/                    - Organized package lists
@@ -142,6 +143,12 @@ rocmPackages
    ├─ Reason: Prevents breaking changes in ROCm stack
    └─ Source: nixpkgs snapshot (2024-12)
 
+rocm-hipblas
+└─ rocm-hipblas.nix
+   ├─ ROCm hipblas compatibility overlay
+   ├─ Reason: Provides hipblas compatibility for ROCm packages
+   └─ Source: Local overlay
+
 rose-pine-gtk-theme-full
 └─ rose-pine-gtk-theme-full.nix
    ├─ Custom SCSS build of Rose Pine GTK theme
@@ -167,6 +174,18 @@ thinkpad0 Power Management
    ├─ TLP with AC performance mode
    └─ Reason: Optimize for AC performance while allowing battery balance
 
+OpenRGB Support
+└─ openrgb.nix
+   ├─ Enables OpenRGB RGB control service
+   ├─ Reason: RGB lighting control for gaming peripherals
+   └─ Applied to: nixos0 (gaming workstation)
+
+Tablet Support
+└─ tablet.nix
+   ├─ Enables OpenTabletDriver for graphics tablets
+   ├─ Reason: Graphics tablet input support
+   └─ Applied to: Available for all hosts
+
 Kernel Module Blacklist
 └─ boot.nix
    ├─ Blacklists snd_seq_dummy kernel module
@@ -175,11 +194,11 @@ Kernel Module Blacklist
 
 GitHub Actions Runner (nixos0)
 └─ github-runner/
-   ├─ Self-hosted runners for personal repositories
+   ├─ Self-hosted runners for personal repositories (temporarily disabled)
    ├─ Uses agenix for encrypted token management
    ├─ Docker integration for containerized builds
    ├─ Repositories: PopCat19/nixos-shimboot (2 runners), PopCat19/popcat19-nixos-hm (1 runner)
-   └─ Source: github-nix-ci flake input
+   └─ Source: github-nix-ci flake input (commented out due to runCommandNoCC deprecation)
 ```
 
 ---
@@ -219,10 +238,11 @@ zen-browser
 └─ Provides: Zen Browser with PWA support
 
 github-nix-ci
-├─ Purpose: Self-hosted GitHub Actions runners
+├─ Purpose: Self-hosted GitHub Actions runners (temporarily disabled)
 ├─ Dependencies: nixpkgs
 ├─ Related: hosts/nixos0/github-runner/
 └─ Provides: GitHub Actions runner service with Nix support
+└─ Status: Commented out due to runCommandNoCC deprecation
 
 agenix
 ├─ Purpose: Secrets management with age encryption
@@ -292,7 +312,7 @@ nixos0/ (Desktop Workstation)
 ├─ Display: Dual monitor setup (DP-3, DP-4)
 ├─ Monitors: DP-3 (1920x1080@165Hz primary) + HDMI-A-1 (1920x1080@60Hz portrait)
 ├─ Packages: zluda (CUDA on AMD), OpenRGB, gaming stack
-└─ Features: Gaming, AI (Ollama ROCm), development, distributed builds server, OpenRGB, self-hosted GitHub Actions runners
+└─ Features: Gaming, AI (Ollama ROCm), development, distributed builds server, OpenRGB, GitHub Actions runners (temporarily disabled)
 └─ Home Modules: All modules including ollama-rocm, mangohud, generative
 └─ System Modules: github-runner (self-hosted CI/CD)
 
@@ -366,14 +386,16 @@ flake.nix (entry point)
 │  ├─ flake_modules/overlays.nix (imports)
 │  │  ├─ rose-pine-*.nix (theme packages)
 │  │  ├─ rocm-pinned.nix (ROCm version lock)
+│  │  ├─ rocm-hipblas.nix (ROCm hipblas compatibility)
 │  │  └─ fcitx5-fix.nix (input method fix)
 │  │
 │  └─ nur.overlays.default (NUR packages)
 │
 └─ user-config.nix (pure function)
-   ├─ Input: { hostname ? null, username ? "popcat19", ... }
+   ├─ Input: { machine ? "nixos0", username ? "popcat19", system ? "x86_64-linux", hostname ? null }
    ├─ Output: Structured user/host metadata
    └─ Used by: All system and home modules
+   └─ Note: 'machine' parameter replaces direct hostname specification
 ```
 
 ### Pure vs Impure Operations
@@ -465,6 +487,8 @@ user-config.nix                        - Centralized user metadata
 │  ├─ ssh.nix                          - SSH server + keys
 │  ├─ vpn.nix                          - Mullvad VPN
 │  ├─ environment.nix                  - Nix settings + system environment
+│  ├─ openrgb.nix                      - OpenRGB RGB control
+│  ├─ tablet.nix                       - OpenTabletDriver for graphics tablets
 │  └─ [other].nix                      - Additional system features
 │
 ├─ home_modules/
@@ -516,7 +540,7 @@ user-config.nix                        - Centralized user metadata
    │  ├─ hyprpanel.nix                 - Host-specific panel layout
    │  └─ [overrides].nix               - Additional overrides
    ├─ system_modules/                  - Host-specific system modules
-   └─ github-runner/                   - GitHub Actions runner (nixos0 only)
+   └─ github-runner/                   - GitHub Actions runner (nixos0 only, temporarily disabled)
       ├─ github-runner.nix             - Runner service configuration
       ├─ secrets/                      - Encrypted token management
       └─ README.md                     - Setup documentation
@@ -539,7 +563,7 @@ flake.nix (outputs.nixosConfigurations)
    │  └─ Links homeConfigPath (hosts/<hostname>/home.nix)
    │
    └─ User metadata injection
-      └─ userConfig = user-config.nix { hostname = hostname; }
+      └─ userConfig = user-config.nix { machine = <machine>; hostname = hostname; }
          └─ Passed to all system/home modules via specialArgs
 ```
 
