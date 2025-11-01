@@ -1,9 +1,9 @@
 final: prev: let
-  stdenvNoCC = prev.stdenvNoCC;
+  stdenv = prev.stdenv;
   fetchFromGitHub = prev.fetchFromGitHub;
   lib = prev.lib;
 in {
-  rose-pine-kvantum = stdenvNoCC.mkDerivation (finalAttrs: {
+  rose-pine-kvantum = stdenv.mkDerivation (finalAttrs: {
     pname = "rose-pine-kvantum";
     version = "0-unstable-2025-04-16";
 
@@ -34,7 +34,7 @@ in {
       description = "Kvantum themes based on Rosé Pine";
       homepage = "https://github.com/rose-pine/kvantum";
       platforms = platforms.linux;
-      maintainers = with maintainers; [ amadaluzia ];
+      maintainers = with maintainers; [amadaluzia];
       license = licenses.mit;
     };
   });

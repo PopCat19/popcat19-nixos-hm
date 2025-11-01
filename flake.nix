@@ -27,10 +27,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # GitHub self-hosted runners
-    github-nix-ci = {
-      url = "github:juspay/github-nix-ci";
-    };
+    # GitHub self-hosted runners - temporarily disabled due to runCommandNoCC deprecation
+    # github-nix-ci = {
+    #   url = "github:juspay/github-nix-ci";
+    # };
 
     # Secrets management
     agenix = {
@@ -101,20 +101,21 @@
     # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
     nixosConfigurations = let
       machines = baseUserConfig.hosts.machines;
-    in nixpkgs.lib.listToAttrs (map (m: let
-      perHostConfig =
-        import ./user-config.nix {
-          username = baseUserConfig.user.username;
-          machine = m;
-          system = "x86_64-linux";
-        };
-      hostname = perHostConfig.host.hostname;
-    in {
-      name = hostname;
-      value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {
-        inherit inputs nixpkgs modules;
-        userConfig = perHostConfig;
-      };
-    }) machines);
+    in
+      nixpkgs.lib.listToAttrs (map (m: let
+          perHostConfig = import ./user-config.nix {
+            username = baseUserConfig.user.username;
+            machine = m;
+            system = "x86_64-linux";
+          };
+          hostname = perHostConfig.host.hostname;
+        in {
+          name = hostname;
+          value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {
+            inherit inputs nixpkgs modules;
+            userConfig = perHostConfig;
+          };
+        })
+        machines);
   };
 }

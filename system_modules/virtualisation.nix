@@ -14,7 +14,7 @@
   virtualizationPackages = with pkgs; [
     docker
     spice-gtk
-    win-virtio
+    virtio-win
     win-spice
     virt-manager
     libvirt
