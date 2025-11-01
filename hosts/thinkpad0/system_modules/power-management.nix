@@ -40,8 +40,7 @@
   # Enable CPU frequency scaling
   powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
 
-  # Enable thermald for thermal management
-  services.thermald.enable = true;
+  
 
   # Load necessary kernel modules for ThinkPad
   boot.kernelModules = [

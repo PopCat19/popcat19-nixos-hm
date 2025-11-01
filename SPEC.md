@@ -40,7 +40,7 @@ nixos0 (Desktop Workstation)
  ├─ Status: Working
  ├─ Device: ThinkPad series laptop
  ├─ Role: Secondary portable machine
- └─ Features: External HDMI (Dell S2415H), TLP power management, ThinkPad ACPI, thermald, distributed builds
+ └─ Features: External HDMI (Dell S2415H), TLP power management, ThinkPad ACPI, distributed builds
 ```
 
 ### Supported Platforms (Infrastructure Only)
@@ -316,7 +316,7 @@ thinkpad0/ (Portable Laptop)
 ├─ Display: Internal eDP-1 + Dell S2415H via HDMI-A-1
 ├─ Extends: Base configuration
 ├─ Adds: HDMI external display support
-├─ Adds: ThinkPad power management (TLP), thermald, ThinkPad ACPI
+├─ Adds: ThinkPad power management (TLP), ThinkPad ACPI
 ├─ Packages: ThinkPad ACPI tools, power management utilities
 └─ Features: AC performance optimization, battery balance, distributed builds client, external monitor
 └─ Home Modules: All modules including generative AI (VOICEVOX)
