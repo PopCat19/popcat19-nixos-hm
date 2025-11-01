@@ -43,6 +43,7 @@
       '';
     };
   };
+  
 
   # **THERMAL KERNEL MODULES**
   # Ensure required thermal management modules are loaded
