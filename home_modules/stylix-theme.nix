@@ -23,13 +23,15 @@
   stylix = {
     enable = true;
     
-    # Disable targets that we have custom configurations for to avoid conflicts
+    # Enable all Stylix targets to use Rose Pine theming
     targets = {
-      hyprland.enable = false;
-      kitty.enable = false;
-      fuzzel.enable = false;
-      micro.enable = false;
-      starship.enable = false;
+      hyprland.enable = true;
+      kitty.enable = true;
+      fuzzel.enable = true;
+      micro.enable = true;
+      starship.enable = true;
+      zen-browser.enable = true;
+      zen-browser.profileNames = [ "default" ];
     };
     
     # Use Rose Pine Base16 color scheme from themes directory

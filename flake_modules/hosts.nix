@@ -11,7 +11,7 @@
       specialArgs = {inherit inputs userConfig;};
 
       modules = [
-        # Overlays plus NUR
+        # Overlays plus NUR (required for system functionality)
         {nixpkgs.overlays = (import ./overlays.nix system) ++ [inputs.nur.overlays.default];}
 
         # Host-specific configuration file

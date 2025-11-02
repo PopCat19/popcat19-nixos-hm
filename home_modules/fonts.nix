@@ -25,12 +25,14 @@ in {
 
   # dconf font settings moved to Stylix - Stylix handles GNOME interface settings automatically
 
+  # Kitty font configuration moved to Stylix - Stylix handles all font theming
   programs.kitty.font = {
     name = fontMono;
-    size = kittyFontSize;
+    # Note: size is now controlled by Stylix for consistency
   };
 
-  programs.fuzzel.settings.main.font = "${fontMain}:size=${builtins.toString fuzzelFontSize}";
+  # Fuzzel font configuration moved to Stylix - Stylix handles all fuzzel theming
+  # programs.fuzzel.settings.main.font = "${fontMain}:size=${builtins.toString fuzzelFontSize}";
 
   home.file.".config/fontconfig/fonts.conf".text = ''
     <?xml version="1.0"?>

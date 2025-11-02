@@ -4,6 +4,7 @@
   # System packages are in core-packages.nix and packages.nix
 
   # Nix configuration
+  # Note: allowUnfree required for Home Manager with useGlobalPkgs
   nixpkgs.config.allowUnfree = true;
   nix.settings = {
     experimental-features = [
