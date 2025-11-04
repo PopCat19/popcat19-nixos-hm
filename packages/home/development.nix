@@ -16,6 +16,7 @@ with pkgs; [
   lazygit
   git-lfs
   hyprls
+  shellcheck
 
   # Android Tools
   universal-android-debloater
