@@ -114,30 +114,6 @@
     intel-gpu-tools
   ];
 
-  # **THERMAL SYSTEMD SERVICES**
-  systemd.services = {
-    thermal-monitor = {
-      description = "Surface Thermal Monitor";
-      wantedBy = ["multi-user.target"];
-      after = ["thermald.service"];
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.bash}/bin/bash -c '\n            while true; do\n              ${pkgs.lm_sensors}/bin/sensors > /tmp/thermal-status.log\n              sleep 30\n            done\n          '";
-      };
-    };
-
-    ac-state-optim = {
-      description = "Surface Dynamic Governor Manager";
-      wantedBy = ["multi-user.target"];
-      after = ["auto-cpufreq.service" "thermald.service"];
-      serviceConfig = {
-        Type = "simple";
-        Restart = "always";
-        ExecStart = "${pkgs.bash}/bin/bash -c '\n            while true; do\n              if [ -e /sys/class/power_supply/AC/online ] && \\\n                 [ \"$(cat /sys/class/power_supply/AC/online)\" = \"1\" ]; then\n                echo performance > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor 2>/dev/null || true\n              else\n                echo \"battery mode active\" > /dev/null\n              fi\n              sleep 15\n            done\n          '";
-      };
-    };
-  };
-
   # **THERMAL UDEV RULES**
   services.udev.extraRules = ''
     SUBSYSTEM=="thermal", MODE="0664", GROUP="users"
