@@ -1,15 +1,14 @@
-# Global Power Management Configuration (Non-TLP)
+# Global Power Management Configuration (Desktop Systems)
 #
-# Purpose: Provide unified power management for desktop systems excluding TLP-based setups
-# Dependencies: auto-cpufreq, upower
-# Related: None - standalone global module
+# Purpose: Provide basic power management for desktop systems with CPU frequency scaling
+# Dependencies: None
+# Related: system_modules/mobile-pm.nix
 #
 # This module:
 # - Enables CPU frequency scaling with userspace governor
-# - Configures upower for battery management
-# - Sets up auto-cpufreq with optimized settings for battery and AC power
 # - Provides consistent power management behavior across desktop systems
-# - Designed for systems that should NOT use TLP
+# - Designed for desktop systems without auto-cpufreq
+# - Note: Mobile systems should use system_modules/mobile-pm.nix for upower and auto-cpufreq
 {
   pkgs,
   lib,
@@ -20,29 +19,5 @@
     cpuFreqGovernor = lib.mkDefault "userspace";
   };
 
-  services = {
-    upower.enable = lib.mkDefault true;
-
-    auto-cpufreq = {
-      enable = lib.mkDefault true;
-      settings = {
-        battery = {
-          governor = lib.mkDefault "schedutil";
-          turbo = lib.mkDefault "auto";
-          energy_performance_preference = lib.mkDefault "balance_power";
-        };
-        charger = {
-          governor = lib.mkDefault "schedutil";
-          turbo = lib.mkDefault "auto";
-          energy_performance_preference = lib.mkDefault "performance";
-        };
-      };
-    };
-  };
-
-  # Add power management tools
-  environment.systemPackages = with pkgs; [
-    auto-cpufreq
-    cpufrequtils
-  ];
+  # Note: upower is configured in system_modules/mobile-pm.nix for mobile systems
 }

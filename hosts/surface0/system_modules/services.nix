@@ -19,29 +19,6 @@
   # Surface-specific services
   services.iptsd.enable = lib.mkDefault true;
 
-  services.auto-cpufreq = {
-    enable = true;
-    settings = {
-      # Remove existing turbo settings to allow full boost control
-      # Enhanced battery settings - focus on efficiency
-      battery = {
-        governor = "schedutil";
-        turbo = "auto";
-        energy_performance_preference = "balance_power";
-      };
-      # Enhanced charger settings - maximum performance
-      charger = {
-        governor = "schedutil";
-        turbo = "auto";
-        energy_performance_preference = "performance";
-      };
-    };
-  };
-
-  # Power/profile services
-  services.power-profiles-daemon.enable = false;
-  services.tlp.enable = false;
-
   # Firmware update service
   services.fwupd.enable = true;
 

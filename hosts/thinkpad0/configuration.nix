@@ -18,7 +18,7 @@ in {
       ../../system_modules/core_modules/users.nix
       ../../system_modules/localization.nix
       ../../system_modules/services.nix
-      ../../system_modules/power-management.nix
+      ../../system_modules/mobile-pm.nix
       ../../system_modules/display.nix
       ../../system_modules/audio.nix
       ../../system_modules/virtualisation.nix
