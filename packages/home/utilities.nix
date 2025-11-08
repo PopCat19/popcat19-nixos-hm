@@ -16,7 +16,7 @@ with pkgs; [
   appimage-run
 
   # Gaming
-  lutris
+  # lutris # Temporarily disabled due to pyrate-limiter build failures
   osu-lazer-bin
 
   # Shimboot Project Tools
