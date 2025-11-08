@@ -1,5 +1,10 @@
 {userConfig, ...}: {
   # Networking and firewall configuration
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
+  };
+  
   networking = {
     hostName = userConfig.host.hostname;
     # Enable nftables for waydroid
@@ -31,7 +36,7 @@
     firewall = {
       enable = true;
       # network overrides deprecated — use canonical defaults here
-      trustedInterfaces = ["lo"];
+      trustedInterfaces = ["lo" "waydroid0"];
       allowedTCPPorts = [
         22 # SSH
         53317 # Syncthing
@@ -39,6 +44,8 @@
       ];
       allowedUDPPorts = [
         53317 # Syncthing
+        53 # DNS
+        67 # DHCP
       ];
       allowedTCPPortRanges = [
         {
