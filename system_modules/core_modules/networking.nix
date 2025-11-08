@@ -2,6 +2,8 @@
   # Networking and firewall configuration
   networking = {
     hostName = userConfig.host.hostname;
+    # Enable nftables for waydroid
+    nftables.enable = true;
     networkmanager = {
       enable = true;
       wifi.backend = "wpa_supplicant";
