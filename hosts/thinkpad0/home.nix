@@ -34,6 +34,7 @@
     ../../home_modules/starship.nix
     ../../home_modules/micro.nix
     ../../home_modules/fcitx5.nix
+    ../../home_modules/mangohud.nix
     ../../home_modules/privacy.nix
     ../../quickshell_config/quickshell.nix
     ../../syncthing_config/home.nix

@@ -45,7 +45,7 @@
     mangojuice # Alternative MangoHUD configuration tool
 
     # ─── GAMING ENHANCEMENT TOOLS ───
-    vkBasalt # Vulkan post-processing layer for visual enhancements
+    vkbasalt # Vulkan post-processing layer for visual enhancements
     obs-studio-plugins.obs-vkcapture # Vulkan/OpenGL game capture for OBS
     gpu-viewer # Frontend to glxinfo, vulkaninfo, clinfo and es2_info
 
