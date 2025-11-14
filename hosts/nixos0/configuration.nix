@@ -11,6 +11,7 @@ in {
       ./hardware-configuration.nix
       # ./github-runner/github-runner.nix - temporarily disabled
       ../../syncthing_config/system.nix
+      inputs.jovian.nixosModules.default
     ]
     ++ [
       ../../system_modules/core_modules/boot.nix
@@ -45,6 +46,9 @@ in {
       "snd_hda_intel.model=auto"
     ];
   };
+
+  # Enable sched-ext (SCX) for CachyOS kernel
+  services.scx.enable = true;
 
   # Host-specific packages
   environment.systemPackages = with pkgs; [
