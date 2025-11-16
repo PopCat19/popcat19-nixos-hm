@@ -4,11 +4,11 @@
   # OBS Studio Configuration Module
   #
   # Purpose: Configure OBS Studio with comprehensive plugin suite for advanced recording and streaming.
-  # Dependencies: obs-studio, obs-pipewire-audio-capture, obs-tuna, obs-vkcapture, input-overlay, obs-advanced-masks, advanced-scene-switcher
+  # Dependencies: obs-pipewire-audio-capture, obs-tuna, obs-vkcapture, input-overlay, obs-advanced-masks, advanced-scene-switcher
   # Related: environment.nix, theme.nix
   #
   # This module:
-  # - Installs OBS Studio for screen recording and streaming
+  # - Enables OBS Studio for screen recording and streaming
   # - Enables PipeWire audio capture plugin for better Wayland audio support
   # - Adds Tuna plugin for music metadata display
   # - Includes VKCapture for Vulkan-based screen capture
@@ -33,9 +33,8 @@
     XDG_SESSION_TYPE = "wayland";
   };
 
-  # Additional packages for OBS functionality
+  # Additional OBS plugins (obs-studio itself is handled by programs.obs-studio.enable)
   home.packages = with pkgs; [
-    obs-studio
     obs-studio-plugins.obs-pipewire-audio-capture
     obs-studio-plugins.obs-tuna
     obs-studio-plugins.obs-vkcapture
