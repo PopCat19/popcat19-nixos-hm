@@ -10,5 +10,5 @@ with pkgs; [
   kdePackages.gwenview
 
   # Streaming and Gaming
-  obs-studio
+  # obs-studio moved to home_modules/obs.nix
 ]
