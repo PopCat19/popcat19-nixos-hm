@@ -59,6 +59,7 @@
     ../../home_modules/micro.nix
     ../../home_modules/fcitx5.nix
     ../../home_modules/mangohud.nix
+../../home_modules/obs.nix
     ../../home_modules/privacy.nix
 
     # Cross-repo home configs

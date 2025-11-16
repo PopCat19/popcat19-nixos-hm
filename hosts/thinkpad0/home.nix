@@ -36,6 +36,7 @@
     ../../home_modules/fcitx5.nix
     ../../home_modules/mangohud.nix
     ../../home_modules/privacy.nix
+../../home_modules/obs.nix
     ../../quickshell_config/quickshell.nix
     ../../syncthing_config/home.nix
   ];
