@@ -4,7 +4,7 @@
   # OBS Studio Configuration Module
   #
   # Purpose: Configure OBS Studio with comprehensive plugin suite for advanced recording and streaming.
-  # Dependencies: obs-studio, obs-pipewire-audio-capture, obs-tuna, obs-vkcapture, input-overlay, obs-advanced-masks, obs-vertical-canvas, advanced-scene-switcher
+  # Dependencies: obs-studio, obs-pipewire-audio-capture, obs-tuna, obs-vkcapture, input-overlay, obs-advanced-masks, advanced-scene-switcher
   # Related: environment.nix, theme.nix
   #
   # This module:
@@ -14,7 +14,6 @@
   # - Includes VKCapture for Vulkan-based screen capture
   # - Provides input overlay for controller/stream deck integration
   # - Adds advanced masks for visual effects
-  # - Includes vertical canvas for portrait-oriented content
   # - Enables advanced scene switcher for automated workflows
   # - Configures optimal settings for screen capture and audio recording
 
@@ -25,7 +24,6 @@
     obs-vkcapture
     input-overlay
     obs-advanced-masks
-    obs-vertical-canvas
     advanced-scene-switcher
   ];
 
@@ -43,7 +41,6 @@
     obs-studio-plugins.obs-vkcapture
     obs-studio-plugins.input-overlay
     obs-studio-plugins.obs-advanced-masks
-    obs-studio-plugins.obs-vertical-canvas
     obs-studio-plugins.advanced-scene-switcher
   ];
 }
