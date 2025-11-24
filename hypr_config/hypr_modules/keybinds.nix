@@ -43,11 +43,15 @@
       "$mainMod+Shift, V, exec, bash -lc 'cliphist list | head -n1 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v'"
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
 
-      # Screenshots - Monitor screenshots (primary keybindings)
+      # Screenshots - Monitor screenshots (disable hyprshade by default)
       "$mainMod, P, exec, ~/.local/bin/screenshot monitor"
+      # Screenshots - Monitor screenshots (keep hyprshade active)
+      "$mainMod+Ctrl, P, exec, ~/.local/bin/screenshot monitor --keep-shader"
 
-      # Screenshots - Region screenshots (secondary keybindings)
+      # Screenshots - Region screenshots (disable hyprshade by default)
       "$mainMod+Shift, P, exec, ~/.local/bin/screenshot region"
+      # Screenshots - Region screenshots (keep hyprshade active)
+      "$mainMod+Shift+Ctrl, P, exec, ~/.local/bin/screenshot region --keep-shader"
 
       # Media playback
       ",XF86AudioPlay, exec, playerctl play-pause"

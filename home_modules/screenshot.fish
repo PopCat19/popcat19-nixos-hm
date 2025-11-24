@@ -1,14 +1,15 @@
 #!/usr/bin/env fish
 
 # Screenshot wrapper using hyprshot with hyprshade integration
-# Usage: screenshot [monitor|region|window|both]
+# Usage: screenshot [monitor|region|window|both] [--keep-shader]
 #
 # Behavior:
 # - Uses hyprshot with --freeze for clean capture
 # - Always saves to XDG_SCREENSHOTS_DIR (defaults to ~/Pictures/Screenshots)
 # - Copies PNG to clipboard when wl-copy/xclip are available
 # - Filename: appname_yyyymmdd-N.png (N increments per day/app)
-# - Temporarily disables hyprshade during capture (restores after)
+# - Temporarily disables hyprshade during capture by default (restores after)
+# - Use --keep-shader flag to preserve hyprshade effects in screenshot
 # - 'both' mode: takes both monitor and region screenshots
 
 function _slugify_app_name --description 'Normalize string to filesystem-safe slug'
@@ -56,6 +57,19 @@ function next_filename --description 'Generate next incremental filename'
 end
 
 function run_with_hyprshade_workaround --description 'Temporarily disable hyprshade while running a command'
+    # args: [--keep-shader] <command...>
+    set -l keep_shader false
+    if test "$argv[1]" = "--keep-shader"
+        set keep_shader true
+        set -e argv[1]
+    end
+
+    if test "$keep_shader" = "true"
+        # Keep shader active, just run the command
+        $argv
+        return
+    end
+
     if type -q hyprshade
         set -l shader (hyprshade current 2>/dev/null; or echo "")
         if test -n "$shader" -a "$shader" != "Off"
@@ -84,10 +98,14 @@ function copy_to_clipboard --description 'Copy PNG to clipboard if tools availab
 end
 
 function take_screenshot --description 'Perform capture using hyprshot'
-    # args: <hyprshot-mode> <dir> <filename>
+    # args: <hyprshot-mode> <dir> <filename> [--keep-shader]
     set -l mode $argv[1]
     set -l dir $argv[2]
     set -l filename $argv[3]
+    set -l keep_shader false
+    if test "$argv[4]" = "--keep-shader"
+        set keep_shader true
+    end
     set -l screenshot_path "$dir/$filename"
 
     if not type -q hyprshot
@@ -95,41 +113,82 @@ function take_screenshot --description 'Perform capture using hyprshot'
         return 127
     end
 
-    if run_with_hyprshade_workaround hyprshot --freeze --silent -m $mode -o "$dir" -f "$filename"
-        if test -f "$screenshot_path"
-            copy_to_clipboard "$screenshot_path"; or true
-            notify-send "Screenshot" "$mode screenshot saved: $filename" -i camera-photo; or true
-            echo "Saved: $screenshot_path"
+    set -l hyprshot_cmd hyprshot --freeze --silent -m $mode -o "$dir" -f "$filename"
+    
+    if test "$keep_shader" = "true"
+        if run_with_hyprshade_workaround --keep-shader $hyprshot_cmd
+            if test -f "$screenshot_path"
+                copy_to_clipboard "$screenshot_path"; or true
+                notify-send "Screenshot" "$mode screenshot saved (with shader): $filename" -i camera-photo; or true
+                echo "Saved: $screenshot_path (with shader)"
+            else
+                echo "Screenshot cancelled - no file created"
+            end
         else
-            echo "Screenshot cancelled - no file created"
+            if test -f "$screenshot_path"
+                rm -f "$screenshot_path"
+                echo "Screenshot cancelled - cleaned up partial file"
+            else
+                echo "Screenshot cancelled"
+            end
+            return 1
         end
     else
-        if test -f "$screenshot_path"
-            rm -f "$screenshot_path"
-            echo "Screenshot cancelled - cleaned up partial file"
+        if run_with_hyprshade_workaround $hyprshot_cmd
+            if test -f "$screenshot_path"
+                copy_to_clipboard "$screenshot_path"; or true
+                notify-send "Screenshot" "$mode screenshot saved: $filename" -i camera-photo; or true
+                echo "Saved: $screenshot_path"
+            else
+                echo "Screenshot cancelled - no file created"
+            end
         else
-            echo "Screenshot cancelled"
+            if test -f "$screenshot_path"
+                rm -f "$screenshot_path"
+                echo "Screenshot cancelled - cleaned up partial file"
+            else
+                echo "Screenshot cancelled"
+            end
+            return 1
         end
-        return 1
     end
 end
 
 function take_both_screenshots --description 'Take both monitor and region screenshots'
-    # args: <dir> <base_filename>
+    # args: <dir> <base_filename> [--keep-shader]
     set -l dir $argv[1]
     set -l base_filename $argv[2]
+    set -l keep_shader_flag ""
+    if test "$argv[3]" = "--keep-shader"
+        set keep_shader_flag "--keep-shader"
+    end
 
     # Take monitor screenshot
     set -l monitor_filename (string replace ".png" "_monitor.png" "$base_filename")
-    take_screenshot output "$dir" "$monitor_filename"
+    take_screenshot output "$dir" "$monitor_filename" $keep_shader_flag
 
     # Take region screenshot
     set -l region_filename (string replace ".png" "_region.png" "$base_filename")
-    take_screenshot region "$dir" "$region_filename"
+    take_screenshot region "$dir" "$region_filename" $keep_shader_flag
+end
+
+# Parse arguments
+set -l MODE "monitor"
+set -l KEEP_SHADER false
+
+for arg in $argv
+    switch $arg
+        case '--keep-shader'
+            set KEEP_SHADER true
+        case '-*'
+            echo "Unknown option: $arg"
+            exit 1
+        case '*'
+            set MODE $arg
+    end
 end
 
 # Parameters and defaults
-set -l MODE (set -q argv[1]; and echo $argv[1]; or echo "monitor")
 set -l DEFAULT_DIR "$HOME/Pictures/Screenshots"
 set -l XDG_SCREENSHOTS_DIR (set -q XDG_SCREENSHOTS_DIR; and echo $XDG_SCREENSHOTS_DIR; or echo $DEFAULT_DIR)
 
@@ -137,23 +196,30 @@ mkdir -p "$XDG_SCREENSHOTS_DIR"
 
 set -l APP_NAME (get_app_name)
 set -l FILENAME (next_filename "$XDG_SCREENSHOTS_DIR" "$APP_NAME")
+set -l SHADER_FLAG ""
+if test "$KEEP_SHADER" = "true"
+    set SHADER_FLAG "--keep-shader"
+end
 
 switch $MODE
     case monitor full
-        take_screenshot output "$XDG_SCREENSHOTS_DIR" "$FILENAME"
+        take_screenshot output "$XDG_SCREENSHOTS_DIR" "$FILENAME" $SHADER_FLAG
     case region area
-        take_screenshot region "$XDG_SCREENSHOTS_DIR" "$FILENAME"
+        take_screenshot region "$XDG_SCREENSHOTS_DIR" "$FILENAME" $SHADER_FLAG
     case window active
-        take_screenshot window "$XDG_SCREENSHOTS_DIR" "$FILENAME"
+        take_screenshot window "$XDG_SCREENSHOTS_DIR" "$FILENAME" $SHADER_FLAG
     case both
-        take_both_screenshots "$XDG_SCREENSHOTS_DIR" "$FILENAME"
+        take_both_screenshots "$XDG_SCREENSHOTS_DIR" "$FILENAME" $SHADER_FLAG
     case '*'
-        echo "Usage: screenshot [monitor|region|window|both]"
+        echo "Usage: screenshot [monitor|region|window|both] [--keep-shader]"
         echo ""
         echo "Modes:"
         echo "  monitor - Screenshot current monitor (default)"
         echo "  region  - Screenshot selected region"
         echo "  window  - Screenshot active window"
         echo "  both    - Screenshot both monitor and region"
+        echo ""
+        echo "Options:"
+        echo "  --keep-shader - Preserve hyprshade effects in screenshot"
         exit 1
 end
