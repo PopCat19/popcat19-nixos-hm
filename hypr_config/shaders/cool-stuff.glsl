@@ -149,27 +149,15 @@ vec3 applyGrain(vec2 uv, vec3 color, float time) {
 #endif
 }
 
-// --- PC-98 Color Quantization ---
-vec3 applyPC98Palette(vec3 color) {
-#if DEBUG_PC98
-    float minDistance = 999999.0;
-    vec3 closestColor = color;
-    
-    for (int i = 0; i < PC98_PALETTE_SIZE; i++) {
-        vec3 paletteColor = PC98_PALETTE[i];
-        vec3 diff = color - paletteColor;
-        float distance = dot(diff, diff);
-        
-        if (distance < minDistance) {
-            minDistance = distance;
-            closestColor = paletteColor;
-        }
-    }
-    
-    return closestColor;
-#else
-    return color;
-#endif
+// --- INDEX-PAINTING + PC-98 Color Quantization ---
+// This implements "index painting dithering": for each input color we find the
+// nearest and second-nearest palette entries and use an ordered/blue-noise
+// threshold to choose which index to paint. This preserves palette indexing
+// and produces pleasing dither patterns across edges.
+
+float safeDistanceSq(vec3 a, vec3 b) {
+    vec3 d = a - b;
+    return dot(d, d);
 }
 
 // --- Dithering Module ---
@@ -193,14 +181,18 @@ const float ORDERED_MATRIX_2x2[4] = float[4](
 
 // Get Bayer matrix threshold value
 float getBayerThreshold(vec2 screenPos) {
-    ivec2 pos = ivec2(mod(screenPos, 8.0));
+    // mod with 8.0, ensure positive indices
+    ivec2 pos = ivec2(int(mod(screenPos.x, 8.0)), int(mod(screenPos.y, 8.0)));
+    // ensure indices in [0..7]
+    pos = ivec2((pos.x + 8) % 8, (pos.y + 8) % 8);
     int index = pos.y * 8 + pos.x;
     return BAYER_MATRIX_8x8[index];
 }
 
 // Get ordered 2x2 threshold value
 float getOrderedThreshold(vec2 screenPos) {
-    ivec2 pos = ivec2(mod(screenPos, 2.0));
+    ivec2 pos = ivec2(int(mod(screenPos.x, 2.0)), int(mod(screenPos.y, 2.0)));
+    pos = ivec2((pos.x + 2) % 2, (pos.y + 2) % 2);
     int index = pos.y * 2 + pos.x;
     return ORDERED_MATRIX_2x2[index];
 }
@@ -209,7 +201,6 @@ float getOrderedThreshold(vec2 screenPos) {
 float blueNoise(vec2 coord) {
     vec2 p = floor(coord);
     float n = fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
-    // Smooth the noise to approximate blue noise characteristics
     vec2 f = fract(coord);
     f = f * f * (3.0 - 2.0 * f);
     return mix(
@@ -220,33 +211,103 @@ float blueNoise(vec2 coord) {
     );
 }
 
-// Apply dithering to color
+// Get threshold depending on chosen DITHER_MODE
+float getDitherThreshold(vec2 screenPos, float t) {
+    #if DITHER_MODE == 0
+        return getBayerThreshold(screenPos);
+    #elif DITHER_MODE == 1
+        return getOrderedThreshold(screenPos);
+    #elif DITHER_MODE == 2
+        return blueNoise(screenPos * 0.5 + t);
+    #else
+        return random(screenPos + t);
+    #endif
+}
+
+// Apply index-painting dithering using the PC98 palette
+vec3 applyIndexPaintingDither(vec3 color, vec2 screenPos, float t) {
+    // Find nearest and second-nearest palette colors (by squared distance)
+    int idxNearest = 0;
+    int idxSecond = 0;
+    float best = 1e20;
+    float second = 1e20;
+    for (int i = 0; i < PC98_PALETTE_SIZE; ++i) {
+        float d = safeDistanceSq(color, PC98_PALETTE[i]);
+        if (d < best) {
+            second = best;
+            idxSecond = idxNearest;
+            best = d;
+            idxNearest = i;
+        } else if (d < second) {
+            second = d;
+            idxSecond = i;
+        }
+    }
+
+    // If colors are identical (rare), just return the nearest
+    if (second <= 0.0) {
+        return PC98_PALETTE[idxNearest];
+    }
+
+    // Compute a normalized closeness factor: w in [0,1]
+    // smaller w -> color much closer to nearest; larger w -> closer to second
+    float w = best / (best + second); // in [0,1], small => strongly nearest
+
+    // Get spatial threshold
+    float threshold = getDitherThreshold(screenPos, t);
+    // Apply strength and remap threshold so 0.5 is neutral
+    threshold = (threshold - 0.5) * DITHER_STRENGTH + 0.5;
+
+    // If closeness (w) is larger than threshold -> pick second, else pick nearest.
+    // This produces a pattern where pixels near the boundary choose the alternate index
+    // depending on the ordered/blue-noise pattern.
+    if (w > threshold) {
+        return PC98_PALETTE[idxSecond];
+    } else {
+        return PC98_PALETTE[idxNearest];
+    }
+}
+
+// --- Dither-compatible PC-98 palette application ---
+// Replaces the simpler nearest-color mapping with index-painting when dithering enabled.
+vec3 applyPC98Palette(vec3 color, vec2 screenPos, float t) {
+#if DEBUG_PC98 && DEBUG_DITHER
+    return applyIndexPaintingDither(color, screenPos, t);
+#elif DEBUG_PC98
+    // Fallback: nearest-color quantization (no index painting)
+    float minDistance = 999999.0;
+    vec3 closestColor = color;
+    for (int i = 0; i < PC98_PALETTE_SIZE; i++) {
+        vec3 paletteColor = PC98_PALETTE[i];
+        vec3 diff = color - paletteColor;
+        float distance = dot(diff, diff);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestColor = paletteColor;
+        }
+    }
+    return closestColor;
+#else
+    return color;
+#endif
+}
+
+// --- Apply dithering to color (channel-wise fallback) ---
 vec3 applyDither(vec2 uv, vec3 color, float time) {
 #if DEBUG_DITHER
     // Calculate screen position for dither pattern
     vec2 screenPos = uv * vec2(PIXEL_GRID_SIZE, PIXEL_GRID_SIZE * (VIGNETTE_ASPECT.y / VIGNETTE_ASPECT.x));
     
-    // Get threshold based on dither mode
-    float threshold;
-    #if DITHER_MODE == 0
-        threshold = getBayerThreshold(screenPos);
-    #elif DITHER_MODE == 1
-        threshold = getOrderedThreshold(screenPos);
-    #elif DITHER_MODE == 2
-        threshold = blueNoise(screenPos * 0.5);
-    #else // DITHER_MODE == 3
-        threshold = random(screenPos + time * 0.1);
-    #endif
+    // Adjust threshold by dither strength: handled inside getDitherThreshold / painting function
     
-    // Adjust threshold by dither strength
+    // Quantize colors with dithering per-channel (fallback path if not using palette index painting)
+    float threshold = getDitherThreshold(screenPos, time);
     threshold = (threshold - 0.5) * DITHER_STRENGTH + 0.5;
     
-    // Quantize colors with dithering
     float levels = float(DITHER_COLORS);
     vec3 quantized = floor(color * levels) / levels;
     vec3 nextLevel = ceil(color * levels) / levels;
     
-    // Apply threshold to each channel
     vec3 dithered;
     dithered.r = (fract(color.r * levels) > threshold) ? nextLevel.r : quantized.r;
     dithered.g = (fract(color.g * levels) > threshold) ? nextLevel.g : quantized.g;
@@ -529,12 +590,16 @@ void main() {
         color = applyGrain(processedUV, color, time);
     #endif
 
-    #if DEBUG_DITHER
-        color = applyDither(processedUV, color, time);
-    #endif
-
+    // Apply channel-wise dithering if not using palette-index painting,
+    // but if PC98 palette + dithering are enabled, apply index-painting
     #if DEBUG_PC98
-        color = applyPC98Palette(color);
+        // For index-painting we need a consistent "screen position" for thresholding.
+        vec2 screenPos = processedUV * vec2(PIXEL_GRID_SIZE, PIXEL_GRID_SIZE * (VIGNETTE_ASPECT.y / VIGNETTE_ASPECT.x));
+        color = applyPC98Palette(color, screenPos, time);
+    #else
+        #if DEBUG_DITHER
+            color = applyDither(processedUV, color, time);
+        #endif
     #endif
 
     fragColor = vec4(color, alpha);
