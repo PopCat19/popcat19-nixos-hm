@@ -86,7 +86,7 @@ const float COLOR_TEMPERATURE = 4000.0;
 const float COLOR_TEMPERATURE_STRENGTH = 1.0;
 
 // Pixelation Effect
-#define PIXEL_GRID_SIZE 720.0
+#define PIXEL_GRID_SIZE 960.0
 
 // VHS Overlay Parameters
 #define VHS_INTENSITY        0.16
