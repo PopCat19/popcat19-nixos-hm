@@ -33,10 +33,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # GitHub self-hosted runners - temporarily disabled due to runCommandNoCC deprecation
-    # github-nix-ci = {
-    #   url = "github:juspay/github-nix-ci";
-    # };
 
     # Secrets management
     agenix = {
@@ -83,7 +79,7 @@
     supportedSystems = ["x86_64-linux"];
 
     # Base user configuration
-    baseUserConfig = import ./user-config.nix {};
+    baseUserConfig = import ./lib/user-config.nix {};
   in {
     # Packages output (no vicinae now that the overlay was removed)
     packages = nixpkgs.lib.genAttrs supportedSystems (
@@ -109,7 +105,7 @@
       machines = baseUserConfig.hosts.machines;
     in
       nixpkgs.lib.listToAttrs (map (m: let
-          perHostConfig = import ./user-config.nix {
+          perHostConfig = import ./lib/user-config.nix {
             username = baseUserConfig.user.username;
             machine = m;
             system = "x86_64-linux";
