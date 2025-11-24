@@ -23,7 +23,7 @@ uniform float time;
 #define DEBUG_DRIFT    0       // Toggle drifting effect
 #define DEBUG_COLOR_TEMP 0     // Toggle color temperature adjustment
 #define DEBUG_VIBRATION 0      // Toggle CRT buzz vibration effect
-#define DEBUG_GRAIN     1      // Toggle cinematic grain effect
+#define DEBUG_GRAIN     0      // Toggle cinematic grain effect
 
 // [Effect Parameters]
 // Bloom Parameters
