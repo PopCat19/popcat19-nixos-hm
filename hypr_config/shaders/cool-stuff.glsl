@@ -12,18 +12,20 @@ uniform sampler2D tex;
 uniform float time;
 
 // [Debug Toggles]
-#define DEBUG_CA       1       // Toggle chromatic aberration effect
-#define DEBUG_BLOOM    1       // Toggle bloom effect
+#define DEBUG_CA       0       // Toggle chromatic aberration effect
+#define DEBUG_BLOOM    0       // Toggle bloom effect
 #define DEBUG_VIGNETTE 0       // Toggle vignette effect
 #define DEBUG_PIXEL    1       // Toggle pixelation effect
 #define COLOR_DEPTH_ENABLED 0  // Enable color depth reduction
 #define DEBUG_SCANLINE 0       // Toggle scanline effect
-#define DEBUG_VHS_OVERLAY 1    // Toggle VHS effect
-#define DEBUG_GLITCH   1       // Toggle glitch effect
+#define DEBUG_VHS_OVERLAY 0    // Toggle VHS effect
+#define DEBUG_GLITCH   0       // Toggle glitch effect
 #define DEBUG_DRIFT    0       // Toggle drifting effect
 #define DEBUG_COLOR_TEMP 0     // Toggle color temperature adjustment
 #define DEBUG_VIBRATION 0      // Toggle CRT buzz vibration effect
 #define DEBUG_GRAIN     0      // Toggle cinematic grain effect
+#define DEBUG_PC98      1      // Toggle PC-98 color palette mode
+#define DEBUG_DITHER    1      // Toggle dithering effect
 
 // [Effect Parameters]
 // Bloom Parameters
@@ -102,7 +104,34 @@ const float COLOR_TEMPERATURE_STRENGTH = 1.0;
 #define GRAIN_SIZE 800.0
 #define GRAIN_SPEED 0.5
 
+// Dither Parameters
+#define DITHER_MODE 0          // 0=Bayer8x8, 1=Ordered2x2, 2=Blue Noise, 3=Random
+#define DITHER_STRENGTH 1.0    // Overall dithering intensity (0.0-1.0)
+#define DITHER_COLORS 16       // Number of color levels per channel (2-256)
+
 const float PI = 3.14159265359;
+
+// PC-98 Touhou Color Palette (68 colors)
+const int PC98_PALETTE_SIZE = 68;
+const vec3 PC98_PALETTE[68] = vec3[68](
+    vec3(0x00, 0x00, 0x00) / 255.0, vec3(0xff, 0xff, 0xff) / 255.0, vec3(0xff, 0xee, 0xcc) / 255.0, vec3(0xee, 0xbb, 0xaa) / 255.0,
+    vec3(0xff, 0x44, 0x44) / 255.0, vec3(0x88, 0x00, 0x00) / 255.0, vec3(0xff, 0xff, 0x55) / 255.0, vec3(0xaa, 0xaa, 0x44) / 255.0,
+    vec3(0x22, 0xaa, 0x22) / 255.0, vec3(0x00, 0x66, 0x00) / 255.0, vec3(0xaa, 0xaa, 0xff) / 255.0, vec3(0x00, 0x00, 0xff) / 255.0,
+    vec3(0xcc, 0x55, 0xcc) / 255.0, vec3(0x77, 0x00, 0x77) / 255.0, vec3(0xff, 0xaa, 0xbb) / 255.0, vec3(0xee, 0xaa, 0xbb) / 255.0,
+    vec3(0x66, 0x66, 0x66) / 255.0, vec3(0xfe, 0x45, 0x45) / 255.0, vec3(0xff, 0x00, 0x00) / 255.0, vec3(0x89, 0x01, 0x01) / 255.0,
+    vec3(0x55, 0x00, 0x00) / 255.0, vec3(0x99, 0x55, 0x44) / 255.0, vec3(0xbb, 0x55, 0x00) / 255.0, vec3(0xff, 0x99, 0x00) / 255.0,
+    vec3(0x55, 0x88, 0x11) / 255.0, vec3(0x23, 0xab, 0x23) / 255.0, vec3(0x01, 0x67, 0x01) / 255.0, vec3(0x11, 0x88, 0xff) / 255.0,
+    vec3(0x00, 0x00, 0x77) / 255.0, vec3(0xbb, 0x55, 0xbb) / 255.0, vec3(0x88, 0x00, 0x88) / 255.0, vec3(0x66, 0x00, 0x55) / 255.0,
+    vec3(0xcc, 0x22, 0x22) / 255.0, vec3(0xaa, 0x00, 0x00) / 255.0, vec3(0x99, 0x00, 0x00) / 255.0, vec3(0x66, 0x33, 0x22) / 255.0,
+    vec3(0xaa, 0x66, 0x22) / 255.0, vec3(0x99, 0x55, 0x00) / 255.0, vec3(0x88, 0x66, 0x00) / 255.0, vec3(0xdd, 0xcc, 0x44) / 255.0,
+    vec3(0xff, 0xff, 0x00) / 255.0, vec3(0x44, 0xbb, 0x33) / 255.0, vec3(0x22, 0x66, 0x22) / 255.0, vec3(0x88, 0x88, 0x55) / 255.0,
+    vec3(0x99, 0x99, 0x99) / 255.0, vec3(0xcc, 0xbb, 0xcc) / 255.0, vec3(0xbb, 0xbb, 0xff) / 255.0, vec3(0xaa, 0xdd, 0xff) / 255.0,
+    vec3(0x00, 0x99, 0xaa) / 255.0, vec3(0x00, 0x77, 0x88) / 255.0, vec3(0x00, 0x33, 0xaa) / 255.0, vec3(0x11, 0x11, 0x66) / 255.0,
+    vec3(0x66, 0x33, 0x88) / 255.0, vec3(0x55, 0x44, 0x99) / 255.0, vec3(0x66, 0x55, 0xbb) / 255.0, vec3(0xaa, 0x99, 0xdd) / 255.0,
+    vec3(0xdd, 0xdd, 0xff) / 255.0, vec3(0xcc, 0x33, 0xaa) / 255.0, vec3(0x88, 0x00, 0x66) / 255.0, vec3(0x44, 0x22, 0x44) / 255.0,
+    vec3(0xcc, 0x88, 0x99) / 255.0, vec3(0x99, 0x44, 0x55) / 255.0, vec3(0x88, 0x33, 0x22) / 255.0, vec3(0xbb, 0x55, 0x33) / 255.0,
+    vec3(0xdd, 0x99, 0x77) / 255.0, vec3(0xff, 0xdd, 0xdd) / 255.0, vec3(0xff, 0xcc, 0xaa) / 255.0, vec3(0x99, 0x99, 0x66) / 255.0
+);
 
 // --- Utility Functions ---
 float random(vec2 st) {
@@ -115,6 +144,115 @@ vec3 applyGrain(vec2 uv, vec3 color, float time) {
     float noise = random(uv * GRAIN_SIZE + time * GRAIN_SPEED);
     float grain = (noise - 0.5) * 2.0;
     return mix(color, color + grain * GRAIN_INTENSITY, 0.5);
+#else
+    return color;
+#endif
+}
+
+// --- PC-98 Color Quantization ---
+vec3 applyPC98Palette(vec3 color) {
+#if DEBUG_PC98
+    float minDistance = 999999.0;
+    vec3 closestColor = color;
+    
+    for (int i = 0; i < PC98_PALETTE_SIZE; i++) {
+        vec3 paletteColor = PC98_PALETTE[i];
+        vec3 diff = color - paletteColor;
+        float distance = dot(diff, diff);
+        
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestColor = paletteColor;
+        }
+    }
+    
+    return closestColor;
+#else
+    return color;
+#endif
+}
+
+// --- Dithering Module ---
+// Bayer 8x8 matrix for ordered dithering
+const float BAYER_MATRIX_8x8[64] = float[64](
+     0.0/64.0, 32.0/64.0,  8.0/64.0, 40.0/64.0,  2.0/64.0, 34.0/64.0, 10.0/64.0, 42.0/64.0,
+    48.0/64.0, 16.0/64.0, 56.0/64.0, 24.0/64.0, 50.0/64.0, 18.0/64.0, 58.0/64.0, 26.0/64.0,
+    12.0/64.0, 44.0/64.0,  4.0/64.0, 36.0/64.0, 14.0/64.0, 46.0/64.0,  6.0/64.0, 38.0/64.0,
+    60.0/64.0, 28.0/64.0, 52.0/64.0, 20.0/64.0, 62.0/64.0, 30.0/64.0, 54.0/64.0, 22.0/64.0,
+     3.0/64.0, 35.0/64.0, 11.0/64.0, 43.0/64.0,  1.0/64.0, 33.0/64.0,  9.0/64.0, 41.0/64.0,
+    51.0/64.0, 19.0/64.0, 59.0/64.0, 27.0/64.0, 49.0/64.0, 17.0/64.0, 57.0/64.0, 25.0/64.0,
+    15.0/64.0, 47.0/64.0,  7.0/64.0, 39.0/64.0, 13.0/64.0, 45.0/64.0,  5.0/64.0, 37.0/64.0,
+    63.0/64.0, 31.0/64.0, 55.0/64.0, 23.0/64.0, 61.0/64.0, 29.0/64.0, 53.0/64.0, 21.0/64.0
+);
+
+// Ordered 2x2 matrix (simpler pattern)
+const float ORDERED_MATRIX_2x2[4] = float[4](
+    0.0/4.0, 2.0/4.0,
+    3.0/4.0, 1.0/4.0
+);
+
+// Get Bayer matrix threshold value
+float getBayerThreshold(vec2 screenPos) {
+    ivec2 pos = ivec2(mod(screenPos, 8.0));
+    int index = pos.y * 8 + pos.x;
+    return BAYER_MATRIX_8x8[index];
+}
+
+// Get ordered 2x2 threshold value
+float getOrderedThreshold(vec2 screenPos) {
+    ivec2 pos = ivec2(mod(screenPos, 2.0));
+    int index = pos.y * 2 + pos.x;
+    return ORDERED_MATRIX_2x2[index];
+}
+
+// Blue noise approximation using hash function
+float blueNoise(vec2 coord) {
+    vec2 p = floor(coord);
+    float n = fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+    // Smooth the noise to approximate blue noise characteristics
+    vec2 f = fract(coord);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(
+        mix(n, fract(sin(dot(p + vec2(1.0, 0.0), vec2(12.9898, 78.233))) * 43758.5453), f.x),
+        mix(fract(sin(dot(p + vec2(0.0, 1.0), vec2(12.9898, 78.233))) * 43758.5453),
+            fract(sin(dot(p + vec2(1.0, 1.0), vec2(12.9898, 78.233))) * 43758.5453), f.x),
+        f.y
+    );
+}
+
+// Apply dithering to color
+vec3 applyDither(vec2 uv, vec3 color, float time) {
+#if DEBUG_DITHER
+    // Calculate screen position for dither pattern
+    vec2 screenPos = uv * vec2(PIXEL_GRID_SIZE, PIXEL_GRID_SIZE * (VIGNETTE_ASPECT.y / VIGNETTE_ASPECT.x));
+    
+    // Get threshold based on dither mode
+    float threshold;
+    #if DITHER_MODE == 0
+        threshold = getBayerThreshold(screenPos);
+    #elif DITHER_MODE == 1
+        threshold = getOrderedThreshold(screenPos);
+    #elif DITHER_MODE == 2
+        threshold = blueNoise(screenPos * 0.5);
+    #else // DITHER_MODE == 3
+        threshold = random(screenPos + time * 0.1);
+    #endif
+    
+    // Adjust threshold by dither strength
+    threshold = (threshold - 0.5) * DITHER_STRENGTH + 0.5;
+    
+    // Quantize colors with dithering
+    float levels = float(DITHER_COLORS);
+    vec3 quantized = floor(color * levels) / levels;
+    vec3 nextLevel = ceil(color * levels) / levels;
+    
+    // Apply threshold to each channel
+    vec3 dithered;
+    dithered.r = (fract(color.r * levels) > threshold) ? nextLevel.r : quantized.r;
+    dithered.g = (fract(color.g * levels) > threshold) ? nextLevel.g : quantized.g;
+    dithered.b = (fract(color.b * levels) > threshold) ? nextLevel.b : quantized.b;
+    
+    return dithered;
 #else
     return color;
 #endif
@@ -389,6 +527,14 @@ void main() {
 
     #if DEBUG_GRAIN
         color = applyGrain(processedUV, color, time);
+    #endif
+
+    #if DEBUG_DITHER
+        color = applyDither(processedUV, color, time);
+    #endif
+
+    #if DEBUG_PC98
+        color = applyPC98Palette(color);
     #endif
 
     fragColor = vec4(color, alpha);
