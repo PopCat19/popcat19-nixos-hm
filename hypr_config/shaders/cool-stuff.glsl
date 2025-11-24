@@ -15,7 +15,7 @@ uniform float time;
 #define DEBUG_CA       1       // Toggle chromatic aberration effect
 #define DEBUG_BLOOM    1       // Toggle bloom effect
 #define DEBUG_VIGNETTE 0       // Toggle vignette effect
-#define DEBUG_PIXEL    0       // Toggle pixelation effect
+#define DEBUG_PIXEL    1       // Toggle pixelation effect
 #define COLOR_DEPTH_ENABLED 0  // Enable color depth reduction
 #define DEBUG_SCANLINE 0       // Toggle scanline effect
 #define DEBUG_VHS_OVERLAY 1    // Toggle VHS effect
@@ -23,7 +23,7 @@ uniform float time;
 #define DEBUG_DRIFT    0       // Toggle drifting effect
 #define DEBUG_COLOR_TEMP 0     // Toggle color temperature adjustment
 #define DEBUG_VIBRATION 0      // Toggle CRT buzz vibration effect
-#define DEBUG_GRAIN     0      // Toggle cinematic grain effect
+#define DEBUG_GRAIN     1      // Toggle cinematic grain effect
 
 // [Effect Parameters]
 // Bloom Parameters
@@ -86,7 +86,7 @@ const float COLOR_TEMPERATURE = 4000.0;
 const float COLOR_TEMPERATURE_STRENGTH = 1.0;
 
 // Pixelation Effect
-#define PIXEL_GRID_SIZE 360.0
+#define PIXEL_GRID_SIZE 640.0
 
 // VHS Overlay Parameters
 #define VHS_INTENSITY        0.16
