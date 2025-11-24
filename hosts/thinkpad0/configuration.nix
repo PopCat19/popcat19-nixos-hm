@@ -35,6 +35,7 @@ in {
     ++ [
       ./system_modules/hardware.nix
       ./system_modules/zram.nix
+      ./system_modules/tlp.nix
     ];
 
   networking.hostName = "popcat19-thinkpad0";
