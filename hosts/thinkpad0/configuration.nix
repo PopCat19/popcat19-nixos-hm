@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  thinkpadUserConfig = import ../../user-config.nix {hostname = "popcat19-thinkpad0";};
+  thinkpadUserConfig = import ../../lib/user-config.nix {hostname = "popcat19-thinkpad0";};
 in {
   imports =
     [

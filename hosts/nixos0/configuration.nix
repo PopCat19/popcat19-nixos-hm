@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  nixos0UserConfig = import ../../user-config.nix {hostname = "popcat19-nixos0";};
+  nixos0UserConfig = import ../../lib/user-config.nix {hostname = "popcat19-nixos0";};
 in {
   imports =
     [

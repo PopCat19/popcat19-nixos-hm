@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  surfaceUserConfig = import ../../user-config.nix {hostname = "popcat19-surface0";};
+  surfaceUserConfig = import ../../lib/user-config.nix {hostname = "popcat19-surface0";};
 in {
   imports =
     [
