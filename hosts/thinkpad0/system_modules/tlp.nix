@@ -108,7 +108,6 @@
     tlp
     powertop
     acpi
-    tlpui
   ];
 
   # Enable TLP service
