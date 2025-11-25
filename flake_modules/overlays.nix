@@ -11,6 +11,8 @@ system: [
   (import ../overlays/rose-pine-gtk-theme-full.nix)
   # Pin ROCm packages to current version from flake.lock (6.3.3)
   (import ../overlays/rocm-pinned.nix)
+  # Pin EasyEffects to nixpkgs 25.05 release version
+  (import ../overlays/easyeffects-pinned.nix)
   # Fix lutris build by overriding pyrate-limiter dependency to disable tests
   # (import ../overlays/lutris-fix.nix) # Temporarily disabled
 ]
