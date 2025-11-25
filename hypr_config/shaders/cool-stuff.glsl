@@ -28,7 +28,7 @@ uniform float time;
 #define BLOOM_INTENSITY       0.16      // Increase for more visible bloom (try 0.30-0.50)
 #define BLOOM_RADIUS          0.004     // Increase for wider spread (try 0.025-0.040)
 #define BLOOM_RADIAL_SAMPLES  8        // Samples per axis direction (try 10-16 for smoother blur)
-#define DIRECTIONS            12        // Number of directions for bloom blur sampling
+#define DIRECTIONS            32        // Number of directions for bloom blur sampling
 #define BLOOM_TINT            vec3(1.1, 0.9, 0.85)
 #define BLOOM_THRESHOLD       0.96       // Only bright areas create bloom (try 0.4-0.7)
 #define BLOOM_SOFT_THRESHOLD  0.4       // Softer threshold transition
