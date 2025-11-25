@@ -22,8 +22,8 @@ uniform float time;
 #define DEBUG_GLITCH   1       // Toggle glitch effect
 #define DEBUG_DRIFT    0       // Toggle drifting effect
 #define DEBUG_COLOR_TEMP 0     // Toggle color temperature adjustment
-#define DEBUG_VIBRATION 0      // Toggle CRT buzz vibration effect
-#define DEBUG_GRAIN     0      // Toggle cinematic grain effect
+#define DEBUG_VIBRATION 1      // Toggle CRT buzz vibration effect
+#define DEBUG_GRAIN     1      // Toggle cinematic grain effect
 #define DEBUG_PC98      0      // Toggle PC-98 color palette mode
 #define DEBUG_DITHER    0      // Toggle dithering effects (all dithering on/off)
 #define DEBUG_CRT_CURVE 0      // Toggle CRT curvature effect
@@ -33,15 +33,13 @@ uniform float time;
 
 // [Effect Parameters]
 // Bloom Parameters
-#define BLOOM_INTENSITY       0.24      // Increase for more visible bloom (try 0.30-0.50)
-#define BLOOM_RADIUS          0.0016     // Increase for wider spread (try 0.025-0.040)
-#define BLOOM_SAMPLES         128       // Not used in tent blur (kept for compatibility)
-#define BLOOM_RADIAL_SAMPLES  24        // Samples per axis direction (try 10-16 for smoother blur)
-#define BLOOM_DENSITY_CURVE   1.6       // Not used in tent blur (kept for compatibility)
+#define BLOOM_INTENSITY       0.16      // Increase for more visible bloom (try 0.30-0.50)
+#define BLOOM_RADIUS          0.004     // Increase for wider spread (try 0.025-0.040)
+#define BLOOM_RADIAL_SAMPLES  8        // Samples per axis direction (try 10-16 for smoother blur)
+#define DIRECTIONS            12        // Number of directions for bloom blur sampling
 #define BLOOM_TINT            vec3(1.1, 0.9, 0.85)
 #define BLOOM_THRESHOLD       0.96       // Only bright areas create bloom (try 0.4-0.7)
-#define BLOOM_SOFT_THRESHOLD  0.3       // Softer threshold transition
-#define BLOOM_FALLOFF_CURVE   32.0
+#define BLOOM_SOFT_THRESHOLD  0.4       // Softer threshold transition
 
 // Glitch Parameters
 #define GLITCH_STRENGTH        1.0
@@ -673,9 +671,9 @@ vec3 calculateBloom(vec2 uv) {
         // This mimics separable gaussian blur to eliminate shape artifacts
         int samplesPerAxis = BLOOM_RADIAL_SAMPLES;
 
-        // Sample along 8 cardinal/diagonal directions
-        for (int dir = 0; dir < 8; dir++) {
-            float angle = float(dir) * 0.785398; // 45 degrees each
+        // Sample along configurable number of directions
+        for (int dir = 0; dir < DIRECTIONS; dir++) {
+            float angle = float(dir) * (2.0 * 3.14159265359 / float(DIRECTIONS)); // Evenly distributed angles
             vec2 direction = vec2(cos(angle), sin(angle));
 
             // Multiple samples along each direction (tent blur)
