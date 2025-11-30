@@ -12,8 +12,8 @@
 self: super: let
   # Nixpkgs 25.05 release version
   pinnedNixpkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/7284e2decc982b81a296ab35aa46e804baaa1cfe.tar.gz";
-    sha256 = "79e91c1ead03887825c486f521acab6d44ba2abd1828f90f622d3ac72cf72e3f";
+    url = "https://github.com/NixOS/nixpkgs/archive/refs/tags/25.05.tar.gz";
+    sha256 = "1915r28xc4znrh2vf4rrjnxldw2imysz819gzhk9qlrkqanmfsxd";
   }) {
     system = "x86_64-linux";
     config = {};
