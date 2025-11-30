@@ -22,6 +22,7 @@ in {
       ../../system_modules/services.nix
       ../../system_modules/display.nix
       ../../system_modules/audio.nix
+      ../../system_modules/lmms.nix
       ../../system_modules/virtualisation.nix
       ../../system_modules/programs.nix
       ../../system_modules/environment.nix
