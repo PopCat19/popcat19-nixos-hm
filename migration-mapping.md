@@ -68,7 +68,7 @@ This document provides a complete mapping of all file movements during the refac
 | `home_modules/mangohud.nix` | `modules/desktop/home-mangohud.nix` | Gaming overlay |
 | `home_modules/obs.nix` | `modules/desktop/home-obs.nix` | Streaming software |
 | `home_modules/generative.nix` | `modules/desktop/home-generative.nix` | AI tools |
-| `home_modules/ollama-rocm.nix` | `modules/desktop/home-ollama-rocm.nix` | Local AI |
+| `home_modules/ollama.nix` | `modules/desktop/home-ollama.nix` | Local AI |
 | `home_modules/zen-browser.nix` | `modules/desktop/home-zen-browser.nix` | Web browser |
 
 ## Hyprland Integration Mapping

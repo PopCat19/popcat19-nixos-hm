@@ -313,7 +313,7 @@ nixos0/ (Desktop Workstation)
 ├─ Monitors: DP-3 (1920x1080@165Hz primary) + HDMI-A-1 (1920x1080@60Hz portrait)
 ├─ Packages: zluda (CUDA on AMD), OpenRGB, gaming stack
 └─ Features: Gaming, AI (Ollama ROCm), development, distributed builds server, OpenRGB, GitHub Actions runners (temporarily disabled)
-└─ Home Modules: All modules including ollama-rocm, mangohud, generative
+└─ Home Modules: All modules including ollama, mangohud, generative
 └─ System Modules: github-runner (self-hosted CI/CD)
 
 surface0/ (Mobile Workstation)
@@ -327,7 +327,7 @@ surface0/ (Mobile Workstation)
 ├─ Display: Internal + optional external
 ├─ Packages: Surface-control, iptsd (touch/pen), WiFi stability tools
 └─ Features: Touch/pen input, aggressive thermal management, auto-cpufreq, distributed builds client, WiFi fixes
-└─ Home Modules: Base modules (excluding generative AI, ollama-rocm)
+└─ Home Modules: Base modules (excluding generative AI, ollama)
 
 thinkpad0/ (Portable Laptop)
 ├─ Purpose: Secondary portable machine
@@ -494,7 +494,7 @@ user-config.nix                        - Centralized user metadata
 ├─ home_modules/
 │  ├─ packages.nix                     - Package aggregator
 │  │  └─ Imports: packages/home/*.nix + packages/system/*.nix
-│  ├─ ollama-rocm.nix                  - Ollama with ROCm acceleration
+│  ├─ ollama.nix                       - Ollama with ROCm acceleration
 │  │  └─ Note: Currently CPU fallback (ROCm stdenv issue)
 │  ├─ mangohud.nix                     - Gaming performance overlay
 │  │  └─ Includes Rose Pine themed config
