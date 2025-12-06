@@ -5,4 +5,6 @@ with pkgs; [
   kdePackages.filelight
   # Qt theming engine for EasyEffects and other Qt applications
   kdePackages.qtstyleplugin-kvantum
+  # Collaborative drawing application
+  drawpile
 ]
