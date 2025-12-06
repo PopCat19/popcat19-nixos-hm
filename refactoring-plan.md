@@ -43,7 +43,7 @@ This document outlines the structural refactoring of the NixOS configuration fro
 - `home_modules/kde-apps.nix`, `qt-gtk-config.nix`, `fuzzel-config.nix`
 - `home_modules/kitty.nix`, `fish.nix`, `starship.nix`, `micro.nix`
 - `home_modules/fcitx5.nix`, `mangohud.nix`, `obs.nix`
-- `home_modules/generative.nix`, `ollama-rocm.nix`, `zen-browser.nix`
+- `home_modules/generative.nix`, `ollama.nix`, `zen-browser.nix`
 - `hypr_config/` - All Hyprland configuration files
 
 #### Packages Modules
@@ -104,7 +104,7 @@ nixos-config/
 │   │   ├── home-mangohud.nix
 │   │   ├── home-obs.nix
 │   │   ├── home-generative.nix
-│   │   ├── home-ollama-rocm.nix
+│   │   ├── home-ollama.nix
 │   │   ├── home-zen-browser.nix
 │   │   └── hyprland/      (integrated from hypr_config/)
 │   │       ├── hyprland.nix

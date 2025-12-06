@@ -94,7 +94,7 @@
 - [ ] Move `home_modules/mangohud.nix` → `modules/desktop/home-mangohud.nix`
 - [ ] Move `home_modules/obs.nix` → `modules/desktop/home-obs.nix`
 - [ ] Move `home_modules/generative.nix` → `modules/desktop/home-generative.nix`
-- [ ] Move `home_modules/ollama-rocm.nix` → `modules/desktop/home-ollama-rocm.nix`
+- [ ] Move `home_modules/ollama.nix` → `modules/desktop/home-ollama.nix`
 - [ ] Move `home_modules/zen-browser.nix` → `modules/desktop/home-zen-browser.nix`
 
 ### Hyprland Integration
