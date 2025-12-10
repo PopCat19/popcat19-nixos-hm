@@ -19,5 +19,8 @@
   environment.systemPackages = with pkgs; [
     alsa-utils
     pavucontrol
+    
+    # Light audio editing tools
+    audacity
   ];
 }

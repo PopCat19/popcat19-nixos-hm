@@ -4,5 +4,4 @@ with pkgs;
 [
   vscodium
   zed-editor
-  penpot-desktop
 ]
