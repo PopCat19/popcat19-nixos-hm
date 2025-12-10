@@ -32,6 +32,9 @@
 
   # Add Docker support (required for shimboot builds)
   virtualisation.docker.enable = true;
+  
+  # Add Docker package
+  environment.systemPackages = with pkgs; [ docker ];
 
   # Ensure runner user is in docker group and has sudo access
   users.users.github-runner = {

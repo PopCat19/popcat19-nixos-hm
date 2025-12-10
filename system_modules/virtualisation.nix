@@ -1,3 +1,13 @@
+# Waydroid Android Emulation Module
+#
+# Purpose: Enable Waydroid for running Android applications on Linux
+# Dependencies: waydroid
+# Related: None
+#
+# This module:
+# - Enables Waydroid for Android app emulation
+# - Provides basic Android app compatibility
+# - Uses minimal system resources
 {
   pkgs,
   userConfig,
@@ -6,43 +16,7 @@
   # Architecture detection
   system = userConfig.host.system;
   isX86_64 = system == "x86_64-linux";
-
-  # Architecture-specific QEMU package
-  qemuPackage = pkgs.qemu_kvm;
-
-  # Virtualization-related packages (moved here)
-  virtualizationPackages = with pkgs; [
-    docker
-    spice-gtk
-    virtio-win
-    win-spice
-    virt-manager
-    libvirt
-    qemu
-    quickgui
-    quickemu
-  ];
 in {
-  # Virtualisation configuration
-  virtualisation = {
-    # Waydroid (Android emulation)
-    waydroid.enable = true;
-
-    # Docker
-    docker.enable = true;
-
-    # libvirt/QEMU
-    libvirtd.enable = true;
-    libvirtd.qemu = {
-      package = qemuPackage;
-      runAsRoot = true;
-      swtpm.enable = true;
-    };
-
-    # SPICE USB redirection
-    spiceUSBRedirection.enable = true;
-  };
-
-  # Add virtualization-related packages to systemPackages (quick tools included above)
-  environment.systemPackages = virtualizationPackages;
+  # Waydroid (Android emulation)
+  virtualisation.waydroid.enable = true;
 }

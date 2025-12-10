@@ -19,10 +19,7 @@ with pkgs; [
   shellcheck
 
   # Android Tools
-  universal-android-debloater
   android-tools
-  scrcpy
-  sidequest
 
   # Programming Languages and Runtimes
   jdk
@@ -31,8 +28,4 @@ with pkgs; [
   rustup
   python3
 
-  # Hardware Development Tools
-  sunxi-tools
-  binwalk
-  vboot_reference
 ]
