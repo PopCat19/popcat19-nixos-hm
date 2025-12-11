@@ -73,60 +73,158 @@ Physical Hardware (CPU, GPU, peripherals)
 nixos-config/ (project root)
 ├─ flake.nix                    - Flake entry point, host definitions
 ├─ flake.lock                   - Pinned input versions
-├─ user-config.nix              - Centralized user/host metadata
-│
-├─ system_modules/              - System-level NixOS modules
-│  ├─ core_modules/             - Essential system configuration
-│  │  ├─ boot.nix               - Bootloader, kernel
-│  │  ├─ hardware.nix           - Hardware devices
-│  │  ├─ networking.nix         - Network + firewall
-│  │  └─ users.nix              - User accounts
-│  ├─ [feature].nix             - Optional system features
-│  └─ x86_64-packages.nix       - Architecture-specific packages
-│
-├─ home_modules/                - Home Manager user configuration
-│  ├─ packages.nix              - Package list aggregator
-│  ├─ theme.nix                 - Rose Pine theme application
-│  ├─ [app]-config.nix          - Application-specific configs
-│  └─ lib/theme.nix             - Theme utilities library
+├─ configuration/               - Main configuration directory
+│  ├─ user-config.nix           - Centralized user/host metadata
+│  ├─ flake/                    - Flake modules and overlays
+│  │  ├─ modules/               - NixOS module definitions
+│  │  │  ├─ hosts.nix           - Host configuration builder
+│  │  │  ├─ modules.nix         - Module aggregator
+│  │  │  └─ overlays.nix        - Overlay importer
+│  │  └─ overlays/              - Nix package overlays
+│  │     ├─ easyeffects-pinned.nix      - EasyEffects version pinning
+│  │     ├─ fcitx5-fix.nix              - Input method fixes
+│  │     ├─ rocm-hipblas.nix            - ROCm hipblas compatibility
+│  │     ├─ rocm-pinned.nix             - ROCm version pinning
+│  │     ├─ rose-pine-gtk-theme-full.nix - Rose Pine GTK theme
+│  │     └─ rose-pine-kvantum.nix       - Rose Pine Kvantum theme
+│  ├─ home/                     - Home Manager configuration
+│  │  ├─ home.nix               - Home Manager entry point
+│  │  ├─ home_modules/          - User-level modules
+│  │  │  ├─ environment.nix     - Environment variables
+│  │  │  ├─ fcitx5.nix          - Input method configuration
+│  │  │  ├─ fish-functions.nix  - Custom Fish functions
+│  │  │  ├─ fish.nix            - Fish shell configuration
+│  │  │  ├─ fonts.nix           - Font configuration
+│  │  │  ├─ fuzzel-config.nix   - Application launcher
+│  │  │  ├─ generative.nix      - AI/ML packages (VOICEVOX)
+│  │  │  ├─ git.nix             - Git configuration
+│  │  │  ├─ home-files.nix      - Dotfiles management
+│  │  │  ├─ kde-apps.nix        - KDE applications
+│  │  │  ├─ kitty.nix           - Terminal emulator
+│  │  │  ├─ mangohud.nix        - Gaming performance overlay
+│  │  │  ├─ micro.nix           - Text editor configuration
+│  │  │  ├─ obs.nix             - OBS Studio configuration
+│  │  │  ├─ ollama.nix          - Ollama with ROCm acceleration
+│  │  │  ├─ packages.nix        - Package aggregator
+│  │  │  ├─ privacy.nix         - KeePassXC + Syncthing
+│  │  │  ├─ qt-gtk-config.nix   - Qt/GTK configuration
+│  │  │  ├─ screenshot.fish     - Screenshot wrapper script
+│  │  │  ├─ screenshot.nix      - Screenshot configuration
+│  │  │  ├─ services.nix        - User services
+│  │  │  ├─ starship.nix        - Shell prompt
+│  │  │  ├─ syncthing.nix       - File synchronization
+│  │  │  ├─ systemd-services.nix - User systemd services
+│  │  │  ├─ theme.nix           - Rose Pine theme application
+│  │  │  ├─ x86_64-packages.nix - Architecture-specific packages
+│  │  │  ├─ zen-browser.nix     - Browser with extensions
+│  │  │  └─ lib/theme.nix       - Theme utilities library
+│  │  ├─ hypr_config/           - Hyprland configuration
+│  │  │  ├─ hyprland.nix        - Hyprland module entry point
+│  │  │  ├─ monitors.conf       - Monitor layout configuration
+│  │  │  ├─ userprefs.conf      - User preferences
+│  │  │  ├─ wallpaper.nix       - Dynamic wallpaper selection
+│  │  │  ├─ modules/            - Modular Hyprland settings
+│  │  │  │  ├─ animations.nix   - Animation curves
+│  │  │  │  ├─ autostart.nix    - Autostart applications
+│  │  │  │  ├─ colors.nix       - Rose Pine color definitions
+│  │  │  │  ├─ environment.nix  - Hyprland environment variables
+│  │  │  │  ├─ general.nix      - Layout, gaps, borders
+│  │  │  │  ├─ hyprlock.nix     - Screen locker config
+│  │  │  │  ├─ keybinds.nix     - Keyboard shortcuts
+│  │  │  │  └─ window-rules.nix - Window opacity, floating rules
+│  │  │  └─ shaders/            - GLSL shader files
+│  │  │     ├─ bloom.glsl       - Bloom effect shader
+│  │  │     ├─ blue-light-filter.glsl - Blue light filter
+│  │  │     └─ cool-stuff.glsl  - Custom shader effects
+│  │  ├─ micro_config/          - Text editor themes
+│  │  │  └─ rose-pine.micro     - Rose Pine theme for Micro
+│  │  ├─ packages/              - Organized package lists
+│  │  │  ├─ home/               - User-space packages by category
+│  │  │  │  ├─ browsers.nix     - Web browsers
+│  │  │  │  ├─ communication.nix - Communication apps
+│  │  │  │  ├─ development.nix  - Development tools
+│  │  │  │  ├─ editors.nix      - Text editors
+│  │  │  │  ├─ hyprland.nix     - Wayland packages
+│  │  │  │  ├─ media.nix        - Media applications
+│  │  │  │  ├─ monitoring.nix   - System monitoring
+│  │  │  │  ├─ notifications.nix - Notification systems
+│  │  │  │  ├─ terminal.nix     - Terminal applications
+│  │  │  │  └─ utilities.nix    - Utility applications
+│  │  │  └─ system/             - System-level packages by category
+│  │  │     ├─ development.nix  - Development tools
+│  │  │     ├─ gui.nix          - GUI applications
+│  │  │     ├─ hardware.nix     - Hardware support
+│  │  │     └─ network.nix      - Network applications
+│  │  └─ fish_themes/           - Shell color schemes
+│  │     ├─ Rosé Pine Dawn.theme - Light theme variant
+│  │     ├─ Rosé Pine Moon.theme - Dark theme variant
+│  │     └─ Rosé Pine.theme     - Default theme
+│  ├─ system/                   - System-level configuration
+│  │  ├─ configuration.nix      - Base system configuration
+│  │  ├─ system-extended.nix    - Extended system features
+│  │  └─ system_modules/        - System-level modules
+│  │     ├─ audio.nix           - PipeWire audio server
+│  │     ├─ boot.nix            - Bootloader, kernel, module blacklist
+│  │     ├─ core-packages.nix   - Core system packages
+│  │     ├─ display.nix         - Hyprland + SDDM
+│  │     ├─ environment.nix     - Nix settings + environment
+│  │     ├─ fish.nix            - Fish shell system integration
+│  │     ├─ fonts.nix           - System fonts
+│  │     ├─ gnome-keyring.n     - Keyring daemon
+│  │     ├─ hardware.nix        - Hardware devices (Bluetooth, i2c)
+│  │     ├─ localization.nix    - Locale and keyboard settings
+│  │     ├─ networking.nix      - Network + firewall rules
+│  │     ├─ packages.nix        - System packages
+│  │     ├─ power-management.nix - Power management
+│  │     ├─ programs.nix        - System programs
+│  │     ├─ services.nix        - System services
+│  │     ├─ syncthing.nix       - File synchronization service
+│  │     ├─ system.nix          - Core system configuration
+│  │     ├─ users.nix           - User account creation
+│  │     ├─ virtualisation.nix  - Docker, libvirt, Waydroid
+│  │     ├─ vpn.nix             - Mullvad VPN
+│  │     └─ x86_64-packages.nix - Architecture-specific packages
+│  └─ wallpaper/                - Wallpaper assets
+│     ├─ wallpaper0.png         - Default wallpaper
+│     └─ wallpaper0-credit.txt  - Wallpaper attribution
 │
 ├─ hosts/                       - Per-host configurations
-│  ├─ [hostname]/
+│  ├─ nixos0/                   - Desktop workstation
+│  │  ├─ configuration.nix      - Host system config
+│  │  ├─ hardware-configuration.nix - Generated hardware config
+│  │  ├─ home.nix               - Host home-manager config
+│  │  └─ hypr_config/           - Host-specific Hyprland config
+│  │     ├─ hyprland.nix        - Hyprland module entry point
+│  │     └─ monitors.conf       - Dual monitor layout
+│  ├─ surface0/                 - Mobile workstation
 │  │  ├─ configuration.nix      - Host system config
 │  │  ├─ hardware-configuration.nix - Generated hardware config
 │  │  ├─ home.nix               - Host home-manager config
 │  │  ├─ hypr_config/           - Host-specific Hyprland config
+│  │  │  ├─ hyprland.nix        - Hyprland module entry point
+│  │  │  └─ monitors.conf       - Surface Pro monitor config
 │  │  └─ system_modules/        - Host-specific system modules
-│  ├─ minimal.nix               - Template for new hosts
-│  └─ home-minimal.nix          - Template for home configs
+│  │     ├─ boot.nix            - Surface-specific boot configuration
+│  │     ├─ clear-bdprochot.nix - BD-PROCHOT workaround
+│  │     ├─ hardware.nix        - Surface hardware configuration
+│  │     ├─ services.nix        - Surface-specific services
+│  │     └─ thermal-config.nix  - Aggressive thermal management
+│  └─ thinkpad0/                - Portable laptop
+│     ├─ configuration.nix      - Host system config
+│     ├─ hardware-configuration.nix - Generated hardware config
+│     ├─ home.nix               - Host home-manager config
+│     ├─ hypr_config/           - Host-specific Hyprland config
+│     │  ├─ hyprland.nix        - Hyprland module entry point
+│     │  └─ monitors.conf       - External monitor layout
+│     └─ system_modules/        - Host-specific system modules
+│        ├─ hardware.nix        - ThinkPad hardware configuration
+│        └─ zram.nix            - ZRAM configuration
 │
-├─ overlays/                    - Nix package overlays
-│  ├─ rose-pine-*.nix           - Rose Pine theme packages
-│  ├─ rocm-pinned.nix           - ROCm version pinning
-│  ├─ rocm-hipblas.nix          - ROCm hipblas compatibility
-│  └─ fcitx5-fix.nix            - Input method fixes
-│
-├─ packages/                    - Organized package lists
-│  ├─ home/                     - User-space packages by category
-│  └─ system/                   - System-level packages by category
-│
-├─ hypr_config/                 - Shared Hyprland configuration
-│  ├─ hyprland.nix              - Hyprland module entry point
-│  ├─ hypr_modules/             - Modular Hyprland settings
-│  │  ├─ colors.nix             - Rose Pine color definitions
-│  │  ├─ keybinds.nix           - Keyboard shortcuts
-│  │  ├─ window-rules.nix       - Window behavior rules
-│  │  └─ [other].nix            - Other Hyprland settings
-│  ├─ shaders/                  - GLSL shader files
-│  └─ wallpaper.nix             - Dynamic wallpaper selection
-│
-├─ syncthing_config/            - Cross-host file sync
-│  ├─ system.nix                - System service config
-│  └─ home.nix                  - User directory setup
-│
-├─ quickshell_config/           - Status bar (alternative)
-├─ micro_config/                - Text editor themes
-└─ fish_themes/                 - Shell color schemes
+├─ .github/workflows/           - GitHub Actions workflows
+│  ├─ flake-check.yml           - Flake validation workflow
+│  └─ sync-dev-main.yml         - Branch synchronization
+└─ .kilocode/rules/             - LLM workspace standards
+   └─ llm-note.md               - LLM documentation standards
 ```
 
 ### Critical Patches/Modifications
@@ -160,7 +258,7 @@ surface0 Thermal Management
    ├─ Implements aggressive thermal limits (65°C passive trip)
    ├─ Clears BD-PROCHOT bit (MSR 0x1FC) on boot
    ├─ Reason: Surface Pro thermal throttling issue
-   └─ Source: nixos-hardware + custom systemd service
+   └─ Source: Custom systemd service
 
 surface0 WiFi Stability
 └─ services.nix + hardware.nix
@@ -216,89 +314,82 @@ nixpkgs
 home-manager
 ├─ Purpose: User environment management
 ├─ Dependencies: nixpkgs
-├─ Related: home_modules/*, hosts/*/home.nix
+├─ Related: configuration/home/*, hosts/*/home.nix
 └─ Provides: User-level declarative configuration
+
+nur (Nix User Repository)
+├─ Purpose: Community package repository
+├─ Dependencies: nixpkgs
+├─ Related: Package extensions
+└─ Provides: Additional community packages
 
 chaotic
 ├─ Purpose: Community package extensions
 ├─ Dependencies: nixpkgs
-├─ Related: None (system extension)
-└─ Provides: Additional community packages
+├─ Related: Gaming and community packages
+└─ Provides: Additional community packages including gaming tools
 
-quickshell
-├─ Purpose: Status bar (alternative to hyprpanel)
-├─ Dependencies: nixpkgs
-├─ Related: quickshell_config/
-└─ Provides: Customizable status bar
+jovian
+├─ Purpose: Jovian NixOS (Steam Deck OS)
+├─ Dependencies: chaotic
+├─ Related: Gaming-specific configurations
+└─ Provides: Gaming-focused NixOS features
 
 zen-browser
 ├─ Purpose: Privacy-focused browser
 ├─ Dependencies: nixpkgs
-├─ Related: home_modules/zen-browser.nix
+├─ Related: configuration/home/home_modules/zen-browser.nix
 └─ Provides: Zen Browser with PWA support
-
-github-nix-ci
-├─ Purpose: Self-hosted GitHub Actions runners (temporarily disabled)
-├─ Dependencies: nixpkgs
-├─ Related: hosts/nixos0/github-runner/
-└─ Provides: GitHub Actions runner service with Nix support
-└─ Status: Commented out due to runCommandNoCC deprecation
 
 agenix
 ├─ Purpose: Secrets management with age encryption
 ├─ Dependencies: nixpkgs
-├─ Related: hosts/nixos0/github-runner/secrets/
-└─ Provides: Encrypted secrets for GitHub runner tokens
+├─ Related: GitHub Actions runner secrets
+└─ Provides: Encrypted secrets management
 
 rose-pine-hyprcursor
 ├─ Purpose: Cursor theme
 ├─ Dependencies: None
-├─ Related: home_modules/theme.nix
+├─ Related: configuration/home/home_modules/theme.nix
 └─ Provides: Rose Pine cursor theme package
-
-catppuccin-nix
-├─ Purpose: Catppuccin theme integration
-├─ Dependencies: nixpkgs
-├─ Related: None (available for future use)
-└─ Provides: Catppuccin theme variants
 
 aagl (Anime Game Launcher)
 ├─ Purpose: Gaming support
 ├─ Dependencies: nixpkgs
-├─ Related: flake_modules/modules.nix
+├─ Related: Gaming package configurations
 └─ Provides: Game launcher integration (x86_64 only)
 ```
 
 ### Module Organization
 ```
-system_modules/*.nix
+configuration/system/system_modules/*.nix
 ├─ Purpose: System-level NixOS configuration
-├─ Dependencies: nixpkgs, user-config.nix
+├─ Dependencies: nixpkgs, configuration/user-config.nix
 ├─ Related: hosts/*/configuration.nix
 └─ Provides: Bootloader, services, drivers, firewall
 
-home_modules/*.nix
+configuration/home/home_modules/*.nix
 ├─ Purpose: User environment configuration
-├─ Dependencies: home-manager, user-config.nix
+├─ Dependencies: home-manager, configuration/user-config.nix
 ├─ Related: hosts/*/home.nix
 └─ Provides: Applications, themes, dotfiles
 
-hypr_config/*.nix
+configuration/home/hypr_config/*.nix
 ├─ Purpose: Hyprland compositor settings
 ├─ Dependencies: home-manager, hyprland
 ├─ Related: hosts/*/hypr_config/ overrides
 └─ Provides: Keybinds, window rules, theming
 
-overlays/*.nix
+configuration/flake/overlays/*.nix
 ├─ Purpose: Package modifications/additions
 ├─ Dependencies: nixpkgs
-├─ Related: flake_modules/overlays.nix
+├─ Related: configuration/flake/modules/overlays.nix
 └─ Provides: Custom package versions, fixes
 
-packages/*/*.nix
+configuration/home/packages/*/*.nix
 ├─ Purpose: Organized package lists by category
 ├─ Dependencies: nixpkgs
-├─ Related: home_modules/packages.nix (aggregator)
+├─ Related: configuration/home/home_modules/packages.nix (aggregator)
 └─ Provides: Categorized package selections
 ```
 
@@ -365,33 +456,34 @@ Build Cache            | No           | Distributed builds use SSH
 flake.nix (entry point)
 ├─ nixosConfigurations.<hostname>
 │  └─ hosts/<hostname>/configuration.nix
-│     ├─ system_modules/*.nix (imports)
-│     │  ├─ core_modules/*.nix
+│     ├─ configuration/system/system_modules/*.nix (imports)
+│     │  ├─ Core modules (audio, boot, display, etc.)
 │     │  └─ [feature].nix
 │     │
 │     ├─ hardware-configuration.nix (generated)
 │     │
 │     └─ home-manager.users.<username>
 │        └─ hosts/<hostname>/home.nix
-│           ├─ home_modules/*.nix (imports)
-│           │  ├─ packages.nix (aggregates packages/*/*.nix)
+│           ├─ configuration/home/home_modules/*.nix (imports)
+│           │  ├─ packages.nix (aggregates configuration/home/packages/*/*.nix)
 │           │  ├─ theme.nix (applies Rose Pine theme)
 │           │  └─ [app]-config.nix
 │           │
 │           └─ (optional) hosts/<hostname>/hypr_config/
-│              └─ hyprland.nix (overrides hypr_config/)
-│                 └─ hypr_modules/*.nix
+│              └─ hyprland.nix (overrides configuration/home/hypr_config/)
+│                 └─ modules/*.nix
 │
 ├─ overlays (final: prev:)
-│  ├─ flake_modules/overlays.nix (imports)
-│  │  ├─ rose-pine-*.nix (theme packages)
+│  ├─ configuration/flake/modules/overlays.nix (imports)
+│  │  ├─ rose-pine-gtk-theme-full.nix (theme packages)
 │  │  ├─ rocm-pinned.nix (ROCm version lock)
 │  │  ├─ rocm-hipblas.nix (ROCm hipblas compatibility)
-│  │  └─ fcitx5-fix.nix (input method fix)
+│  │  ├─ fcitx5-fix.nix (input method fix)
+│  │  └─ easyeffects-pinned.nix (audio plugin version pinning)
 │  │
 │  └─ nur.overlays.default (NUR packages)
 │
-└─ user-config.nix (pure function)
+└─ configuration/user-config.nix (pure function)
    ├─ Input: { machine ? "nixos0", username ? "popcat19", system ? "x86_64-linux", hostname ? null }
    ├─ Output: Structured user/host metadata
    └─ Used by: All system and home modules
@@ -435,7 +527,7 @@ user-config.nix (pure function)
 
 ### Global Nix Settings
 ```
-system_modules/environment.nix
+configuration/system/system_modules/environment.nix
 ├─ experimental-features        - nix-command, flakes, fetch-tree, impure-derivations
 ├─ accept-flake-config          - Automatic flake acceptance
 ├─ auto-optimise-store          - Storage optimization
@@ -455,11 +547,11 @@ system_modules/environment.nix
 │ hosts/<hostname>/home.nix           │
 ├─────────────────────────────────────┤
 │ Shared Feature Modules              │
-│ system_modules/*.nix                │
-│ home_modules/*.nix                  │
+│ configuration/system/system_modules/*.nix
+│ configuration/home/home_modules/*.nix
 ├─────────────────────────────────────┤
 │ User Preferences                    │
-│ user-config.nix                     │
+│ configuration/user-config.nix       │
 ├─────────────────────────────────────┤
 │ Flake Inputs (Pinned)               │
 │ flake.lock                          │
@@ -470,80 +562,87 @@ system_modules/environment.nix
 
 ### Module Structure
 ```
-user-config.nix                        - Centralized user metadata
-├─ flake.nix                           - Flake definition + host declarations
+configuration/user-config.nix                    - Centralized user metadata
+├─ flake.nix                                     - Flake definition + host declarations
 │
-├─ system_modules/
-│  ├─ core_modules/
-│  │  ├─ boot.nix                      - Bootloader + kernel + module blacklist
-│  │  ├─ hardware.nix                  - Hardware devices (Bluetooth, i2c)
-│  │  ├─ networking.nix                - Network + firewall rules
-│  │  └─ users.nix                     - User account creation
-│  ├─ audio.nix                        - PipeWire audio server
-│  ├─ display.nix                      - Hyprland + SDDM
-│  ├─ virtualisation.nix               - Docker, libvirt, Waydroid
-│  ├─ distributed-builds.nix           - Remote build client
-│  ├─ distributed-builds-server.nix    - Remote build server
-│  ├─ ssh.nix                          - SSH server + keys
-│  ├─ vpn.nix                          - Mullvad VPN
-│  ├─ environment.nix                  - Nix settings + system environment
-│  ├─ openrgb.nix                      - OpenRGB RGB control
-│  ├─ tablet.nix                       - OpenTabletDriver for graphics tablets
-│  └─ [other].nix                      - Additional system features
+├─ configuration/system/system_modules/
+│  ├─ Core system modules
+│  │  ├─ boot.nix                        - Bootloader + kernel + module blacklist
+│  │  ├─ hardware.nix                    - Hardware devices (Bluetooth, i2c)
+│  │  ├─ networking.nix                  - Network + firewall rules
+│  │  ├─ users.nix                       - User account creation
+│  │  └─ system.nix                      - Core system configuration
+│  ├─ audio.nix                           - PipeWire audio server
+│  ├─ display.nix                         - Hyprland + SDDM
+│  ├─ virtualisation.nix                  - Docker, libvirt, Waydroid
+│  ├─ environment.nix                     - Nix settings + system environment
+│  ├─ power-management.nix                - Power management
+│  ├─ services.nix                        - System services
+│  ├─ syncthing.nix                       - File synchronization service
+│  ├─ localization.nix                    - Locale and keyboard settings
+│  ├─ programs.nix                        - System programs
+│  ├─ packages.nix                        - System packages
+│  ├─ core-packages.nix                   - Core system packages
+│  ├─ fish.nix                            - Fish shell system integration
+│  ├─ fonts.nix                           - System fonts
+│  ├─ gnome-keyring.n                     - Keyring daemon
+│  ├─ vpn.nix                             - Mullvad VPN
+│  └─ x86_64-packages.nix                 - Architecture-specific packages
 │
-├─ home_modules/
-│  ├─ packages.nix                     - Package aggregator
-│  │  └─ Imports: packages/home/*.nix + packages/system/*.nix
-│  ├─ ollama.nix                       - Ollama with ROCm acceleration
+├─ configuration/home/home_modules/
+│  ├─ packages.nix                        - Package aggregator
+│  │  └─ Imports: configuration/home/packages/home/*.nix + configuration/home/packages/system/*.nix
+│  ├─ ollama.nix                          - Ollama with ROCm acceleration
 │  │  └─ Note: Currently CPU fallback (ROCm stdenv issue)
-│  ├─ mangohud.nix                     - Gaming performance overlay
+│  ├─ mangohud.nix                        - Gaming performance overlay
 │  │  └─ Includes Rose Pine themed config
-│  ├─ screenshot.nix                   - Screenshot wrapper
-│  │  └─ Uses: screenshot.fish (hyprshot + hyprshade integration)
-│  ├─ zen-browser.nix                  - Browser with extensions
+│  ├─ screenshot.nix + screenshot.fish    - Screenshot wrapper + script
+│  ├─ zen-browser.nix                     - Browser with extensions
 │  │  └─ Includes: uBlock, Dark Reader, SponsorBlock, firefoxpwa
-│  ├─ theme.nix                        - Rose Pine theme application
-│  │  └─ Uses: home_modules/lib/theme.nix
-│  ├─ fish.nix                         - Fish shell + config
-│  │  └─ Imports: fish-functions.nix
-│  ├─ starship.nix                     - Shell prompt
-│  ├─ kitty.nix                        - Terminal emulator
-│  ├─ kde-apps.nix                     - Dolphin, Gwenview, Okular
-│  ├─ fuzzel-config.nix                - Application launcher
-│  ├─ privacy.nix                      - KeePassXC + Syncthing integration
-│  ├─ generative.nix                   - AI/ML packages (VOICEVOX)
-│  └─ [other].nix                      - Additional user features
+│  ├─ theme.nix                           - Rose Pine theme application
+│  │  └─ Uses: configuration/home/home_modules/lib/theme.nix
+│  ├─ fish.nix + fish-functions.nix       - Fish shell + custom functions
+│  ├─ starship.nix                        - Shell prompt
+│  ├─ kitty.nix                           - Terminal emulator
+│  ├─ kde-apps.nix                        - Dolphin, Gwenview, Okular
+│  ├─ fuzzel-config.nix                   - Application launcher
+│  ├─ privacy.nix                         - KeePassXC + Syncthing integration
+│  ├─ generative.nix                      - AI/ML packages (VOICEVOX)
+│  ├─ environment.nix                     - Environment variables
+│  ├─ fcitx5.nix                          - Input method configuration
+│  ├─ fonts.nix                           - Font configuration
+│  ├─ git.nix                             - Git configuration
+│  ├─ home-files.nix                      - Dotfiles management
+│  ├─ micro.nix                           - Text editor configuration
+│  ├─ obs.nix                             - OBS Studio configuration
+│  ├─ qt-gtk-config.nix                   - Qt/GTK configuration
+│  ├─ services.nix                        - User services
+│  ├─ syncthing.nix                       - File synchronization
+│  ├─ systemd-services.nix                - User systemd services
+│  └─ x86_64-packages.nix                 - Architecture-specific packages
 │
-├─ hypr_config/                        - Shared Hyprland config
-│  ├─ hyprland.nix                     - Module entry point
-│  ├─ hypr_modules/
-│  │  ├─ colors.nix                    - Rose Pine color definitions
-│  │  ├─ keybinds.nix                  - Keyboard shortcuts
-│  │  ├─ window-rules.nix              - Window opacity, floating rules
-│  │  ├─ animations.nix                - Animation curves
-│  │  ├─ general.nix                   - Layout, gaps, borders
-│  │  ├─ hyprlock.nix                  - Screen locker config
-│  │  ├─ autostart.nix                 - Autostart applications
-│  │  └─ environment.nix               - Hyprland-specific env vars
-│  │  └─ [other].nix                   - Other Hyprland settings
-│  ├─ hyprpanel-common.nix             - Shared panel config
-│  ├─ shaders/                         - GLSL shader files
-│  └─ wallpaper.nix                    - Dynamic wallpaper selection
+├─ configuration/home/hypr_config/              - Shared Hyprland config
+│  ├─ hyprland.nix                        - Module entry point
+│  ├─ modules/
+│  │  ├─ colors.nix                       - Rose Pine color definitions
+│  │  ├─ keybinds.nix                     - Keyboard shortcuts
+│  │  ├─ window-rules.nix                 - Window opacity, floating rules
+│  │  ├─ animations.nix                   - Animation curves
+│  │  ├─ general.nix                      - Layout, gaps, borders
+│  │  ├─ hyprlock.nix                     - Screen locker config
+│  │  ├─ autostart.nix                    - Autostart applications
+│  │  └─ environment.nix                  - Hyprland-specific env vars
+│  ├─ shaders/                            - GLSL shader files
+│  └─ wallpaper.nix                       - Dynamic wallpaper selection
 │
 └─ hosts/<hostname>/
-   ├─ configuration.nix                - Host system config
-   ├─ hardware-configuration.nix       - Generated hardware config
-   ├─ home.nix                         - Host home-manager config
-   ├─ hypr_config/                     - Host-specific Hyprland overrides
-   │  ├─ hyprland.nix                  - Imports shared modules + host-specific files
-   │  ├─ monitors.conf                 - Host-specific monitor layout
-   │  ├─ hyprpanel.nix                 - Host-specific panel layout
-   │  └─ [overrides].nix               - Additional overrides
-   ├─ system_modules/                  - Host-specific system modules
-   └─ github-runner/                   - GitHub Actions runner (nixos0 only, temporarily disabled)
-      ├─ github-runner.nix             - Runner service configuration
-      ├─ secrets/                      - Encrypted token management
-      └─ README.md                     - Setup documentation
+   ├─ configuration.nix                   - Host system config
+   ├─ hardware-configuration.nix          - Generated hardware config
+   ├─ home.nix                            - Host home-manager config
+   ├─ hypr_config/                        - Host-specific Hyprland overrides
+   │  ├─ hyprland.nix                     - Imports shared modules + host-specific files
+   │  └─ monitors.conf                    - Host-specific monitor layout
+   └─ system_modules/                     - Host-specific system modules (surface0, thinkpad0)
 ```
 
 ---
@@ -553,10 +652,10 @@ user-config.nix                        - Centralized user metadata
 ### Host Declaration Tree
 ```
 flake.nix (outputs.nixosConfigurations)
-└─ mkHostConfig function (from flake_modules/hosts.nix)
+└─ mkHostConfig function (from modules/hosts.nix)
    ├─ Input: hostname, system, hostConfigPath, homeConfigPath
    ├─ Creates: nixosSystem
-   │  ├─ Applies overlays (flake_modules/overlays.nix)
+   │  ├─ Applies overlays (modules/overlays.nix)
    │  ├─ Imports hostConfigPath (hosts/<hostname>/configuration.nix)
    │  ├─ Imports external modules (chaotic, home-manager)
    │  ├─ Applies feature modules (gaming, home-manager)
@@ -738,7 +837,7 @@ overlays/<name>.nix
      });
    }
 
-Import in flake_modules/overlays.nix:
+Import in modules/overlays.nix:
 └─ Add to list: [ (import ../overlays/<name>.nix) ]
 ```
 
@@ -748,12 +847,12 @@ Current: Shared config in hypr_config/
 Proposed: Per-host overrides in hosts/<hostname>/hypr_config/
 
 1. Create hosts/<hostname>/hypr_config/:
-   ├─ hyprland.nix (imports shared hypr_modules + host files)
+   ├─ hyprland.nix (imports shared modules + host files)
    ├─ monitors.conf (host-specific monitor layout)
    └─ hyprpanel.nix (host-specific panel layout)
 
 2. hyprland.nix imports:
-   └─ ../../../hypr_config/hypr_modules/*.nix (shared)
+   └─ ../../../hypr_config/modules/*.nix (shared)
 
 3. Define host-specific settings in monitors.conf
 

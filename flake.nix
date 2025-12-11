@@ -21,18 +21,11 @@
       inputs.nixpkgs.follows = "chaotic";
     };
 
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      # Mismatched system dependencies will lead to crashes
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Gaming-specific inputs
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
 
     # Secrets management
     agenix = {
@@ -54,13 +47,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Hardware-specific configurations
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
     # Theming inputs
     rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
-    catppuccin-nix = {
-      url = "github:catppuccin/nix";
+
+    # Noctalia Shell (Wayland bar/launcher)
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -72,21 +64,21 @@
     ...
   }: let
     # Import modules
-    modules = import ./flake_modules/modules.nix;
-    hosts = import ./flake_modules/hosts.nix;
+    modules = import ./configuration/flake/modules/modules.nix;
+    hosts = import ./configuration/flake/modules/hosts.nix;
 
     # Supported systems
     supportedSystems = ["x86_64-linux"];
 
     # Base user configuration
-    baseUserConfig = import ./lib/user-config.nix {};
+    baseUserConfig = import ./configuration/user-config.nix {};
   in {
     # Packages output (no vicinae now that the overlay was removed)
     packages = nixpkgs.lib.genAttrs supportedSystems (
       system: let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = import ./flake_modules/overlays.nix system;
+          overlays = import ./configuration/flake/modules/overlays.nix system;
         };
       in {
         # Export agenix for secret management
@@ -105,7 +97,7 @@
       machines = baseUserConfig.hosts.machines;
     in
       nixpkgs.lib.listToAttrs (map (m: let
-          perHostConfig = import ./lib/user-config.nix {
+          perHostConfig = import ./configuration/user-config.nix {
             username = baseUserConfig.user.username;
             machine = m;
             system = "x86_64-linux";

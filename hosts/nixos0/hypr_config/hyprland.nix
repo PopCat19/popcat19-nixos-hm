@@ -13,13 +13,13 @@
 in {
   imports = [
     # Import all shared Hyprland configuration modules from the main config
-    ../../../hypr_config/hypr_modules/colors.nix
-    ../../../hypr_config/hypr_modules/environment.nix
-    ../../../hypr_config/hypr_modules/autostart.nix
-    ../../../hypr_config/hypr_modules/general.nix
-    ../../../hypr_config/hypr_modules/animations.nix
-    ../../../hypr_config/hypr_modules/keybinds.nix
-    ../../../hypr_config/hypr_modules/window-rules.nix
+    ../../../hypr_config/modules/colors.nix
+    ../../../hypr_config/modules/environment.nix
+    ../../../hypr_config/modules/autostart.nix
+    ../../../hypr_config/modules/general.nix
+    ../../../hypr_config/modules/animations.nix
+    ../../../hypr_config/modules/keybinds.nix
+    ../../../hypr_config/modules/window-rules.nix
   ];
 
   # Enable Hyprland window manager
@@ -43,9 +43,6 @@ in {
     # Copy the nixos0-specific monitors.conf file
     ".config/hypr/monitors.conf".source = ./monitors.conf;
     ".config/hypr/userprefs.conf".source = ../../../hypr_config/userprefs.conf;
-
-    # Generated hyprpaper.conf from local wallpapers
-    ".config/hypr/hyprpaper.conf".source = wallpaper.hyprpaperConf;
 
     # Copy shared shaders directory
     ".config/hypr/shaders" = {
