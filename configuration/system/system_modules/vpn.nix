@@ -1,0 +1,67 @@
+# System-level Mullvad VPN module
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
+  mullvadPackage = pkgs.mullvad-vpn;
+in {
+  # Enable Mullvad VPN service (daemon)
+  services.mullvad-vpn = {
+    enable = true;
+
+    # Force both the daemon and CLI tooling to use the exact same derivation.
+    # This avoids version skew between the service and the packaged CLI.
+    package = mullvadPackage;
+
+    # Whether to wrap commands to bypass the VPN. Keep disabled by default for privacy.
+    # See `nixos-options services.mullvad-vpn.enableExcludeWrapper`
+    enableExcludeWrapper = lib.mkDefault false;
+  };
+
+  # Install Mullvad VPN GUI for controlling connections
+  environment.systemPackages = [
+    mullvadPackage
+  ];
+
+  # Ensure Mullvad daemon is up and auto-connect is enabled silently on boot.
+  # This keeps VPN active in the background without popping up a GUI.
+  systemd.services.mullvad-autoconnect = {
+    description = "Ensure Mullvad auto-connect is enabled";
+    wantedBy = ["multi-user.target"];
+    after = ["network-online.target" "mullvad-daemon.service"];
+    # Add Wants to satisfy ordering constraints and remove the evaluation warning
+    wants = ["network-online.target"];
+    requires = ["mullvad-daemon.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      TimeoutStartSec = 15;
+      # Wait for mullvad-daemon to accept CLI, then enable auto-connect.
+      # This avoids "Management RPC server or client error" during early boot.
+      ExecStart = "${pkgs.writeShellScript "mullvad-autoconnect.sh" ''
+        set -euo pipefail
+        for i in $(seq 1 30); do
+          if ${mullvadPackage}/bin/mullvad status >/dev/null 2>&1; then
+            break
+          fi
+          sleep 0.5
+        done
+        ${mullvadPackage}/bin/mullvad auto-connect set on
+      ''}";
+    };
+  };
+
+  # If you rely on NetworkManager, keep it enabled elsewhere as usual.
+  # Mullvad integrates fine with NM. No special OpenVPN/WireGuard toggles needed;
+  # Mullvad handles that internally via its daemon.
+  #
+  # Example (do not force here to avoid changing your networking module decisions):
+  # networking.networkmanager.enable = lib.mkDefault true;
+
+  # Firewall/Killswitch:
+  # Mullvad's daemon configures firewall rules at runtime. If you want a strict
+  # system-level killswitch, consider adding explicit nftables/iptables rules or
+  # Mullvad's `block_when_disconnected` via GUI/cli. Not enforced here to keep the
+  # module minimally invasive.
+}
