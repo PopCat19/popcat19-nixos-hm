@@ -32,29 +32,29 @@
         showCapsule = true;
         widgets = {
           left = [
-            {
-              icon = "rocket";
-              id = "CustomButton";
-              leftClickExec = "noctalia-shell ipc call launcher toggle";
-            }
-            {
-              id = "SystemMonitor";
-            }
-            {
-              id = "ActiveWindow";
-            }
-            {
-              id = "MediaMini";
-            }
-          ];
-          center = [
+            # {
+            #   icon = "rocket";
+            #   id = "CustomButton";
+            #   leftClickExec = "noctalia-shell ipc call launcher toggle";
+            # }
             {
               id = "Workspace";
               hideUnoccupied = false;
               labelMode = "name";
             }
+            # {
+            #   id = "ActiveWindow";
+            # }
+            {
+              id = "MediaMini";
+            }
+          ];
+          center = [
           ];
           right = [
+            {
+              id = "SystemMonitor";
+            }
             {
               id = "ScreenRecorder";
             }
