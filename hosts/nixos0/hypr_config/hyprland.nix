@@ -44,9 +44,6 @@ in {
     ".config/hypr/monitors.conf".source = ./monitors.conf;
     ".config/hypr/userprefs.conf".source = ../../../hypr_config/userprefs.conf;
 
-    # Generated hyprpaper.conf from local wallpapers
-    ".config/hypr/hyprpaper.conf".source = wallpaper.hyprpaperConf;
-
     # Copy shared shaders directory
     ".config/hypr/shaders" = {
       source = ../../../hypr_config/shaders;

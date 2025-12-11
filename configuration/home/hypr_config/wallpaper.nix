@@ -28,15 +28,6 @@
 
   images =
     map (n: toString (wallpaperDir + ("/" + n))) imageNames;
-
-  hyprpaperText = let
-    specificImage = "${wallpaperDir}/wallpaper0.png";
-    preloads = ["preload = ${specificImage}"];
-    wallpaperLine = ["wallpaper = , ${specificImage}"];
-  in
-    lib.concatStringsSep "\n" (preloads ++ wallpaperLine) + "\n";
-
-  hyprpaperConf = pkgs.writeText "hyprpaper.conf" hyprpaperText;
 in {
-  inherit images hyprpaperText hyprpaperConf;
+  inherit images;
 }
