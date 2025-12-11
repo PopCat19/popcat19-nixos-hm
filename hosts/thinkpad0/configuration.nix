@@ -8,7 +8,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ../../base-configuration/configuration.nix
+    ../../configuration/base/configuration.nix
     ../../main-configuration/configuration.nix
     ./system_modules/hardware.nix
     ./system_modules/zram.nix

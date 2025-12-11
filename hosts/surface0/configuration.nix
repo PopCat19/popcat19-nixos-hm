@@ -8,7 +8,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ../../base-configuration/configuration.nix
+    ../../configuration/base/configuration.nix
     ../../main-configuration/configuration.nix
     ./system_modules/clear-bdprochot.nix
     ./system_modules/thermal-config.nix

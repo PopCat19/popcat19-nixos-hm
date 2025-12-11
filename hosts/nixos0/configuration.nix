@@ -8,7 +8,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ../../base-configuration/configuration.nix
+    ../../configuration/base/configuration.nix
     ../../main-configuration/configuration.nix
     inputs.jovian.nixosModules.default
   ];

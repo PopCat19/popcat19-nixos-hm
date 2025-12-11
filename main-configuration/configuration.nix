@@ -1,8 +1,8 @@
 # Main Configuration Module
 #
 # Purpose: Main system configuration combining base and user modules
-# Dependencies: base-configuration, user system modules
-# Related: base-configuration/configuration.nix, flake.nix
+# Dependencies: configuration/base, user system modules
+# Related: configuration/base/configuration.nix, flake.nix
 #
 # This module:
 # - Imports base configuration as foundation
@@ -16,7 +16,7 @@
   ...
 }: {
   imports = [
-    ../base-configuration/configuration.nix
+    ../configuration/base/configuration.nix
     ./system_modules/programs.nix
     ./system_modules/power-management.nix
     ./system_modules/vpn.nix
