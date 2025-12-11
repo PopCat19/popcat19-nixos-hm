@@ -124,7 +124,6 @@ nixos-config/ (project root)
 │  ├─ system.nix                - System service config
 │  └─ home.nix                  - User directory setup
 │
-├─ quickshell_config/           - Status bar (alternative)
 ├─ micro_config/                - Text editor themes
 └─ fish_themes/                 - Shell color schemes
 ```
@@ -160,7 +159,7 @@ surface0 Thermal Management
    ├─ Implements aggressive thermal limits (65°C passive trip)
    ├─ Clears BD-PROCHOT bit (MSR 0x1FC) on boot
    ├─ Reason: Surface Pro thermal throttling issue
-   └─ Source: nixos-hardware + custom systemd service
+   └─ Source: Custom systemd service
 
 surface0 WiFi Stability
 └─ services.nix + hardware.nix
@@ -225,12 +224,6 @@ chaotic
 ├─ Related: None (system extension)
 └─ Provides: Additional community packages
 
-quickshell
-├─ Purpose: Status bar (alternative to hyprpanel)
-├─ Dependencies: nixpkgs
-├─ Related: quickshell_config/
-└─ Provides: Customizable status bar
-
 zen-browser
 ├─ Purpose: Privacy-focused browser
 ├─ Dependencies: nixpkgs
@@ -255,12 +248,6 @@ rose-pine-hyprcursor
 ├─ Dependencies: None
 ├─ Related: home_modules/theme.nix
 └─ Provides: Rose Pine cursor theme package
-
-catppuccin-nix
-├─ Purpose: Catppuccin theme integration
-├─ Dependencies: nixpkgs
-├─ Related: None (available for future use)
-└─ Provides: Catppuccin theme variants
 
 aagl (Anime Game Launcher)
 ├─ Purpose: Gaming support

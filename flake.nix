@@ -21,18 +21,11 @@
       inputs.nixpkgs.follows = "chaotic";
     };
 
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      # Mismatched system dependencies will lead to crashes
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Gaming-specific inputs
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
 
     # Secrets management
     agenix = {
@@ -54,15 +47,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Hardware-specific configurations
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
     # Theming inputs
     rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
-    catppuccin-nix = {
-      url = "github:catppuccin/nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = inputs @ {
