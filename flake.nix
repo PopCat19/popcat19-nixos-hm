@@ -49,6 +49,12 @@
 
     # Theming inputs
     rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
+
+    # Noctalia Shell (Wayland bar/launcher)
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
