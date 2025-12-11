@@ -30,14 +30,16 @@
   # Ensure systemd user services are enabled
   systemd.user.services.noctalia-shell = {
     # Add service override for better startup behavior
+    unitConfig = {
+      # Ensure it waits for display server (must be in Unit section)
+      After = [ "graphical-session.target" "wayland-session.target" ];
+      # Add wayland dependency (must be in Unit section)
+      Wants = [ "graphical-session.target" ];
+    };
     serviceConfig = {
       # Restart on failure to ensure it starts reliably
       Restart = "on-failure";
       RestartSec = 5;
-      # Ensure it waits for display server
-      After = [ "graphical-session.target" "wayland-session.target" ];
-      # Add wayland dependency
-      Wants = [ "graphical-session.target" ];
     };
   };
 
