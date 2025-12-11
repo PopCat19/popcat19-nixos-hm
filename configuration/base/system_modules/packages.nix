@@ -9,10 +9,10 @@
 
   # Import individual system package lists
   systemPackageLists = [
-    (import ../../../main-configuration/packages/system/network.nix {inherit pkgs;})
-    (import ../../../main-configuration/packages/system/hardware.nix {inherit pkgs;})
-    (import ../../../main-configuration/packages/system/gui.nix {inherit pkgs;})
-    (import ../../../main-configuration/packages/system/development.nix {inherit pkgs;})
+    (import ../../../configuration/main/packages/system/network.nix {inherit pkgs;})
+    (import ../../../configuration/main/packages/system/hardware.nix {inherit pkgs;})
+    (import ../../../configuration/main/packages/system/gui.nix {inherit pkgs;})
+    (import ../../../configuration/main/packages/system/development.nix {inherit pkgs;})
   ];
 in {
   environment.systemPackages =

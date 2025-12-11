@@ -2,7 +2,7 @@
 #
 # Purpose: Home Manager configuration for user-facing applications
 # Dependencies: All home_modules, user-config.nix
-# Related: configuration/base/configuration.nix, main-configuration/configuration.nix
+# Related: configuration/base/configuration.nix, configuration/main/configuration.nix
 #
 # This module:
 # - Imports all home modules

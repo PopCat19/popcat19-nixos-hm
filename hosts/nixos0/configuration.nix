@@ -9,7 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../configuration/base/configuration.nix
-    ../../main-configuration/configuration.nix
+    ../../configuration/main/configuration.nix
     inputs.jovian.nixosModules.default
   ];
 

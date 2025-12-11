@@ -2,7 +2,7 @@
 #
 # Purpose: Core NixOS configuration for nixos-config base system
 # Dependencies: All base system_modules, user-config.nix
-# Related: main-configuration/configuration.nix, user-config.nix
+# Related: configuration/main/configuration.nix, user-config.nix
 #
 # This module:
 # - Imports all base system modules
