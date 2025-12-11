@@ -9,7 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../configuration/base/configuration.nix
-    ../../main-configuration/configuration.nix
+    ../../configuration/main/configuration.nix
     ./system_modules/hardware.nix
     ./system_modules/zram.nix
   ];
