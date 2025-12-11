@@ -29,6 +29,7 @@ in {
     ./system_modules/users.nix
     ./system_modules/services.nix
     ./system_modules/display.nix
+    ./system_modules/noctalia.nix
     ./system_modules/audio.nix
     ./system_modules/virtualisation.nix
     ./system_modules/fonts.nix
