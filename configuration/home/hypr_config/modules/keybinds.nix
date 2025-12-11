@@ -34,6 +34,8 @@
       "$mainMod, C, exec, $editor"
       "$mainMod, F, exec, $browser"
       "$mainMod, A, exec, $launcher"
+      # Noctalia launcher with Mod+Shift+A (fuzzel fallback on Mod+A)
+      "$mainMod+Shift, A, exec, noctalia-shell ipc call launcher toggle"
 
       # Utilities
       "$mainMod+Shift, C, exec, hyprpicker -a"
