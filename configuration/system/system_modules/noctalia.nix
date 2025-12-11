@@ -20,44 +20,8 @@
     inputs.noctalia.nixosModules.default
   ];
 
-  # Enable Noctalia systemd service with proper autostart
-  services.noctalia-shell = {
-    enable = true;
-    # Use graphical-session.target for proper autostart with Wayland compositors
-    target = "graphical-session.target";
-  };
-
-  # Ensure systemd user services are enabled
-  systemd.user.services.noctalia-shell = {
-    # Add service override for better startup behavior
-    unitConfig = {
-      # Ensure it waits for display server (must be in Unit section)
-      After = [ "graphical-session.target" "wayland-session.target" ];
-      # Add wayland dependency (must be in Unit section)
-      Wants = [ "graphical-session.target" ];
-    };
-    serviceConfig = {
-      # Restart on failure to ensure it starts reliably
-      Restart = "on-failure";
-      RestartSec = 5;
-    };
-  };
-
-  # Ensure required system packages are available
-  environment.systemPackages = with pkgs; [
-    # Noctalia is provided by the flake input, but ensure basic Wayland support
-    wayland
-    wayland-protocols
-    wlroots
-  ];
-
-  # Optional: Set default environment variables for better Noctalia compatibility
-  environment.sessionVariables = {
-    # Ensure Wayland applications use native protocols
-    XDG_SESSION_TYPE = "wayland";
-    XDG_CURRENT_DESKTOP = "Hyprland";
-    # Help Noctalia detect the correct display server
-    QT_QPA_PLATFORM = "wayland";
-    GDK_BACKEND = "wayland";
-  };
+  # Enable Noctalia systemd service with proper autostart (this or hm only)
+  # services.noctalia-shell = {
+  #   enable = true;
+  # };
 }

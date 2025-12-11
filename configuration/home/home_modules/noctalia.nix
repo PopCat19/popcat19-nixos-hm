@@ -113,6 +113,6 @@
 
     # Optional: Enable systemd service through home manager
     # (Only enable one - either here or in system module)
-    # systemd.enable = true;
+    systemd.enable = true;
   };
 }
