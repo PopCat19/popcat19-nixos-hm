@@ -19,6 +19,7 @@
 in {
   imports = [
     ./system_modules/environment.nix
+    ./system_modules/fish.nix
     ./system_modules/boot.nix
     ./system_modules/networking.nix
     ./system_modules/hardware.nix

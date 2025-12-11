@@ -9,7 +9,7 @@
   users.users.${userConfig.user.username} = {
     isNormalUser = true;
     extraGroups = userConfig.user.extraGroups;
-    shell = pkgs.${userConfig.user.shell};
+    shell = pkgs.fish;
   };
 
   # Tmpfiles rules
