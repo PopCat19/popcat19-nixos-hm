@@ -20,11 +20,25 @@
     inputs.noctalia.nixosModules.default
   ];
 
-  # Enable Noctalia systemd service
+  # Enable Noctalia systemd service with proper autostart
   services.noctalia-shell = {
     enable = true;
-    # Use default target which works with most Wayland compositors
-    # target = "graphical-session.target";
+    # Use graphical-session.target for proper autostart with Wayland compositors
+    target = "graphical-session.target";
+  };
+
+  # Ensure systemd user services are enabled
+  systemd.user.services.noctalia-shell = {
+    # Add service override for better startup behavior
+    serviceConfig = {
+      # Restart on failure to ensure it starts reliably
+      Restart = "on-failure";
+      RestartSec = 5;
+      # Ensure it waits for display server
+      After = [ "graphical-session.target" "wayland-session.target" ];
+      # Add wayland dependency
+      Wants = [ "graphical-session.target" ];
+    };
   };
 
   # Ensure required system packages are available
