@@ -10,6 +10,6 @@
 }: {
   imports = [
     ../../main-configuration/home-configuration.nix
-    ./hypr_config/hyprpanel.nix
+    ../../hypr_config/hyprpanel-home.nix
   ];
 }
