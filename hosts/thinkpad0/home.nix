@@ -9,6 +9,6 @@
   ...
 }: {
   imports = [
-    ../../configuration/main/home-configuration.nix
+    ../../configuration/main/home.nix
   ];
 }
