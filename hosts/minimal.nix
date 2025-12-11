@@ -17,7 +17,7 @@
 }: let
   # TODO: Replace with your hostname (should match flake.nix entry)
   hostname = "your-hostname-here";
-  userConfig = import ../user-config.nix {inherit hostname;};
+  userConfig = import ../lib/user-config.nix {inherit hostname;};
 in {
   # ============================================================================
   # ESSENTIAL SYSTEM MODULES
