@@ -79,7 +79,7 @@
     supportedSystems = ["x86_64-linux"];
 
     # Base user configuration
-    baseUserConfig = import ./lib/user-config.nix {};
+    baseUserConfig = import ./configuration/user-config.nix {};
   in {
     # Packages output (no vicinae now that the overlay was removed)
     packages = nixpkgs.lib.genAttrs supportedSystems (
@@ -105,7 +105,7 @@
       machines = baseUserConfig.hosts.machines;
     in
       nixpkgs.lib.listToAttrs (map (m: let
-          perHostConfig = import ./lib/user-config.nix {
+          perHostConfig = import ./configuration/user-config.nix {
             username = baseUserConfig.user.username;
             machine = m;
             system = "x86_64-linux";
