@@ -16,7 +16,7 @@
   ...
 }: {
   imports = [
-    ../configuration/base/configuration.nix
+    ../base/configuration.nix
     ./system_modules/programs.nix
     ./system_modules/power-management.nix
     ./system_modules/vpn.nix
