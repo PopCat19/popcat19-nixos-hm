@@ -7,14 +7,14 @@
   wallpaper = import ./wallpaper.nix {inherit lib pkgs;};
 in {
   imports = [
-    ./hypr_modules/colors.nix
-    ./hypr_modules/environment.nix
-    ./hypr_modules/autostart.nix
-    ./hypr_modules/general.nix
-    ./hypr_modules/animations.nix
-    ./hypr_modules/keybinds.nix
-    ./hypr_modules/window-rules.nix
-    ./hypr_modules/hyprlock.nix
+    ./modules/colors.nix
+    ./modules/environment.nix
+    ./modules/autostart.nix
+    ./modules/general.nix
+    ./modules/animations.nix
+    ./modules/keybinds.nix
+    ./modules/window-rules.nix
+    ./modules/hyprlock.nix
   ];
 
   wayland.windowManager.hyprland = {

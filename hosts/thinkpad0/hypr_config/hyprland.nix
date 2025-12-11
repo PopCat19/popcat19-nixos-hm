@@ -9,13 +9,13 @@
 in {
   imports = [
     # Import all shared Hyprland configuration modules from the main config
-    ../../../hypr_config/hypr_modules/colors.nix
-    ../../../hypr_config/hypr_modules/environment.nix
-    ../../../hypr_config/hypr_modules/autostart.nix
-    ../../../hypr_config/hypr_modules/general.nix
-    ../../../hypr_config/hypr_modules/animations.nix
-    ../../../hypr_config/hypr_modules/keybinds.nix
-    ../../../hypr_config/hypr_modules/window-rules.nix
+    ../../../hypr_config/modules/colors.nix
+    ../../../hypr_config/modules/environment.nix
+    ../../../hypr_config/modules/autostart.nix
+    ../../../hypr_config/modules/general.nix
+    ../../../hypr_config/modules/animations.nix
+    ../../../hypr_config/modules/keybinds.nix
+    ../../../hypr_config/modules/window-rules.nix
   ];
 
   # Enable Hyprland window manager
