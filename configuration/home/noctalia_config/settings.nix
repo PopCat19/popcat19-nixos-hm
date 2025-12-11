@@ -106,6 +106,12 @@ let
             pinned = [ ];
           }
           {
+            id = "CpuTemp";
+          }
+          {
+            id = "Memory";
+          }
+          {
             id = "Battery";
             deviceNativePath = "/org/bluez/hci0/dev_A4_16_C0_5D_ED_1A";
             displayMode = "alwaysShow";
