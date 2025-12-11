@@ -13,7 +13,6 @@
   # Install Fish shell
   environment.systemPackages = with pkgs; [
     fish
-    fish-plugins # For plugin management
   ];
 
   # Configure Fish shell
