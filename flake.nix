@@ -72,8 +72,8 @@
     ...
   }: let
     # Import modules
-    modules = import ./configuration/flake/flake_modules/modules.nix;
-    hosts = import ./configuration/flake/flake_modules/hosts.nix;
+    modules = import ./configuration/flake/modules/modules.nix;
+    hosts = import ./configuration/flake/modules/hosts.nix;
 
     # Supported systems
     supportedSystems = ["x86_64-linux"];
@@ -86,7 +86,7 @@
       system: let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = import ./configuration/flake/flake_modules/overlays.nix system;
+          overlays = import ./configuration/flake/modules/overlays.nix system;
         };
       in {
         # Export agenix for secret management

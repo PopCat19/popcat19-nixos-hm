@@ -265,7 +265,7 @@ catppuccin-nix
 aagl (Anime Game Launcher)
 ├─ Purpose: Gaming support
 ├─ Dependencies: nixpkgs
-├─ Related: flake_modules/modules.nix
+├─ Related: modules/modules.nix
 └─ Provides: Game launcher integration (x86_64 only)
 ```
 
@@ -292,7 +292,7 @@ hypr_config/*.nix
 overlays/*.nix
 ├─ Purpose: Package modifications/additions
 ├─ Dependencies: nixpkgs
-├─ Related: flake_modules/overlays.nix
+├─ Related: modules/overlays.nix
 └─ Provides: Custom package versions, fixes
 
 packages/*/*.nix
@@ -383,7 +383,7 @@ flake.nix (entry point)
 │                 └─ hypr_modules/*.nix
 │
 ├─ overlays (final: prev:)
-│  ├─ flake_modules/overlays.nix (imports)
+│  ├─ modules/overlays.nix (imports)
 │  │  ├─ rose-pine-*.nix (theme packages)
 │  │  ├─ rocm-pinned.nix (ROCm version lock)
 │  │  ├─ rocm-hipblas.nix (ROCm hipblas compatibility)
@@ -553,10 +553,10 @@ user-config.nix                        - Centralized user metadata
 ### Host Declaration Tree
 ```
 flake.nix (outputs.nixosConfigurations)
-└─ mkHostConfig function (from flake_modules/hosts.nix)
+└─ mkHostConfig function (from modules/hosts.nix)
    ├─ Input: hostname, system, hostConfigPath, homeConfigPath
    ├─ Creates: nixosSystem
-   │  ├─ Applies overlays (flake_modules/overlays.nix)
+   │  ├─ Applies overlays (modules/overlays.nix)
    │  ├─ Imports hostConfigPath (hosts/<hostname>/configuration.nix)
    │  ├─ Imports external modules (chaotic, home-manager)
    │  ├─ Applies feature modules (gaming, home-manager)
@@ -738,7 +738,7 @@ overlays/<name>.nix
      });
    }
 
-Import in flake_modules/overlays.nix:
+Import in modules/overlays.nix:
 └─ Add to list: [ (import ../overlays/<name>.nix) ]
 ```
 
