@@ -15,7 +15,7 @@
   lib,
   ...
 }: let
-  userConfig = import ../lib/user-config.nix {};
+  userConfig = import ../../lib/user-config.nix {};
 in {
   imports = [
     ./system_modules/environment.nix
