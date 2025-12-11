@@ -64,7 +64,7 @@
 
     # Cross-repo home configs
     ../../quickshell_config/quickshell.nix
-    ../../syncthing_config/home.nix
+    ../../main-configuration/home_modules/syncthing.nix
 
     # ==========================================================================
     # DESKTOP ENVIRONMENT MODULES (uncomment if this host has a GUI)

@@ -48,7 +48,7 @@ in {
     ../system_modules/privacy.nix
     ../system_modules/gnome-keyring.nix
     ../system_modules/vpn.nix
-    # ../syncthing_config/system.nix  # Uncomment if needed
+    # ../main-configuration/system_modules/syncthing.nix  # Uncomment if needed
 
     # Host-specific modules (create these as needed)
     # ./system_modules/custom-hardware.nix
