@@ -112,7 +112,7 @@ nixos-config/ (project root)
 │
 ├─ hypr_config/                 - Shared Hyprland configuration
 │  ├─ hyprland.nix              - Hyprland module entry point
-│  ├─ hypr_modules/             - Modular Hyprland settings
+│  ├─ modules/             - Modular Hyprland settings
 │  │  ├─ colors.nix             - Rose Pine color definitions
 │  │  ├─ keybinds.nix           - Keyboard shortcuts
 │  │  ├─ window-rules.nix       - Window behavior rules
@@ -380,7 +380,7 @@ flake.nix (entry point)
 │           │
 │           └─ (optional) hosts/<hostname>/hypr_config/
 │              └─ hyprland.nix (overrides hypr_config/)
-│                 └─ hypr_modules/*.nix
+│                 └─ modules/*.nix
 │
 ├─ overlays (final: prev:)
 │  ├─ modules/overlays.nix (imports)
@@ -516,7 +516,7 @@ user-config.nix                        - Centralized user metadata
 │
 ├─ hypr_config/                        - Shared Hyprland config
 │  ├─ hyprland.nix                     - Module entry point
-│  ├─ hypr_modules/
+│  ├─ modules/
 │  │  ├─ colors.nix                    - Rose Pine color definitions
 │  │  ├─ keybinds.nix                  - Keyboard shortcuts
 │  │  ├─ window-rules.nix              - Window opacity, floating rules
@@ -748,12 +748,12 @@ Current: Shared config in hypr_config/
 Proposed: Per-host overrides in hosts/<hostname>/hypr_config/
 
 1. Create hosts/<hostname>/hypr_config/:
-   ├─ hyprland.nix (imports shared hypr_modules + host files)
+   ├─ hyprland.nix (imports shared modules + host files)
    ├─ monitors.conf (host-specific monitor layout)
    └─ hyprpanel.nix (host-specific panel layout)
 
 2. hyprland.nix imports:
-   └─ ../../../hypr_config/hypr_modules/*.nix (shared)
+   └─ ../../../hypr_config/modules/*.nix (shared)
 
 3. Define host-specific settings in monitors.conf
 
