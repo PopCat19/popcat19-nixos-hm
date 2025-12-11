@@ -24,8 +24,6 @@
 
   imports = [
     ./hypr_config/hyprland.nix
-    ./hypr_config/hyprpanel-common.nix
-    ./hypr_config/hyprpanel-home.nix
     ./home_modules/theme.nix
     ./home_modules/fonts.nix
     ./home_modules/screenshot.nix
