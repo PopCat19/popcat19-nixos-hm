@@ -78,7 +78,7 @@ let
             id = "MediaMini";
             hideMode = "hidden";
             hideWhenIdle = false;
-            maxWidth = 384;
+            maxWidth = 256;
             scrollingMode = "hover";
             showAlbumArt = false;
             showArtistFirst = true;
