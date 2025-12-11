@@ -78,7 +78,7 @@ let
             id = "MediaMini";
             hideMode = "hidden";
             hideWhenIdle = false;
-            maxWidth = 145;
+            maxWidth = 384;
             scrollingMode = "hover";
             showAlbumArt = false;
             showArtistFirst = true;
@@ -476,7 +476,7 @@ let
     brightness = {
       brightnessStep = 10;
       enforceMinimum = true;
-      enableDdcSupport = true;
+      enableDdcSupport = false;
     };
     
     # Color schemes
