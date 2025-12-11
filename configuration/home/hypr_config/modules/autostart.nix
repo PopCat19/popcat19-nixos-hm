@@ -4,7 +4,6 @@
   wayland.windowManager.hyprland.settings = {
     "exec-once" = [
       # Core services
-      "hyprpaper -c ~/.config/hypr/hyprpaper.conf"
       "/run/current-system/sw/libexec/polkit-gnome-authentication-agent-1"
 
       # Desktop integration
