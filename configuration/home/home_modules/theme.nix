@@ -131,88 +131,90 @@
     then pkgs.rose-pine-gtk-theme
     else null;
 in {
-  home.sessionVariables =
-    mkSessionVariables selectedVariant fonts.sizes
-    // {
-      XCURSOR_SIZE = builtins.toString cursorSize;
-    };
+  config = {
+    home.sessionVariables =
+      mkSessionVariables selectedVariant fonts.sizes
+      // {
+        XCURSOR_SIZE = builtins.toString cursorSize;
+      };
 
-  # GTK theme configuration - simplified to avoid module option conflicts
-  home.file.".config/gtk-3.0/settings.ini".text = ''
-    [Settings]
-    gtk-theme-name=${selectedVariant.gtkThemeName}
-    gtk-icon-theme-name=${iconTheme}
-    gtk-font-name=${fonts.main} ${builtins.toString fonts.sizes.gtk}
-    gtk-cursor-theme-name=${selectedVariant.cursorTheme}
-    gtk-cursor-theme-size=${builtins.toString cursorSize}
-  '';
-
-  home.file.".config/gtk-4.0/settings.ini".text = ''
-    [Settings]
-    gtk-theme-name=${selectedVariant.gtkThemeName}
-    gtk-icon-theme-name=${iconTheme}
-    gtk-font-name=${fonts.main} ${builtins.toString fonts.sizes.gtk}
-    gtk-cursor-theme-name=${selectedVariant.cursorTheme}
-    gtk-cursor-theme-size=${builtins.toString cursorSize}
-  '';
-
-  qt = {
-    enable = true;
-    style = {
-      name = "kvantum";
-      package = kvantumPkg;
-    };
-  };
-
-  # Ensure Kvantum can find Rosé Pine themes from our package
-  # Kvantum searches ~/.config/Kvantum and XDG data dirs (share/Kvantum)
-  # These symlinks guarantee availability regardless of XDG_DATA_DIRS.
-  xdg.configFile."Kvantum/rose-pine-rose".source = "${rosePineKvantum}/share/Kvantum/rose-pine-rose";
-  xdg.configFile."Kvantum/rose-pine-moon".source = "${rosePineKvantum}/share/Kvantum/rose-pine-moon";
-
-  home.file.".config/Kvantum/kvantum.kvconfig".text = ''
-    [General]
-    theme=${selectedVariant.kvantumTheme}
-  '';
-
-  # Ensure Qt5 apps also use Kvantum style and Papirus icons
-  home.file.".config/qt5ct/qt5ct.conf" = {
-    text = ''
-      [Appearance]
-      color_scheme_path=
-      custom_palette=false
-      icon_theme=${iconTheme}
-      style=kvantum
-
-      [Interface]
-      activate_item_on_single_click=1
-      buttonbox_layout=0
-      cursor_flash_time=1000
-      dialog_buttons_have_icons=1
-      double_click_interval=400
-      gui_effects=@Invalid()
-      keyboard_scheme=2
-      menus_have_icons=true
-      show_shortcuts_in_context_menus=true
-      stylesheets=@Invalid()
-      toolbutton_style=4
-      underline_shortcut=1
-      wheel_scroll_lines=3
+    # GTK theme configuration - simplified to avoid module option conflicts
+    home.file.".config/gtk-3.0/settings.ini".text = ''
+      [Settings]
+      gtk-theme-name=${selectedVariant.gtkThemeName}
+      gtk-icon-theme-name=${iconTheme}
+      gtk-font-name=${fonts.main} ${builtins.toString fonts.sizes.gtk}
+      gtk-cursor-theme-name=${selectedVariant.cursorTheme}
+      gtk-cursor-theme-size=${builtins.toString cursorSize}
     '';
+
+    home.file.".config/gtk-4.0/settings.ini".text = ''
+      [Settings]
+      gtk-theme-name=${selectedVariant.gtkThemeName}
+      gtk-icon-theme-name=${iconTheme}
+      gtk-font-name=${fonts.main} ${builtins.toString fonts.sizes.gtk}
+      gtk-cursor-theme-name=${selectedVariant.cursorTheme}
+      gtk-cursor-theme-size=${builtins.toString cursorSize}
+    '';
+
+    qt = {
+      enable = true;
+      style = {
+        name = "kvantum";
+        package = kvantumPkg;
+      };
+    };
+
+    # Ensure Kvantum can find Rosé Pine themes from our package
+    # Kvantum searches ~/.config/Kvantum and XDG data dirs (share/Kvantum)
+    # These symlinks guarantee availability regardless of XDG_DATA_DIRS.
+    xdg.configFile."Kvantum/rose-pine-rose".source = "${rosePineKvantum}/share/Kvantum/rose-pine-rose";
+    xdg.configFile."Kvantum/rose-pine-moon".source = "${rosePineKvantum}/share/Kvantum/rose-pine-moon";
+
+    home.file.".config/Kvantum/kvantum.kvconfig".text = ''
+      [General]
+      theme=${selectedVariant.kvantumTheme}
+    '';
+
+    # Ensure Qt5 apps also use Kvantum style and Papirus icons
+    home.file.".config/qt5ct/qt5ct.conf" = {
+      text = ''
+        [Appearance]
+        color_scheme_path=
+        custom_palette=false
+        icon_theme=${iconTheme}
+        style=kvantum
+
+        [Interface]
+        activate_item_on_single_click=1
+        buttonbox_layout=0
+        cursor_flash_time=1000
+        dialog_buttons_have_icons=1
+        double_click_interval=400
+        gui_effects=@Invalid()
+        keyboard_scheme=2
+        menus_have_icons=true
+        show_shortcuts_in_context_menus=true
+        stylesheets=@Invalid()
+        toolbutton_style=4
+        underline_shortcut=1
+        wheel_scroll_lines=3
+      '';
+    };
+
+    # Ensure KDE Frameworks apps (Dolphin, Gwenview, Okular, etc.) use Papirus icons
+    # KDE reads ~/.config/kdeglobals for the icon theme.
+    home.file.".config/kdeglobals".text = ''
+      [Icons]
+      Theme=${iconTheme}
+    '';
+
+    # Use centralized package list from lib/theme.nix and add module-specific extras
+    # Avoid duplicating cursorPackage (already included in commonPackages)
+    home.packages = with pkgs;
+      commonPackages
+      ++ [
+        rose-pine-kvantum
+      ];
   };
-
-  # Ensure KDE Frameworks apps (Dolphin, Gwenview, Okular, etc.) use Papirus icons
-  # KDE reads ~/.config/kdeglobals for the icon theme.
-  home.file.".config/kdeglobals".text = ''
-    [Icons]
-    Theme=${iconTheme}
-  '';
-
-  # Use centralized package list from lib/theme.nix and add module-specific extras
-  # Avoid duplicating cursorPackage (already included in commonPackages)
-  home.packages = with pkgs;
-    commonPackages
-    ++ [
-      rose-pine-kvantum
-    ];
 }
