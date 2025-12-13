@@ -14,6 +14,7 @@ with pkgs; [
   jq
   tree
   appimage-run
+  zenity
 
   # Gaming
   # lutris # Temporarily disabled due to pyrate-limiter build failures

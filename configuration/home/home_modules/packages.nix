@@ -21,7 +21,6 @@
   latePackages = [
     (import ../packages/home/monitoring.nix {inherit pkgs;})
     (import ../packages/home/utilities.nix {inherit pkgs;})
-    (import ../packages/home/notifications.nix {inherit pkgs;})
     (import ../packages/home/editors.nix {inherit pkgs;})
     (import ../packages/home/development.nix {inherit pkgs;})
   ];
