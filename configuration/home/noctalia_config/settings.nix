@@ -107,7 +107,6 @@ let
           }
           {
             id = "Battery";
-            deviceNativePath = "/org/bluez/hci0/dev_A4_16_C0_5D_ED_1A";
             displayMode = "alwaysShow";
             showNoctaliaPerformance = false;
             showPowerProfiles = false;
@@ -259,8 +258,6 @@ let
       wallhavenResolutionMode = "atleast";
       wallhavenResolutionWidth = "";
       wallhavenResolutionHeight = "";
-      # Set specific wallpaper file
-      specificWallpaper = "${config.home.homeDirectory}/wallpaper/wallpaper0.png";
     };
     
     # App launcher settings
@@ -396,12 +393,6 @@ let
           countdownEnabled = true;
         }
         {
-          action = "hibernate";
-          enabled = true;
-          command = "";
-          countdownEnabled = true;
-        }
-        {
           action = "reboot";
           enabled = true;
           command = "";
@@ -428,7 +419,7 @@ let
       monitors = [ ];
       location = "top_right";
       overlayLayer = true;
-      backgroundOpacity = 1;
+      backgroundOpacity = 0.8;
       respectExpireTimeout = false;
       lowUrgencyDuration = 3;
       normalUrgencyDuration = 8;
@@ -458,8 +449,8 @@ let
     
     # Audio settings
     audio = {
-      volumeStep = 5;
-      volumeOverdrive = false;
+      volumeStep = 4;
+      volumeOverdrive = true;
       cavaFrameRate = 30;
       visualizerType = "linear";
       visualizerQuality = "high";
@@ -515,7 +506,7 @@ let
     nightLight = {
       enabled = false;
       forced = false;
-      autoSchedule = true;
+      autoSchedule = false;
       nightTemp = "4000";
       dayTemp = "6500";
       manualSunrise = "06:30";
