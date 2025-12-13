@@ -12,7 +12,6 @@
   lib,
   pkgs,
   config,
-  system,
   inputs,
   userConfig,
   ...
@@ -77,7 +76,7 @@
 
   # Packages (common)
   commonPackages = with pkgs; [
-    inputs.rose-pine-hyprcursor.packages.${system}.default
+    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
     rose-pine-gtk-theme-full
     pkgs.kdePackages.qtstyleplugin-kvantum
     papirus-icon-theme
@@ -122,7 +121,7 @@
   iconTheme = "Papirus-Dark"; # Centralized if needed
   cursorSize = 24;
 
-  cursorPackage = inputs.rose-pine-hyprcursor.packages.${system}.default;
+  cursorPackage = inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default;
   kvantumPkg = pkgs.kdePackages.qtstyleplugin-kvantum;
   rosePineKvantum = pkgs.rose-pine-kvantum;
   rosePineGtk =
@@ -138,33 +137,24 @@ in {
       XCURSOR_SIZE = builtins.toString cursorSize;
     };
 
-  gtk = {
-    enable = true;
-    cursorTheme = {
-      name = selectedVariant.cursorTheme or "rose-pine-hyprcursor";
-      size = cursorSize;
-      package = cursorPackage;
-    };
-    theme =
-      {
-        name = selectedVariant.gtkThemeName;
-      }
-      // lib.optionalAttrs (rosePineGtk != null) {package = rosePineGtk;};
-    iconTheme = {
-      name = iconTheme;
-      package = pkgs.papirus-icon-theme;
-    };
-    gtk3.extraConfig = {
-      gtk-decoration-layout = "appmenu:minimize,maximize,close";
-      gtk-enable-animations = true;
-      gtk-primary-button-warps-slider = false;
-    };
-    gtk4.extraConfig = {
-      gtk-decoration-layout = "appmenu:minimize,maximize,close";
-      gtk-enable-animations = true;
-      gtk-primary-button-warps-slider = false;
-    };
-  };
+  # GTK theme configuration - simplified to avoid module option conflicts
+  home.file.".config/gtk-3.0/settings.ini".text = ''
+    [Settings]
+    gtk-theme-name=${selectedVariant.gtkThemeName}
+    gtk-icon-theme-name=${iconTheme}
+    gtk-font-name=${fonts.main} ${builtins.toString fonts.sizes.gtk}
+    gtk-cursor-theme-name=${selectedVariant.cursorTheme}
+    gtk-cursor-theme-size=${builtins.toString cursorSize}
+  '';
+
+  home.file.".config/gtk-4.0/settings.ini".text = ''
+    [Settings]
+    gtk-theme-name=${selectedVariant.gtkThemeName}
+    gtk-icon-theme-name=${iconTheme}
+    gtk-font-name=${fonts.main} ${builtins.toString fonts.sizes.gtk}
+    gtk-cursor-theme-name=${selectedVariant.cursorTheme}
+    gtk-cursor-theme-size=${builtins.toString cursorSize}
+  '';
 
   qt = {
     enable = true;
@@ -184,20 +174,6 @@ in {
     [General]
     theme=${selectedVariant.kvantumTheme}
   '';
-
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      cursor-theme = selectedVariant.cursorTheme;
-      cursor-size = cursorSize;
-      gtk-theme = selectedVariant.gtkThemeName;
-      icon-theme = iconTheme;
-      color-scheme = "prefer-dark";
-    };
-
-    "org/gnome/desktop/wm/preferences" = {
-      theme = selectedVariant.gtkThemeName;
-    };
-  };
 
   # Ensure Qt5 apps also use Kvantum style and Papirus icons
   home.file.".config/qt5ct/qt5ct.conf" = {
