@@ -14,7 +14,6 @@
     ./system_modules/thermal-config.nix
     ./system_modules/boot.nix
     ./system_modules/hardware.nix
-    ./home.nix
   ];
 
   networking.hostName = "popcat19-surface0";

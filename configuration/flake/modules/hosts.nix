@@ -23,10 +23,18 @@
 
         # Feature modules
         (modules.mkGamingModule system {inherit inputs;})
-        (modules.mkHomeManagerModule system {
-          inherit userConfig inputs;
-          homePath = homeConfigPath;
-        })
+
+        # Home Manager configuration
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            users.${userConfig.user.username} = import homeConfigPath;
+            extraSpecialArgs = {
+              inherit system userConfig inputs;
+            };
+          };
+        }
       ];
     };
 }

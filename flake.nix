@@ -105,7 +105,7 @@
           hostname = perHostConfig.host.hostname;
         in {
           name = hostname;
-          value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {
+          value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./configuration/home/home.nix {
             inherit inputs nixpkgs modules;
             userConfig = perHostConfig;
           };

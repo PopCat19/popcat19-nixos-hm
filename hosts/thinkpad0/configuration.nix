@@ -12,7 +12,6 @@
     ../../configuration/system/system-extended.nix
     ./system_modules/hardware.nix
     ./system_modules/zram.nix
-    ./home.nix
   ];
 
   networking.hostName = "popcat19-thinkpad0";
