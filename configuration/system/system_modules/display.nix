@@ -44,6 +44,4 @@
       user = userConfig.user.username;
     };
   };
-
-  programs.dconf.enable = true;
 }

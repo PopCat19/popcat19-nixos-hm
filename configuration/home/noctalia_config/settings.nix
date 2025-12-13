@@ -7,7 +7,7 @@
 # - Provides complete Noctalia settings as Nix attribute set
 # - Matches user's personalized configuration from JSON
 # - Can be imported by the main Noctalia home manager module
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 let
   # Complete Noctalia settings based on user's configuration
@@ -17,7 +17,7 @@ let
     # Bar configuration with user's custom layout
     bar = {
       position = "top";
-      backgroundOpacity = 0.4;
+      backgroundOpacity = 0.64;
       monitors = [ ];
       density = "default";
       showCapsule = true;
@@ -31,30 +31,13 @@ let
       widgets = {
         left = [
           {
-            icon = "rocket";
-            id = "CustomButton";
-            leftClickExec = "noctalia-shell ipc call launcher toggle";
-            hideMode = "alwaysExpanded";
-            showIcon = true;
-            textCollapse = "";
-            textCommand = "";
-            textIntervalMs = 3000;
-            textStream = false;
-            maxTextLength.horizontal = 10;
-            maxTextLength.vertical = 10;
-            leftClickUpdateText = false;
-            middleClickExec = "";
-            middleClickUpdateText = false;
-            parseJson = false;
-            rightClickExec = "";
-            rightClickUpdateText = false;
-            wheelDownExec = "";
-            wheelDownUpdateText = false;
-            wheelExec = "";
-            wheelMode = "unified";
-            wheelUpExec = "";
-            wheelUpUpdateText = false;
-            wheelUpdateText = false;
+            id = "ControlCenter";
+            icon = "noctalia";
+            colorizeDistroLogo = false;
+            colorizeSystemIcon = "none";
+            customIconPath = "";
+            enableColorization = false;
+            useDistroLogo = true;
           }
           {
             id = "Workspace";
@@ -71,14 +54,14 @@ let
             showDiskUsage = false;
             showMemoryAsPercent = false;
             showMemoryUsage = true;
-            showNetworkStats = false;
+            showNetworkStats = true;
             usePrimaryColor = false;
           }
           {
             id = "MediaMini";
             hideMode = "hidden";
             hideWhenIdle = false;
-            maxWidth = 145;
+            maxWidth = 256;
             scrollingMode = "hover";
             showAlbumArt = false;
             showArtistFirst = true;
@@ -86,11 +69,6 @@ let
             showVisualizer = false;
             useFixedWidth = false;
             visualizerType = "linear";
-          }
-          {
-            id = "NotificationHistory";
-            hideWhenZero = true;
-            showUnreadBadge = true;
           }
         ];
         
@@ -107,7 +85,6 @@ let
           }
           {
             id = "Battery";
-            deviceNativePath = "/org/bluez/hci0/dev_A4_16_C0_5D_ED_1A";
             displayMode = "alwaysShow";
             showNoctaliaPerformance = false;
             showPowerProfiles = false;
@@ -129,23 +106,19 @@ let
             id = "Clock";
             formatHorizontal = "HH:mm ddd, MMM dd";
             formatVertical = "HH mm - dd MM";
-            useCustomFont = false;
-            customFont = "";
+            useCustomFont = true;
+            customFont = "JetBrainsMono Nerd Font";
             usePrimaryColor = false;
           }
           {
-            id = "ControlCenter";
-            icon = "noctalia";
-            colorizeDistroLogo = false;
-            colorizeSystemIcon = "none";
-            customIconPath = "";
-            enableColorization = false;
-            useDistroLogo = false;
+            id = "NotificationHistory";
+            hideWhenZero = true;
+            showUnreadBadge = true;
           }
         ];
       };
     };
-    
+        
     # General appearance settings
     general = {
       avatarImage = "${pkgs.writeText "face" ""}/.face";
@@ -236,7 +209,7 @@ let
     wallpaper = {
       enabled = true;
       overviewEnabled = false;
-      directory = "";
+      directory = "${config.home.homeDirectory}/wallpaper";
       monitorDirectories = [ ];
       enableMultiMonitorDirectories = false;
       recursiveSearch = false;
@@ -246,7 +219,7 @@ let
       randomEnabled = false;
       randomIntervalSec = 300;
       transitionDuration = 1500;
-      transitionType = "random";
+      transitionType = "fade";
       transitionEdgeSmoothness = 0.05;
       panelPosition = "follow_bar";
       hideWallpaperFilenames = false;
@@ -394,12 +367,6 @@ let
           countdownEnabled = true;
         }
         {
-          action = "hibernate";
-          enabled = true;
-          command = "";
-          countdownEnabled = true;
-        }
-        {
           action = "reboot";
           enabled = true;
           command = "";
@@ -426,7 +393,7 @@ let
       monitors = [ ];
       location = "top_right";
       overlayLayer = true;
-      backgroundOpacity = 1;
+      backgroundOpacity = 0.8;
       respectExpireTimeout = false;
       lowUrgencyDuration = 3;
       normalUrgencyDuration = 8;
@@ -456,8 +423,8 @@ let
     
     # Audio settings
     audio = {
-      volumeStep = 5;
-      volumeOverdrive = false;
+      volumeStep = 4;
+      volumeOverdrive = true;
       cavaFrameRate = 30;
       visualizerType = "linear";
       visualizerQuality = "high";
@@ -470,7 +437,7 @@ let
     brightness = {
       brightnessStep = 10;
       enforceMinimum = true;
-      enableDdcSupport = true;
+      enableDdcSupport = false;
     };
     
     # Color schemes
@@ -513,7 +480,7 @@ let
     nightLight = {
       enabled = false;
       forced = false;
-      autoSchedule = true;
+      autoSchedule = false;
       nightTemp = "4000";
       dayTemp = "6500";
       manualSunrise = "06:30";

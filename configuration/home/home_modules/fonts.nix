@@ -19,14 +19,16 @@
     }
   '';
 in {
-  gtk = {
-    font = {
-      name = fontMain;
-      size = gtkFontSize;
-    };
-    gtk3.extraCss = gtkCss;
-    gtk4.extraCss = gtkCss;
-  };
+  # GTK font configuration via direct config files
+  home.file.".config/gtk-3.0/settings.ini".text = ''
+    [Settings]
+    gtk-font-name=${fontMain} ${builtins.toString gtkFontSize}
+  '';
+
+  home.file.".config/gtk-4.0/settings.ini".text = ''
+    [Settings]
+    gtk-font-name=${fontMain} ${builtins.toString gtkFontSize}
+  '';
 
   home.file.".config/qt6ct/qt6ct.conf" = {
     text = ''
@@ -57,16 +59,8 @@ in {
       wheel_scroll_lines=3
 
       [SettingsWindow]
-      geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x3\0\0\0\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf\0\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf\0\0\0\0\x2\0\0\0\n\0\0\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf)
+      geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x3\0\0\0\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf)
     '';
-  };
-
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      font-name = "${fontMain} ${builtins.toString gtkFontSize}";
-      document-font-name = "${fontMain} ${builtins.toString gtkFontSize}";
-      monospace-font-name = "${fontMono} ${builtins.toString kittyFontSize}";
-    };
   };
 
   programs.kitty.font = {
@@ -95,14 +89,6 @@ in {
     </fontconfig>
   '';
 
-  home.packages = with pkgs; [
-    google-fonts
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.caskaydia-cove
-    nerd-fonts.fantasque-sans-mono
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-color-emoji
-    font-awesome
-  ];
+  # Note: Font packages are now centralized in theme.nix/commonPackages
+  # to avoid duplication following DRY principle
 }

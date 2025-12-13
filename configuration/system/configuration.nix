@@ -22,6 +22,7 @@ in {
     ./system_modules/fish.nix
     ./system_modules/boot.nix
     ./system_modules/networking.nix
+    ./system_modules/ssh.nix
     ./system_modules/hardware.nix
     ./system_modules/packages.nix
     ./system_modules/core-packages.nix
