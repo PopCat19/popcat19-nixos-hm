@@ -18,7 +18,7 @@
   userConfig,
   ...
 }: let
-  inherit (import ./settings.nix {inherit pkgs;}) settings;
+  inherit (import ./settings.nix {inherit pkgs config;}) settings;
   username = userConfig.user.username;
 in {
   imports = [
