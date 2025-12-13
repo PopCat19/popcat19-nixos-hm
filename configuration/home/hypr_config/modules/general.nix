@@ -1,10 +1,8 @@
 {
   wayland.windowManager.hyprland.settings = {
-    monitor = ",preferred,auto,auto";
-
     general = {
-      gaps_in = 6;
-      gaps_out = 12;
+      gaps_in = 4;
+      gaps_out = 4;
       border_size = 2;
       "col.active_border" = "$rose";
       "col.inactive_border" = "$muted";
@@ -27,8 +25,8 @@
 
       blur = {
         enabled = true;
-        size = 3;
-        passes = 3;
+        size = 2;
+        passes = 2;
         vibrancy = 0.1696;
       };
     };
