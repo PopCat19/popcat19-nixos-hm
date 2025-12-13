@@ -29,12 +29,8 @@
     kdePackages.keditbookmarks # Bookmark editor
     kdePackages.kleopatra # Certificate manager and GUI for GnuPG
 
-    # Qt theming
-    qt6Packages.qtstyleplugin-kvantum
-    libsForQt5.qtstyleplugin-kvantum
-
-    # Papirus icons
-    papirus-icon-theme
+    # Note: Qt theming and icon packages are centralized in theme.nix/commonPackages
+    # to avoid duplication following DRY principle
   ];
 
   # KDE configuration files - keeping minimal config here, main theme config in theme.nix
@@ -67,13 +63,7 @@
      <bookmark href="file:///home/${config.home.username}/Videos">
       <title>Videos</title>
      </bookmark>
-     <bookmark href="file:///home/${config.home.username}/syncthing-shared">
-      <title>Syncthing Shared</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/nixos-config">
-      <title>nixos-config</title>
-     </bookmark>
-     <bookmark href="trash:/">
+     <bookmark href="trash://">
       <title>Trash</title>
      </bookmark>
     </xbel>
