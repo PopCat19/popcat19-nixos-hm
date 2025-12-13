@@ -1,14 +1,14 @@
-# Home Manager configuration for nixos0
+# Host-specific home configuration for nixos0
 {
-  pkgs,
   config,
-  system,
+  pkgs,
   lib,
-  inputs,
-  userConfig,
   ...
 }: {
   imports = [
     ../../configuration/home/home.nix
   ];
+
+  # Host-specific monitor configuration
+  home.file.".config/hypr/monitors.conf".source = ./hypr_config/monitors.conf;
 }

@@ -11,6 +11,7 @@
     ../../configuration/system/configuration.nix
     ../../configuration/system/system-extended.nix
     inputs.jovian.nixosModules.default
+    ./home.nix
   ];
 
   networking.hostName = "popcat19-nixos0";
