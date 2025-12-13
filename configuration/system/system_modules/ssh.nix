@@ -13,7 +13,7 @@
   services.openssh = {
     enable = true;
     settings = {
-      PasswordAuthentication = yes;
+      PasswordAuthentication = true;
       PermitRootLogin = "yes";
     };
   };
