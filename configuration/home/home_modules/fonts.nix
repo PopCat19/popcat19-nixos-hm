@@ -57,7 +57,7 @@ in {
       wheel_scroll_lines=3
 
       [SettingsWindow]
-      geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x3\0\0\0\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf\0\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf\0\0\0\0\x2\0\0\0\n\0\0\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf)
+      geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x3\0\0\0\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf\0\0\0\0\0\0\0\0\0\x2\x7f\0\0\x1\xdf)
     '';
   };
 
@@ -95,14 +95,6 @@ in {
     </fontconfig>
   '';
 
-  home.packages = with pkgs; [
-    google-fonts
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.caskaydia-cove
-    nerd-fonts.fantasque-sans-mono
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-color-emoji
-    font-awesome
-  ];
+  # Note: Font packages are now centralized in theme.nix/commonPackages
+  # to avoid duplication following DRY principle
 }
