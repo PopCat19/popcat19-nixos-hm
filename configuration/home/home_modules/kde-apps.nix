@@ -63,6 +63,12 @@
      <bookmark href="file:///home/${config.home.username}/Videos">
       <title>Videos</title>
      </bookmark>
+     <bookmark href="file:///home/${config.home.username}/syncthing-shared">
+      <title>Syncthing Shared</title>
+     </bookmark>
+     <bookmark href="file:///home/${config.home.username}/nixos-config">
+      <title>nixos-config</title>
+     </bookmark>
      <bookmark href="trash://">
       <title>Trash</title>
      </bookmark>
