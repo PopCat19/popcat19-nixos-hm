@@ -107,7 +107,7 @@ let
             formatHorizontal = "HH:mm ddd, MMM dd";
             formatVertical = "HH mm - dd MM";
             useCustomFont = true;
-            customFont = fonts.mono;
+            customFont = "JetBrainsMono Nerd Font";
             usePrimaryColor = false;
           }
           {
