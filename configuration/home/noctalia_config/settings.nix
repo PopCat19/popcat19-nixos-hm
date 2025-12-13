@@ -246,7 +246,7 @@ let
       randomEnabled = false;
       randomIntervalSec = 300;
       transitionDuration = 1500;
-      transitionType = "random";
+      transitionType = "fade";
       transitionEdgeSmoothness = 0.05;
       panelPosition = "follow_bar";
       hideWallpaperFilenames = false;
@@ -259,6 +259,8 @@ let
       wallhavenResolutionMode = "atleast";
       wallhavenResolutionWidth = "";
       wallhavenResolutionHeight = "";
+      # Set specific wallpaper file
+      specificWallpaper = "${config.home.homeDirectory}/wallpaper/wallpaper0.png";
     };
     
     # App launcher settings
