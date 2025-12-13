@@ -9,21 +9,4 @@
       honkers-railway-launcher.enable = system == "x86_64-linux";
     };
   };
-
-  # Home Manager configuration module
-  mkHomeManagerModule = system: {
-    userConfig,
-    inputs,
-    homePath,
-  }: {
-    home-manager = {
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      extraSpecialArgs = {
-        inherit system userConfig inputs;
-      };
-      users.${userConfig.user.username} = import homePath;
-      backupFileExtension = "bak2";
-    };
-  };
 }
