@@ -23,6 +23,7 @@ in {
 
     settings = {
       source = [
+        "~/.config/hypr/monitors.conf"
         "~/.config/hypr/userprefs.conf"
       ];
     };
