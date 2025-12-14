@@ -76,12 +76,13 @@
     # GTK_THEME removed - let stylix handle GTK theming automatically
   };
 
-  # Package overrides to ensure we have the fonts we want
+  # Package overrides to ensure we have the fonts and icons we want
   home.packages = with pkgs; [
     google-fonts
     nerd-fonts.fira-code
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
+    papirus-icon-theme  # Required for QT_QT6CT_THEME to work
   ];
 }
