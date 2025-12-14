@@ -34,6 +34,12 @@
   stylix.targets.hyprland.enable = true;
   stylix.targets.gtk.enable = true;
 
+  # Icon theme configuration
+  gtk.iconTheme = {
+    package = pkgs.papirus-icon-theme;
+    name = "Papirus-Dark";
+  };
+
   # Session variables for Qt compatibility (let stylix handle GTK automatically)
   home.sessionVariables = {
     QT_STYLE_OVERRIDE = "kvantum";
