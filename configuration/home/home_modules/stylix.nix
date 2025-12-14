@@ -47,17 +47,18 @@
   # Font configuration - let stylix handle packages automatically
   # Manual font packages removed to avoid conflicts
 
-  # Enable Hyprland theming target
+  # Enable theming targets for comprehensive coverage
   stylix.targets.hyprland.enable = true;
+  stylix.targets.gtk.enable = true;
 
-  # Session variables for Qt and GTK compatibility
+  # Session variables for Qt compatibility (let stylix handle GTK automatically)
   home.sessionVariables = {
     QT_STYLE_OVERRIDE = "kvantum";
     QT_QPA_PLATFORM = "wayland;xcb";
-    GTK_THEME = "Rose-Pine-Main-BL";
     GDK_BACKEND = "wayland,x11,*";
     QT_QUICK_CONTROLS_STYLE = "Kvantum";
     QT_QUICK_CONTROLS_MATERIAL_THEME = "Dark";
+    # GTK_THEME removed - let stylix handle GTK theming automatically
   };
 
   # Package overrides to ensure we have the fonts we want

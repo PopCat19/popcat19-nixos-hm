@@ -36,7 +36,7 @@
     ./home_modules/home-files.nix
     ./home_modules/systemd-services.nix
     ./home_modules/kde-apps.nix
-    ./home_modules/qt-gtk-config.nix
+    # ./home_modules/qt-gtk-config.nix removed - let stylix handle all theming
     ./home_modules/fuzzel-config.nix
     ./home_modules/kitty.nix
     ./home_modules/fish.nix
