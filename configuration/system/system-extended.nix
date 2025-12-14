@@ -22,5 +22,6 @@
     ./system_modules/vpn.nix
     ./system_modules/syncthing.nix
     ./system_modules/dconf.nix
+    ./system_modules/openrgb.nix
   ];
 }
