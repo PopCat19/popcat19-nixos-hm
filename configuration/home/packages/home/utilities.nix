@@ -4,6 +4,7 @@ with pkgs; [
   # Audio & Hardware Control
   pavucontrol
   playerctl
+  openrgb
 
   # File Sharing
   localsend
