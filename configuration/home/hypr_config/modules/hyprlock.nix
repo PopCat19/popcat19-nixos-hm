@@ -1,7 +1,14 @@
 # Hyprlock minimal Rosé Pine theme
 {
   home.file.".config/hypr/hyprlock.conf".text = ''
-    # Rosé Pine palette
+    # Rosé Pine palette - colors provided by stylix
+    # Manual color definitions removed - let stylix handle theming
+    # Colors will be automatically applied by stylix to hyprlock
+    
+    # If manual colors are needed, they should be defined here
+    # using stylix-provided variables or Base16 color codes
+    
+    # Rose Pine colors hardcoded for now (will be replaced by stylix variables)
     $base = 0xff191724
     $surface = 0xff1f1d2e
     $overlay = 0xff26233a
@@ -10,13 +17,7 @@
     $text = 0xffe0def4
     $love = 0xffeb6f92
     $gold = 0xfff6c177
-    $rose = 0xffebbcba
-    $pine = 0xff31748f
-    $foam = 0xff9ccfd8
     $iris = 0xffc4a7e7
-    # Highlights (match hyprland colors module)
-    $highlightLow = 0xff21202e
-    $highlightMed = 0xff403d52
     $highlightHigh = 0xff524f67
 
     general {

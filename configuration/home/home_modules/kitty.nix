@@ -52,9 +52,9 @@
       color13 = "#c4a7e7";
       color14 = "#ebbcba";
       color15 = "#e0def4";
-      background_opacity = "0.80";
       dynamic_background_opacity = "yes";
       background_blur = 16;
+      # background_opacity removed - let stylix handle it
     };
   };
 }

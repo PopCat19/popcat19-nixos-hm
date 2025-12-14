@@ -7,7 +7,7 @@
   programs.micro = {
     enable = true;
     settings = {
-      colorscheme = "rose-pine";
+      # colorscheme removed - let stylix handle theming
       mkparents = true;
       softwrap = true;
       wordwrap = true;
@@ -27,8 +27,5 @@
     };
   };
 
-  # Micro editor colorscheme
-  home.file.".config/micro/colorschemes/rose-pine.micro" = {
-    source = ../micro_config/rose-pine.micro;
-  };
+  # Micro editor colorscheme removed - let stylix handle theming
 }

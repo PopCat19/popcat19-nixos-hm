@@ -29,11 +29,11 @@
     kdePackages.keditbookmarks # Bookmark editor
     kdePackages.kleopatra # Certificate manager and GUI for GnuPG
 
-    # Note: Qt theming and icon packages are centralized in theme.nix/commonPackages
+    # Note: Qt theming and icon packages are now handled by stylix.nix
     # to avoid duplication following DRY principle
   ];
 
-  # KDE configuration files - keeping minimal config here, main theme config in theme.nix
+  # KDE configuration files - keeping minimal config here, main theme config in stylix.nix
 
   # Qt environment variables for Kvantum
 
