@@ -68,19 +68,18 @@
   # Enable Qt theming target for comprehensive Qt/KDE integration
   stylix.targets.qt.enable = true;
   
-  # Enable KDE theming target for native KDE desktop integration
-  stylix.targets.kde.enable = true;
+  # Disable KDE target for Hyprland compatibility (creates conflicting configs)
+  stylix.targets.kde.enable = false;
 
   # Session variables for Qt compatibility
   home.sessionVariables = {
-    QT_STYLE_OVERRIDE = "kvantum";
     QT_QPA_PLATFORM = "wayland;xcb";
+    QT_QPA_PLATFORMTHEME = "qt5ct";  # Tells Qt apps to use qt5ct configuration
     GDK_BACKEND = "wayland,x11,*";
-    QT_QUICK_CONTROLS_STYLE = "Kvantum";
-    QT_QUICK_CONTROLS_MATERIAL_THEME = "Dark";
+    QT_QUICK_CONTROLS_STYLE = "org.kde.desktop";  # Better fallback for QML apps
   };
 
-  # Package overrides to ensure we have the fonts and icons we want
+  # Package overrides to ensure we have the fonts, icons, and Qt tools we want
   home.packages = with pkgs; [
     google-fonts
     nerd-fonts.fira-code
@@ -88,5 +87,9 @@
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
     papirus-icon-theme
+    # Qt styling tools for platform theme support
+    libsForQt5.qt5ct
+    kdePackages.qt6ct
+    libsForQt5.qtstyleplugin-kvantum
   ];
 }
