@@ -71,6 +71,8 @@
     GDK_BACKEND = "wayland,x11,*";
     QT_QUICK_CONTROLS_STYLE = "Kvantum";
     QT_QUICK_CONTROLS_MATERIAL_THEME = "Dark";
+    # Qt icon theme for KDE/Qt applications
+    QT_QT6CT_THEME = "Papirus-Dark";
     # GTK_THEME removed - let stylix handle GTK theming automatically
   };
 
