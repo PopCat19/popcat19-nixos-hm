@@ -24,11 +24,11 @@ let
     # Bar configuration with user's custom layout
     bar = {
       position = "top";
-      backgroundOpacity = 0.64;
+      # backgroundOpacity removed - let stylix handle theming
       monitors = [ ];
       density = "default";
       showCapsule = true;
-      capsuleOpacity = 1;
+      # capsuleOpacity removed - let stylix handle theming
       floating = true;
       marginVertical = 0.25;
       marginHorizontal = 0.25;
@@ -159,12 +159,10 @@ let
     
     # UI settings
     ui = {
-      fontDefault = "Rounded Mplus 1c Medium";
-      fontFixed = "Fira Mono";
+      # Fonts and theming removed - let stylix handle all theming
       fontDefaultScale = 1;
       fontFixedScale = 1;
       tooltipsEnabled = true;
-      panelBackgroundOpacity = 1;
       panelsAttachedToBar = true;
       settingsPanelAttachToBar = false;
     };
@@ -339,21 +337,8 @@ let
       criticalColor = "#eb6f92";
     };
     
-    # Dock configuration (disabled)
-    dock = {
-      enabled = false;
-      displayMode = "auto_hide";
-      backgroundOpacity = 1;
-      floatingRatio = 1;
-      size = 1;
-      onlySameOutput = true;
-      monitors = [ ];
-      pinnedApps = [ ];
-      colorizeIcons = false;
-      pinnedStatic = false;
-      inactiveIndicators = false;
-      deadOpacity = 0.6;
-    };
+    # Dock configuration removed - let stylix handle theming
+    # (dock was disabled anyway)
     
     # Network configuration
     network = {
@@ -406,7 +391,7 @@ let
       monitors = [ ];
       location = "top_right";
       overlayLayer = true;
-      backgroundOpacity = 0.8;
+      # backgroundOpacity removed - let stylix handle theming
       respectExpireTimeout = false;
       lowUrgencyDuration = 3;
       normalUrgencyDuration = 8;
@@ -429,7 +414,7 @@ let
       location = "top";
       autoHideMs = 2000;
       overlayLayer = true;
-      backgroundOpacity = 0.8;
+      # backgroundOpacity removed - let stylix handle theming
       enabledTypes = [ 0 1 2 ];
       monitors = [ ];
     };

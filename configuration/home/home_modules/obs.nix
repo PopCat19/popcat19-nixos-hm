@@ -5,7 +5,7 @@
   #
   # Purpose: Configure OBS Studio with comprehensive plugin suite for advanced recording and streaming.
   # Dependencies: obs-pipewire-audio-capture, obs-tuna, obs-vkcapture, input-overlay, obs-advanced-masks, advanced-scene-switcher
-  # Related: environment.nix, theme.nix
+  # Related: environment.nix, stylix.nix
   #
   # This module:
   # - Enables OBS Studio for screen recording and streaming
