@@ -71,13 +71,24 @@
   # Disable KDE target for Hyprland compatibility (creates conflicting configs)
   stylix.targets.kde.enable = false;
 
+  # Enable Home Manager Qt module for proper configuration
+  qt = {
+    enable = true;
+    platformTheme.name = "qtct";  # Handles both qt5ct and qt6ct properly
+    style.name = "kvantum";       # Use Kvantum style for better integration
+  };
+
   # Session variables for Qt compatibility
   home.sessionVariables = {
     QT_QPA_PLATFORM = "wayland;xcb";
-    QT_QPA_PLATFORMTHEME = lib.mkForce "qt6ct";  # Force qt6ct over default qt5ct
     GDK_BACKEND = "wayland,x11,*";
-    QT_QUICK_CONTROLS_STYLE = "org.kde.desktop";  # Better fallback for QML apps
   };
+
+  # Force qt6ct to use the correct icon theme if Stylix misses it
+  xdg.configFile."qt6ct/qt6ct.conf".text = lib.mkBefore ''
+    [Icon Theme]
+    Theme=${config.stylix.icons.dark}
+  '';
 
   # Package overrides to ensure we have the fonts, icons, and Qt tools we want
   home.packages = with pkgs; [
