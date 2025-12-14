@@ -67,6 +67,9 @@
 
   # Enable Qt theming target for comprehensive Qt/KDE integration
   stylix.targets.qt.enable = true;
+  
+  # Enable KDE theming target for native KDE desktop integration
+  stylix.targets.kde.enable = true;
 
   # Session variables for Qt compatibility
   home.sessionVariables = {
