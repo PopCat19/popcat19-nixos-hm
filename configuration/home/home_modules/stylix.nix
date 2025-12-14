@@ -24,24 +24,10 @@
   # Enable Stylix
   stylix.enable = true;
 
-  # Try base16Scheme instead
-  stylix.base16Scheme = {
-    base00 = "#191724";  # base
-    base01 = "#1f1d2e";  # surface
-    base02 = "#26233a";  # overlay
-    base03 = "#6e6a86";  # muted
-    base04 = "#908caa";  # subtle
-    base05 = "#e0def4";  # text
-    base06 = "#524f67";  # highlightHigh
-    base07 = "#524f67";  # highlightHigh
-    base08 = "#eb6f92";  # love
-    base09 = "#f6c177";  # gold
-    base0A = "#ebbcba";  # rose
-    base0B = "#31748f";  # pine
-    base0C = "#9ccfd8";  # foam
-    base0D = "#c4a7e7";  # iris
-    base0E = "#c4a7e7";  # iris
-    base0F = "#eb6f92";  # love
+  # Use Rose Pine Base16 scheme from GitHub
+  stylix.base16Scheme = builtins.fetchurl {
+    url = "https://raw.githubusercontent.com/edunfelt/base16-rose-pine-scheme/main/rose-pine.yaml";
+    sha256 = "4d16e181b6355fd34a444028b46425f08c3cc220deb0b5a00c62341c1d388de3";
   };
 
   # Font configuration - let stylix handle packages automatically
