@@ -64,7 +64,10 @@
     name = "Papirus-Dark";
   };
 
-  # Session variables for Qt compatibility (let stylix handle GTK automatically)
+  # Enable Qt theming target for better Qt/KDE application integration
+  stylix.targets.qt.enable = true;
+
+  # Session variables for Qt compatibility
   home.sessionVariables = {
     QT_STYLE_OVERRIDE = "kvantum";
     QT_QPA_PLATFORM = "wayland;xcb";
@@ -73,7 +76,6 @@
     QT_QUICK_CONTROLS_MATERIAL_THEME = "Dark";
     # Qt icon theme for KDE/Qt applications
     QT_QT6CT_THEME = "Papirus-Dark";
-    # GTK_THEME removed - let stylix handle GTK theming automatically
   };
 
   # Package overrides to ensure we have the fonts and icons we want
@@ -83,6 +85,6 @@
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
-    papirus-icon-theme  # Required for QT_QT6CT_THEME to work
+    papirus-icon-theme
   ];
 }
