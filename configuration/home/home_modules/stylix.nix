@@ -24,11 +24,8 @@
   # Enable Stylix
   stylix.enable = true;
 
-  # Use Rose Pine Base16 scheme from GitHub
-  stylix.base16Scheme = builtins.fetchurl {
-    url = "https://raw.githubusercontent.com/edunfelt/base16-rose-pine-scheme/main/rose-pine.yaml";
-    sha256 = "4d16e181b6355fd34a444028b46425f08c3cc220deb0b5a00c62341c1d388de3";
-  };
+  # Use Rose Pine Base16 scheme from base16-schemes package
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
 
   # Font configuration - let stylix handle packages automatically
   # Manual font packages removed to avoid conflicts
