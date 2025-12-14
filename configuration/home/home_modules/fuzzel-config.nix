@@ -19,7 +19,7 @@
         show-actions = true; # Show application actions.
         terminal = userConfig.defaultApps.terminal.command; # Terminal for launching terminal applications.
         filter-desktop = true; # Filter desktop files.
-        icon-theme = "Papirus-Dark"; # Icon theme to use.
+        # icon-theme removed - let stylix handle icon theming automatically
         icons-enabled = true; # Enable application icons.
         password-character = "*"; # Character for password fields.
         list-executables-in-path = false; # Don't list PATH executables.

@@ -58,14 +58,12 @@
     size = 24;
   };
 
-  # Icon theme configuration
-  gtk.iconTheme = {
+  # Icon theme configuration using stylix native option
+  stylix.icons = {
+    enable = true;
     package = pkgs.papirus-icon-theme;
-    name = "Papirus-Dark";
+    dark = "Papirus-Dark";
   };
-
-  # Enable Qt theming target for better Qt/KDE application integration
-  stylix.targets.qt.enable = true;
 
   # Session variables for Qt compatibility
   home.sessionVariables = {
@@ -74,8 +72,6 @@
     GDK_BACKEND = "wayland,x11,*";
     QT_QUICK_CONTROLS_STYLE = "Kvantum";
     QT_QUICK_CONTROLS_MATERIAL_THEME = "Dark";
-    # Qt icon theme for KDE/Qt applications
-    QT_QT6CT_THEME = "Papirus-Dark";
   };
 
   # Package overrides to ensure we have the fonts and icons we want
