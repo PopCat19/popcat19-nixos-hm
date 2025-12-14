@@ -91,4 +91,10 @@
     # Qt styling tools for platform theme support
     kdePackages.qt6ct
   ];
+
+  # Create kdeglobals configuration file for KDE icon theme
+  home.file.".config/kdeglobals".text = ''
+    [Icons]
+    Theme=Papirus-Dark
+  '';
 }
