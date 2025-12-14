@@ -7,9 +7,16 @@
 # - Provides complete Noctalia settings as Nix attribute set
 # - Matches user's personalized configuration from JSON
 # - Can be imported by the main Noctalia home manager module
-{ pkgs, config, ... }:
+{ pkgs, config, hostname ? null, ... }:
 
 let
+  # Determine if host has battery based on hostname
+  hasBattery = 
+    if hostname != null then
+      hostname == "popcat19-surface0" || hostname == "popcat19-thinkpad0"
+    else
+      false;
+  
   # Complete Noctalia settings based on user's configuration
   settings = {
     settingsVersion = 26;
@@ -83,13 +90,19 @@ let
             hidePassive = false;
             pinned = [ ];
           }
-          {
-            id = "Battery";
-            displayMode = "alwaysShow";
-            showNoctaliaPerformance = false;
-            showPowerProfiles = false;
-            warningThreshold = 20;
-          }
+        ]
+        ++ (
+          if hasBattery then [
+            {
+              id = "Battery";
+              displayMode = "alwaysShow";
+              showNoctaliaPerformance = false;
+              showPowerProfiles = false;
+              warningThreshold = 20;
+            }
+          ] else []
+        )
+        ++ [
           {
             id = "Volume";
             displayMode = "alwaysShow";

@@ -20,6 +20,7 @@
 }: let
   inherit (import ./settings.nix {inherit pkgs config;}) settings;
   username = userConfig.user.username;
+  hostname = config.networking.hostName or userConfig.host.hostname;
 in {
   imports = [
     inputs.noctalia.homeModules.default
@@ -30,6 +31,6 @@ in {
     # Enable systemd service through home manager
     systemd.enable = true;
 
-    settings = settings;
+    settings = (import ./settings.nix {inherit pkgs config hostname;}).settings;
   };
 }
