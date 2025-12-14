@@ -65,6 +65,9 @@
     dark = "Papirus-Dark";
   };
 
+  # Enable Qt theming target for comprehensive Qt/KDE integration
+  stylix.targets.qt.enable = true;
+
   # Session variables for Qt compatibility
   home.sessionVariables = {
     QT_STYLE_OVERRIDE = "kvantum";
