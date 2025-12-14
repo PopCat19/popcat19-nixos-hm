@@ -7,9 +7,9 @@
 {
   wayland.windowManager.hyprland.settings = {
     env = [
-      # Cursor theme (Hyprland cursor integration)
-      "HYPRCURSOR_THEME,rose-pine-hyprcursor"
-      "XCURSOR_SIZE,24"
+      # Cursor theme now configured declaratively via home.pointerCursor
+      # HYPRCURSOR_THEME,rose-pine-hyprcursor
+      # XCURSOR_SIZE,24
       "HYPRCURSOR_SIZE,28"
 
       # Desktop session identifiers (set for Hyprland session)

@@ -50,6 +50,14 @@
   stylix.targets.hyprland.enable = true;
   stylix.targets.gtk.enable = true;
 
+  # Cursor theme configuration
+  home.pointerCursor = {
+    gtk.enable = true;
+    package = pkgs.rose-pine-hyprcursor;
+    name = "rose-pine-hyprcursor";
+    size = 24;
+  };
+
   # Icon theme configuration
   gtk.iconTheme = {
     package = pkgs.papirus-icon-theme;
