@@ -6,7 +6,7 @@
 #
 # This module:
 # - Sets up Rose Pine color scheme via Stylix
-# - Configures fonts: Rounded Mplus 1c Medium + JetBrainsMono Nerd Font
+# - Configures fonts: Rounded Mplus 1c Medium + FiraCode Nerd Font
 # - Manages GTK, Qt, and desktop environment theming
 # - Provides comprehensive theming across all applications
 {
@@ -27,8 +27,24 @@
   # Use Rose Pine Base16 scheme from base16-schemes package
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
 
-  # Font configuration - let stylix handle packages automatically
-  # Manual font packages removed to avoid conflicts
+  # Font configuration
+  stylix.fonts.sansSerif = {
+    package = pkgs.google-fonts;
+    name = "Rounded Mplus 1c Medium";
+  };
+  
+  stylix.fonts.monospace = {
+    package = pkgs.nerd-fonts.fira-code;
+    name = "FiraCode Nerd Font";
+  };
+  
+  # Font sizes for specific contexts
+  stylix.fonts.sizes = {
+    applications = 10;  # For applications like fuzzel
+    terminal = 10;      # For terminal applications like kitty
+    popups = 10;        # For popup dialogs
+    desktop = 10;       # For desktop applications
+  };
 
   # Enable theming targets for comprehensive coverage
   stylix.targets.hyprland.enable = true;
@@ -53,7 +69,7 @@
   # Package overrides to ensure we have the fonts we want
   home.packages = with pkgs; [
     google-fonts
-    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
