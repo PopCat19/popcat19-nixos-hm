@@ -74,7 +74,7 @@
   # Session variables for Qt compatibility
   home.sessionVariables = {
     QT_QPA_PLATFORM = "wayland;xcb";
-    QT_QPA_PLATFORMTHEME = "qt5ct";  # Tells Qt apps to use qt5ct configuration
+    QT_QPA_PLATFORMTHEME = lib.mkForce "qt6ct";  # Force qt6ct over default qt5ct
     GDK_BACKEND = "wayland,x11,*";
     QT_QUICK_CONTROLS_STYLE = "org.kde.desktop";  # Better fallback for QML apps
   };
@@ -88,7 +88,6 @@
     noto-fonts-color-emoji
     papirus-icon-theme
     # Qt styling tools for platform theme support
-    libsForQt5.qt5ct
     kdePackages.qt6ct
     libsForQt5.qtstyleplugin-kvantum
   ];
