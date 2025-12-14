@@ -1,55 +1,24 @@
-{ pkgs, inputs, lib, ... }:
-
-let
-  thinkpadUserConfig = import ../../user-config.nix { hostname = "popcat19-thinkpad0"; };
-in
-
+# NixOS Configuration for thinkpad0
 {
+  pkgs,
+  inputs,
+  lib,
+  userConfig,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
-    ../../syncthing_config/system.nix
-    ../../system_modules/boot.nix
-    ../../system_modules/hardware.nix
-    ../../system_modules/networking.nix
-    ../../system_modules/localization.nix
-    ../../system_modules/services.nix
-    ../../system_modules/stream.nix
-    ../../system_modules/display.nix
-    ../../system_modules/audio.nix
-    ../../system_modules/users.nix
-    ../../system_modules/virtualisation.nix
-    ../../system_modules/programs.nix
-    ../../system_modules/environment.nix
-    ../../system_modules/core-packages.nix
-    ../../system_modules/packages.nix
-    ../../system_modules/fonts.nix
-    inputs.home-manager.nixosModules.home-manager
+    ../../configuration/system/configuration.nix
+    ../../configuration/system/system-extended.nix
+    ./system_modules/hardware.nix
+    ./system_modules/zram.nix
   ];
 
-  _module.args.userConfig = thinkpadUserConfig;
-  
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs = {
-      inherit inputs;
-      userConfig = thinkpadUserConfig;
-      system = "x86_64-linux";
-    };
-    users.${thinkpadUserConfig.user.username} = import ./home.nix;
-    backupFileExtension = "bak2";
-  };
-
   networking.hostName = "popcat19-thinkpad0";
-  
-  # Disable Sunshine game-streaming service on this host
-  services.sunshine = {
-    enable = false;
-  };
-  
-  nix.extraOptions = ''
-    experimental-features = fetch-tree flakes nix-command impure-derivations ca-derivations
-  '';
-  
-  system.stateVersion = "25.05";
+
+  # Disable Waydroid for thinkpad0 (override from virtualisation module)
+  virtualisation.waydroid.enable = lib.mkForce false;
+
+  # Disable autologin for thinkpad0 (override from display module)
+  services.displayManager.autoLogin.enable = lib.mkForce false;
 }

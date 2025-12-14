@@ -1,6 +1,8 @@
-{ pkgs, lib, ... }:
-
 {
+  pkgs,
+  lib,
+  ...
+}: {
   # Journald configuration
   services.journald.extraConfig = ''
     MaxRetentionSec=3day
@@ -17,30 +19,11 @@
   # Surface-specific services
   services.iptsd.enable = lib.mkDefault true;
 
-  services.auto-cpufreq = {
-    enable = true;
-    settings = {
-      battery = {
-        governor = "schedutil";
-        turbo = "auto";
-        scaling_min_freq = 400000;
-        scaling_max_freq = 4200000;
-      };
-      charger = {
-        governor = "performance";
-        turbo = "auto";
-        scaling_min_freq = 800000;
-        scaling_max_freq = 4200000;
-      };
-    };
-  };
-
-  # Power/profile services
-  services.power-profiles-daemon.enable = false;
-  services.tlp.enable = false;
-
   # Firmware update service
   services.fwupd.enable = true;
+
+  # Ensure ddcutil udev rules are installed
+  services.udev.packages = [pkgs.ddcutil];
 
   # Udev rules for Surface hardware
   services.udev.extraRules = ''
@@ -68,6 +51,9 @@
 
     # Disable USB autosuspend for WiFi devices to prevent disconnections
     ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="11ab", ATTRS{idProduct}=="2b38", ATTR{power/autosuspend}="-1"
+
+    # I2C devices permissions for DDC/CI
+    KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
   '';
 
   # Audio / PipeWire
@@ -94,23 +80,4 @@
   # Security & authentication
   security.polkit.enable = true;
   security.rtkit.enable = true;
-
-  # TPM / Secure Boot support
-  security.tpm2 = {
-    enable = true;
-    pkcs11.enable = true;
-    tctiEnvironment.enable = true;
-  };
-
-  # WiFi stability systemd service
-  systemd.services.wifi-powersave-off = {
-    description = "Turn off WiFi power saving";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${pkgs.bash}/bin/bash -c 'for i in /sys/class/net/wlp*; do [ -e $i/device/power/control ] && echo on > $i/device/power/control; done'";
-    };
-  };
 }

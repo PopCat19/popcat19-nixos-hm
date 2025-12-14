@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # Surface-specific hardware settings
   hardware = {
     # Enable firmware updates and include wifi firmware
@@ -37,7 +35,7 @@
         libGL
         libGLU
         freeglut
-        glxinfo
+        mesa-demos
         libva
         libva-utils
         vdpauinfo
@@ -102,6 +100,10 @@
     iw
     wpa_supplicant
     wirelesstools
+
+    # DDC/CI and I2C tools for monitor control
+    i2c-tools
+    ddcutil
   ];
 
   # SURFACE POWER MANAGEMENT

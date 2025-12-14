@@ -15,15 +15,21 @@
     # System extensions
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      # Mismatched system dependencies will lead to crashes
-      inputs.nixpkgs.follows = "nixpkgs";
+    # Jovian NixOS (Steam Deck OS)
+    jovian = {
+      url = "github:Jovian-Experiments/jovian-nixos";
+      inputs.nixpkgs.follows = "chaotic";
     };
 
     # Gaming-specific inputs
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Secrets management
+    agenix = {
+      url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -41,65 +47,69 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Hardware-specific configurations
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
     # Theming inputs
     rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
-    catppuccin-nix = {
-      url = "github:catppuccin/nix";
+
+    # Noctalia Shell (Wayland bar/launcher)
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      home-manager,
-      ...
-    }:
-    let
-      # Import modules
-      modules = import ./flake_modules/modules.nix;
-      hosts = import ./flake_modules/hosts.nix;
-      
-      # Supported systems
-      supportedSystems = [ "x86_64-linux" ];
-      
-      # User configuration
-      userConfig = import ./user-config.nix { };
-      
-      # Extract commonly used values
-      hostname = userConfig.host.hostname;
-      username = userConfig.user.username;
+  outputs = inputs @ {
+    self,
+    nixpkgs,
+    home-manager,
+    ...
+  }: let
+    # Import modules
+    modules = import ./configuration/flake/modules/modules.nix;
+    hosts = import ./configuration/flake/modules/hosts.nix;
 
+    # Supported systems
+    supportedSystems = ["x86_64-linux"];
+
+    # Base user configuration
+    baseUserConfig = import ./configuration/user-config.nix {};
+  in {
+    # Packages output (no vicinae now that the overlay was removed)
+    packages = nixpkgs.lib.genAttrs supportedSystems (
+      system: let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = import ./configuration/flake/modules/overlays.nix system;
+        };
+      in {
+        # Export agenix for secret management
+        agenix = inputs.agenix.packages.${system}.default;
+      }
+    );
+
+    # Formatter for 'nix fmt'
+    formatter = nixpkgs.lib.genAttrs supportedSystems (
+      system:
+        nixpkgs.legacyPackages.${system}.alejandra
+    );
+    # Host-specific NixOS configurations generated dynamically
+    # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
+    nixosConfigurations = let
+      machines = baseUserConfig.hosts.machines;
     in
-    {
-      # Packages output (no vicinae now that the overlay was removed)
-      packages = nixpkgs.lib.genAttrs supportedSystems (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = import ./flake_modules/overlays.nix system;
+      nixpkgs.lib.listToAttrs (map (m: let
+          perHostConfig = import ./configuration/user-config.nix {
+            username = baseUserConfig.user.username;
+            machine = m;
+            system = "x86_64-linux";
           };
-        in
-        {
-          # no custom packages exported here
-        }
-      );
-
-      # Host-specific NixOS configurations
-      nixosConfigurations = {
-        popcat19-surface0 = hosts.mkHostConfig "popcat19-surface0" "x86_64-linux" ./hosts/surface0/configuration.nix {
-          inherit inputs nixpkgs modules;
-        };
-        popcat19-nixos0 = hosts.mkHostConfig "popcat19-nixos0" "x86_64-linux" ./hosts/nixos0/configuration.nix {
-          inherit inputs nixpkgs modules;
-        };
-        popcat19-thinkpad0 = hosts.mkHostConfig "popcat19-thinkpad0" "x86_64-linux" ./hosts/thinkpad0/configuration.nix {
-          inherit inputs nixpkgs modules;
-        };
-      };
-    };
+          hostname = perHostConfig.host.hostname;
+        in {
+          name = hostname;
+          value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {
+            inherit inputs nixpkgs modules;
+            userConfig = perHostConfig;
+          };
+        })
+        machines);
+  };
 }
