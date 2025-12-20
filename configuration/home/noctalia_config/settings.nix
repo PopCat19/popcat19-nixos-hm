@@ -27,8 +27,7 @@ let
       # backgroundOpacity removed - let stylix handle theming
       monitors = [ ];
       density = "default";
-      showCapsule = true;
-      # capsuleOpacity removed - let stylix handle theming
+      showCapsule = false;
       floating = true;
       marginVertical = 0.25;
       marginHorizontal = 0.25;
@@ -336,10 +335,19 @@ let
       warningColor = "#31748f";
       criticalColor = "#eb6f92";
     };
-    
-    # Dock configuration removed - let stylix handle theming
-    # (dock was disabled anyway)
-    
+    dock = {
+      enabled = false;
+      displayMode = "auto_hide";
+      floatingRatio = 1;
+      size = 1;
+      onlySameOutput = true;
+      monitors = [ ];
+      pinnedApps = [ ];
+      colorizeIcons = false;
+      pinnedStatic = false;
+      inactiveIndicators = false;
+      animationSpeed = 1;
+    };  
     # Network configuration
     network = {
       wifiEnabled = true;
