@@ -22,5 +22,8 @@
     
     # Light audio editing tools
     audacity
+    
+    # Digital Audio Workstation
+    furnace
   ];
 }
