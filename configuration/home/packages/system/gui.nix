@@ -7,4 +7,7 @@ with pkgs; [
   kdePackages.qtstyleplugin-kvantum
   # Collaborative drawing application
   drawpile
+  
+  # Flashcard learning application
+  anki
 ]
