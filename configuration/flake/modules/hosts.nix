@@ -26,12 +26,10 @@
           home-manager = {
             useGlobalPkgs = false;
             useUserPackages = true;
-            users.${userConfig.user.username} = {
-              nixpkgs.config.allowUnfree = true;
-              nixpkgs.hostPlatform = "x86_64-linux";
-              nixpkgs.overlays = (import ./overlays.nix system) ++ [inputs.nur.overlays.default];
-              imports = [ homeConfigPath ];
-            };
+            nixpkgs.config.allowUnfree = true;
+            nixpkgs.hostPlatform = "x86_64-linux";
+            nixpkgs.overlays = (import ./overlays.nix system) ++ [inputs.nur.overlays.default];
+            users.${userConfig.user.username} = import homeConfigPath;
             extraSpecialArgs = {
               hostPlatform = system;
               inherit userConfig inputs;
