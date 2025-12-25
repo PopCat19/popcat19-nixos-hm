@@ -48,9 +48,30 @@
 
   # Enable theming targets for comprehensive coverage
   stylix.targets.hyprland.enable = true;
+  stylix.targets.kitty.enable = true;
   stylix.targets.gtk.enable = true;
+  stylix.targets.qt.enable = true;
   stylix.targets.zen-browser.enable = true;
   stylix.targets.zen-browser.profileNames = ["default"];
+  stylix.targets.vesktop.enable = true;
+  stylix.targets.fcitx5.enable = true;
+  stylix.targets.fish.enable = true;
+  stylix.targets.starship.enable = true;
+  stylix.targets.tmux.enable = true;
+  stylix.targets.font-packages.enable = true;
+  stylix.targets.fuzzel.enable = true;
+  stylix.targets.btop.enable = true;
+  stylix.targets.mangohud.enable = true;
+  stylix.targets.micro.enable = true;
+  stylix.targets.mpv.enable = true;
+  stylix.targets.neovim.enable = true;
+  stylix.targets.vim.enable = true;
+  stylix.targets.nixos-icons.enable = true;
+  stylix.targets.noctalia-shell.enable = true;
+  stylix.targets.opencode.enable = true;
+  stylix.targets.vscode.enable = true;
+  stylix.targets.zed.enable = true;
+
 
   # Cursor theme configuration
   home.pointerCursor = {
@@ -65,21 +86,6 @@
     enable = true;
     package = pkgs.papirus-icon-theme;
     dark = "Papirus-Dark";
-  };
-
-  # Enable Qt theming target for comprehensive Qt/KDE integration
-  stylix.targets.qt.enable = true;
-
-  # Enable Home Manager Qt module for proper configuration
-  qt = {
-    enable = true;
-    platformTheme.name = "qtct";  # Handles both qt5ct and qt6ct properly
-  };
-
-  # Session variables for Qt compatibility
-  home.sessionVariables = {
-    QT_QPA_PLATFORM = "wayland;xcb";
-    GDK_BACKEND = "wayland,x11,*";
   };
 
   # Package overrides to ensure we have the fonts, icons, and Qt tools we want
