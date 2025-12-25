@@ -1,7 +1,7 @@
 {
   pkgs,
   config,
-  system,
+  hostPlatform,
   lib,
   inputs,
   ...
