@@ -23,6 +23,7 @@
 
   # Enable Stylix
   stylix.enable = true;
+  stylix.autoEnable = true;
 
   # Use Rose Pine Base16 scheme from base16-schemes package
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
@@ -47,30 +48,8 @@
   };
 
   # Enable theming targets for comprehensive coverage
-  stylix.targets.hyprland.enable = true;
-  stylix.targets.kitty.enable = true;
-  stylix.targets.gtk.enable = true;
-  stylix.targets.qt.enable = true;
   stylix.targets.zen-browser.enable = true;
   stylix.targets.zen-browser.profileNames = ["default"];
-  stylix.targets.vesktop.enable = true;
-  stylix.targets.fcitx5.enable = true;
-  stylix.targets.fish.enable = true;
-  stylix.targets.starship.enable = true;
-  stylix.targets.tmux.enable = true;
-  stylix.targets.font-packages.enable = true;
-  stylix.targets.fuzzel.enable = true;
-  stylix.targets.btop.enable = true;
-  stylix.targets.mangohud.enable = true;
-  stylix.targets.micro.enable = true;
-  stylix.targets.mpv.enable = true;
-  stylix.targets.neovim.enable = true;
-  stylix.targets.vim.enable = true;
-  stylix.targets.nixos-icons.enable = true;
-  stylix.targets.noctalia-shell.enable = true;
-  stylix.targets.opencode.enable = true;
-  stylix.targets.vscode.enable = true;
-  stylix.targets.zed.enable = true;
 
 
   # Cursor theme configuration
