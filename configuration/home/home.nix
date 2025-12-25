@@ -14,7 +14,7 @@
   lib,
   inputs,
   userConfig,
-  system,
+  hostPlatform,
   ...
 }: {
   # Basic home configuration
@@ -50,5 +50,5 @@
   ];
 
   # Use the centralized packages list from home_modules/packages.nix
-  home.packages = import ./home_modules/packages.nix {inherit pkgs inputs system userConfig;};
+  home.packages = import ./home_modules/packages.nix {inherit pkgs inputs hostPlatform userConfig;};
 }

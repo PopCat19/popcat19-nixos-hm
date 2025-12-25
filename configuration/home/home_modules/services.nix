@@ -1,6 +1,6 @@
-{system, ...}: let
+{hostPlatform, ...}: let
   # Architecture detection
-  isX86_64 = system == "x86_64-linux";
+  isX86_64 = hostPlatform == "x86_64-linux";
   # Architecture-specific acceleration settings
   # moved to ../../home_modules/generative.nix
 in {

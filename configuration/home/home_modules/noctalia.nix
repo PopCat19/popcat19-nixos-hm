@@ -13,7 +13,7 @@
   lib,
   pkgs,
   config,
-  system,
+  hostPlatform,
   inputs,
   userConfig,
   ...

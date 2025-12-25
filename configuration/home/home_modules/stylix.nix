@@ -18,7 +18,7 @@
   ...
 }: {
   imports = [
-    inputs.stylix.homeManagerModules.stylix
+    inputs.stylix.homeModules.stylix
   ];
 
   # Enable Stylix
@@ -49,6 +49,8 @@
   # Enable theming targets for comprehensive coverage
   stylix.targets.hyprland.enable = true;
   stylix.targets.gtk.enable = true;
+  stylix.targets.zen-browser.enable = true;
+  stylix.targets.zen-browser.profileNames = ["default"];
 
   # Cursor theme configuration
   home.pointerCursor = {
