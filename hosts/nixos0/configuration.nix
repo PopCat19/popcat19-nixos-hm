@@ -20,5 +20,9 @@
     zluda
     alsa-utils
     pavucontrol
+    opentabletdriver
   ];
+
+  # Hardware configuration
+  hardware.opentabletdriver.enable = true;
 }
