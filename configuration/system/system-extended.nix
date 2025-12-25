@@ -23,5 +23,6 @@
     ./system_modules/syncthing.nix
     ./system_modules/dconf.nix
     ./system_modules/openrgb.nix
+    ./system_modules/stylix-lightdm.nix
   ];
 }
