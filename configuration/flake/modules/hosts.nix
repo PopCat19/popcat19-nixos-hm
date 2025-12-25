@@ -26,9 +26,13 @@
           home-manager = {
             useGlobalPkgs = false;
             useUserPackages = true;
-            nixpkgs.config.allowUnfree = true;
-            nixpkgs.hostPlatform = "x86_64-linux";
-            nixpkgs.overlays = (import ./overlays.nix system) ++ [inputs.nur.overlays.default];
+            sharedModules = [
+              {
+                nixpkgs.config.allowUnfree = true;
+                nixpkgs.hostPlatform = "x86_64-linux";
+                nixpkgs.overlays = (import ./overlays.nix system) ++ [inputs.nur.overlays.default];
+              }
+            ];
             users.${userConfig.user.username} = import homeConfigPath;
             extraSpecialArgs = {
               hostPlatform = system;
