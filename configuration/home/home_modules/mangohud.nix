@@ -42,7 +42,7 @@
     # ─── CORE MANGOHUD PACKAGES ───
     mangohud # Gaming performance overlay with system metrics
     goverlay # MangoHUD configuration GUI for easy setup
-    mangojuice # Alternative MangoHUD configuration tool
+
 
     # ─── GAMING ENHANCEMENT TOOLS ───
     vkbasalt # Vulkan post-processing layer for visual enhancements
