@@ -28,6 +28,7 @@
             useUserPackages = true;
             users.${userConfig.user.username} = {
               nixpkgs.config.allowUnfree = true;
+              nixpkgs.hostPlatform = "x86_64-linux";
               nixpkgs.overlays = (import ./overlays.nix system) ++ [inputs.nur.overlays.default];
               imports = [ homeConfigPath ];
             };
