@@ -15,4 +15,6 @@ system: [
   (import ../overlays/easyeffects-pinned.nix)
   # Fix lutris build by overriding pyrate-limiter dependency to disable tests
   # (import ../overlays/lutris-fix.nix) # Temporarily disabled
+  # Fix mangojuice hash mismatch
+  (import ../overlays/mangojuice-fix.nix)
 ]
