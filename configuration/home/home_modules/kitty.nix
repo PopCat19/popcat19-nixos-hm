@@ -36,25 +36,10 @@
       background = "#191724";
       selection_foreground = "#e0def4";
       selection_background = "#403d52";
-      color0 = "#26233a";
-      color1 = "#eb6f92";
-      color2 = "#9ccfd8";
-      color3 = "#f6c177";
-      color4 = "#31748f";
-      color5 = "#c4a7e7";
-      color6 = "#ebbcba";
-      color7 = "#e0def4";
-      color8 = "#6e6a86";
-      color9 = "#eb6f92";
-      color10 = "#9ccfd8";
-      color11 = "#f6c177";
-      color12 = "#31748f";
-      color13 = "#c4a7e7";
-      color14 = "#ebbcba";
-      color15 = "#e0def4";
+      # Manual color palette removed - let stylix handle theming
+      # Colors are now provided by stylix Base16 scheme
       dynamic_background_opacity = "yes";
       background_blur = 16;
-      # background_opacity removed - let stylix handle it
     };
   };
 }

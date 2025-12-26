@@ -332,8 +332,10 @@ let
       diskPollingInterval = 3000;
       networkPollingInterval = 3000;
       useCustomColors = false;
-      warningColor = "#31748f";
-      criticalColor = "#eb6f92";
+      # warningColor removed - let stylix handle theming
+      # warningColor = "#31748f";
+      # criticalColor removed - let stylix handle theming
+      # criticalColor = "#eb6f92";
     };
     dock = {
       enabled = false;
@@ -449,12 +451,14 @@ let
     # Color schemes
     colorSchemes = {
       useWallpaperColors = false;
-      predefinedScheme = "Rose Pine";
+      # predefinedScheme removed - let stylix handle theming
+      # predefinedScheme = "Rose Pine";
       darkMode = true;
       schedulingMode = "off";
       manualSunrise = "06:30";
       manualSunset = "18:30";
-      matugenSchemeType = "scheme-fruit-salad";
+      # matugenSchemeType removed - let stylix handle theming
+      # matugenSchemeType = "scheme-fruit-salad";
       generateTemplatesForPredefined = true;
     };
     
