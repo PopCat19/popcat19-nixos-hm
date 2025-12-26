@@ -11,9 +11,6 @@
       specialArgs = {inherit inputs userConfig;};
 
       modules = [
-        # Overlays plus NUR
-        {nixpkgs.overlays = (import ./overlays.nix system) ++ [inputs.nur.overlays.default];}
-
         # Host-specific configuration file
         hostConfigPath
 
@@ -27,11 +24,18 @@
         # Home Manager configuration
         {
           home-manager = {
-            useGlobalPkgs = true;
+            useGlobalPkgs = false;
             useUserPackages = true;
+            sharedModules = [
+              {
+                nixpkgs.config.allowUnfree = true;
+                nixpkgs.overlays = (import ./overlays.nix system) ++ [inputs.nur.overlays.default];
+              }
+            ];
             users.${userConfig.user.username} = import homeConfigPath;
             extraSpecialArgs = {
-              inherit system userConfig inputs;
+              hostPlatform = system;
+              inherit userConfig inputs;
             };
           };
         }

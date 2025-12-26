@@ -55,6 +55,12 @@
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Stylix theming framework
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -77,7 +83,7 @@
     packages = nixpkgs.lib.genAttrs supportedSystems (
       system: let
         pkgs = import nixpkgs {
-          inherit system;
+          hostPlatform = system;
           overlays = import ./configuration/flake/modules/overlays.nix system;
         };
       in {

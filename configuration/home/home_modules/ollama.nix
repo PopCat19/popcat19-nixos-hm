@@ -1,5 +1,5 @@
 {
-  system,
+  hostPlatform,
   pkgs,
   ...
 }: {

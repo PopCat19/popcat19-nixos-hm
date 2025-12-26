@@ -42,7 +42,7 @@
     # ─── CORE MANGOHUD PACKAGES ───
     mangohud # Gaming performance overlay with system metrics
     goverlay # MangoHUD configuration GUI for easy setup
-    mangojuice # Alternative MangoHUD configuration tool
+
 
     # ─── GAMING ENHANCEMENT TOOLS ───
     vkbasalt # Vulkan post-processing layer for visual enhancements
@@ -77,10 +77,8 @@
       # ─── OVERLAY APPEARANCE ───
       background_alpha=0.0              # Transparent background for clean look
       round_corners=0                   # Sharp corners matching system theme
-      background_color=191724           # Rose Pine base color
       font_file=                        # Use system default font
       font_size=14                      # Readable font size
-      text_color=e0def4                 # Rose Pine text color
       position=middle-left              # Unobtrusive overlay position
       toggle_hud=Shift_R+F12           # Toggle overlay visibility
       hud_compact                       # Compact layout for minimal distraction
@@ -92,7 +90,6 @@
       gpu_stats                         # Enable GPU statistics display
       gpu_load_change                   # Show GPU load changes
       gpu_load_value=50,90             # GPU load warning thresholds (50%, 90%)
-      gpu_load_color=e0def4,f6c177,eb6f92  # Colors: normal, warning, critical
       gpu_voltage                       # Display GPU voltage
       gpu_core_clock                    # Show GPU core clock speed
       gpu_temp                          # GPU temperature monitoring
@@ -100,37 +97,29 @@
       gpu_junction_temp                 # GPU junction temperature
       gpu_fan                           # GPU fan speed display
       gpu_power                         # GPU power consumption
-      gpu_color=9ccfd8                  # Rose Pine foam color for GPU metrics
 
       # ─── CPU MONITORING ───
       cpu_text=                         # No CPU label text
       cpu_stats                         # Enable CPU statistics
       cpu_load_change                   # Show CPU load changes
       cpu_load_value=50,90             # CPU load warning thresholds
-      cpu_load_color=e0def4,f6c177,eb6f92  # CPU load colors
       cpu_mhz                           # CPU frequency display
       cpu_temp                          # CPU temperature monitoring
-      cpu_color=31748f                  # Rose Pine pine color for CPU metrics
 
       # ─── MEMORY MONITORING ───
       vram                              # GPU memory (VRAM) usage
-      vram_color=c4a7e7                # Rose Pine iris color for VRAM
       ram                               # System RAM usage
-      ram_color=c4a7e7                 # Rose Pine iris color for RAM
       battery                           # Battery status (for laptops)
-      battery_color=9ccfd8             # Rose Pine foam color for battery
 
       # ─── PERFORMANCE METRICS ───
       fps                               # Frames per second display
       fps_metrics=avg,0.01             # FPS average and 0.01% low metrics
       frame_timing                      # Frame timing graph
-      frametime_color=ebbcba           # Rose Pine rose color for frame timing
       throttling_status_graph           # GPU/CPU throttling indicators
       fps_limit_method=early           # Early FPS limiting method
       toggle_fps_limit=none            # No FPS limit toggle key
       fps_limit=0                      # No FPS limit (0 = unlimited)
       fps_color_change                 # Dynamic FPS color based on performance
-      fps_color=eb6f92,f6c177,9ccfd8   # FPS colors: low, medium, high
       fps_value=60,90                  # FPS thresholds for color changes
 
       # ─── ADVANCED SETTINGS ───

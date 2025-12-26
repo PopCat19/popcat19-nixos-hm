@@ -24,11 +24,9 @@ let
     # Bar configuration with user's custom layout
     bar = {
       position = "top";
-      backgroundOpacity = 0.64;
       monitors = [ ];
       density = "default";
-      showCapsule = true;
-      capsuleOpacity = 1;
+      showCapsule = false;
       floating = true;
       marginVertical = 0.25;
       marginHorizontal = 0.25;
@@ -159,12 +157,9 @@ let
     
     # UI settings
     ui = {
-      fontDefault = "Rounded Mplus 1c Medium";
-      fontFixed = "Fira Mono";
       fontDefaultScale = 1;
       fontFixedScale = 1;
       tooltipsEnabled = true;
-      panelBackgroundOpacity = 1;
       panelsAttachedToBar = true;
       settingsPanelAttachToBar = false;
     };
@@ -335,15 +330,10 @@ let
       diskPollingInterval = 3000;
       networkPollingInterval = 3000;
       useCustomColors = false;
-      warningColor = "#31748f";
-      criticalColor = "#eb6f92";
     };
-    
-    # Dock configuration (disabled)
     dock = {
       enabled = false;
       displayMode = "auto_hide";
-      backgroundOpacity = 1;
       floatingRatio = 1;
       size = 1;
       onlySameOutput = true;
@@ -352,9 +342,8 @@ let
       colorizeIcons = false;
       pinnedStatic = false;
       inactiveIndicators = false;
-      deadOpacity = 0.6;
-    };
-    
+      animationSpeed = 1;
+    };  
     # Network configuration
     network = {
       wifiEnabled = true;
@@ -406,7 +395,6 @@ let
       monitors = [ ];
       location = "top_right";
       overlayLayer = true;
-      backgroundOpacity = 0.8;
       respectExpireTimeout = false;
       lowUrgencyDuration = 3;
       normalUrgencyDuration = 8;
@@ -429,7 +417,6 @@ let
       location = "top";
       autoHideMs = 2000;
       overlayLayer = true;
-      backgroundOpacity = 0.8;
       enabledTypes = [ 0 1 2 ];
       monitors = [ ];
     };
@@ -456,12 +443,10 @@ let
     # Color schemes
     colorSchemes = {
       useWallpaperColors = false;
-      predefinedScheme = "Rose Pine";
       darkMode = true;
       schedulingMode = "off";
       manualSunrise = "06:30";
       manualSunset = "18:30";
-      matugenSchemeType = "scheme-fruit-salad";
       generateTemplatesForPredefined = true;
     };
     

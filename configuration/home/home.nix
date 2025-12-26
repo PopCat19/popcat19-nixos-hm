@@ -14,7 +14,7 @@
   lib,
   inputs,
   userConfig,
-  system,
+  hostPlatform,
   ...
 }: {
   # Basic home configuration
@@ -24,7 +24,7 @@
 
   imports = [
     ./hypr_config/hyprland.nix
-    ./home_modules/theme.nix
+    ./home_modules/stylix.nix
     ./home_modules/fonts.nix
     ./home_modules/noctalia.nix
     ./home_modules/screenshot.nix
@@ -47,8 +47,9 @@
     ./home_modules/privacy.nix
     ./home_modules/obs.nix
     ./home_modules/syncthing.nix
+    ./home_modules/audio-control.nix
   ];
 
   # Use the centralized packages list from home_modules/packages.nix
-  home.packages = import ./home_modules/packages.nix {inherit pkgs inputs system userConfig;};
+  home.packages = import ./home_modules/packages.nix {inherit pkgs inputs hostPlatform userConfig;};
 }

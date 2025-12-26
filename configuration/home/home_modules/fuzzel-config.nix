@@ -19,20 +19,9 @@
         show-actions = true; # Show application actions.
         terminal = userConfig.defaultApps.terminal.command; # Terminal for launching terminal applications.
         filter-desktop = true; # Filter desktop files.
-        icon-theme = "Papirus-Dark"; # Icon theme to use.
         icons-enabled = true; # Enable application icons.
         password-character = "*"; # Character for password fields.
         list-executables-in-path = false; # Don't list PATH executables.
-      };
-      colors = {
-        background = "191724f0"; # Rose Pine base with higher opacity.
-        text = "e0def4ff"; # Rose Pine text.
-        match = "eb6f92ff"; # Rose Pine love (red) for matches.
-        selection = "403d52ff"; # Rose Pine highlight medium for selection.
-        selection-text = "e0def4ff"; # Rose Pine text for selected.
-        selection-match = "f6c177ff"; # Rose Pine gold for selected matches.
-        border = "ebbcbaff"; # Rose Pine rose for border.
-        placeholder = "908caaff"; # Rose Pine subtle for placeholder.
       };
       border = {
         radius = 12; # Rounded corners.

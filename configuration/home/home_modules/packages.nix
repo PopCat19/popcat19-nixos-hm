@@ -2,7 +2,7 @@
 {
   pkgs,
   inputs,
-  system,
+  hostPlatform,
   userConfig,
 }: let
   # Architecture-specific packages
