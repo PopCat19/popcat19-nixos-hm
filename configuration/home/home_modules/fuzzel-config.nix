@@ -19,12 +19,10 @@
         show-actions = true; # Show application actions.
         terminal = userConfig.defaultApps.terminal.command; # Terminal for launching terminal applications.
         filter-desktop = true; # Filter desktop files.
-        # icon-theme removed - let stylix handle icon theming automatically
         icons-enabled = true; # Enable application icons.
         password-character = "*"; # Character for password fields.
         list-executables-in-path = false; # Don't list PATH executables.
       };
-      # Colors removed - let stylix handle theming
       border = {
         radius = 12; # Rounded corners.
         width = 2; # Border width.

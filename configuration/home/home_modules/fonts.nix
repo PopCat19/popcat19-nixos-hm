@@ -20,8 +20,6 @@
   '';
 in {
   # Application-specific font configurations (let stylix handle system theming)
-
-  # Font configurations removed - let stylix handle all fonts
   
   # Note: Font configuration is now handled by stylix.nix
   # Font packages are centralized in stylix configuration

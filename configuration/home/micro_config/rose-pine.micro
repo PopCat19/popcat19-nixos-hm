@@ -1,9 +1,8 @@
 # Micro Editor Theme Configuration
-# Manual colors removed - let stylix handle theming automatically
-# Colors will be provided by stylix Base16 scheme
+# Colors are handled by stylix Base16 scheme
 
-# To manually configure colors, uncomment and set desired values:
-# color-link default "<color>"
+# Manual color configuration can be added here if needed:
+# color-link default "<foreground>,<background>"
 # color-link comment "<color>"
 # color-link identifier "<color>"
-# ... other color definitions ...
+# ...

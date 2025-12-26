@@ -36,8 +36,6 @@
       background = "#191724";
       selection_foreground = "#e0def4";
       selection_background = "#403d52";
-      # Manual color palette removed - let stylix handle theming
-      # Colors are now provided by stylix Base16 scheme
       dynamic_background_opacity = "yes";
       background_blur = 16;
     };

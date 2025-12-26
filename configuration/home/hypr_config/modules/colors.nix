@@ -1,11 +1,6 @@
-# Rose Pine Color Scheme for Hyprland
-# ====================================
-# name: Rosé Pine
-# author: jishnurajendran
-# upstream: https://github.com/jishnurajendran/hyprland-rosepine/blob/main/rose-pine.conf
+# Hyprland Color Configuration
+# Colors are handled by stylix Base16 scheme
 {
   wayland.windowManager.hyprland.settings = {
-    # Color variables removed - let stylix handle theming automatically
-    # Colors are now provided by stylix Base16 scheme
   };
 }

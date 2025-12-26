@@ -24,7 +24,6 @@ let
     # Bar configuration with user's custom layout
     bar = {
       position = "top";
-      # backgroundOpacity removed - let stylix handle theming
       monitors = [ ];
       density = "default";
       showCapsule = false;
@@ -158,7 +157,6 @@ let
     
     # UI settings
     ui = {
-      # Fonts and theming removed - let stylix handle all theming
       fontDefaultScale = 1;
       fontFixedScale = 1;
       tooltipsEnabled = true;
@@ -332,10 +330,6 @@ let
       diskPollingInterval = 3000;
       networkPollingInterval = 3000;
       useCustomColors = false;
-      # warningColor removed - let stylix handle theming
-      # warningColor = "#31748f";
-      # criticalColor removed - let stylix handle theming
-      # criticalColor = "#eb6f92";
     };
     dock = {
       enabled = false;
@@ -401,7 +395,6 @@ let
       monitors = [ ];
       location = "top_right";
       overlayLayer = true;
-      # backgroundOpacity removed - let stylix handle theming
       respectExpireTimeout = false;
       lowUrgencyDuration = 3;
       normalUrgencyDuration = 8;
@@ -424,7 +417,6 @@ let
       location = "top";
       autoHideMs = 2000;
       overlayLayer = true;
-      # backgroundOpacity removed - let stylix handle theming
       enabledTypes = [ 0 1 2 ];
       monitors = [ ];
     };
@@ -451,14 +443,10 @@ let
     # Color schemes
     colorSchemes = {
       useWallpaperColors = false;
-      # predefinedScheme removed - let stylix handle theming
-      # predefinedScheme = "Rose Pine";
       darkMode = true;
       schedulingMode = "off";
       manualSunrise = "06:30";
       manualSunset = "18:30";
-      # matugenSchemeType removed - let stylix handle theming
-      # matugenSchemeType = "scheme-fruit-salad";
       generateTemplatesForPredefined = true;
     };
     

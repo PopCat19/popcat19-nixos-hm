@@ -4,7 +4,6 @@
       gaps_in = 4;
       gaps_out = 4;
       border_size = 2;
-      # Border colors removed - let stylix handle theming
       resize_on_border = false;
       allow_tearing = false;
       layout = "dwindle";
@@ -19,7 +18,6 @@
         enabled = false;
         range = 4;
         render_power = 3;
-        # color removed - let stylix handle theming
       };
 
       blur = {

@@ -7,7 +7,6 @@
   programs.micro = {
     enable = true;
     settings = {
-      # colorscheme removed - let stylix handle theming
       mkparents = true;
       softwrap = true;
       wordwrap = true;
@@ -26,6 +25,4 @@
       tabstospaces = true;
     };
   };
-
-  # Micro editor colorscheme removed - let stylix handle theming
 }
