@@ -7,7 +7,7 @@
   
   networking = {
     hostName = userConfig.host.hostname;
-    # Enable nftables for waydroid
+    # Enable nftables for firewall and network management
     nftables.enable = true;
     networkmanager = {
       enable = true;
@@ -36,7 +36,7 @@
     firewall = {
       enable = true;
       # network overrides deprecated — use canonical defaults here
-      trustedInterfaces = ["lo" "waydroid0"];
+      trustedInterfaces = ["lo"];
       allowedTCPPorts = [
         22 # SSH
         53317 # Syncthing

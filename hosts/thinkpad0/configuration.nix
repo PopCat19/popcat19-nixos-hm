@@ -16,9 +16,6 @@
 
   networking.hostName = "popcat19-thinkpad0";
 
-  # Disable Waydroid for thinkpad0 (override from virtualisation module)
-  virtualisation.waydroid.enable = lib.mkForce false;
-
   # Disable autologin for thinkpad0 (override from display module)
   services.displayManager.autoLogin.enable = lib.mkForce false;
 }
