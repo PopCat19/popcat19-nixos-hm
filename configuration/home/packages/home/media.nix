@@ -9,6 +9,10 @@ with pkgs; [
   mangayomi
   kdePackages.gwenview
 
+  # Audio Applications
+  audacity
+  furnace
+
   # Streaming and Gaming
   # obs-studio moved to home_modules/obs.nix
 ]

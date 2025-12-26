@@ -47,6 +47,7 @@
     ./home_modules/privacy.nix
     ./home_modules/obs.nix
     ./home_modules/syncthing.nix
+    ./home_modules/audio-control.nix
   ];
 
   # Use the centralized packages list from home_modules/packages.nix

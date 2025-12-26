@@ -18,12 +18,5 @@
   # Ensure ALSA utilities are available for audio management
   environment.systemPackages = with pkgs; [
     alsa-utils
-    pavucontrol
-    
-    # Light audio editing tools
-    audacity
-    
-    # Digital Audio Workstation
-    furnace
   ];
 }
