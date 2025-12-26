@@ -4,9 +4,6 @@
     settings = {
       format = "$time$directory$git_branch$git_status$line_break$character";
 
-      # palette removed - let stylix handle theming
-      # Custom palettes removed - let stylix use Base16
-
       character = {
         success_symbol = "[❯](bold foam)";
         error_symbol = "[❯](bold love)";

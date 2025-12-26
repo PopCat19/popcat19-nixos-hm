@@ -2,7 +2,6 @@
 #
 # Purpose: Configure theming using Stylix framework with Rose Pine color scheme
 # Dependencies: stylix
-# Related: theme.nix (deprecated)
 #
 # This module:
 # - Sets up Rose Pine color scheme via Stylix
