@@ -1,13 +1,13 @@
 # Waydroid Android Emulation Module
 #
-# Purpose: Enable Waydroid for running Android applications on Linux
+# Purpose: Configure Waydroid for running Android applications on Linux (disabled by default)
 # Dependencies: waydroid
 # Related: None
 #
 # This module:
-# - Enables Waydroid for Android app emulation
-# - Provides basic Android app compatibility
-# - Uses minimal system resources
+# - Disables Waydroid for Android app emulation by default
+# - Can be enabled per-host if needed
+# - Maintains networking support for waydroid0 interface
 {
   pkgs,
   userConfig,
@@ -17,6 +17,8 @@
   system = userConfig.host.system;
   isX86_64 = system == "x86_64-linux";
 in {
-  # Waydroid (Android emulation)
-  virtualisation.waydroid.enable = true;
+  # Waydroid (Android emulation) - disabled by default
+  # To enable Waydroid on specific hosts, add:
+  # virtualisation.waydroid.enable = true;
+  virtualisation.waydroid.enable = false;
 }
