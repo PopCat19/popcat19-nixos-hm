@@ -44,11 +44,14 @@
     # QT/Kvantum theme support
     NIXOS_OZONE_WL = "1";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-    
+
     # Flatpak Wayland support
     XDG_DESKTOP_PORTAL = "1";
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "Hyprland";
+
+    # Icon theme
+    XDG_ICON_THEME = "Papirus-Dark";
 
     # Default applications
     TERMINAL = userConfig.defaultApps.terminal.command;

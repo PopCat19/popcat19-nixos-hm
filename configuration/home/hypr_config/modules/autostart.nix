@@ -11,6 +11,9 @@
       "dbus-update-activation-environment --systemd --all"
       "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
 
+      # Systemd user services
+      "systemctl --user start hyprpolkitagent"
+
       # Hardware specific
       "openrgb -p orang-full"
     ];

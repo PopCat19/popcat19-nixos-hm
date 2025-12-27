@@ -24,7 +24,10 @@
 
     # GTK/scale defaults
     GDK_SCALE = "1";
-    
+
+    # Icon theme
+    XDG_ICON_THEME = "Papirus-Dark";
+
     # Flatpak and portal support
     GTK_USE_PORTAL = "1";
     XDG_DESKTOP_PORTAL = "1";
