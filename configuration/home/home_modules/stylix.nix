@@ -74,6 +74,9 @@
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
     papirus-icon-theme
+    # Fallback icon themes for missing icons
+    adwaita-icon-theme
+    hicolor-icon-theme
     # Qt styling tools for platform theme support
     kdePackages.qt6ct
   ];
