@@ -13,6 +13,9 @@ with pkgs; [
   audacity
   furnace
 
+  # Torrent
+  qbittorrent
+
   # Streaming and Gaming
   # obs-studio moved to home_modules/obs.nix
 ]
