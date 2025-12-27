@@ -44,6 +44,15 @@
     # QT/Kvantum theme support
     NIXOS_OZONE_WL = "1";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+    
+    # Flatpak Wayland support
+    FLATPAK_ENABLE_SDK_EXT = "org.freedesktop.Platform.GL.default";
+    XDG_DESKTOP_PORTAL = "1";
+    XDG_SESSION_TYPE = "wayland";
+    
+    # Portal backend selection
+    GTK_USE_PORTAL = "1";
+    QT_QPA_PLATFORMTHEME = "gtk3";
     GST_PLUGIN_SYSTEM_PATH_1_0 = "/run/current-system/sw/lib/gstreamer-1.0";
     GDK_PIXBUF_MODULE_FILE = "/run/current-system/sw/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache";
 
