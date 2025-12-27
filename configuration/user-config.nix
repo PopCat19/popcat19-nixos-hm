@@ -73,6 +73,7 @@
         "i2c"
         "input"
         "libvirtd"
+        "docker"
       ]
       ++ (
         if host.hostname == "${username}-surface0"

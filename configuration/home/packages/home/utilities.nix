@@ -20,6 +20,7 @@ with pkgs; [
   lutris
   # bottles
   osu-lazer-bin
+  winboat
 
   # Shimboot Project Tools
   pv

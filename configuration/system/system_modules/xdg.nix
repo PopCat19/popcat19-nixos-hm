@@ -17,10 +17,19 @@
     portal = {
       enable = true;
       extraPortals = [
-        pkgs.xdg-desktop-portal
         pkgs.xdg-desktop-portal-hyprland
         pkgs.xdg-desktop-portal-gtk
       ];
+      # Fix: Tell XDG to use Hyprland for things it supports (screenshare),
+      # and fall back to GTK for things it doesn't (file picker).
+      config = {
+        common = {
+          default = [ "gtk" ];
+        };
+        hyprland = {
+          default = [ "hyprland" "gtk" ];
+        };
+      };
     };
   };
 
