@@ -17,7 +17,7 @@ with pkgs; [
   zenity
 
   # Gaming
-  # lutris # Temporarily disabled due to pyrate-limiter build failures
+  lutris
   osu-lazer-bin
 
   # Shimboot Project Tools
