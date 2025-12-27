@@ -18,6 +18,7 @@ with pkgs; [
 
   # Gaming
   lutris
+  bottles-unwrapped
   osu-lazer-bin
 
   # Shimboot Project Tools
