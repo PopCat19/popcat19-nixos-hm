@@ -43,10 +43,10 @@
     hicolor-icon-theme
   ];
 
-  # Set global icon theme
-  environment.sessionVariables = {
-    XDG_ICON_THEME = "Papirus-Dark";
-  };
+  # Set global icon theme (centralized in system_modules/environment.nix)
+  # environment.sessionVariables = {
+  #   XDG_ICON_THEME = "Papirus-Dark";
+  # };
 
   # XDG icon theme configuration
   xdg.icons.enable = true;
