@@ -36,6 +36,7 @@ in {
     ./system_modules/fonts.nix
     ./system_modules/gnome-keyring.nix
     ./system_modules/searxng.nix
+    ./system_modules/tailscale.nix
   ];
 
   _module.args.userConfig = userConfig;
