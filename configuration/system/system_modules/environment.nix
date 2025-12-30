@@ -1,6 +1,5 @@
 {userConfig, config, ...}: {
 
-  # Nix configuration
   nixpkgs.config.allowUnfree = true;
   nix.settings = {
     experimental-features = [
@@ -35,25 +34,20 @@
     options = "--delete-older-than 3d";
   };
 
-  # System environment variables
   environment.sessionVariables = {
-    # Wayland support and desktop environment
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_DESKTOP_PORTAL = "1";
     NIXOS_OZONE_WL = "1";
 
-    # Icon theme
     XDG_ICON_THEME = "Papirus-Dark";
 
-    # Default applications
     TERMINAL = userConfig.defaultApps.terminal.command;
     EDITOR = userConfig.defaultApps.editor.command;
     VISUAL = userConfig.defaultApps.editor.command;
     BROWSER = userConfig.defaultApps.browser.command;
     FILECHOOSER = userConfig.defaultApps.fileManager.package;
 
-    # NixOS configuration paths
     NIXOS_CONFIG_DIR = "${userConfig.directories.home}/nixos-config";
     NIXOS_FLAKE_HOSTNAME = userConfig.host.hostname;
   };

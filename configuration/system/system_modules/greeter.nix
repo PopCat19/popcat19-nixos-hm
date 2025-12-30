@@ -14,7 +14,6 @@
   pkgs,
   ...
 }: {
-  # SDDM (Wayland) with Hyprland default session and autologin
   services.displayManager = {
     sddm = {
       enable = true;
@@ -25,29 +24,19 @@
       };
     };
 
-    # Ensure Hyprland session is selected on login/autologin
     defaultSession = "hyprland-uwsm";
-
-    # Autologin configuration
     autoLogin = {
       enable = true;
       user = userConfig.user.username;
     };
   };
 
-  # System-wide icon theme for SDDM and other applications
   environment.systemPackages = with pkgs; [
     papirus-icon-theme
-    # Fallback icon themes for missing icons
     adwaita-icon-theme
     hicolor-icon-theme
   ];
 
-  # Set global icon theme (centralized in system_modules/environment.nix)
-  # environment.sessionVariables = {
-  #   XDG_ICON_THEME = "Papirus-Dark";
-  # };
-
-  # XDG icon theme configuration
+  # Icon theme centralized in system_modules/environment.nix
   xdg.icons.enable = true;
 }
