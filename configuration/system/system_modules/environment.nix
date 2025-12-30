@@ -1,4 +1,19 @@
-{userConfig, config, ...}: {
+# System Environment Configuration Module
+#
+# Purpose: Configure system-level environment variables and Nix settings
+# Dependencies: None
+# Related: home_modules/environment.nix, greeter.nix
+#
+# This module:
+# - Configures Nix package manager settings and experimental features
+# - Sets system environment variables for Wayland and desktop environment
+# - Defines default applications and configuration paths
+# - Manages garbage collection and trusted users
+{
+  userConfig,
+  config,
+  ...
+}: {
 
   nixpkgs.config.allowUnfree = true;
   nix.settings = {

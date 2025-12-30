@@ -1,3 +1,14 @@
+# User Environment Configuration Module
+#
+# Purpose: Configure user-specific environment variables and session settings
+# Dependencies: lib, fcitx5
+# Related: system_modules/environment.nix, qt-gtk-config.nix
+#
+# This module:
+# - Sets user environment variables for applications and Wayland support
+# - Configures input method framework (fcitx5) for internationalization
+# - Defines default applications and GTK/Qt theming variables
+# - Manages session PATH and application-specific settings
 {
   lib,
   userConfig,
