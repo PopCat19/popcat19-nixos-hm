@@ -35,6 +35,7 @@ in {
     ./system_modules/virtualisation.nix
     ./system_modules/fonts.nix
     ./system_modules/gnome-keyring.nix
+    ./system_modules/searxng.nix
   ];
 
   _module.args.userConfig = userConfig;
