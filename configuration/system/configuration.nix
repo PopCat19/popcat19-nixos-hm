@@ -36,6 +36,7 @@ in {
     ./system_modules/fonts.nix
     ./system_modules/gnome-keyring.nix
     ./system_modules/searxng.nix
+    ./system_modules/perplexica.nix
     ./system_modules/tailscale.nix
   ];
 
