@@ -1,5 +1,14 @@
 # Zen Browser Configuration Module
-# Configures Zen Browser twilight with default extensions and PWA support
+#
+# Purpose: Configure Zen Browser with extensions and PWA support
+# Dependencies: inputs.zen-browser, pkgs.firefoxpwa
+# Related: None
+#
+# This module:
+# - Imports Zen Browser Home Manager module
+# - Enables PWA support via firefoxpwa
+# - Configures browser policies and extensions
+# - Sets up security and privacy settings
 {
   pkgs,
   config,

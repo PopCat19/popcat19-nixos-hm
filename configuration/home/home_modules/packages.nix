@@ -1,4 +1,13 @@
-# Home Manager package configuration
+# Home Manager Packages Configuration Module
+#
+# Purpose: Aggregate and organize Home Manager package installations
+# Dependencies: All home package modules
+# Related: None
+#
+# This module:
+# - Imports architecture-specific packages
+# - Aggregates individual package lists with priority ordering
+# - Returns combined package list for Home Manager
 {
   pkgs,
   inputs,

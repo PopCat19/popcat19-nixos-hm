@@ -1,4 +1,13 @@
-# System packages configuration
+# System Packages Configuration Module
+#
+# Purpose: Aggregate and organize system-level package installations
+# Dependencies: All system package modules
+# Related: system_modules/core-packages.nix
+#
+# This module:
+# - Imports architecture-specific packages
+# - Aggregates individual system package lists
+# - Installs packages in environment.systemPackages
 {
   pkgs,
   userConfig,
