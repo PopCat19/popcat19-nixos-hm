@@ -1,14 +1,19 @@
+# Fish Shell Configuration Module
+#
+# Purpose: Configure Fish shell with custom functions
+# Dependencies: fish-functions.nix
+# Related: None
+#
+# This module:
+# - Enables Fish shell functionality
+# - Imports custom fish functions and abbreviations
+# - Defers theming to Stylix
 {
   pkgs,
   userConfig,
   ...
 }: {
-  # Fish shell configuration
   programs.fish.enable = true;
 
-  # Import fish functions and abbreviations
   imports = [./fish-functions.nix];
-
-  # Fish configuration
-  # Theming is handled by stylix
 }
