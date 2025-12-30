@@ -1,13 +1,13 @@
-# Rule Writing Guidelines
+# General Rule Writing Guidelines
 
-Guidelines for creating new rule files in `.kilocode/rules` directory.
+Guidelines for creating consistent rule files across projects.
 
 ## File Naming
 
 - Use kebab-case: `descriptive-name.md`
 - Names should reflect the rule's primary purpose
 - Avoid generic names like `rules.md` or `guidelines.md`
-- Examples: `dry-refactor.md`, `module.md`, `llm-note.md`
+- Examples: `dry-refactor.md`, `module.md`, `linting.md`
 
 ## Content Structure
 
@@ -89,8 +89,8 @@ Guidelines for creating new rule files in `.kilocode/rules` directory.
 - Field 2: Description (required/optional)
 
 ## Style Rules
-- Rule 1
-- Rule 2
+- Maximum 100 characters per line
+- Use present tense verbs
 ```
 
 ### Pattern 3: Reference-Oriented
