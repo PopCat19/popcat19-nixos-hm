@@ -1,7 +1,4 @@
-{userConfig, ...}: {
-  # System environment configuration
-  # User-specific environment variables are in home_modules/environment.nix
-  # System packages are in core-packages.nix and packages.nix
+{userConfig, config, ...}: {
 
   # Nix configuration
   nixpkgs.config.allowUnfree = true;
@@ -40,15 +37,11 @@
 
   # System environment variables
   environment.sessionVariables = {
-    # Wayland support
-    # QT/Kvantum theme support
-    NIXOS_OZONE_WL = "1";
-    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-
-    # Flatpak Wayland support
-    XDG_DESKTOP_PORTAL = "1";
+    # Wayland support and desktop environment
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_DESKTOP_PORTAL = "1";
+    NIXOS_OZONE_WL = "1";
 
     # Icon theme
     XDG_ICON_THEME = "Papirus-Dark";
