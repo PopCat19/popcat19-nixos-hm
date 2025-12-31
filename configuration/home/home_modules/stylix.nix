@@ -34,13 +34,12 @@
     enable = true;
     hue = userConfig.theme.hue;
     variant = userConfig.theme.variant;
-    
+
     # DISABLE PMD Wallpaper generation here
-    wallpaper.enable = false; 
+    wallpaper.enable = false;
   };
 
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
-
 
   # Enhanced font configuration with all font types
   stylix.fonts = {
@@ -67,18 +66,16 @@
 
   # Font sizes for specific contexts
   stylix.fonts.sizes = {
-    applications = 10;  # For applications like fuzzel
-    terminal = 10;      # For terminal applications like kitty
-    popups = 10;        # For popup dialogs
-    desktop = 10;       # For desktop applications
+    applications = 10; # For applications like fuzzel
+    terminal = 10; # For terminal applications like kitty
+    popups = 10; # For popup dialogs
+    desktop = 10; # For desktop applications
   };
 
   # Optional: Align Stylix targets with PMD Effects System
   # PMD recommends no shadows/gradients, focus on borders
   # Note: 1rem at 16px base = 16px
   stylix.opacity.applications = 1.0;
-
-
 
   # Enable theming targets for comprehensive coverage
   stylix.targets.zen-browser.enable = true;
@@ -97,8 +94,6 @@
     package = pkgs.papirus-icon-theme;
     dark = "Papirus-Dark";
   };
-
-
 
   # Additional packages for comprehensive theming coverage
   home.packages = with pkgs; [

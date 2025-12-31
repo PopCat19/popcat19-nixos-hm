@@ -27,7 +27,7 @@
     BROWSER = userConfig.defaultApps.browser.command;
     TERMINAL = userConfig.defaultApps.terminal.command;
     FILE_MANAGER = userConfig.defaultApps.fileManager.command;
-    
+
     WEBKIT_DISABLE_COMPOSITING_MODE = "1";
 
     GTK_IM_MODULE = lib.mkForce "fcitx5";

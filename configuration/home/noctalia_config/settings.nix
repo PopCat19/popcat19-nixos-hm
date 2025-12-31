@@ -7,24 +7,26 @@
 # - Provides complete Noctalia settings as Nix attribute set
 # - Matches user's personalized configuration from JSON
 # - Can be imported by the main Noctalia home manager module
-{ pkgs, config, hostname ? null, ... }:
-
-let
+{
+  pkgs,
+  config,
+  hostname ? null,
+  ...
+}: let
   # Determine if host has battery based on hostname
-  hasBattery = 
-    if hostname != null then
-      hostname == "popcat19-surface0" || hostname == "popcat19-thinkpad0"
-    else
-      false;
-  
+  hasBattery =
+    if hostname != null
+    then hostname == "popcat19-surface0" || hostname == "popcat19-thinkpad0"
+    else false;
+
   # Complete Noctalia settings based on user's configuration
   settings = {
     settingsVersion = 26;
-    
+
     # Bar configuration with user's custom layout
     bar = {
       position = "top";
-      monitors = [ ];
+      monitors = [];
       density = "default";
       showCapsule = false;
       floating = true;
@@ -32,7 +34,7 @@ let
       marginHorizontal = 0.25;
       outerCorners = true;
       exclusive = true;
-      
+
       widgets = {
         left = [
           {
@@ -76,60 +78,63 @@ let
             visualizerType = "linear";
           }
         ];
-        
-        center = [ ];
-        
-        right = [
-          {
-            id = "Tray";
-            blacklist = [ ];
-            colorizeIcons = false;
-            drawerEnabled = true;
-            hidePassive = false;
-            pinned = [ ];
-          }
-        ]
-        ++ (
-          if hasBattery then [
+
+        center = [];
+
+        right =
+          [
             {
-              id = "Battery";
-              displayMode = "alwaysShow";
-              showNoctaliaPerformance = false;
-              showPowerProfiles = false;
-              warningThreshold = 20;
+              id = "Tray";
+              blacklist = [];
+              colorizeIcons = false;
+              drawerEnabled = true;
+              hidePassive = false;
+              pinned = [];
             }
-          ] else []
-        )
-        ++ [
-          {
-            id = "Volume";
-            displayMode = "alwaysShow";
-          }
-          {
-            id = "WiFi";
-            displayMode = "onhover";
-          }
-          {
-            id = "Bluetooth";
-            displayMode = "onhover";
-          }
-          {
-            id = "Clock";
-            formatHorizontal = "HH:mm ddd, MMM dd";
-            formatVertical = "HH mm - dd MM";
-            useCustomFont = true;
-            customFont = "JetBrainsMono Nerd Font";
-            usePrimaryColor = false;
-          }
-          {
-            id = "NotificationHistory";
-            hideWhenZero = true;
-            showUnreadBadge = true;
-          }
-        ];
+          ]
+          ++ (
+            if hasBattery
+            then [
+              {
+                id = "Battery";
+                displayMode = "alwaysShow";
+                showNoctaliaPerformance = false;
+                showPowerProfiles = false;
+                warningThreshold = 20;
+              }
+            ]
+            else []
+          )
+          ++ [
+            {
+              id = "Volume";
+              displayMode = "alwaysShow";
+            }
+            {
+              id = "WiFi";
+              displayMode = "onhover";
+            }
+            {
+              id = "Bluetooth";
+              displayMode = "onhover";
+            }
+            {
+              id = "Clock";
+              formatHorizontal = "HH:mm ddd, MMM dd";
+              formatVertical = "HH mm - dd MM";
+              useCustomFont = true;
+              customFont = "JetBrainsMono Nerd Font";
+              usePrimaryColor = false;
+            }
+            {
+              id = "NotificationHistory";
+              hideWhenZero = true;
+              showUnreadBadge = true;
+            }
+          ];
       };
     };
-        
+
     # General appearance settings
     general = {
       avatarImage = "${pkgs.writeText "face" ""}/.face";
@@ -154,7 +159,7 @@ let
       language = "";
       allowPanelsOnScreenWithoutBar = true;
     };
-    
+
     # UI settings
     ui = {
       fontDefaultScale = 1;
@@ -163,7 +168,7 @@ let
       panelsAttachedToBar = true;
       settingsPanelAttachToBar = false;
     };
-    
+
     # Location settings
     location = {
       name = "New York";
@@ -177,7 +182,7 @@ let
       analogClockInCalendar = false;
       firstDayOfWeek = -1;
     };
-    
+
     # Calendar configuration
     calendar = {
       cards = [
@@ -199,7 +204,7 @@ let
         }
       ];
     };
-    
+
     # Screen recorder settings
     screenRecorder = {
       directory = "";
@@ -212,13 +217,13 @@ let
       audioSource = "default_output";
       videoSource = "portal";
     };
-    
+
     # Wallpaper configuration
     wallpaper = {
       enabled = true;
       overviewEnabled = false;
       directory = "${config.home.homeDirectory}/wallpaper";
-      monitorDirectories = [ ];
+      monitorDirectories = [];
       enableMultiMonitorDirectories = false;
       recursiveSearch = false;
       setWallpaperOnAllMonitors = true;
@@ -241,13 +246,13 @@ let
       wallhavenResolutionWidth = "";
       wallhavenResolutionHeight = "";
     };
-    
+
     # App launcher settings
     appLauncher = {
       enableClipboardHistory = true;
       enableClipPreview = true;
       position = "center";
-      pinnedExecs = [ ];
+      pinnedExecs = [];
       useApp2Unit = false;
       sortByMostUsed = true;
       terminalCommand = "xterm -e";
@@ -256,7 +261,7 @@ let
       viewMode = "list";
       showCategories = true;
     };
-    
+
     # Control center configuration
     controlCenter = {
       position = "close_to_bar_button";
@@ -313,7 +318,7 @@ let
         }
       ];
     };
-    
+
     # System monitor settings
     systemMonitor = {
       cpuWarningThreshold = 80;
@@ -337,18 +342,18 @@ let
       floatingRatio = 1;
       size = 1;
       onlySameOutput = true;
-      monitors = [ ];
-      pinnedApps = [ ];
+      monitors = [];
+      pinnedApps = [];
       colorizeIcons = false;
       pinnedStatic = false;
       inactiveIndicators = false;
       animationSpeed = 1;
-    };  
+    };
     # Network configuration
     network = {
       wifiEnabled = true;
     };
-    
+
     # Session menu settings
     sessionMenu = {
       enableCountdown = true;
@@ -388,11 +393,11 @@ let
         }
       ];
     };
-    
+
     # Notifications settings
     notifications = {
       enabled = true;
-      monitors = [ ];
+      monitors = [];
       location = "top_right";
       overlayLayer = true;
       respectExpireTimeout = false;
@@ -410,17 +415,17 @@ let
         excludedApps = "discord,firefox,chrome,chromium,edge";
       };
     };
-    
+
     # OSD settings
     osd = {
       enabled = true;
       location = "top";
       autoHideMs = 2000;
       overlayLayer = true;
-      enabledTypes = [ 0 1 2 ];
-      monitors = [ ];
+      enabledTypes = [0 1 2];
+      monitors = [];
     };
-    
+
     # Audio settings
     audio = {
       volumeStep = 4;
@@ -428,18 +433,18 @@ let
       cavaFrameRate = 30;
       visualizerType = "linear";
       visualizerQuality = "high";
-      mprisBlacklist = [ ];
+      mprisBlacklist = [];
       preferredPlayer = "";
       externalMixer = "pwvucontrol || pavucontrol";
     };
-    
+
     # Brightness settings
     brightness = {
       brightnessStep = 10;
       enforceMinimum = true;
       enableDdcSupport = false;
     };
-    
+
     # Color schemes
     colorSchemes = {
       useWallpaperColors = false;
@@ -449,7 +454,7 @@ let
       manualSunset = "18:30";
       generateTemplatesForPredefined = true;
     };
-    
+
     # Templates (all disabled)
     templates = {
       gtk = false;
@@ -473,7 +478,7 @@ let
       niri = false;
       enableUserTemplates = false;
     };
-    
+
     # Night light (disabled)
     nightLight = {
       enabled = false;
@@ -484,7 +489,7 @@ let
       manualSunrise = "06:30";
       manualSunset = "18:30";
     };
-    
+
     # Hooks (disabled)
     hooks = {
       enabled = false;

@@ -27,5 +27,4 @@ with pkgs; [
   yarn-berry
   rustup
   python3
-
 ]
