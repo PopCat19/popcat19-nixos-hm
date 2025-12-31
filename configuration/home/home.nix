@@ -52,4 +52,12 @@
 
   # Use the centralized packages list from home_modules/packages.nix
   home.packages = import ./home_modules/packages.nix {inherit pkgs inputs hostPlatform userConfig;};
+
+  # Link existing wallpaper directory for Noctalia
+  home.file = {
+    ".wallpaper" = {
+      source = ./wallpaper;
+      recursive = true;
+    };
+  };
 }

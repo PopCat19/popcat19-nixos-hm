@@ -21,14 +21,26 @@
 }: {
   imports = [
     inputs.stylix.homeModules.stylix
+    inputs.pmd.homeManagerModules.pmd
   ];
 
   # Enable Stylix with auto-enable for better compatibility
   stylix.enable = true;
   stylix.autoEnable = true;
 
-  # Use Rose Pine Base16 color scheme
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+  # PMD Theme Configuration
+  # Uses centralized theme configuration from userConfig
+  stylix.pmd = {
+    enable = true;
+    hue = userConfig.theme.hue;
+    variant = userConfig.theme.variant;
+    
+    # DISABLE PMD Wallpaper generation here
+    wallpaper.enable = false; 
+  };
+
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+
 
   # Enhanced font configuration with all font types
   stylix.fonts = {
@@ -60,6 +72,13 @@
     popups = 10;        # For popup dialogs
     desktop = 10;       # For desktop applications
   };
+
+  # Optional: Align Stylix targets with PMD Effects System
+  # PMD recommends no shadows/gradients, focus on borders
+  # Note: 1rem at 16px base = 16px
+  stylix.opacity.applications = 1.0;
+
+
 
   # Enable theming targets for comprehensive coverage
   stylix.targets.zen-browser.enable = true;
