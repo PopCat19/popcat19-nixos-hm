@@ -168,4 +168,10 @@
       unit = "metric";
     };
   };
+
+  # Theme configuration for PMD
+  theme = {
+    hue = 30;        # Lavender vibe
+    variant = "dark"; # "dark" or "light"
+  };
 }

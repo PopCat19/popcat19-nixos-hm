@@ -61,6 +61,14 @@
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Personal Material Design (PMD) theme system
+    pmd = {
+      url = "path:/home/popcat19/project-minimalist-design";
+      # If you eventually push it to GitHub, change to:
+      # url = "github:popcat19/project-minimalist-design";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {

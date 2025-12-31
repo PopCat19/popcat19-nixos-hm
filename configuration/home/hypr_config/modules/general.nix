@@ -10,7 +10,7 @@
     };
 
     decoration = {
-      rounding = 12;
+      rounding = 16;  # PMD spec: 1rem (16px) radius
       active_opacity = 1.0;
       inactive_opacity = 1.0;
 
@@ -39,7 +39,6 @@
 
     misc = {
       force_default_wallpaper = -1;
-      disable_hyprland_logo = false;
       vfr = true;
     };
 
