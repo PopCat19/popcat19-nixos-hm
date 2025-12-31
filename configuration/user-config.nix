@@ -171,7 +171,7 @@
 
   # Theme configuration for PMD
   theme = {
-    hue = 245;
+    hue = 345;
     variant = "dark"; # "dark" or "light"
   };
 }
