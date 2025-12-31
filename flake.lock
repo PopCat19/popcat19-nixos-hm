@@ -630,14 +630,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1767211461,
-        "narHash": "sha256-1BAJvV4Aq51T5Cr6USaCrWZw5wHzYqhuYzqIH8LtmHM=",
-        "path": "/home/popcat19/project-minimalist-design",
-        "type": "path"
+        "lastModified": 1767217542,
+        "narHash": "sha256-PhhF9C2+xqdguenumGrAse10SJseU+3XydBqSGgaB9E=",
+        "owner": "popcat19",
+        "repo": "project-minimalist-design",
+        "rev": "77b4bf7e506b599c4a0978a25cfac84792040b76",
+        "type": "github"
       },
       "original": {
-        "path": "/home/popcat19/project-minimalist-design",
-        "type": "path"
+        "owner": "popcat19",
+        "repo": "project-minimalist-design",
+        "type": "github"
       }
     },
     "root": {
