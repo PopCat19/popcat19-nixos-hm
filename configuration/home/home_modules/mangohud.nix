@@ -43,7 +43,6 @@
     mangohud # Gaming performance overlay with system metrics
     goverlay # MangoHUD configuration GUI for easy setup
 
-
     # ─── GAMING ENHANCEMENT TOOLS ───
     vkbasalt # Vulkan post-processing layer for visual enhancements
     obs-studio-plugins.obs-vkcapture # Vulkan/OpenGL game capture for OBS

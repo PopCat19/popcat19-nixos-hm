@@ -18,7 +18,7 @@
   # Enable OpenRGB hardware service
   services.hardware.openrgb = {
     enable = true;
-    
+
     # Configure motherboard support (AMD in this case)
     motherboard = "amd";
   };

@@ -10,7 +10,7 @@
     };
 
     decoration = {
-      rounding = 16;  # PMD spec: 1rem (16px) radius
+      rounding = 16; # PMD spec: 1rem (16px) radius
       active_opacity = 1.0;
       inactive_opacity = 1.0;
 
