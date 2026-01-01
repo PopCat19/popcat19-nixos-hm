@@ -64,7 +64,7 @@
 
     # Personal Material Design (PMD) theme system
     pmd = {
-      url = "github:popcat19/project-minimalist-design";
+      url = "github:popcat19/project-minimalist-design/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
