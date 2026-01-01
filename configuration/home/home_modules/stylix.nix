@@ -80,6 +80,9 @@
   # Enable theming targets for comprehensive coverage
   stylix.targets.zen-browser.enable = true;
   stylix.targets.zen-browser.profileNames = ["default"];
+  stylix.targets.vesktop.enable = true;
+  stylix.targets.vencord.enable = true;
+  stylix.targets.nixcord.enable = true;
 
   # Cursor theme configuration using Stylix native option
   stylix.cursor = {

@@ -40,6 +40,7 @@
     ./home_modules/fuzzel-config.nix
     ./home_modules/kitty.nix
     ./home_modules/fish.nix
+    ./home_modules/vesktop.nix
     ./home_modules/starship.nix
     ./home_modules/micro.nix
     ./home_modules/fcitx5.nix
