@@ -56,12 +56,12 @@
           {
             id = "SystemMonitor";
             diskPath = "/";
+            showCpuUsage = true;
             showCpuTemp = true;
-            showCpuUsage = false;
-            showDiskUsage = false;
             showMemoryAsPercent = false;
             showMemoryUsage = true;
-            showNetworkStats = true;
+            showNetworkStats = false;
+            showDiskUsage = true;
             usePrimaryColor = false;
           }
           {
