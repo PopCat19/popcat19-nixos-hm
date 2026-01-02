@@ -83,6 +83,7 @@
   stylix.targets.vesktop.enable = true;
   stylix.targets.vencord.enable = true;
   stylix.targets.nixcord.enable = true;
+  stylix.targets.zed.enable = true;
 
   # Cursor theme configuration using Stylix native option
   stylix.cursor = {
