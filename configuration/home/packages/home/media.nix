@@ -5,7 +5,7 @@ with pkgs; [
   audacious
   audacious-plugins
   pureref
-  youtube-music
+  pear-desktop
   mangayomi
   kdePackages.gwenview
 
