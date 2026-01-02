@@ -17,7 +17,6 @@
 
   # Host-specific packages
   environment.systemPackages = with pkgs; [
-    zluda
     alsa-utils
     pavucontrol
     opentabletdriver
