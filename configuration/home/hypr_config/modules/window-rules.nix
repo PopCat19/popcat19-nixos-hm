@@ -46,15 +46,13 @@
       "float,class:^(xdg-desktop-portal-gtk)$"
       "float,class:^(org.keepassxc.KeePassXC)$,title:^(Password Generator)$"
       "float,class:^(keepassxc)$,title:^(Password Generator)$"
-    ];
 
-    # Window rules v1 (legacy)
-    windowrule = [
-      "float,title:^(Open)$"
-      "float,title:^(Choose Files)$"
-      "float,title:^(Save As)$"
-      "float,title:^(Confirm to replace files)$"
-      "float,title:^(File Operation Progress)$"
+      # Standardized Window rules v2
+      "float, title:^(Open)$"
+      "float, title:^(Choose Files)$"
+      "float, title:^(Save As)$"
+      "float, title:^(Confirm to replace files)$"
+      "float, title:^(File Operation Progress)$"
     ];
   };
 }

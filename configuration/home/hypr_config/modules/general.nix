@@ -45,13 +45,5 @@
     debug = {
       damage_tracking = 0;
     };
-
-    layerrule = [
-      "blur,bar-0"
-      "blur,bar-1"
-      "blur,fuzzel"
-      "blur,noctalia-shell"
-      "ignorezero,fuzzel"
-    ];
   };
 }
