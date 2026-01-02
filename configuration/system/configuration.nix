@@ -42,9 +42,17 @@ in {
   nix.settings = {
     experimental-features = ["nix-command" "flakes"];
     trusted-users = lib.mkAfter ["root" "${userConfig.user.username}"];
-    # Add binary caches here as needed
-    # substituters = lib.mkAfter ["https://cache.nixos.org/"];
-    # trusted-public-keys = lib.mkAfter ["cache.nixos.org-1:6NCHdD59X431o0jWzmge3Qi8TWxF6bXlEAEaLLJgI="];
+    # Binary caches for optimized builds
+    substituters = lib.mkAfter [
+      "https://cache.nixos.org/"
+      "https://attic.xuyh0120.win/lantian"
+      "https://cache.garnix.io"
+    ];
+    trusted-public-keys = lib.mkAfter [
+      "cache.nixos.org-1:6NCHdD59X431o0jWzmge3Qi8TWxF6bXlEAEaLLJgI="
+      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+    ];
 
     # Enable store optimization at build time
     auto-optimise-store = true; # Hardlink duplicate files
