@@ -51,16 +51,13 @@ in {
     trusted-users = lib.mkAfter ["root" "${userConfig.user.username}"];
 
     substituters = lib.mkAfter [
-      "https://cache.nixos.org"
       "https://shimboot-systemd-nixos.cachix.org"
-      "https://ezkea.cachix.org"
       "https://attic.xuyh0120.win/lantian"
       "https://cache.garnix.io"
     ];
 
     trusted-public-keys = lib.mkAfter [
       "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
-      "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
     ];
