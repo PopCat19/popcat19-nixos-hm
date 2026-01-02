@@ -35,23 +35,41 @@ in {
   _module.args.userConfig = userConfig;
 
   nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+      "fetch-tree"
+      "impure-derivations"
+    ];
+    accept-flake-config = true;
+    auto-optimise-store = true;
+    max-jobs = "auto";
+    cores = 0;
+    min-free = 0;
+    download-buffer-size = 67108864;
+
     trusted-users = lib.mkAfter ["root" "${userConfig.user.username}"];
-    # Binary caches for optimized builds
+
     substituters = lib.mkAfter [
-      "https://cache.nixos.org/"
+      "https://cache.nixos.org"
+      "https://shimboot-systemd-nixos.cachix.org"
+      "https://ezkea.cachix.org"
       "https://attic.xuyh0120.win/lantian"
       "https://cache.garnix.io"
     ];
+
     trusted-public-keys = lib.mkAfter [
-      "cache.nixos.org-1:6NCHdD59X431o0jWzmge3Qi8TWxF6bXlEAEaLLJgI="
+      "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
+      "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
     ];
+  };
 
-    # Enable store optimization at build time
-    auto-optimise-store = true; # Hardlink duplicate files
-    min-free = 0; # Don't reserve space
+  nix.gc = {
+    automatic = true;
+    dates = "03:00";
+    options = "--delete-older-than 3d";
   };
 
   nixpkgs.config.allowUnfree = true;
