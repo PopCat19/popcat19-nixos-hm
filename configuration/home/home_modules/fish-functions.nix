@@ -1,8 +1,4 @@
-{
-  pkgs,
-  userConfig,
-  ...
-}: {
+{userConfig, ...}: {
   programs.fish.functions = {
     nix-shell-unfree = ''
       set -lx NIXPKGS_ALLOW_UNFREE 1

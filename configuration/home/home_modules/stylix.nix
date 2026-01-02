@@ -12,9 +12,7 @@
 # - Handles browser theming targets (Firefox-based browsers)
 # - Applies system-wide theming across all applications
 {
-  lib,
   pkgs,
-  config,
   inputs,
   userConfig,
   ...
@@ -33,8 +31,8 @@
   # Uses centralized theme configuration from userConfig
   stylix.pmd = {
     enable = true;
-    hue = userConfig.theme.hue;
-    variant = userConfig.theme.variant;
+    inherit (userConfig.theme) hue;
+    inherit (userConfig.theme) variant;
 
     # DISABLE PMD Wallpaper generation here
     wallpaper.enable = false;

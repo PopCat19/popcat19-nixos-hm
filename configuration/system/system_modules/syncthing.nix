@@ -1,10 +1,4 @@
-{
-  pkgs,
-  config,
-  lib,
-  userConfig,
-  ...
-}: let
+{userConfig, ...}: let
   # Syncthing configuration constants
   syncthingUser = userConfig.user.username;
   syncthingPaths = {
@@ -20,8 +14,8 @@ in {
     user = syncthingUser;
     group = "users";
     openDefaultPorts = true;
-    dataDir = syncthingPaths.dataDir;
-    configDir = syncthingPaths.configDir;
+    inherit (syncthingPaths) dataDir;
+    inherit (syncthingPaths) configDir;
     settings = {
       devices = {
         "nixos0" = {

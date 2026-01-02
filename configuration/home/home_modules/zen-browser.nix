@@ -11,10 +11,7 @@
 # - Sets up security and privacy settings
 {
   pkgs,
-  config,
-  lib,
   inputs,
-  userConfig,
   ...
 }: {
   # Import the Zen Browser Home Manager module

@@ -9,11 +9,7 @@
 # - Sets system environment variables for Wayland and desktop environment
 # - Defines default applications and configuration paths
 # - Manages garbage collection and trusted users
-{
-  userConfig,
-  config,
-  ...
-}: {
+{userConfig, ...}: {
   nixpkgs.config.allowUnfree = true;
   nix.settings = {
     experimental-features = [

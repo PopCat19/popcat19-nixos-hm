@@ -9,11 +9,7 @@
 # - Sets up EFI boot variables
 # - Enables support for NTFS filesystems
 # - Configures CachyOS LTO kernel for optimal performance
-{
-  pkgs,
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   boot = {
     loader = {
       systemd-boot = {

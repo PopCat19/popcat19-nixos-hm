@@ -9,14 +9,7 @@
 # - Integrates with PMD theming for consistent styling
 # - Configures AI agent and language model settings
 # - Sets up context servers for enhanced functionality
-{
-  config,
-  pkgs,
-  lib,
-  inputs,
-  userConfig,
-  ...
-}: {
+_: {
   # Enable Zed editor
   programs.zed-editor = {
     enable = true;

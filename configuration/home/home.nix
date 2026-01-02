@@ -9,9 +9,7 @@
 # - Configures user applications and services
 # - Sets up desktop environment and themes
 {
-  config,
   pkgs,
-  lib,
   inputs,
   userConfig,
   hostPlatform,

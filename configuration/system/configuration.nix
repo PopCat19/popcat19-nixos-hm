@@ -9,12 +9,7 @@
 # - Configures Nix settings and binary caches
 # - Enables core system functionality
 # - Sets system state version
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: let
+{lib, ...}: let
   userConfig = import ../../configuration/user-config.nix {};
 in {
   imports = [

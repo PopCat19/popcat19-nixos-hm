@@ -8,7 +8,7 @@
   # User account
   users.users.${userConfig.user.username} = {
     isNormalUser = true;
-    extraGroups = userConfig.user.extraGroups;
+    inherit (userConfig.user) extraGroups;
     shell = pkgs.fish;
   };
 

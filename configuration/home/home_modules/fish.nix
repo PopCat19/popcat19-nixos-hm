@@ -8,11 +8,7 @@
 # - Enables Fish shell functionality
 # - Imports custom fish functions and abbreviations
 # - Defers theming to Stylix
-{
-  pkgs,
-  userConfig,
-  ...
-}: {
+{...}: {
   programs.fish.enable = true;
 
   imports = [./fish-functions.nix];

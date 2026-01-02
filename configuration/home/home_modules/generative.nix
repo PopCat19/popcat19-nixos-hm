@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+_: {
   # Generative/AI related packages
   # Note: ollama service is now managed by ollama.nix module
 

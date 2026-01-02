@@ -8,11 +8,7 @@
 # - Imports architecture-specific packages
 # - Aggregates individual system package lists
 # - Installs packages in environment.systemPackages
-{
-  pkgs,
-  userConfig,
-  ...
-}: let
+{pkgs, ...}: let
   # Architecture-specific packages
   x86_64Packages = import ./x86_64-packages.nix {inherit pkgs;};
 

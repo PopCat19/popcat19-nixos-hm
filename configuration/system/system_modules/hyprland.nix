@@ -9,7 +9,7 @@
 # - Configures XWayland support for X11 applications
 # - Enables UWSM (Universal Wayland Session Manager)
 # - Sets up X server for X11 compatibility
-{pkgs, ...}: {
+_: {
   services.xserver = {
     enable = true;
     xkb.layout = "us";

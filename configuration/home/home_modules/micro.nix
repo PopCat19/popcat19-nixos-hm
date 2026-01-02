@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}: {
+_: {
   # Micro text editor configuration
   programs.micro = {
     enable = true;
