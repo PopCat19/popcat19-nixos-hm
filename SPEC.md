@@ -1,7 +1,7 @@
 # nixos-config Technical Specification
 
-**Status:** Stable (Multi-Host Production)  
-**Target:** NixOS 24.05+ with Flakes, Hyprland Wayland Desktop  
+**Status:** Stable (Multi-Host Production)
+**Target:** NixOS 24.05+ with Flakes, Hyprland Wayland Desktop
 **License:** Personal Configuration (Unlicensed)
 
 ---
@@ -402,7 +402,7 @@ nixos0/ (Desktop Workstation)
 ├─ GPU: AMD Radeon RX 6600 XT (ROCm 6.3.3)
 ├─ Display: Dual monitor setup (DP-3, DP-4)
 ├─ Monitors: DP-3 (1920x1080@165Hz primary) + HDMI-A-1 (1920x1080@60Hz portrait)
-├─ Packages: zluda (CUDA on AMD), OpenRGB, gaming stack
+├─ Packages: OpenRGB, gaming stack
 └─ Features: Gaming, AI (Ollama ROCm), development, distributed builds server, OpenRGB, GitHub Actions runners (temporarily disabled)
 └─ Home Modules: All modules including ollama, mangohud, generative
 └─ System Modules: github-runner (self-hosted CI/CD)
@@ -1098,7 +1098,7 @@ Package missing:
 
 ---
 
-**End of Specification**  
-For implementation details, see source files in repository.  
-For community support, see NixOS Discourse or Matrix channels.  
+**End of Specification**
+For implementation details, see source files in repository.
+For community support, see NixOS Discourse or Matrix channels.
 For upstream documentation, see NixOS Manual and Home Manager Manual.
