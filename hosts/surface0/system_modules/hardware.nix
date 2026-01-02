@@ -114,9 +114,8 @@
   };
 
   # SURFACE NETWORKING (hardware-level WiFi tweaks)
-  networking.wireless.iwd.enable = false;
   # Let NetworkManager handle WiFi
-  networking.wireless.enable = false;
+  networking.wireless.iwd.enable = false;
 
   # INTEL GRAPHICS ENVIRONMENT VARIABLES (session-level)
   environment.sessionVariables = {
