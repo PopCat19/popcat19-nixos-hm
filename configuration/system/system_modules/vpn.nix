@@ -1,6 +1,5 @@
 # System-level Mullvad VPN module
 {
-  config,
   pkgs,
   lib,
   ...

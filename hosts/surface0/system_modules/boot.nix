@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: {
+{pkgs, ...}: {
   # **BOOT & KERNEL CONFIGURATION**
   # Defines boot loader, kernel, and filesystem support settings for Surface.
   boot = {

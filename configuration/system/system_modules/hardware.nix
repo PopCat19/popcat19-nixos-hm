@@ -1,4 +1,4 @@
-{...}: {
+_: {
   # Hardware configuration
   hardware = {
     bluetooth = {

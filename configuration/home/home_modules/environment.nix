@@ -12,7 +12,6 @@
 {
   lib,
   userConfig,
-  config,
   ...
 }: {
   home.sessionVariables = {

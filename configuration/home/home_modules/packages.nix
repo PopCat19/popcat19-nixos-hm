@@ -8,12 +8,7 @@
 # - Imports architecture-specific packages
 # - Aggregates individual package lists with priority ordering
 # - Returns combined package list for Home Manager
-{
-  pkgs,
-  inputs,
-  hostPlatform,
-  userConfig,
-}: let
+{pkgs, ...}: let
   # Architecture-specific packages
   x86_64Packages = import ./x86_64-packages.nix {inherit pkgs;};
 

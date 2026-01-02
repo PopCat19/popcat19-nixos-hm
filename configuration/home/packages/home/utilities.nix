@@ -16,6 +16,8 @@ with pkgs; [
   appimage-run
   zenity
   alejandra
+  statix
+  deadnix
 
   # Gaming
   lutris

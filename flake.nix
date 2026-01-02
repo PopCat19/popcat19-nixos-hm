@@ -81,9 +81,7 @@
   };
 
   outputs = inputs @ {
-    self,
     nixpkgs,
-    home-manager,
     alejandra,
     ...
   }: let
@@ -99,12 +97,7 @@
   in {
     # Packages output (no vicinae now that the overlay was removed)
     packages = nixpkgs.lib.genAttrs supportedSystems (
-      system: let
-        pkgs = import nixpkgs {
-          hostPlatform = system;
-          overlays = import ./configuration/flake/modules/overlays.nix system;
-        };
-      in {
+      system: {
         # Export agenix for secret management
         agenix = inputs.agenix.packages.${system}.default;
       }
@@ -118,15 +111,15 @@
     # Host-specific NixOS configurations generated dynamically
     # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
     nixosConfigurations = let
-      machines = baseUserConfig.hosts.machines;
+      inherit (baseUserConfig.hosts) machines;
     in
       nixpkgs.lib.listToAttrs (map (m: let
           perHostConfig = import ./configuration/user-config.nix {
-            username = baseUserConfig.user.username;
+            inherit (baseUserConfig.user) username;
             machine = m;
             system = "x86_64-linux";
           };
-          hostname = perHostConfig.host.hostname;
+          inherit (perHostConfig.host) hostname;
         in {
           name = hostname;
           value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {

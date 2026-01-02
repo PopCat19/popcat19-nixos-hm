@@ -1,11 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: let
-  wallpaper = import ./wallpaper.nix {inherit lib pkgs;};
-in {
+{pkgs, ...}: {
   imports = [
     ./modules/colors.nix
     ./modules/environment.nix

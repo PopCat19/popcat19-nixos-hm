@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
+{lib, ...}: let
   # Force inclusion of the wallpaper directory into the Nix store, even if empty.
   # This prevents ENOENT during evaluation when the directory exists in the repo
   # but Nix didn't copy it because it had no referenced files.

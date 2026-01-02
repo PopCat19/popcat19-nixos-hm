@@ -1,24 +1,4 @@
-{
-  pkgs,
-  config,
-  hostPlatform,
-  lib,
-  inputs,
-  ...
-}: let
-  # Font configuration
-  fontMain = "Rounded Mplus 1c Medium";
-  fontMono = "JetBrainsMono Nerd Font";
-  fuzzelFontSize = 14;
-  kittyFontSize = 11;
-  gtkFontSize = 11;
-
-  gtkCss = ''
-    * {
-      font-family: "${fontMain}";
-    }
-  '';
-in {
+_: {
   # Application-specific font configurations (let stylix handle system theming)
 
   # Note: Font configuration is now handled by stylix.nix

@@ -9,7 +9,7 @@
 # - Configures password authentication for user access
 # - Permits root login for administrative access
 # - Integrates with system firewall rules
-{pkgs, ...}: {
+_: {
   services.openssh = {
     enable = true;
     settings = {

@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Screenshot configuration for Hyprland using grimblast
 
   home.packages = with pkgs; [

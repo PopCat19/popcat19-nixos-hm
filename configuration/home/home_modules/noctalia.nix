@@ -9,15 +9,7 @@
 # - Applies user's personalized settings from syncthing-shared
 # - Configures systemd service for autostart
 # - Provides centralized Noctalia configuration management
-{
-  lib,
-  pkgs,
-  config,
-  hostPlatform,
-  inputs,
-  userConfig,
-  ...
-}: {
+{...}: {
   imports = [
     ./../noctalia_config/module.nix
   ];

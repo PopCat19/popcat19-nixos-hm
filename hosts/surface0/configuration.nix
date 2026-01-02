@@ -1,11 +1,5 @@
 # NixOS Configuration for surface0
-{
-  pkgs,
-  inputs,
-  lib,
-  userConfig,
-  ...
-}: {
+{...}: {
   imports = [
     ./hardware-configuration.nix
     ../../configuration/system/configuration.nix

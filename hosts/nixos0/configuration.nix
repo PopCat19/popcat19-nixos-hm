@@ -2,8 +2,6 @@
 {
   pkgs,
   inputs,
-  lib,
-  userConfig,
   ...
 }: {
   imports = [

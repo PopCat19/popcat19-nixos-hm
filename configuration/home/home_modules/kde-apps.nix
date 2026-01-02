@@ -1,7 +1,6 @@
 {
   pkgs,
   config,
-  userConfig,
   ...
 }: {
   # KDE applications and utilities (no desktop environment)

@@ -1,11 +1,10 @@
 {
-  config,
   lib,
   pkgs,
   ...
 }:
 with lib; let
-  msr-tools = pkgs.msr-tools;
+  inherit (pkgs) msr-tools;
 in {
   systemd.services.clear-bdprochot = {
     description = "Clear BD-PROCHOT bit in MSR 0x1FC";
