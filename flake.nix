@@ -13,12 +13,11 @@
     };
 
     # System extensions
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     # Jovian NixOS (Steam Deck OS)
     jovian = {
       url = "github:Jovian-Experiments/jovian-nixos";
-      inputs.nixpkgs.follows = "chaotic";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Gaming-specific inputs
