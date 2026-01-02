@@ -58,66 +58,189 @@
       # Vencord plugin configurations (from backup, filtered)
       plugins = {
         # Core APIs
-        BadgeAPI = { enabled = true; };
-        CommandsAPI = { enabled = true; };
-        ContextMenuAPI = { enabled = true; };
-        MessageAccessoriesAPI = { enabled = true; };
-        MessageEventsAPI = { enabled = true; };
-        NoticesAPI = { enabled = true; };
-        ServerListAPI = { enabled = true; };
+        BadgeAPI = {enabled = true;};
+        CommandsAPI = {enabled = true;};
+        ContextMenuAPI = {enabled = true;};
+        MessageAccessoriesAPI = {enabled = true;};
+        MessageEventsAPI = {enabled = true;};
+        NoticesAPI = {enabled = true;};
+        ServerListAPI = {enabled = true;};
 
         # Utility plugins
-        NoTrack = { enabled = true; disableAnalytics = true; };
-        Settings = { enabled = true; settingsLocation = "aboveActivity"; };
-        CrashHandler = { enabled = true; };
-        Experiments = { enabled = true; enableIsStaff = false; forceStagingBanner = false; toolbarDevMenu = false; };
-        SupportHelper = { enabled = true; };
+        NoTrack = {
+          enabled = true;
+          disableAnalytics = true;
+        };
+        Settings = {
+          enabled = true;
+          settingsLocation = "aboveActivity";
+        };
+        CrashHandler = {enabled = true;};
+        Experiments = {
+          enabled = true;
+          enableIsStaff = false;
+          forceStagingBanner = false;
+          toolbarDevMenu = false;
+        };
+        SupportHelper = {enabled = true;};
 
         # Content enhancement
-        BetterNotesBox = { enabled = true; hide = false; noSpellCheck = false; };
-        BiggerStreamPreview = { enabled = true; };
-        BlurNSFW = { enabled = true; blurAmount = 10; };
-        ColorSighted = { enabled = true; };
-        ForceOwnerCrown = { enabled = true; };
-        GifPaste = { enabled = true; };
-        ImageZoom = { enabled = true; size = 750; zoom = 2.2; nearestNeighbour = false; square = false; saveZoomValues = true; invertScroll = true; zoomSpeed = 0.5; preventCarouselFromClosingOnClick = true; };
-        MemberCount = { enabled = true; memberList = true; toolTip = true; voiceActivity = true; };
-        MessageClickActions = { enabled = true; enableDeleteOnClick = true; enableDoubleClickToEdit = true; enableDoubleClickToReply = true; requireModifier = false; };
-        MessageTags = { enabled = true; clyde = true; tagsList = {}; };
-        MoreKaomoji = { enabled = true; };
-        petpet = { enabled = true; };
-        ReadAllNotificationsButton = { enabled = true; };
-        RevealAllSpoilers = { enabled = true; };
-        ReverseImageSearch = { enabled = true; };
-        ReviewDB = { enabled = true; notifyReviews = true; reviewsDropdownState = false; showWarning = true; hideBlockedUsers = true; };
-        SilentTyping = { enabled = true; showIcon = false; isEnabled = true; contextMenu = true; };
-        SpotifyControls = { enabled = true; hoverControls = false; };
-        SpotifyCrack = { enabled = true; noSpotifyAutoPause = true; keepSpotifyActivityOnIdle = false; };
-        TypingIndicator = { enabled = true; includeMutedChannels = false; includeBlockedUsers = false; includeCurrentChannel = true; indicatorMode = 3; };
-        TypingTweaks = { enabled = true; showAvatars = true; showRoleColors = true; alternativeFormatting = true; };
-        USRBG = { enabled = true; voiceBackground = true; nitroFirst = true; };
-        ValidUser = { enabled = true; };
-        WebContextMenus = { enabled = true; addBack = false; };
-        GreetStickerPicker = { enabled = true; };
-        WhoReacted = { enabled = true; };
-        VoiceMessages = { enabled = true; noiseSuppression = false; echoCancellation = false; };
-        PictureInPicture = { enabled = true; };
-        "AI Noise Suppression" = { enabled = true; };
-        NoTypingAnimation = { enabled = true; };
-        WebKeybinds = { enabled = true; };
-        ChatInputButtonAPI = { enabled = true; };
-        NewGuildSettings = { enabled = true; guild = true; everyone = true; role = true; events = true; highlights = true; messages = 3; showAllChannels = true; };
-        UserSettingsAPI = { enabled = true; };
-        UserMessagesPronouns = { enabled = true; showInMessages = true; showSelf = true; pronounSource = 0; showInProfile = true; pronounsFormat = "LOWERCASE"; };
-        FixYoutubeEmbeds = { enabled = true; };
-        YoutubeAdblock = { enabled = true; };
-        DisableDeepLinks = { enabled = true; };
+        BetterNotesBox = {
+          enabled = true;
+          hide = false;
+          noSpellCheck = false;
+        };
+        BiggerStreamPreview = {enabled = true;};
+        BlurNSFW = {
+          enabled = true;
+          blurAmount = 10;
+        };
+        ColorSighted = {enabled = true;};
+        ForceOwnerCrown = {enabled = true;};
+        GifPaste = {enabled = true;};
+        ImageZoom = {
+          enabled = true;
+          size = 750;
+          zoom = 2.2;
+          nearestNeighbour = false;
+          square = false;
+          saveZoomValues = true;
+          invertScroll = true;
+          zoomSpeed = 0.5;
+          preventCarouselFromClosingOnClick = true;
+        };
+        MemberCount = {
+          enabled = true;
+          memberList = true;
+          toolTip = true;
+          voiceActivity = true;
+        };
+        MessageClickActions = {
+          enabled = true;
+          enableDeleteOnClick = true;
+          enableDoubleClickToEdit = true;
+          enableDoubleClickToReply = true;
+          requireModifier = false;
+        };
+        MessageTags = {
+          enabled = true;
+          clyde = true;
+          tagsList = {};
+        };
+        MoreKaomoji = {enabled = true;};
+        petpet = {enabled = true;};
+        ReadAllNotificationsButton = {enabled = true;};
+        RevealAllSpoilers = {enabled = true;};
+        ReverseImageSearch = {enabled = true;};
+        ReviewDB = {
+          enabled = true;
+          notifyReviews = true;
+          reviewsDropdownState = false;
+          showWarning = true;
+          hideBlockedUsers = true;
+        };
+        SilentTyping = {
+          enabled = true;
+          showIcon = false;
+          isEnabled = true;
+          contextMenu = true;
+        };
+        SpotifyControls = {
+          enabled = true;
+          hoverControls = false;
+        };
+        SpotifyCrack = {
+          enabled = true;
+          noSpotifyAutoPause = true;
+          keepSpotifyActivityOnIdle = false;
+        };
+        TypingIndicator = {
+          enabled = true;
+          includeMutedChannels = false;
+          includeBlockedUsers = false;
+          includeCurrentChannel = true;
+          indicatorMode = 3;
+        };
+        TypingTweaks = {
+          enabled = true;
+          showAvatars = true;
+          showRoleColors = true;
+          alternativeFormatting = true;
+        };
+        USRBG = {
+          enabled = true;
+          voiceBackground = true;
+          nitroFirst = true;
+        };
+        ValidUser = {enabled = true;};
+        WebContextMenus = {
+          enabled = true;
+          addBack = false;
+        };
+        GreetStickerPicker = {enabled = true;};
+        WhoReacted = {enabled = true;};
+        VoiceMessages = {
+          enabled = true;
+          noiseSuppression = false;
+          echoCancellation = false;
+        };
+        PictureInPicture = {enabled = true;};
+        "AI Noise Suppression" = {enabled = true;};
+        NoTypingAnimation = {enabled = true;};
+        WebKeybinds = {enabled = true;};
+        ChatInputButtonAPI = {enabled = true;};
+        NewGuildSettings = {
+          enabled = true;
+          guild = true;
+          everyone = true;
+          role = true;
+          events = true;
+          highlights = true;
+          messages = 3;
+          showAllChannels = true;
+        };
+        UserSettingsAPI = {enabled = true;};
+        UserMessagesPronouns = {
+          enabled = true;
+          showInMessages = true;
+          showSelf = true;
+          pronounSource = 0;
+          showInProfile = true;
+          pronounsFormat = "LOWERCASE";
+        };
+        FixYoutubeEmbeds = {enabled = true;};
+        YoutubeAdblock = {enabled = true;};
+        DisableDeepLinks = {enabled = true;};
 
         # Enhanced functionality
-        FakeNitro = { enabled = true; enableEmojiBypass = true; enableStickerBypass = true; enableStreamQualityBypass = true; transformStickers = true; transformEmojis = true; transformCompoundSentence = false; emojiSize = 64; stickerSize = 256; hyperLinkText = "{{NAME}}"; useHyperLinks = true; disableEmbedPermissionCheck = false; };
-        PinDMs = { enabled = true; pinOrder = 0; dmSectionCollapsed = false; canCollapseDmSection = false; userBasedCategoryList = {}; };
-        NoProfileThemes = { enabled = true; };
-        NoReplyMention = { enabled = true; userList = ""; shouldPingListed = true; inverseShiftReply = false; };
+        FakeNitro = {
+          enabled = true;
+          enableEmojiBypass = true;
+          enableStickerBypass = true;
+          enableStreamQualityBypass = true;
+          transformStickers = true;
+          transformEmojis = true;
+          transformCompoundSentence = false;
+          emojiSize = 64;
+          stickerSize = 256;
+          hyperLinkText = "{{NAME}}";
+          useHyperLinks = true;
+          disableEmbedPermissionCheck = false;
+        };
+        PinDMs = {
+          enabled = true;
+          pinOrder = 0;
+          dmSectionCollapsed = false;
+          canCollapseDmSection = false;
+          userBasedCategoryList = {};
+        };
+        NoProfileThemes = {enabled = true;};
+        NoReplyMention = {
+          enabled = true;
+          userList = "";
+          shouldPingListed = true;
+          inverseShiftReply = false;
+        };
       };
 
       # Vencord settings
@@ -139,14 +262,14 @@
           NoticesAPI = true;
           ServerListAPI = true;
           SettingsStoreAPI = false;
-          
+
           # Utility plugins
           NoTrack = true;
           Settings = true;
           CrashHandler = true;
           Experiments = true;
           SupportHelper = true;
-          
+
           # Enhanced features
           FakeNitro = true;
           BetterNotesBox = true;

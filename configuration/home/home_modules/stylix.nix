@@ -27,6 +27,7 @@
   # Enable Stylix with auto-enable for better compatibility
   stylix.enable = true;
   stylix.autoEnable = true;
+  stylix.polarity = "dark";
 
   # PMD Theme Configuration
   # Uses centralized theme configuration from userConfig
@@ -84,6 +85,7 @@
   stylix.targets.vencord.enable = true;
   stylix.targets.nixcord.enable = true;
   stylix.targets.zed.enable = true;
+  stylix.targets.vscode.enable = true;
 
   # Cursor theme configuration using Stylix native option
   stylix.cursor = {

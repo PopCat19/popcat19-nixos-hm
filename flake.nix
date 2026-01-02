@@ -67,12 +67,19 @@
       url = "github:popcat19/project-minimalist-design/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Alejandra Nix formatter
+    alejandra = {
+      url = "github:kamadorueda/alejandra/4.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
     self,
     nixpkgs,
     home-manager,
+    alejandra,
     ...
   }: let
     # Import modules
@@ -101,7 +108,7 @@
     # Formatter for 'nix fmt'
     formatter = nixpkgs.lib.genAttrs supportedSystems (
       system:
-        nixpkgs.legacyPackages.${system}.alejandra
+        alejandra.defaultPackage.${system}
     );
     # Host-specific NixOS configurations generated dynamically
     # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
