@@ -28,6 +28,7 @@
     ./home_modules/fonts.nix
     ./home_modules/noctalia.nix
     ./home_modules/zed.nix
+    ./home_modules/vscodium.nix
     ./home_modules/screenshot.nix
     ./home_modules/zen-browser.nix
     ./home_modules/generative.nix

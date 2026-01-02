@@ -15,6 +15,7 @@ with pkgs; [
   tree
   appimage-run
   zenity
+  alejandra
 
   # Gaming
   lutris
