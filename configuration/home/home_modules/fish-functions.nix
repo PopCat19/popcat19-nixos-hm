@@ -442,7 +442,25 @@
     # NixOS Build and Switch operations
     nrb = "nixos-rebuild-basic";
     nrbc = "nixos-commit-rebuild-push";
-    cnup = "begin; if test -d .git; git add --intent-to-add . 2>/dev/null; or true; end; set -l use_nix_shell false; for cmd in statix deadnix alejandra; if not command -q $cmd; set use_nix_shell true; break; end; end; if test $use_nix_shell = true; nix-shell -p 'statix deadnix alejandra' --run 'statix fix . && deadnix -e . && alejandra . && nix flake check --impure --accept-flake-config --verbose'; else; statix fix . && deadnix -e . && alejandra . && nix flake check --impure --accept-flake-config --verbose; end; end";
+    cnup = ''
+      begin
+        if test -d .git
+          git add --intent-to-add . 2>/dev/null; or true
+        end
+        set -l use_nix_shell false
+        for cmd in statix deadnix alejandra
+          if not command -q $cmd
+            set use_nix_shell true
+            break
+          end
+        end
+        if test $use_nix_shell = true
+          nix-shell -p 'statix deadnix alejandra' --run 'statix fix . && deadnix -e . && alejandra . && nix flake check --impure --accept-flake-config --verbose'
+        else
+          statix fix . && deadnix -e . && alejandra . && nix flake check --impure --accept-flake-config --verbose
+        end
+      end
+    '';
 
     # Package Management with nix search
     pkgs = "nix search nixpkgs";
@@ -454,7 +472,14 @@
     dtm = "dev-to-main";
 
     # SillyTavern launcher
-    sillytavern = "begin; cd ~/SillyTavern-Launcher/SillyTavern; git pull origin staging 2>/dev/null; or true; ./start.sh; cd -; end";
+    sillytavern = ''
+      begin
+        cd ~/SillyTavern-Launcher/SillyTavern
+        git pull origin staging 2>/dev/null; or true
+        ./start.sh
+        cd -
+      end
+    '';
 
     # Fish history management
     fixhist = "fix-fish-history";
