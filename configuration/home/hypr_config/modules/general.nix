@@ -1,3 +1,14 @@
+# General Configuration
+#
+# Purpose: Configure core Hyprland settings including layout, decoration, and behavior
+# Dependencies: None
+# Related: animations.nix, window-rules.nix
+#
+# This module:
+# - Sets window gaps, borders, and layout behavior
+# - Configures decoration (rounding, blur, shadows)
+# - Defines dwindle and master layout options
+# - Sets performance and debug settings
 {
   wayland.windowManager.hyprland.settings = {
     general = {
@@ -10,7 +21,7 @@
     };
 
     decoration = {
-      rounding = 16; # PMD spec: 1rem (16px) radius
+      rounding = 16;
       active_opacity = 1.0;
       inactive_opacity = 1.0;
 
