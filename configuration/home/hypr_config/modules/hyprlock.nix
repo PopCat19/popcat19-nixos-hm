@@ -1,9 +1,16 @@
-# Hyprlock minimal Rosé Pine theme
+# Hyprlock Configuration
+#
+# Purpose: Configure Hyprlock screen lock with Rosé Pine theme
+# Dependencies: hyprlock, stylix
+# Related: None
+#
+# This module:
+# - Sets up lock screen with clock and date display
+# - Configures password input field
+# - Applies blur and hides cursor
+# Note: Colors are managed by stylix Base16 scheme
 {
   home.file.".config/hypr/hyprlock.conf".text = ''
-    # Hyprlock theme configuration
-    # Colors are handled by stylix Base16 scheme
-
     general {
       hide_cursor = true
       grace = 1
@@ -14,7 +21,6 @@
       blur_passes = 3
     }
 
-    # Clock (HH:MM)
     label {
       text = cmd[update:1000] date +"%H:%M"
       font_size = 120
@@ -24,7 +30,6 @@
       valign = center
     }
 
-    # Date (weekday, month day)
     label {
       text = cmd[update:1000] date +"%A, %B %d"
       font_size = 22
@@ -34,7 +39,6 @@
       valign = center
     }
 
-    # Password field (centered)
     input-field {
       monitor =
       size = 300, 44
@@ -49,7 +53,7 @@
       dots_size = 0.2
       dots_spacing = 0.25
     }
-    # Hint
+
     label {
       text = "Type password to unlock"
       font_size = 14

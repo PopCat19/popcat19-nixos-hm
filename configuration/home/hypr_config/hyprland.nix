@@ -1,3 +1,14 @@
+# Hyprland Window Manager
+#
+# Purpose: Configure Hyprland Wayland compositor with modular settings
+# Dependencies: hyprland
+# Related: userprefs.conf, wallpaper.nix, modules/*
+#
+# This module:
+# - Enables Hyprland window manager
+# - Imports modular configuration files
+# - Sources user preferences and monitor configuration
+# - Manages shader files and wallpaper directory
 {pkgs, ...}: {
   imports = [
     ./modules/colors.nix

@@ -1,15 +1,21 @@
-# Window Rules for Hyprland
-# ==========================
+# Window Rules Configuration
+#
+# Purpose: Configure window behavior rules for specific applications
+# Dependencies: None
+# Related: keybinds.nix, general.nix
+#
+# This module:
+# - Suppresses maximize events globally
+# - Defines floating rules for specific applications
+# - Sets minimum window sizes
+# - Configures focus behavior for special windows
 {
   wayland.windowManager.hyprland.settings = {
-    # Window rules v2
     windowrulev2 = [
-      # General rules
       "suppressevent maximize, class:.*"
       "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
       "minsize 1024 600,class:^(org.pulseaudio.pavucontrol)$"
 
-      # Floating rules
       "float,class:^(org.kde.dolphin)$,title:^(Progress Dialog — Dolphin)$"
       "float,class:^(org.kde.dolphin)$,title:^(Copying — Dolphin)$"
       "float,title:^(About Mozilla Firefox)$"
@@ -47,7 +53,6 @@
       "float,class:^(org.keepassxc.KeePassXC)$,title:^(Password Generator)$"
       "float,class:^(keepassxc)$,title:^(Password Generator)$"
 
-      # Standardized Window rules v2
       "float, title:^(Open)$"
       "float, title:^(Choose Files)$"
       "float, title:^(Save As)$"
