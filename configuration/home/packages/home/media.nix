@@ -12,6 +12,7 @@ with pkgs; [
   # Audio Applications
   audacity
   furnace
+  lmms
 
   # Torrent
   qbittorrent
