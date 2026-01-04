@@ -24,7 +24,7 @@
     ./hypr_config/hyprland.nix
     ./home_modules/stylix.nix
     ./home_modules/fonts.nix
-    ./home_modules/noctalia.nix
+    ./noctalia_config/noctalia.nix
     ./home_modules/zed.nix
     ./home_modules/vscodium.nix
     ./home_modules/screenshot.nix
