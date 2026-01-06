@@ -35,10 +35,10 @@
       "$mainMod, E, exec, $file"
       "$mainMod, C, exec, $editor"
       "$mainMod, F, exec, $browser"
-      "$mainMod, A, exec, noctalia-shell ipc call launcher toggle"
+      "$mainMod, A, exec, vicinae open"
       "$mainMod+Shift, A, exec, $launcher"
       "$mainMod+Shift, C, exec, hyprpicker -a"
-      "$mainMod, V, exec, noctalia-shell ipc call launcher clipboard"
+      "$mainMod, V, exec, vicinae vicinae://extensions/vicinae/clipboard/history"
       "$mainMod+Shift, V, exec, bash -lc \"cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v\""
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
 

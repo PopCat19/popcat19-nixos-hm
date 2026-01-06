@@ -49,6 +49,7 @@
     ./home_modules/obs.nix
     ./home_modules/syncthing.nix
     ./home_modules/audio-control.nix
+    ./home_modules/vicinae.nix
   ];
 
   # Use the centralized packages list from home_modules/packages.nix

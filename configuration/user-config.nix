@@ -129,9 +129,9 @@
     };
 
     launcher = {
-      desktop = "fuzzel.desktop";
-      package = "fuzzel";
-      command = "fuzzel";
+      desktop = "vicinae.desktop";
+      package = "vicinae";
+      command = "vicinae";
     };
   };
 
