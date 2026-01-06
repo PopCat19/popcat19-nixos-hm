@@ -36,7 +36,7 @@
       "$mainMod, C, exec, $editor"
       "$mainMod, F, exec, $browser"
       "$mainMod, A, exec, vicinae open"
-      "$mainMod+Shift, A, exec, $launcher"
+      "$mainMod+Shift, A, exec, fuzzel"
       "$mainMod+Shift, C, exec, hyprpicker -a"
       "$mainMod, V, exec, vicinae vicinae://extensions/vicinae/clipboard/history"
       "$mainMod+Shift, V, exec, bash -lc \"cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v\""
