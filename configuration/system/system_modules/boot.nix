@@ -1,15 +1,15 @@
 # Boot Configuration Module
 #
 # Purpose: Manage bootloader configuration and kernel settings.
-# Dependencies: systemd-boot, nixpkgs, nix-cachyos-kernel
+# Dependencies: systemd-boot, nixpkgs
 # Related: hardware.nix
 #
 # This module:
 # - Configures systemd-boot as the bootloader
 # - Sets up EFI boot variables
 # - Enables support for NTFS filesystems
-# - Configures CachyOS LTO kernel for optimal performance
-{inputs, ...}: {
+# - Configures zen kernel for optimal performance
+{pkgs, ...}: {
   boot = {
     loader = {
       systemd-boot = {
@@ -20,7 +20,7 @@
       timeout = 3;
     };
     supportedFilesystems = ["ntfs"];
-    kernelPackages = inputs.nix-cachyos-kernel.legacyPackages.x86_64-linux.linuxPackages-cachyos-latest-lto-x86_64-v3;
+    kernelPackages = pkgs.linuxPackages_zen;
     kernelModules = ["i2c-dev"];
     blacklistedKernelModules = ["snd_seq_dummy"];
   };

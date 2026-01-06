@@ -4,7 +4,7 @@
   # Flake inputs
   inputs = {
     # Core Nixpkgs repository
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/pull/476347/head";
 
     # Nix User Repository
     nur = {
@@ -73,11 +73,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # CachyOS kernels with optimized builds and patches
-    nix-cachyos-kernel = {
-      url = "github:xddxdd/nix-cachyos-kernel/release";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Vicinae launcher
+    vicinae.url = "github:vicinaehq/vicinae";
   };
 
   outputs = inputs @ {
