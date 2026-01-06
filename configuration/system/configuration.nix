@@ -48,16 +48,16 @@ in {
     min-free = 0;
     download-buffer-size = 67108864;
 
-    trusted-users = lib.mkAfter ["root" "${userConfig.user.username}"];
+    trusted-users = ["root" "${userConfig.user.username}"];
 
-    substituters = lib.mkAfter [
+    substituters = [
       "https://vicinae.cachix.org"
       "https://shimboot-systemd-nixos.cachix.org"
       "https://attic.xuyh0120.win/lantian"
       "https://cache.garnix.io"
     ];
 
-    trusted-public-keys = lib.mkAfter [
+    trusted-public-keys = [
       "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
       "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
