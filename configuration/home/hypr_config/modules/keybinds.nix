@@ -16,7 +16,7 @@
     "$editor" = userConfig.defaultApps.editor.command;
     "$file" = userConfig.defaultApps.fileManager.command;
     "$browser" = userConfig.defaultApps.browser.command;
-    "$menu" = "${userConfig.defaultApps.launcher.command} --dmenu";
+    "$menu" = "fuzzel --dmenu";
     "$launcher" = userConfig.defaultApps.launcher.command;
 
     bind = [
