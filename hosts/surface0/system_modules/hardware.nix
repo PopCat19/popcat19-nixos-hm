@@ -63,9 +63,6 @@
         };
       };
     };
-
-    # Surface pen and touch input
-    opentabletdriver.enable = true;
   };
 
   # USER GROUPS FOR HARDWARE ACCESS
