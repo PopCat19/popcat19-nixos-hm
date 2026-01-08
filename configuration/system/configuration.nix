@@ -19,6 +19,7 @@ in {
     ./system_modules/networking.nix
     ./system_modules/ssh.nix
     ./system_modules/hardware.nix
+    ./system_modules/tablet.nix
     ./system_modules/packages.nix
     ./system_modules/core-packages.nix
     ./system_modules/localization.nix

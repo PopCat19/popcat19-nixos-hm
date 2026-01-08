@@ -19,7 +19,4 @@
     pavucontrol
     opentabletdriver
   ];
-
-  # Hardware configuration
-  hardware.opentabletdriver.enable = true;
 }
