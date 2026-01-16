@@ -2,7 +2,7 @@
   # **CONFIGURATION FILE MANAGEMENT**
   # Manages symlinks for configuration files.
   home.file.".config/hypr" = {
-    source = ../hypr_config;
+    source = ../main/wayland/hyprland/hypr_config;
     recursive = true;
   };
 

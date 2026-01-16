@@ -2,8 +2,7 @@
 {lib, ...}: {
   imports = [
     ./hardware-configuration.nix
-    ../../configuration/system/configuration.nix
-    ../../configuration/system/system-extended.nix
+    ../../configuration/system/main.nix
     ./system_modules/hardware.nix
     ./system_modules/zram.nix
   ];

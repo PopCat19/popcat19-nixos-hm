@@ -2,8 +2,7 @@
 {...}: {
   imports = [
     ./hardware-configuration.nix
-    ../../configuration/system/configuration.nix
-    ../../configuration/system/system-extended.nix
+    ../../configuration/system/main.nix
     ./system_modules/clear-bdprochot.nix
     ./system_modules/thermal-config.nix
     ./system_modules/boot.nix

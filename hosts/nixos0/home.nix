@@ -7,7 +7,7 @@
 
   # Import the central home configuration
   imports = [
-    ../../configuration/home/home.nix
+    ../../configuration/home/extras.nix
   ];
 
   # Host-specific monitor configuration (overrides central config)

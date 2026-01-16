@@ -11,8 +11,8 @@
 # - Maintains single entry point for display system setup
 {...}: {
   imports = [
-    ./greeter.nix
-    ./hyprland.nix
+    ./stylix-lightdm.nix
+    ./wayland/hyprland.nix
     ./xdg.nix
   ];
 }

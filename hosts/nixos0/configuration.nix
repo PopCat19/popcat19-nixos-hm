@@ -6,8 +6,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ../../configuration/system/configuration.nix
-    ../../configuration/system/system-extended.nix
+    ../../configuration/system/extras.nix
     inputs.jovian.nixosModules.default
   ];
 

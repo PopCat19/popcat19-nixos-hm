@@ -26,7 +26,6 @@
   services = {
     # Storage / Packaging
     udisks2.enable = true;
-    flatpak.enable = true;
 
     # Hardware
     upower.enable = true;
