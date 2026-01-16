@@ -65,7 +65,7 @@ function fish_greeting
 
         # Check which functions are available and build dynamic list
         set -l available_helpers ""
-        set -l helper_functions nrb nrbc flup dtm fixhist list-fish-helpers
+        set -l helper_functions nrb nrbc flup dtm fixhist list-fish-helpers show-shortcuts
 
         for func in $helper_functions
             if functions -q $func
