@@ -18,14 +18,41 @@ function show-shortcuts
 
     set -l filter ""
     set -l search ""
-    if test (count $argv) -gt 0
-        set -l input (string lower "$argv[1]")
-        set -l valid_cats (get_detected_categories "$keybinds_file" "$userprefs_file")
-        if contains "$input" (string lower $valid_cats)
-            set filter "$input"
+    set -l list_only false
+    set -l use_fzf false
+    set -l search_term ""
+
+    set -l i 1
+    while test $i -le (count $argv)
+        set -l arg "$argv[$i]"
+        if test "$arg" = "--list" -o "$arg" = "-l"
+            set list_only true
+            set i (math $i + 1)
+        else if test "$arg" = "--fzf" -o "$arg" = "-f"
+            set use_fzf true
+            set i (math $i + 1)
+            if test $i -le (count $argv)
+                set search_term "$argv[$i]"
+                set i (math $i + 1)
+            end
         else
-            set search "$argv[1]"
+            set search "$arg"
+            set i (math $i + 1)
         end
+    end
+
+    # Handle --list option
+    if test "$list_only" = true
+        set -l categories (get_detected_categories "$keybinds_file" "$userprefs_file")
+        set_color brgreen
+        echo "Available shortcut categories:"
+        set_color normal
+        for cat in $categories
+            echo "  • "(string trim "$cat")
+        end
+        echo ""
+        set_color brblack; echo "Usage: show-shortcuts <category>"; set_color normal
+        return
     end
 
     set -l all_shortcuts
@@ -94,6 +121,7 @@ function show-shortcuts
     set -l title " HYPRLAND SHORTCUTS "
     test -n "$filter"; and set title " CATEGORY: "(string upper "$filter")" "
     test -n "$search"; and set title " SEARCH: $search "
+    test "$use_fzf" = true; and set title " FUZZY SEARCH "
 
     set -l padding (math "($box_width - "(string length "$title")") / 2")
     set -l l_pad (math -s0 "floor($padding)")
@@ -120,6 +148,40 @@ function show-shortcuts
             end
         end | column -t -s (printf '\t')
         echo ""
+    end
+
+    # Check if fzf is available
+    set -l fzf_available false
+    if command -v fzf > /dev/null 2>&1
+        set fzf_available true
+    end
+
+    # Handle fzf output
+    if test "$use_fzf" = true
+        if test "$fzf_available" = false
+            set_color red; echo "Error: fzf is not installed. Please install fzf to use fuzzy search."; set_color normal
+            echo ""
+            echo " showing all shortcuts instead:"
+            set -l prev_use_fzf "$use_fzf"
+            set use_fzf false
+        else
+            set -l all_items
+            for item in $filtered
+                set -l p (string split '|' "$item")
+                set -a all_items "$p[1] | $p[2] [$p[3]]"
+            end
+
+            set -l fzf_cmd "fzf --delimiter '|' --preview 'echo {+}' --preview-window=right:30%"
+            if test -n "$search_term"
+                set fzf_cmd "$fzf_cmd --query '$search_term'"
+            end
+
+            set -l selected (printf '%s\n' $all_items | eval $fzf_cmd)
+            if test -n "$selected"
+                set -l binding (string split '|' "$selected")[1]
+                string trim "$binding"
+            end
+        end
     end
 
     set_color brblack; echo "Tip: # cat: <name> and # desc: <text> in config files"; set_color normal
