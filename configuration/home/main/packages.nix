@@ -10,7 +10,7 @@
 # - Returns combined package list for Home Manager
 {pkgs, ...}: let
   # Architecture-specific packages
-  x86_64Packages = import ../x86_64-packages.nix {inherit pkgs;};
+  x86_64Packages = import ./packages/x86_64-packages.nix {inherit pkgs;};
 
   # Import individual package lists (early priority)
   earlyPackages = [
