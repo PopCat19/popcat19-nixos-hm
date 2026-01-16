@@ -14,20 +14,20 @@
 
   # Import individual package lists (early priority)
   earlyPackages = [
-    (import ./terminal.nix {inherit pkgs;})
-    (import ./browsers.nix {inherit pkgs;})
-    (import ./media.nix {inherit pkgs;})
-    (import ./hyprland.nix {inherit pkgs;})
-    (import ./communication.nix {inherit pkgs;})
+    (import ./packages/terminal.nix {inherit pkgs;})
+    (import ./packages/browsers.nix {inherit pkgs;})
+    (import ./packages/media.nix {inherit pkgs;})
+    (import ./packages/hyprland.nix {inherit pkgs;})
+    (import ./packages/communication.nix {inherit pkgs;})
   ];
 
   # Import individual package lists (late priority)
   latePackages = [
-    (import ./monitoring.nix {inherit pkgs;})
-    (import ./utilities.nix {inherit pkgs;})
-    (import ./editors.nix {inherit pkgs;})
-    (import ./development.nix {inherit pkgs;})
-    (import ./hardware.nix {inherit pkgs;})
+    (import ./packages/monitoring.nix {inherit pkgs;})
+    (import ./packages/utilities.nix {inherit pkgs;})
+    (import ./packages/editors.nix {inherit pkgs;})
+    (import ./packages/development.nix {inherit pkgs;})
+    (import ./packages/hardware.nix {inherit pkgs;})
   ];
 in
   (builtins.concatLists earlyPackages)
