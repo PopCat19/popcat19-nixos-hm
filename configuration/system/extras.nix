@@ -11,5 +11,6 @@
   imports = [
     ./main.nix
     ./extras/vpn.nix
+    ./extras/openrgb.nix
   ];
 }

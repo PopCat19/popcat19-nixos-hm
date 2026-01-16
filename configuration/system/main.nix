@@ -15,7 +15,6 @@
     ./main/power-management.nix
     ./main/syncthing.nix
     ./main/dconf.nix
-    ./main/openrgb.nix
     ./main/stylix-lightdm.nix
     ./main/wayland/hyprland.nix
     ./main/wayland/noctalia.nix
