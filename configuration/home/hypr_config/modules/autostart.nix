@@ -9,7 +9,7 @@
 # - Configures desktop environment integration
 # - Launches systemd user services
 # - Initializes hardware-specific applications
-{
+{userConfig, ...}: {
   wayland.windowManager.hyprland.settings = {
     "exec-once" = [
       "/run/current-system/sw/libexec/polkit-gnome-authentication-agent-1"
@@ -18,6 +18,7 @@
       "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       "systemctl --user start hyprpolkitagent"
       "openrgb -p orang-full"
+      "${userConfig.defaultApps.terminal.command}"
     ];
   };
 }
