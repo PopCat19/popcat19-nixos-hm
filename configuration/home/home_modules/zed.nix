@@ -9,7 +9,8 @@
 # - Integrates with PMD theming for consistent styling
 # - Configures AI agent and language model settings
 # - Sets up context servers for enhanced functionality
-_: {
+{ lib, ... }:
+{
   # Enable Zed editor
   programs.zed-editor = {
     enable = true;
@@ -22,9 +23,9 @@ _: {
         always_allow_tool_actions = true;
         default_model = {
           provider = "openai";
-          model = "MiniMaxAI/MiniMax-M2";
+          model = "zai-org/GLM-4.7-TEE";
         };
-        model_parameters = [];
+        model_parameters = [ ];
       };
 
       # Language Models Configuration
@@ -33,19 +34,19 @@ _: {
           api_url = "https://llm.chutes.ai/v1";
           available_models = [
             {
-              name = "zai-org/GLM-4.6-FP8";
-              display_name = "GLM-4.6-FP8";
+              name = "zai-org/GLM-4.7-TEE";
+              display_name = "GLM-4.7-TEE";
               max_tokens = 200000;
             }
             {
               name = "moonshotai/Kimi-K2-Thinking";
               display_name = "Kimi-K2-Thinking";
-              max_tokens = 128000;
+              max_tokens = 262000;
             }
             {
-              name = "MiniMaxAI/MiniMax-M2";
-              display_name = "MiniMax-M2";
-              max_tokens = 128000;
+              name = "MiniMaxAI/MiniMax-M2.1-TEE";
+              display_name = "MiniMax-M2.1-TEE";
+              max_tokens = 196000;
             }
           ];
         };
@@ -55,6 +56,9 @@ _: {
       context_servers = {
         "mcp-server-exa-search" = {
           enabled = true;
+          settings = {
+            exa_api_key = null;
+          };
         };
         "mcp-server-context7" = {
           settings = {
@@ -62,6 +66,13 @@ _: {
           };
         };
       };
+
+      # UI Settings
+      ui_font_size = lib.mkForce 12;
+      buffer_font_size = lib.mkForce 12.0;
+      buffer_font_family = lib.mkForce "FiraCode Nerd Font";
+      ui_font_family = lib.mkForce "Rounded Mplus 1c";
+      ui_font_weight = lib.mkForce 500;
     };
   };
 

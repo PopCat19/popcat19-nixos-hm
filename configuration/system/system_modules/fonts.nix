@@ -1,5 +1,9 @@
-{pkgs, ...}: {
-  # Fonts configuration
+{
+  pkgs,
+  userConfig,
+  ...
+}: {
+  # Fonts configuration using centralized userConfig
   fonts.packages = with pkgs; [
     # Core fonts
     noto-fonts
@@ -10,8 +14,7 @@
 
     # Fonts used by applications
     google-fonts # Contains M+ Outline Fonts (Rounded Mplus 1c)
-    jetbrains-mono # Monospace font for terminals and coding
-    nerd-fonts.jetbrains-mono # JetBrains Mono with nerd font symbols
+    nerd-fonts.${userConfig.fonts.monospace.packageName}
   ];
 
   fonts.fontconfig = {
@@ -26,7 +29,7 @@
         "Noto Sans"
       ];
       monospace = [
-        "JetBrainsMono Nerd Font"
+        "${userConfig.fonts.monospace.name}"
         "Noto Sans Mono"
       ];
       emoji = ["Noto Color Emoji"];
