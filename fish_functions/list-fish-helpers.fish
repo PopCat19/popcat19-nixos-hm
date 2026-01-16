@@ -18,7 +18,7 @@ function list-fish-helpers
 
     # List custom functions (filter for our specific functions)
     set_color green; echo "[INFO] Custom Functions:"; set_color normal
-    functions | grep -E "(nix-shell-unfree|fish-greeting|list-fish-helpers|nixos-commit-rebuild-push|nixos-rebuild-basic|dev-to-main|nixos-flake-update|fix-fish-history|cnup|sillytavern)" | sort | awk '{print "   • " $0}'
+    functions | grep -E "(nix-shell-unfree|fish-greeting|list-fish-helpers|nixos-commit-rebuild-push|nixos-rebuild-basic|dev-to-main|nixos-flake-update|fix-fish-history|cnup|sillytavern|show-shortcuts)" | sort | awk '{print "   • " $0}'
 
     echo ""
     set_color green; echo "[INFO] All Abbreviations:"; set_color normal
