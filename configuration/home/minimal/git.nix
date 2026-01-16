@@ -11,8 +11,13 @@
 {userConfig, ...}: {
   programs.git = {
     enable = true;
-    inherit (userConfig.git) userName;
-    inherit (userConfig.git) userEmail;
-    inherit (userConfig.git) extraConfig;
+    settings =
+      {
+        user = {
+          name = userConfig.git.userName;
+          email = userConfig.git.userEmail;
+        };
+      }
+      // userConfig.git.extraConfig;
   };
 }

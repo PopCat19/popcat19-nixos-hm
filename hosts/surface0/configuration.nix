@@ -10,4 +10,7 @@
   ];
 
   networking.hostName = "popcat19-surface0";
+
+  # NixOS release version
+  system.stateVersion = "25.11";
 }

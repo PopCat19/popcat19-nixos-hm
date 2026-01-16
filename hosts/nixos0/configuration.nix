@@ -12,6 +12,9 @@
 
   networking.hostName = "popcat19-nixos0";
 
+  # NixOS release version
+  system.stateVersion = "25.11";
+
   # Host-specific packages
   environment.systemPackages = with pkgs; [
     alsa-utils

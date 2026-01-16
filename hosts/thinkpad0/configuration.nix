@@ -9,6 +9,9 @@
 
   networking.hostName = "popcat19-thinkpad0";
 
+  # NixOS release version
+  system.stateVersion = "25.11";
+
   # Disable autologin for thinkpad0 (override from display module)
   services.displayManager.autoLogin.enable = lib.mkForce false;
 }

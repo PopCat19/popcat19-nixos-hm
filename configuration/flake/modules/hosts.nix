@@ -11,6 +11,9 @@
       specialArgs = {inherit inputs userConfig;};
 
       modules = [
+        # Allow unfree packages
+        {nixpkgs.config.allowUnfree = true;}
+
         # Host-specific configuration file
         hostConfigPath
 
