@@ -6,10 +6,6 @@
 #
 # This module:
 # - Sets nix.settings from aagl nixConfig for optimized builds
-{
-  inputs
-}:
-
-{
+{inputs}: {
   nix.settings = inputs.aagl.nixConfig;
 }

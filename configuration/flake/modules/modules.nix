@@ -4,7 +4,7 @@
   mkGamingModule = system: {inputs}: {
     imports = [
       inputs.aagl.nixosModules.default
-      (import ../../nix-conf.nix { inherit inputs; })
+      (import ../../nix-conf.nix {inherit inputs;})
     ];
     programs = {
       anime-game-launcher.enable = system == "x86_64-linux";
