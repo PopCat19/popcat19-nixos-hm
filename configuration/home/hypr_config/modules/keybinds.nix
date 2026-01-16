@@ -9,7 +9,8 @@
 # - Configures system and window management shortcuts
 # - Sets up application launchers and utilities
 # - Binds media, volume, and brightness controls
-{userConfig, ...}: {
+{ userConfig, ... }:
+{
   wayland.windowManager.hyprland.settings = {
     "$mainMod" = "SUPER";
     "$term" = userConfig.defaultApps.terminal.command;
@@ -20,6 +21,7 @@
     "$launcher" = userConfig.defaultApps.launcher.command;
 
     # === WINDOW MANAGEMENT ===
+    # cat: Window Management
     # desc: Close active window
     bind = [
       "$mainMod, Q, killactive"
@@ -41,6 +43,7 @@
       "$mainMod, J, togglesplit"
 
       # === APPLICATION LAUNCHERS ===
+      # cat: Applications
       # desc: Launch terminal
       "$mainMod, T, exec, $term"
       # desc: Launch file manager
@@ -72,6 +75,7 @@
       "$mainMod+Shift+Ctrl, P, exec, ~/.local/bin/screenshot region --keep-shader"
 
       # === MEDIA KEYS ===
+      # cat: Media
       # desc: Toggle play/pause
       ",XF86AudioPlay, exec, playerctl play-pause"
       ",XF86AudioPause, exec, playerctl play-pause"
@@ -89,6 +93,7 @@
       "Alt, F7, exec, playerctl next"
 
       # === FOCUS NAVIGATION ===
+      # cat: Focus
       # desc: Focus left
       "$mainMod, Left, movefocus, l"
       # desc: Focus right
@@ -101,12 +106,14 @@
       "Alt, Tab, movefocus, d"
 
       # === GROUP NAVIGATION ===
+      # cat: Groups
       # desc: Previous in group
       "$mainMod+Ctrl, H, changegroupactive, b"
       # desc: Next in group
       "$mainMod+Ctrl, L, changegroupactive, f"
 
       # === WORKSPACE SWITCHING ===
+      # cat: Workspaces
       # desc: Switch to workspace 1
       "$mainMod, 1, workspace, 1"
       # desc: Switch to workspace 2
@@ -136,6 +143,7 @@
       "$mainMod+Ctrl, Down, workspace, empty"
 
       # === MOVE WINDOW TO WORKSPACE ===
+      # cat: Workspaces
       # desc: Move to workspace 1
       "$mainMod+Shift, 1, movetoworkspace, 1"
       # desc: Move to workspace 2
@@ -163,6 +171,7 @@
       "$mainMod+Ctrl+Alt, Left, movetoworkspace, r-1"
 
       # === SILENT MOVE TO WORKSPACE ===
+      # cat: Workspaces
       # desc: Silent move to workspace 1
       "$mainMod+Alt, 1, movetoworkspacesilent, 1"
       # desc: Silent move to workspace 2
@@ -185,6 +194,7 @@
       "$mainMod+Alt, 0, movetoworkspacesilent, 10"
 
       # === RESIZE WINDOW ===
+      # cat: Window Management
       # desc: Resize window left
       "$mainMod+Shift+Ctrl, Left, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive -30 0; else hyprctl dispatch movewindow l; fi'"
       # desc: Resize window right
@@ -195,12 +205,14 @@
       "$mainMod+Shift+Ctrl, Down, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 0 30; else hyprctl dispatch movewindow d; fi'"
 
       # === SCROLL WORKSPACES ===
+      # cat: Workspaces
       # desc: Scroll to next workspace
       "$mainMod, mouse_down, workspace, e+1"
       # desc: Scroll to previous workspace
       "$mainMod, mouse_up, workspace, e-1"
 
       # === SPECIAL WORKSPACE ===
+      # cat: Workspaces
       # desc: Move to special workspace
       "$mainMod+Alt, S, movetoworkspacesilent, special"
       # desc: Toggle special workspace
@@ -223,6 +235,7 @@
     ];
 
     # === LOCK DISPLAY KEYS ===
+    # cat: Hardware
     # desc: Volume up
     bindel = [
       ",F12, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 4%+"
@@ -246,6 +259,7 @@
     ];
 
     # === MOUSE BINDINGS ===
+    # cat: Window Management
     # desc: Drag window
     bindm = [
       "$mainMod, mouse:272, movewindow"
