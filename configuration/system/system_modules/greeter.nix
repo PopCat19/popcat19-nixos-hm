@@ -1,19 +1,19 @@
 # Greeter Configuration Module
 #
 # Purpose: Configure SDDM display manager for Wayland login sessions
-# Dependencies: sddm, userConfig
-# Related: wm.nix, xdg.nix
+# Dependencies: sddm, userConfig, papirus-icon-theme
+# Related: wm.nix, xdg.nix, stylix.nix
 #
 # This module:
 # - Enables SDDM Wayland display manager
-# - Configures theme settings and cursor appearance
+# - Configures theme settings, cursor, and icon appearance
 # - Sets Hyprland as default session
 # - Enables automatic login for configured user
 {
   userConfig,
+  pkgs,
   ...
 }: {
-  # SDDM (Wayland) with Hyprland default session and autologin
   services.displayManager = {
     sddm = {
       enable = true;
@@ -24,13 +24,19 @@
       };
     };
 
-    # Ensure Hyprland session is selected on login/autologin
     defaultSession = "hyprland-uwsm";
-
-    # Autologin configuration
     autoLogin = {
       enable = true;
       user = userConfig.user.username;
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    papirus-icon-theme
+    adwaita-icon-theme
+    hicolor-icon-theme
+  ];
+
+  # Icon theme centralized in system_modules/environment.nix
+  xdg.icons.enable = true;
 }

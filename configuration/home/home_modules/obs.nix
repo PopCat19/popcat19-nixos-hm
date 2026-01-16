@@ -1,6 +1,4 @@
-{ config, pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # OBS Studio Configuration Module
   #
   # Purpose: Configure OBS Studio with comprehensive plugin suite for advanced recording and streaming.

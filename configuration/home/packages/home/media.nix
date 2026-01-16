@@ -5,13 +5,17 @@ with pkgs; [
   audacious
   audacious-plugins
   pureref
-  youtube-music
+  pear-desktop
   mangayomi
   kdePackages.gwenview
 
   # Audio Applications
   audacity
   furnace
+  lmms
+
+  # Torrent
+  qbittorrent
 
   # Streaming and Gaming
   # obs-studio moved to home_modules/obs.nix

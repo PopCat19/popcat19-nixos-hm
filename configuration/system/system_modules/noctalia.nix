@@ -10,12 +10,7 @@
 # - Ensures required system dependencies are available
 # - Provides global configuration for all Wayland systems
 # - Note: Does not configure power-profiles-daemon or tuned as requested
-{
-  pkgs,
-  lib,
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   imports = [
     inputs.noctalia.nixosModules.default
   ];

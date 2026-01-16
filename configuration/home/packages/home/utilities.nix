@@ -17,8 +17,10 @@ with pkgs; [
   zenity
 
   # Gaming
-  # lutris # Temporarily disabled due to pyrate-limiter build failures
+  lutris
+  # bottles
   osu-lazer-bin
+  winboat
 
   # Shimboot Project Tools
   pv

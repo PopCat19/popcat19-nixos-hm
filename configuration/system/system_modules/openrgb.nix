@@ -9,16 +9,11 @@
 # - Configures automatic SMBus/I2C module loading for device detection
 # - Provides OpenRGB server with customizable port options
 # - Supports AMD motherboard RGB control and plugin extensions
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: {
+{pkgs, ...}: {
   # Enable OpenRGB hardware service
   services.hardware.openrgb = {
     enable = true;
-    
+
     # Configure motherboard support (AMD in this case)
     motherboard = "amd";
   };

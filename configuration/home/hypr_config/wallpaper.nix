@@ -1,11 +1,14 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
-  # Force inclusion of the wallpaper directory into the Nix store, even if empty.
-  # This prevents ENOENT during evaluation when the directory exists in the repo
-  # but Nix didn't copy it because it had no referenced files.
+# Wallpaper Discovery Module
+#
+# Purpose: Discover and list image files from wallpaper directory
+# Dependencies: None
+# Related: hyprland.nix
+#
+# This module:
+# - Forces wallpaper directory inclusion in Nix store
+# - Filters files by image extension (jpg, jpeg, png, webp, bmp)
+# - Returns list of absolute paths to image files
+{lib, ...}: let
   wallpaperDir = builtins.path {
     path = ../wallpaper;
     name = "wallpaper";

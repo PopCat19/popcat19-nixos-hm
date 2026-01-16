@@ -73,6 +73,7 @@
         "i2c"
         "input"
         "libvirtd"
+        "docker"
       ]
       ++ (
         if host.hostname == "${username}-surface0"
@@ -128,9 +129,9 @@
     };
 
     launcher = {
-      desktop = "fuzzel.desktop";
-      package = "fuzzel";
-      command = "fuzzel";
+      desktop = "vicinae.desktop";
+      package = "vicinae";
+      command = "vicinae";
     };
   };
 
@@ -158,13 +159,9 @@
   # Network configuration moved to system_modules/networking.nix
   # Host-specific overrides may still set `network` in userConfig if needed.
 
-  # UI components and panels
-  panel = {
-    weather = {
-      enabled = true;
-      location = "Suffolk";
-      key = "dde14cc79e324028be572340252405";
-      unit = "metric";
-    };
+  # Theme configuration for PMD
+  theme = {
+    hue = 345;
+    variant = "dark"; # "dark" or "light"
   };
 }

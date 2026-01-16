@@ -8,7 +8,7 @@
 # - Configures systemd-boot as the bootloader
 # - Sets up EFI boot variables
 # - Enables support for NTFS filesystems
-# - Configures the Zen kernel for optimal performance
+# - Configures zen kernel for optimal performance
 {pkgs, ...}: {
   boot = {
     loader = {

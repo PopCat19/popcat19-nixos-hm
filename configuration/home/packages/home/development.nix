@@ -4,11 +4,19 @@ with pkgs; [
   # Nix Development
   nil
   nixd
-  nixfmt-rfc-style
 
   # Code Formatters
   black
   prettierd
+  nixfmt-rfc-style
+  alejandra
+  statix
+  deadnix
+  yamllint
+  shfmt
+  glslang
+  clang-tools
+  hyprlang
 
   # Development Tools
   ripgrep
@@ -17,6 +25,7 @@ with pkgs; [
   git-lfs
   hyprls
   shellcheck
+  fish-lsp
 
   # Android Tools
   android-tools
@@ -27,5 +36,4 @@ with pkgs; [
   yarn-berry
   rustup
   python3
-
 ]

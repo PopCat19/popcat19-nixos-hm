@@ -1,3 +1,14 @@
+# General Configuration
+#
+# Purpose: Configure core Hyprland settings including layout, decoration, and behavior
+# Dependencies: None
+# Related: animations.nix, window-rules.nix
+#
+# This module:
+# - Sets window gaps, borders, and layout behavior
+# - Configures decoration (rounding, blur, shadows)
+# - Defines dwindle and master layout options
+# - Sets performance and debug settings
 {
   wayland.windowManager.hyprland.settings = {
     general = {
@@ -10,7 +21,7 @@
     };
 
     decoration = {
-      rounding = 12;
+      rounding = 16;
       active_opacity = 1.0;
       inactive_opacity = 1.0;
 
@@ -39,20 +50,11 @@
 
     misc = {
       force_default_wallpaper = -1;
-      disable_hyprland_logo = false;
       vfr = true;
     };
 
     debug = {
       damage_tracking = 0;
     };
-
-    layerrule = [
-      "blur,bar-0"
-      "blur,bar-1"
-      "blur,fuzzel"
-      "blur,noctalia-shell"
-      "ignorezero,fuzzel"
-    ];
   };
 }

@@ -8,13 +8,7 @@
 # - Imports base system configuration as foundation
 # - Adds user-specific system modules
 # - Provides extension point for additional modules
-{
-  config,
-  pkgs,
-  lib,
-  userConfig,
-  ...
-}: {
+{...}: {
   imports = [
     ./configuration.nix
     ./system_modules/programs.nix

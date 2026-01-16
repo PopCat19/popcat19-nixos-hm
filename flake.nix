@@ -4,7 +4,7 @@
   # Flake inputs
   inputs = {
     # Core Nixpkgs repository
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/pull/476347/head";
 
     # Nix User Repository
     nur = {
@@ -13,12 +13,11 @@
     };
 
     # System extensions
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     # Jovian NixOS (Steam Deck OS)
     jovian = {
       url = "github:Jovian-Experiments/jovian-nixos";
-      inputs.nixpkgs.follows = "chaotic";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Gaming-specific inputs
@@ -61,12 +60,32 @@
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Personal Material Design (PMD) theme system
+    pmd = {
+      url = "github:popcat19/project-minimalist-design/dev";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Alejandra Nix formatter
+    alejandra = {
+      url = "github:kamadorueda/alejandra/4.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Vicinae launcher
+    vicinae.url = "github:vicinaehq/vicinae";
+
+    # LLM Agents
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
-    self,
     nixpkgs,
-    home-manager,
+    alejandra,
     ...
   }: let
     # Import modules
@@ -81,12 +100,7 @@
   in {
     # Packages output (no vicinae now that the overlay was removed)
     packages = nixpkgs.lib.genAttrs supportedSystems (
-      system: let
-        pkgs = import nixpkgs {
-          hostPlatform = system;
-          overlays = import ./configuration/flake/modules/overlays.nix system;
-        };
-      in {
+      system: {
         # Export agenix for secret management
         agenix = inputs.agenix.packages.${system}.default;
       }
@@ -95,20 +109,20 @@
     # Formatter for 'nix fmt'
     formatter = nixpkgs.lib.genAttrs supportedSystems (
       system:
-        nixpkgs.legacyPackages.${system}.alejandra
+        alejandra.defaultPackage.${system}
     );
     # Host-specific NixOS configurations generated dynamically
     # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
     nixosConfigurations = let
-      machines = baseUserConfig.hosts.machines;
+      inherit (baseUserConfig.hosts) machines;
     in
       nixpkgs.lib.listToAttrs (map (m: let
           perHostConfig = import ./configuration/user-config.nix {
-            username = baseUserConfig.user.username;
+            inherit (baseUserConfig.user) username;
             machine = m;
             system = "x86_64-linux";
           };
-          hostname = perHostConfig.host.hostname;
+          inherit (perHostConfig.host) hostname;
         in {
           name = hostname;
           value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {

@@ -1,11 +1,5 @@
 # Host-specific home configuration for surface0
-{
-  config,
-  pkgs,
-  lib,
-  userConfig,
-  ...
-}: {
+{userConfig, ...}: {
   # Basic home configuration
   home.username = userConfig.user.username;
   home.homeDirectory = userConfig.directories.home;

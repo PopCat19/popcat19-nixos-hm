@@ -1,15 +1,20 @@
 # Fish Shell Configuration Module
 #
-# Purpose: Configure Fish shell as the default system shell
-# Dependencies: fish, fish-plugins
+# Purpose: Configure Fish shell as the default system shell with global functions
+# Dependencies: fish, fish-plugins, fish-functions.nix
 # Related: users.nix, core-packages.nix
 #
 # This module:
 # - Installs Fish shell as system package
 # - Configures Fish as default shell for users
 # - Provides Fish plugin management
-# - Sets up basic Fish environment
+# - Imports global Fish functions and configuration
+# - Sets up Fish environment system-wide
 {pkgs, ...}: {
+  imports = [
+    ./fish-functions.nix
+  ];
+
   # Install Fish shell
   environment.systemPackages = with pkgs; [
     fish

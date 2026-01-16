@@ -9,9 +9,7 @@
 # - Configures user applications and services
 # - Sets up desktop environment and themes
 {
-  config,
   pkgs,
-  lib,
   inputs,
   userConfig,
   hostPlatform,
@@ -26,7 +24,9 @@
     ./hypr_config/hyprland.nix
     ./home_modules/stylix.nix
     ./home_modules/fonts.nix
-    ./home_modules/noctalia.nix
+    ./noctalia_config/noctalia.nix
+    ./home_modules/zed.nix
+    ./home_modules/vscodium.nix
     ./home_modules/screenshot.nix
     ./home_modules/zen-browser.nix
     ./home_modules/generative.nix
@@ -39,7 +39,8 @@
     ./home_modules/qt-gtk-config.nix
     ./home_modules/fuzzel-config.nix
     ./home_modules/kitty.nix
-    ./home_modules/fish.nix
+
+    ./home_modules/vesktop.nix
     ./home_modules/starship.nix
     ./home_modules/micro.nix
     ./home_modules/fcitx5.nix
@@ -48,8 +49,17 @@
     ./home_modules/obs.nix
     ./home_modules/syncthing.nix
     ./home_modules/audio-control.nix
+    ./home_modules/vicinae.nix
   ];
 
   # Use the centralized packages list from home_modules/packages.nix
   home.packages = import ./home_modules/packages.nix {inherit pkgs inputs hostPlatform userConfig;};
+
+  # Link existing wallpaper directory for Noctalia
+  home.file = {
+    ".wallpaper" = {
+      source = ./wallpaper;
+      recursive = true;
+    };
+  };
 }

@@ -2,8 +2,6 @@
 {
   pkgs,
   inputs,
-  lib,
-  userConfig,
   ...
 }: {
   imports = [
@@ -17,12 +15,8 @@
 
   # Host-specific packages
   environment.systemPackages = with pkgs; [
-    zluda
     alsa-utils
     pavucontrol
     opentabletdriver
   ];
-
-  # Hardware configuration
-  hardware.opentabletdriver.enable = true;
 }

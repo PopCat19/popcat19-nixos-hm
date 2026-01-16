@@ -1,7 +1,6 @@
 # Privacy and security tools configuration
 {
   pkgs,
-  config,
   lib,
   userConfig,
   ...

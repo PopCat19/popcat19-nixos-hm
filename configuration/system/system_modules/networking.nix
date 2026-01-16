@@ -8,7 +8,6 @@
 # - Enables IP forwarding for IPv4/IPv6
 # - Configures NetworkManager with wpa_supplicant backend
 # - Sets up firewall rules with nftables
-
 {userConfig, ...}: let
   # Port definitions (DRY)
   ports = {
@@ -56,7 +55,12 @@ in {
       trustedInterfaces = ["lo"];
       allowedTCPPorts = [ports.ssh ports.syncthing ports.custom];
       allowedUDPPorts = [ports.syncthing ports.dns ports.dhcp];
-      allowedTCPPortRanges = [{from = 3000; to = 4000;}];
+      allowedTCPPortRanges = [
+        {
+          from = 3000;
+          to = 4000;
+        }
+      ];
       checkReversePath = false;
     };
   };

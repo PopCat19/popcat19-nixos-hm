@@ -1,10 +1,4 @@
-{
-  pkgs,
-  config,
-  lib,
-  userConfig,
-  ...
-}: {
+{userConfig, ...}: {
   # XDG MIME Applications Configuration
   xdg.mimeApps = {
     enable = true;

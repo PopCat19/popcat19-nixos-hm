@@ -1,11 +1,5 @@
 # NixOS Configuration for thinkpad0
-{
-  pkgs,
-  inputs,
-  lib,
-  userConfig,
-  ...
-}: {
+{lib, ...}: {
   imports = [
     ./hardware-configuration.nix
     ../../configuration/system/configuration.nix

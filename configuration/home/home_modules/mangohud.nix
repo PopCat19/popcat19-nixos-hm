@@ -2,7 +2,6 @@
 # This file contains MangoHUD gaming performance overlay configuration and packages
 # Imported by home.nix
 {
-  config,
   pkgs,
   userConfig,
   ...
@@ -42,7 +41,6 @@
     # ─── CORE MANGOHUD PACKAGES ───
     mangohud # Gaming performance overlay with system metrics
     goverlay # MangoHUD configuration GUI for easy setup
-
 
     # ─── GAMING ENHANCEMENT TOOLS ───
     vkbasalt # Vulkan post-processing layer for visual enhancements

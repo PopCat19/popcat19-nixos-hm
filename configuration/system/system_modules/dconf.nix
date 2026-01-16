@@ -8,9 +8,6 @@
 # - Enables dconf at system level for desktop settings
 # - Provides dconf functionality for home-manager modules
 # - Supports GTK theme and font configuration
-{
-  pkgs,
-  ...
-}: {
+_: {
   programs.dconf.enable = true;
 }
