@@ -7,6 +7,6 @@
 # This module:
 # - Enables Flatpak service
 # - Provides sandboxed application support
-{...}: {
+_: {
   services.flatpak.enable = true;
 }

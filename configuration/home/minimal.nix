@@ -7,13 +7,7 @@
 # This module:
 # - Imports all minimal home modules
 # - Provides basic user environment
-{
-  pkgs,
-  inputs,
-  userConfig,
-  hostPlatform,
-  ...
-}: {
+{...}: {
   imports = [
     ./minimal/environment.nix
     ./minimal/fonts.nix
