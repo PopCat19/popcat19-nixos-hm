@@ -9,7 +9,7 @@
 # - Configures Nix settings and binary caches
 # - Enables core system functionality
 # - Sets system state version
-{...}: let
+_: let
   userConfig = import ../../configuration/user-config.nix {};
 in {
   imports = [
@@ -56,6 +56,7 @@ in {
       "https://shimboot-systemd-nixos.cachix.org"
       "https://attic.xuyh0120.win/lantian"
       "https://cache.garnix.io"
+      "https://cache.numtide.com"
     ];
 
     trusted-public-keys = [
@@ -63,6 +64,7 @@ in {
       "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "cache.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
     ];
   };
 
