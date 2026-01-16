@@ -27,5 +27,5 @@ in {
   environment.systemPackages =
     (builtins.concatLists systemPackageLists)
     ++ x86_64Packages
-    ++ [inputs.llm-agents.packages.${pkgs.system}.claude-code];
+    ++ [inputs.llm-agents.packages.${pkgs.system}.opencode];
 }
