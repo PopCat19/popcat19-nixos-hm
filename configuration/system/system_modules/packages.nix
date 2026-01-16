@@ -8,7 +8,11 @@
 # - Imports architecture-specific packages
 # - Aggregates individual system package lists
 # - Installs packages in environment.systemPackages
-{pkgs, ...}: let
+{
+  pkgs,
+  inputs,
+  ...
+}: let
   # Architecture-specific packages
   x86_64Packages = import ./x86_64-packages.nix {inherit pkgs;};
 
@@ -22,5 +26,6 @@
 in {
   environment.systemPackages =
     (builtins.concatLists systemPackageLists)
-    ++ x86_64Packages;
+    ++ x86_64Packages
+    ++ [inputs.llm-agents.packages.${pkgs.system}.claude-code];
 }
