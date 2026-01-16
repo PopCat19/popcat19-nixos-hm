@@ -40,35 +40,35 @@
 
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
 
-  # Enhanced font configuration with all font types
+  # Enhanced font configuration using centralized userConfig
   stylix.fonts = {
     serif = {
-      package = pkgs.noto-fonts;
-      name = "Noto Serif";
+      package = pkgs.${userConfig.fonts.serif.packageName};
+      inherit (userConfig.fonts.serif) name;
     };
 
     sansSerif = {
-      package = pkgs.google-fonts;
-      name = "Rounded Mplus 1c Medium";
+      package = pkgs.${userConfig.fonts.sansSerif.packageName};
+      inherit (userConfig.fonts.sansSerif) name;
     };
 
     monospace = {
-      package = pkgs.nerd-fonts.fira-code;
-      name = "FiraCode Nerd Font";
+      package = pkgs.nerd-fonts.${userConfig.fonts.monospace.packageName};
+      inherit (userConfig.fonts.monospace) name;
     };
 
     emoji = {
-      package = pkgs.noto-fonts-color-emoji;
-      name = "Noto Color Emoji";
+      package = pkgs.${userConfig.fonts.emoji.packageName};
+      inherit (userConfig.fonts.emoji) name;
     };
   };
 
   # Font sizes for specific contexts
   stylix.fonts.sizes = {
-    applications = 10; # For applications like fuzzel
-    terminal = 10; # For terminal applications like kitty
-    popups = 10; # For popup dialogs
-    desktop = 10; # For desktop applications
+    applications = userConfig.fonts.monospace.size; # For applications like fuzzel
+    terminal = userConfig.fonts.monospace.size; # For terminal applications like kitty
+    popups = userConfig.fonts.monospace.size; # For popup dialogs
+    desktop = userConfig.fonts.monospace.size; # For desktop applications
   };
 
   # Optional: Align Stylix targets with PMD Effects System

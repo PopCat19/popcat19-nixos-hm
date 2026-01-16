@@ -9,8 +9,7 @@
 # - Configures system and window management shortcuts
 # - Sets up application launchers and utilities
 # - Binds media, volume, and brightness controls
-{ userConfig, ... }:
-{
+{userConfig, ...}: {
   wayland.windowManager.hyprland.settings = {
     "$mainMod" = "SUPER";
     "$term" = userConfig.defaultApps.terminal.command;
