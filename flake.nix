@@ -67,12 +67,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Alejandra Nix formatter
-    alejandra = {
-      url = "github:kamadorueda/alejandra/4.0.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Vicinae launcher
     vicinae.url = "github:vicinaehq/vicinae";
 
@@ -83,11 +77,7 @@
     };
   };
 
-  outputs = inputs @ {
-    nixpkgs,
-    alejandra,
-    ...
-  }: let
+  outputs = inputs @ {nixpkgs, ...}: let
     # Import modules
     modules = import ./configuration/flake/modules/modules.nix;
     hosts = import ./configuration/flake/modules/hosts.nix;
@@ -109,7 +99,7 @@
     # Formatter for 'nix fmt'
     formatter = nixpkgs.lib.genAttrs supportedSystems (
       system:
-        alejandra.defaultPackage.${system}
+        nixpkgs.legacyPackages.${system}.nixfmt
     );
     # Host-specific NixOS configurations generated dynamically
     # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
