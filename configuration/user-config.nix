@@ -5,14 +5,12 @@
   system ? "x86_64-linux",
   username ? "popcat19",
   machine ? "nixos0",
-}: rec {
+}:
+rec {
   # Host configuration
   host = {
     inherit system;
-    hostname =
-      if hostname == null
-      then "${username}-${machine}"
-      else hostname;
+    hostname = if hostname == null then "${username}-${machine}" else hostname;
   };
 
   # Hosts metadata and helpers
@@ -28,38 +26,34 @@
     mk = m: "${owner}-${m}";
     isValid = m: builtins.elem m machines;
     # Selected machine (argument 'machine' may be overridden by callers)
-    selectedMachine =
-      if isValid machine
-      then machine
-      else defaultMachine;
+    selectedMachine = if isValid machine then machine else defaultMachine;
     # Derived hostname for the selected machine
     derivedHostname = mk selectedMachine;
   };
 
   # Architecture detection helpers
-  arch = let
-    current = system;
-  in rec {
-    inherit current;
+  arch =
+    let
+      current = system;
+    in
+    rec {
+      inherit current;
 
-    # Architecture detection
-    isX86_64 = current == "x86_64-linux";
+      # Architecture detection
+      isX86_64 = current == "x86_64-linux";
 
-    # Hardware capabilities
-    supportsROCm = isX86_64;
-    supportsVirtualization = isX86_64;
-    supportsGaming = isX86_64;
+      # Hardware capabilities
+      supportsROCm = isX86_64;
+      supportsVirtualization = isX86_64;
+      supportsGaming = isX86_64;
 
-    # Package preferences
-    preferredVideoPlayer = "mpv";
-    preferredTerminal = "kitty";
+      # Package preferences
+      preferredVideoPlayer = "mpv";
+      preferredTerminal = "kitty";
 
-    # Helper functions
-    onlyX86_64 = packages:
-      if isX86_64
-      then packages
-      else [];
-  };
+      # Helper functions
+      onlyX86_64 = packages: if isX86_64 then packages else [ ];
+    };
 
   # User credentials
   user = {
@@ -68,22 +62,17 @@
     email = "atsuo11111@gmail.com";
     shell = "fish";
 
-    extraGroups =
-      [
-        "wheel"
-        "video"
-        "audio"
-        "networkmanager"
-        "i2c"
-        "input"
-        "libvirtd"
-        "docker"
-      ]
-      ++ (
-        if host.hostname == "${username}-surface0"
-        then ["surface-control"]
-        else []
-      );
+    extraGroups = [
+      "wheel"
+      "video"
+      "audio"
+      "networkmanager"
+      "i2c"
+      "input"
+      "libvirtd"
+      "docker"
+    ]
+    ++ (if host.hostname == "${username}-surface0" then [ "surface-control" ] else [ ]);
   };
 
   # Default applications
@@ -140,24 +129,26 @@
   };
 
   # System directories
-  directories = let
-    home = "/home/${username}";
-  in {
-    inherit home;
-    documents = "${home}/Documents";
-    downloads = "${home}/Downloads";
-    pictures = "${home}/Pictures";
-    videos = "${home}/Videos";
-    music = "${home}/Music";
-    desktop = "${home}/Desktop";
-    syncthing = "${home}/syncthing-shared";
-  };
+  directories =
+    let
+      home = "/home/${username}";
+    in
+    {
+      inherit home;
+      documents = "${home}/Documents";
+      downloads = "${home}/Downloads";
+      pictures = "${home}/Pictures";
+      videos = "${home}/Videos";
+      music = "${home}/Music";
+      desktop = "${home}/Desktop";
+      syncthing = "${home}/syncthing-shared";
+    };
 
   # Git configuration (used by home_modules/git.nix)
   git = {
     userName = user.fullName;
     userEmail = user.email;
-    extraConfig = {};
+    extraConfig = { };
   };
 
   # Network configuration moved to system_modules/networking.nix

@@ -10,7 +10,8 @@
 # - Provides Fish plugin management
 # - Imports global Fish functions and configuration
 # - Sets up Fish environment system-wide
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./fish-functions.nix
   ];

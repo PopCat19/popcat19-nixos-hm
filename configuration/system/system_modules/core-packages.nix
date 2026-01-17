@@ -9,7 +9,8 @@
 # - Installs system utilities for desktop integration (xdg-utils, shared-mime-info)
 # - Enables PolicyKit authentication agent for GUI applications (polkit_gnome)
 # - Provides modern shell prompt (starship)
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Core system packages
   environment.systemPackages = with pkgs; [
     # Core utilities

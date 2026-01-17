@@ -9,8 +9,9 @@
 # - Configures systemd service with auto-start
 # - Sets up Wayland layer shell mode
 # - Theme settings handled by Stylix
-{inputs, ...}: {
-  imports = [inputs.vicinae.homeManagerModules.default];
+{ inputs, ... }:
+{
+  imports = [ inputs.vicinae.homeManagerModules.default ];
 
   services.vicinae = {
     enable = true;

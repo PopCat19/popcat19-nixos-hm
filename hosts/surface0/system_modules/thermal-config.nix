@@ -1,7 +1,8 @@
 # Surface Pro Intel Thermal Configuration
 # Implements aggressive thermal management to prevent overheating
 # Based on nixos-hardware thermal configuration for Surface Pro Intel devices
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # **THERMAL MANAGEMENT CONFIGURATION**
   services = {
     # Enable thermald with custom configuration

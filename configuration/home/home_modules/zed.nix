@@ -9,7 +9,8 @@
 # - Integrates with PMD theming for consistent styling
 # - Configures AI agent and language model settings
 # - Sets up context servers for enhanced functionality
-{lib, ...}: {
+{ lib, ... }:
+{
   # Enable Zed editor
   programs.zed-editor = {
     enable = true;
@@ -24,7 +25,7 @@
           provider = "openai";
           model = "zai-org/GLM-4.7-TEE";
         };
-        model_parameters = [];
+        model_parameters = [ ];
       };
 
       # Language Models Configuration

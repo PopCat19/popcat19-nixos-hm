@@ -2,7 +2,8 @@
   lib,
   userConfig,
   ...
-}: let
+}:
+let
   # Syncthing configuration constants
   syncthingPaths = {
     shared = userConfig.directories.syncthing;
@@ -10,9 +11,10 @@
     dataDir = "${userConfig.directories.home}/.local/share/syncthing";
     configDir = "${userConfig.directories.home}/.config/syncthing";
   };
-in {
+in
+{
   # User-level directory creation and configuration
-  home.activation.createSyncthingDirs = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.createSyncthingDirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p ${syncthingPaths.shared}
     mkdir -p ${syncthingPaths.dataDir}
     mkdir -p ${syncthingPaths.passwords}

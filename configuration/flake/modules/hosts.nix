@@ -1,14 +1,16 @@
 {
   # Host-specific configuration generator with centralized Home Manager
-  mkHostConfig = _hostname: system: hostConfigPath: homeConfigPath: {
-    inputs,
-    nixpkgs,
-    modules,
-    userConfig,
-  }:
+  mkHostConfig =
+    _hostname: system: hostConfigPath: homeConfigPath:
+    {
+      inputs,
+      nixpkgs,
+      modules,
+      userConfig,
+    }:
     nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = {inherit inputs userConfig;};
+      specialArgs = { inherit inputs userConfig; };
 
       modules = [
         # Host-specific configuration file
@@ -18,7 +20,7 @@
         inputs.home-manager.nixosModules.home-manager
 
         # Feature modules
-        (modules.mkGamingModule system {inherit inputs;})
+        (modules.mkGamingModule system { inherit inputs; })
 
         # Home Manager configuration
         {
@@ -28,7 +30,7 @@
             sharedModules = [
               {
                 nixpkgs.config.allowUnfree = true;
-                nixpkgs.overlays = (import ./overlays.nix system) ++ [inputs.nur.overlays.default];
+                nixpkgs.overlays = (import ./overlays.nix system) ++ [ inputs.nur.overlays.default ];
               }
             ];
             users.${userConfig.user.username} = import homeConfigPath;

@@ -9,7 +9,8 @@
 # - Configures desktop environment integration
 # - Launches systemd user services
 # - Initializes hardware-specific applications
-{userConfig, ...}: {
+{ userConfig, ... }:
+{
   wayland.windowManager.hyprland.settings = {
     "exec-once" = [
       "/run/current-system/sw/libexec/polkit-gnome-authentication-agent-1"

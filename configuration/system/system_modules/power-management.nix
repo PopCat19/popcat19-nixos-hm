@@ -9,7 +9,8 @@
 # - Provides consistent power management behavior across desktop systems
 # - Designed for desktop systems without auto-cpufreq
 # - Note: Mobile systems should use system_modules/mobile-pm.nix for upower and auto-cpufreq
-{lib, ...}: {
+{ lib, ... }:
+{
   powerManagement = {
     enable = true;
     cpuFreqGovernor = lib.mkDefault "userspace";

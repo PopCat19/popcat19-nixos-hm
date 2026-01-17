@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # **SYSTEMD USER SERVICES**
   # Custom systemd services for theme initialization and other user-level services.
 
@@ -6,8 +7,8 @@
   systemd.user.services.theme-init = {
     Unit = {
       Description = "Initialize theme settings";
-      After = ["graphical-session-pre.target"];
-      PartOf = ["graphical-session.target"];
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
     };
     Service = {
       Type = "oneshot";
@@ -15,7 +16,7 @@
       RemainAfterExit = true;
     };
     Install = {
-      WantedBy = ["graphical-session.target"];
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 }

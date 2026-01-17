@@ -1,6 +1,7 @@
 # Development tools and language support
-{pkgs, ...}:
-with pkgs; [
+{ pkgs, ... }:
+with pkgs;
+[
   # Nix Development
   nil
   nixd

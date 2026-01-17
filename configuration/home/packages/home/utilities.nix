@@ -1,6 +1,7 @@
 # Utility packages
-{pkgs, ...}:
-with pkgs; [
+{ pkgs, ... }:
+with pkgs;
+[
   # Audio & Hardware Control
   pavucontrol
   playerctl

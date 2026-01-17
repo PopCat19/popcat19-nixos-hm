@@ -8,7 +8,8 @@
 # - Enables Git functionality
 # - Sets user identity from configuration
 # - Applies additional Git configuration
-{userConfig, ...}: {
+{ userConfig, ... }:
+{
   programs.git = {
     enable = true;
     inherit (userConfig.git) userName;

@@ -14,7 +14,8 @@
   userConfig,
   hostPlatform,
   ...
-}: {
+}:
+{
   # Basic home configuration
   home.username = userConfig.user.username;
   home.homeDirectory = userConfig.directories.home;
@@ -53,7 +54,14 @@
   ];
 
   # Use the centralized packages list from home_modules/packages.nix
-  home.packages = import ./home_modules/packages.nix {inherit pkgs inputs hostPlatform userConfig;};
+  home.packages = import ./home_modules/packages.nix {
+    inherit
+      pkgs
+      inputs
+      hostPlatform
+      userConfig
+      ;
+  };
 
   # Link existing wallpaper directory for Noctalia
   home.file = {

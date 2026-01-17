@@ -8,7 +8,8 @@
 # - Enables Intel UHD 620 graphics with appropriate drivers
 # - Configures hardware acceleration for video decoding
 # - Sets up Intel GuC/HuC firmware loading
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # ThinkPad-specific hardware settings
   hardware = {
     # Intel UHD 620 Graphics Configuration
@@ -24,5 +25,5 @@
   };
 
   # Force Intel GuC/HuC firmware loading
-  boot.kernelParams = ["i915.enable_guc=2"];
+  boot.kernelParams = [ "i915.enable_guc=2" ];
 }

@@ -2,7 +2,8 @@
   pkgs,
   userConfig,
   ...
-}: {
+}:
+{
   # Fonts configuration using centralized userConfig
   fonts.packages = with pkgs; [
     # Core fonts
@@ -32,7 +33,7 @@
         "${userConfig.fonts.monospace.name}"
         "Noto Sans Mono"
       ];
-      emoji = ["Noto Color Emoji"];
+      emoji = [ "Noto Color Emoji" ];
     };
   };
 }

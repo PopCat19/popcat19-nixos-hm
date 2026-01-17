@@ -1,5 +1,6 @@
 # NixOS Configuration for surface0
-{...}: {
+{ ... }:
+{
   imports = [
     ./hardware-configuration.nix
     ../../configuration/system/configuration.nix

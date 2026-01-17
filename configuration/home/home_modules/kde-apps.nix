@@ -2,7 +2,8 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   # KDE applications and utilities (no desktop environment)
   home.packages = with pkgs; [
     # Dolphin and KDE file management packages

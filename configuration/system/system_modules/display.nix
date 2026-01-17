@@ -9,7 +9,8 @@
 # - Imports and coordinates window manager configuration (Hyprland)
 # - Imports and coordinates XDG portal configuration
 # - Maintains single entry point for display system setup
-{...}: {
+{ ... }:
+{
   imports = [
     ./greeter.nix
     ./hyprland.nix

@@ -3,7 +3,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
     ./hardware-configuration.nix
     ../../configuration/system/configuration.nix

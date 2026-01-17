@@ -1,5 +1,6 @@
 # NixOS Configuration for thinkpad0
-{lib, ...}: {
+{ lib, ... }:
+{
   imports = [
     ./hardware-configuration.nix
     ../../configuration/system/configuration.nix

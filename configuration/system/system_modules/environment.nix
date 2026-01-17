@@ -7,7 +7,8 @@
 # This module:
 # - Sets system environment variables for Wayland and desktop environment
 # - Defines default applications and configuration paths
-{userConfig, ...}: {
+{ userConfig, ... }:
+{
   environment.sessionVariables = {
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "Hyprland";

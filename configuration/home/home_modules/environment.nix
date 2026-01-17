@@ -13,7 +13,8 @@
   lib,
   userConfig,
   ...
-}: {
+}:
+{
   home.sessionVariables = {
     XDG_ICON_THEME = "Papirus-Dark";
 
