@@ -18,9 +18,8 @@
 
     # Essential extensions for development
     profiles.default.extensions = with pkgs.vscode-extensions; [
-      # Nix language support and formatting
+      # Nix language support
       jnoortheen.nix-ide
-      kamadorueda.alejandra
 
       # XML and YAML support
       redhat.vscode-xml
@@ -79,13 +78,16 @@
 
       # Nix-IDE specific settings
       "nix.enableLanguageServer" = true;
-      "nix.formatterPath" = "alejandra";
+      "nix.formatterPath" = "nixfmt";
       "nix.serverPath" = "nixd";
 
       # Security
       "security.workspace.trust.enabled" = true;
       "security.workspace.trust.startupPrompt" = "never";
       "security.workspace.trust.untrustedFiles" = "open";
+
+      # Telemetry
+      "redhat.telemetry.enabled" = false;
     };
   };
 
