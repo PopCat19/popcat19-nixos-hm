@@ -1,6 +1,6 @@
 # Ignore build result symlinks
 result
-
+result*
 # Ignore backup files
 *.bak
 *.bak[0-9]
@@ -16,6 +16,8 @@ Thumbs.db
 .vscode/
 .idea/
 .roo/
+.opencode/
+.kilocode/
 *.swp
 *.swo
 
