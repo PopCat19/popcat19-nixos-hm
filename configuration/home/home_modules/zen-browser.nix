@@ -13,16 +13,17 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   # Import the Zen Browser Home Manager module
-  imports = [inputs.zen-browser.homeModules.twilight];
+  imports = [ inputs.zen-browser.homeModules.twilight ];
 
   # Enable Zen Browser with configuration
   programs.zen-browser = {
     enable = true;
 
     # Add PWA support via firefoxpwa
-    nativeMessagingHosts = [pkgs.firefoxpwa];
+    nativeMessagingHosts = [ pkgs.firefoxpwa ];
 
     # Configure browser policies and extensions
     policies = {

@@ -8,7 +8,8 @@
 # - Imports Stylix NixOS module for LightDM theming
 # - Enables LightDM theming with wallpaper support
 # - Works alongside home-level Stylix configuration
-{inputs, ...}: {
+{ inputs, ... }:
+{
   imports = [
     inputs.stylix.nixosModules.stylix
   ];

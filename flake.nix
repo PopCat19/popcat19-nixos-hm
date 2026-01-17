@@ -77,49 +77,57 @@
     };
   };
 
-  outputs = inputs @ {nixpkgs, ...}: let
-    # Import modules
-    modules = import ./configuration/flake/modules/modules.nix;
-    hosts = import ./configuration/flake/modules/hosts.nix;
+  outputs =
+    inputs@{ nixpkgs, ... }:
+    let
+      # Import modules
+      modules = import ./configuration/flake/modules/modules.nix;
+      hosts = import ./configuration/flake/modules/hosts.nix;
 
-    # Supported systems
-    supportedSystems = ["x86_64-linux"];
+      # Supported systems
+      supportedSystems = [ "x86_64-linux" ];
 
-    # Base user configuration
-    baseUserConfig = import ./configuration/user-config.nix {};
-  in {
-    # Packages output (no vicinae now that the overlay was removed)
-    packages = nixpkgs.lib.genAttrs supportedSystems (
-      system: {
+      # Base user configuration
+      baseUserConfig = import ./configuration/user-config.nix { };
+    in
+    {
+      # Packages output (no vicinae now that the overlay was removed)
+      packages = nixpkgs.lib.genAttrs supportedSystems (system: {
         # Export agenix for secret management
         agenix = inputs.agenix.packages.${system}.default;
-      }
-    );
+      });
 
-    # Formatter for 'nix fmt'
-    formatter = nixpkgs.lib.genAttrs supportedSystems (
-      system:
-        nixpkgs.legacyPackages.${system}.nixfmt
-    );
-    # Host-specific NixOS configurations generated dynamically
-    # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
-    nixosConfigurations = let
-      inherit (baseUserConfig.hosts) machines;
-    in
-      nixpkgs.lib.listToAttrs (map (m: let
-          perHostConfig = import ./configuration/user-config.nix {
-            inherit (baseUserConfig.user) username;
-            machine = m;
-            system = "x86_64-linux";
-          };
-          inherit (perHostConfig.host) hostname;
-        in {
-          name = hostname;
-          value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {
-            inherit inputs nixpkgs modules;
-            userConfig = perHostConfig;
-          };
-        })
-        machines);
-  };
+      # Formatter for 'nix fmt'
+      formatter = nixpkgs.lib.genAttrs supportedSystems (
+        system: nixpkgs.legacyPackages.${system}.nixfmt-tree
+      );
+      # Host-specific NixOS configurations generated dynamically
+      # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
+      nixosConfigurations =
+        let
+          inherit (baseUserConfig.hosts) machines;
+        in
+        nixpkgs.lib.listToAttrs (
+          map (
+            m:
+            let
+              perHostConfig = import ./configuration/user-config.nix {
+                inherit (baseUserConfig.user) username;
+                machine = m;
+                system = "x86_64-linux";
+              };
+              inherit (perHostConfig.host) hostname;
+            in
+            {
+              name = hostname;
+              value =
+                hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix
+                  {
+                    inherit inputs nixpkgs modules;
+                    userConfig = perHostConfig;
+                  };
+            }
+          ) machines
+        );
+    };
 }

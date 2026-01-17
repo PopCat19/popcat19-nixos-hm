@@ -1,6 +1,7 @@
 # x86_64-specific Home Manager packages
-{pkgs, ...}:
-with pkgs; [
+{ pkgs, ... }:
+with pkgs;
+[
   # System monitoring with ROCm support
   btop-rocm
 

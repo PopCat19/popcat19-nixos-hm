@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   # Journald configuration
   services.journald.extraConfig = ''
     MaxRetentionSec=3day
@@ -23,7 +24,7 @@
   services.fwupd.enable = true;
 
   # Ensure ddcutil udev rules are installed
-  services.udev.packages = [pkgs.ddcutil];
+  services.udev.packages = [ pkgs.ddcutil ];
 
   # Udev rules for Surface hardware
   services.udev.extraRules = ''

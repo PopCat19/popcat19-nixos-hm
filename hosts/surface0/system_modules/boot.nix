@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # **BOOT & KERNEL CONFIGURATION**
   # Defines boot loader, kernel, and filesystem support settings for Surface.
   boot = {
@@ -7,7 +8,7 @@
       efi.canTouchEfiVariables = true;
       timeout = 3;
     };
-    supportedFilesystems = ["ntfs"];
+    supportedFilesystems = [ "ntfs" ];
 
     # Let nixos-hardware common module provide the patched linux-surface kernel
     # kernelPackages = pkgs.linuxPackages_latest;  # Removed to avoid conflict with nixos-hardware

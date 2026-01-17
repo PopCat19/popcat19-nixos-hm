@@ -3,13 +3,15 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   inherit (pkgs) msr-tools;
-in {
+in
+{
   systemd.services.clear-bdprochot = {
     description = "Clear BD-PROCHOT bit in MSR 0x1FC";
-    wantedBy = ["multi-user.target"];
-    after = ["systemd-modules-load.service"];
+    wantedBy = [ "multi-user.target" ];
+    after = [ "systemd-modules-load.service" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -27,5 +29,5 @@ in {
   };
 
   # Ensure the msr module is loaded
-  boot.kernelModules = ["msr"];
+  boot.kernelModules = [ "msr" ];
 }

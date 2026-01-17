@@ -1,5 +1,6 @@
 # Browsers
-{pkgs, ...}:
-with pkgs; [
+{ pkgs, ... }:
+with pkgs;
+[
   firefox
 ]

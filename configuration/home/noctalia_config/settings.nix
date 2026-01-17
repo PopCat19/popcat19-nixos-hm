@@ -12,12 +12,14 @@
   config,
   hostname ? null,
   ...
-}: let
+}:
+let
   # Determine if host has battery based on hostname
   hasBattery =
-    if hostname != null
-    then hostname == "popcat19-surface0" || hostname == "popcat19-thinkpad0"
-    else false;
+    if hostname != null then
+      hostname == "popcat19-surface0" || hostname == "popcat19-thinkpad0"
+    else
+      false;
 
   # Complete Noctalia settings based on user's configuration
   settings = {
@@ -26,7 +28,7 @@
     # Bar configuration with user's custom layout
     bar = {
       position = "top";
-      monitors = [];
+      monitors = [ ];
       density = "default";
       showCapsule = false;
       floating = true;
@@ -79,22 +81,21 @@
           }
         ];
 
-        center = [];
+        center = [ ];
 
-        right =
-          [
-            {
-              id = "Tray";
-              blacklist = [];
-              colorizeIcons = false;
-              drawerEnabled = true;
-              hidePassive = false;
-              pinned = [];
-            }
-          ]
-          ++ (
-            if hasBattery
-            then [
+        right = [
+          {
+            id = "Tray";
+            blacklist = [ ];
+            colorizeIcons = false;
+            drawerEnabled = true;
+            hidePassive = false;
+            pinned = [ ];
+          }
+        ]
+        ++ (
+          if hasBattery then
+            [
               {
                 id = "Battery";
                 displayMode = "alwaysShow";
@@ -103,35 +104,36 @@
                 warningThreshold = 20;
               }
             ]
-            else []
-          )
-          ++ [
-            {
-              id = "Volume";
-              displayMode = "alwaysShow";
-            }
-            {
-              id = "WiFi";
-              displayMode = "onhover";
-            }
-            {
-              id = "Bluetooth";
-              displayMode = "onhover";
-            }
-            {
-              id = "Clock";
-              formatHorizontal = "HH:mm ddd, MMM dd";
-              formatVertical = "HH mm - dd MM";
-              useCustomFont = true;
-              customFont = "JetBrainsMono Nerd Font";
-              usePrimaryColor = false;
-            }
-            {
-              id = "NotificationHistory";
-              hideWhenZero = true;
-              showUnreadBadge = true;
-            }
-          ];
+          else
+            [ ]
+        )
+        ++ [
+          {
+            id = "Volume";
+            displayMode = "alwaysShow";
+          }
+          {
+            id = "WiFi";
+            displayMode = "onhover";
+          }
+          {
+            id = "Bluetooth";
+            displayMode = "onhover";
+          }
+          {
+            id = "Clock";
+            formatHorizontal = "HH:mm ddd, MMM dd";
+            formatVertical = "HH mm - dd MM";
+            useCustomFont = true;
+            customFont = "JetBrainsMono Nerd Font";
+            usePrimaryColor = false;
+          }
+          {
+            id = "NotificationHistory";
+            hideWhenZero = true;
+            showUnreadBadge = true;
+          }
+        ];
       };
     };
 
@@ -223,7 +225,7 @@
       enabled = true;
       overviewEnabled = false;
       directory = "${config.home.homeDirectory}/wallpaper";
-      monitorDirectories = [];
+      monitorDirectories = [ ];
       enableMultiMonitorDirectories = false;
       recursiveSearch = false;
       setWallpaperOnAllMonitors = true;
@@ -252,7 +254,7 @@
       enableClipboardHistory = true;
       enableClipPreview = true;
       position = "center";
-      pinnedExecs = [];
+      pinnedExecs = [ ];
       useApp2Unit = false;
       sortByMostUsed = true;
       terminalCommand = "xterm -e";
@@ -342,8 +344,8 @@
       floatingRatio = 1;
       size = 1;
       onlySameOutput = true;
-      monitors = [];
-      pinnedApps = [];
+      monitors = [ ];
+      pinnedApps = [ ];
       colorizeIcons = false;
       pinnedStatic = false;
       inactiveIndicators = false;
@@ -397,7 +399,7 @@
     # Notifications settings
     notifications = {
       enabled = true;
-      monitors = [];
+      monitors = [ ];
       location = "top_right";
       overlayLayer = true;
       respectExpireTimeout = false;
@@ -422,8 +424,12 @@
       location = "top";
       autoHideMs = 2000;
       overlayLayer = true;
-      enabledTypes = [0 1 2];
-      monitors = [];
+      enabledTypes = [
+        0
+        1
+        2
+      ];
+      monitors = [ ];
     };
 
     # Audio settings
@@ -433,7 +439,7 @@
       cavaFrameRate = 30;
       visualizerType = "linear";
       visualizerQuality = "high";
-      mprisBlacklist = [];
+      mprisBlacklist = [ ];
       preferredPlayer = "";
       externalMixer = "pwvucontrol || pavucontrol";
     };
@@ -497,6 +503,7 @@
       darkModeChange = "";
     };
   };
-in {
+in
+{
   inherit settings;
 }

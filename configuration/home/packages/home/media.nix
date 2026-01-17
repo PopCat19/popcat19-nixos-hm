@@ -1,6 +1,7 @@
 # Media packages
-{pkgs, ...}:
-with pkgs; [
+{ pkgs, ... }:
+with pkgs;
+[
   mpv
   audacious
   audacious-plugins

@@ -9,7 +9,8 @@
 # - Sets up EFI boot variables
 # - Enables support for NTFS filesystems
 # - Configures zen kernel for optimal performance
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   boot = {
     loader = {
       systemd-boot = {
@@ -19,9 +20,9 @@
       efi.canTouchEfiVariables = true;
       timeout = 3;
     };
-    supportedFilesystems = ["ntfs"];
+    supportedFilesystems = [ "ntfs" ];
     kernelPackages = pkgs.linuxPackages_zen;
-    kernelModules = ["i2c-dev"];
-    blacklistedKernelModules = ["snd_seq_dummy"];
+    kernelModules = [ "i2c-dev" ];
+    blacklistedKernelModules = [ "snd_seq_dummy" ];
   };
 }

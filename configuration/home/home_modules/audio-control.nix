@@ -8,7 +8,8 @@
 # - Provides Pavucontrol audio control panel
 # - Enables user-level audio management
 # - Supports system audio service integration
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     pavucontrol
   ];

@@ -9,7 +9,8 @@
 # - Configures Fish shell environment and abbreviations
 # - Sets up NixOS-specific environment variables
 # - Provides system-wide Fish helper functions
-{userConfig, ...}: {
+{ userConfig, ... }:
+{
   programs.fish = {
     enable = true;
 

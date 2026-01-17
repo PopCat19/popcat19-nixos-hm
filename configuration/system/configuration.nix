@@ -9,9 +9,11 @@
 # - Configures Nix settings and binary caches
 # - Enables core system functionality
 # - Sets system state version
-_: let
-  userConfig = import ../../configuration/user-config.nix {};
-in {
+_:
+let
+  userConfig = import ../../configuration/user-config.nix { };
+in
+{
   imports = [
     ./system_modules/environment.nix
     ./system_modules/fish.nix
@@ -49,7 +51,10 @@ in {
     min-free = 0;
     download-buffer-size = 67108864;
 
-    trusted-users = ["root" "${userConfig.user.username}"];
+    trusted-users = [
+      "root"
+      "${userConfig.user.username}"
+    ];
 
     substituters = [
       "https://vicinae.cachix.org"

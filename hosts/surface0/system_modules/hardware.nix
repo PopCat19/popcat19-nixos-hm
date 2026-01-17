@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Surface-specific hardware settings
   hardware = {
     # Enable firmware updates and include wifi firmware

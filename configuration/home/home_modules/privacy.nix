@@ -4,7 +4,8 @@
   lib,
   userConfig,
   ...
-}: let
+}:
+let
   passwordsDir = "${userConfig.directories.home}/Passwords";
   keepassDb = "${passwordsDir}/keepass.kdbx";
 
@@ -18,7 +19,8 @@
       exec ${pkgs.keepassxc}/bin/keepassxc "$@"
     fi
   '';
-in {
+in
+{
   # Packages
   home.packages = with pkgs; [
     keepassxc
@@ -26,7 +28,7 @@ in {
   ];
 
   # Ensure passwords directory exists (Syncthing also ensures this; harmless if duplicate)
-  home.activation.createPasswordsDir = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.createPasswordsDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p ${passwordsDir}
   '';
 }

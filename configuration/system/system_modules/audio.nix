@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   services.pipewire = {
     enable = true;
     alsa = {
@@ -10,7 +11,11 @@
     extraConfig.pipewire."91-hdmi-audio" = {
       "context.properties" = {
         "default.clock.rate" = 48000;
-        "default.clock.allowed-rates" = [44100 48000 96000];
+        "default.clock.allowed-rates" = [
+          44100
+          48000
+          96000
+        ];
       };
     };
   };

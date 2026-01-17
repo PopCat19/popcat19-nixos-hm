@@ -1,6 +1,7 @@
 # x86_64-specific system packages
-{pkgs, ...}:
-with pkgs; [
+{ pkgs, ... }:
+with pkgs;
+[
   # AMD GPU acceleration
   rocmPackages.rpp
 

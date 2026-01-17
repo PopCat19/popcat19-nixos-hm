@@ -1,6 +1,7 @@
 # Hyprland window manager essentials
-{pkgs, ...}:
-with pkgs; [
+{ pkgs, ... }:
+with pkgs;
+[
   hyprshade
   hyprpolkitagent
   hyprutils

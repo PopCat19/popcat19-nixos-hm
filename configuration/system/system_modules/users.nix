@@ -2,7 +2,8 @@
   pkgs,
   userConfig,
   ...
-}: {
+}:
+{
   # Users and tmpfiles configuration
 
   # User account

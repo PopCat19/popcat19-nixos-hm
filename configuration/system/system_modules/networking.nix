@@ -8,7 +8,8 @@
 # - Enables IP forwarding for IPv4/IPv6
 # - Configures NetworkManager with wpa_supplicant backend
 # - Sets up firewall rules with nftables
-{userConfig, ...}: let
+{ userConfig, ... }:
+let
   # Port definitions (DRY)
   ports = {
     ssh = 22;
@@ -20,7 +21,8 @@
 
   # Timeout value for RSNA configuration
   rsnaTimeout = 60;
-in {
+in
+{
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
     "net.ipv6.conf.all.forwarding" = 1;
@@ -52,9 +54,17 @@ in {
 
     firewall = {
       enable = true;
-      trustedInterfaces = ["lo"];
-      allowedTCPPorts = [ports.ssh ports.syncthing ports.custom];
-      allowedUDPPorts = [ports.syncthing ports.dns ports.dhcp];
+      trustedInterfaces = [ "lo" ];
+      allowedTCPPorts = [
+        ports.ssh
+        ports.syncthing
+        ports.custom
+      ];
+      allowedUDPPorts = [
+        ports.syncthing
+        ports.dns
+        ports.dhcp
+      ];
       allowedTCPPortRanges = [
         {
           from = 3000;

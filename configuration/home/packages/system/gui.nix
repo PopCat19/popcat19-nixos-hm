@@ -1,6 +1,7 @@
 # GUI and launcher tools
-{pkgs, ...}:
-with pkgs; [
+{ pkgs, ... }:
+with pkgs;
+[
   fuzzel
   kdePackages.filelight
   # Qt theming engine for EasyEffects and other Qt applications

@@ -9,7 +9,8 @@
 # - Imports modular configuration files
 # - Sources user preferences and monitor configuration
 # - Manages shader files and wallpaper directory
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./modules/colors.nix
     ./modules/environment.nix

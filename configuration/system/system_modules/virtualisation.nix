@@ -8,7 +8,8 @@
 # - Enables Docker and Docker Compose v2 for containerization
 # - Configures KVM virtualization support
 # - Sets up Docker daemon to start on boot
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Docker and Docker Compose v2
   virtualisation.docker = {
     enable = true;
