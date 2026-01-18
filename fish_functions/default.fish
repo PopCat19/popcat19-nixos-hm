@@ -12,50 +12,50 @@
 # - Automatically includes new function files
 
 # Source individual fish function files
-if test -f "${__fish_config_dir}/../fish_functions/nix-shell-unfree.fish"
-    source ${__fish_config_dir}/../fish_functions/nix-shell-unfree.fish
+if test -f "${../../../fish_functions/nix-shell-unfree.fish}"
+    source ${../../../fish_functions/nix-shell-unfree.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/fish-greeting.fish"
-    source ${__fish_config_dir}/../fish_functions/fish-greeting.fish
+if test -f "${../../../fish_functions/fish-greeting.fish}"
+    source ${../../../fish_functions/fish-greeting.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/list-fish-helpers.fish"
-    source ${__fish_config_dir}/../fish_functions/list-fish-helpers.fish
+if test -f "${../../../fish_functions/list-fish-helpers.fish}"
+    source ${../../../fish_functions/list-fish-helpers.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/nixos-commit-rebuild-push.fish"
-    source ${__fish_config_dir}/../fish_functions/nixos-commit-rebuild-push.fish
+if test -f "${../../../fish_functions/nixos-commit-rebuild-push.fish}"
+    source ${../../../fish_functions/nixos-commit-rebuild-push.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/nixos-rebuild-basic.fish"
-    source ${__fish_config_dir}/../fish_functions/nixos-rebuild-basic.fish
+if test -f "${../../../fish_functions/nixos-rebuild-basic.fish}"
+    source ${../../../fish_functions/nixos-rebuild-basic.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/dev-to-main.fish"
-    source ${__fish_config_dir}/../fish_functions/dev-to-main.fish
+if test -f "${../../../fish_functions/dev-to-main.fish}"
+    source ${../../../fish_functions/dev-to-main.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/nixos-flake-update.fish"
-    source ${__fish_config_dir}/../fish_functions/nixos-flake-update.fish
+if test -f "${../../../fish_functions/nixos-flake-update.fish}"
+    source ${../../../fish_functions/nixos-flake-update.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/fix-fish-history.fish"
-    source ${__fish_config_dir}/../fish_functions/fix-fish-history.fish
+if test -f "${../../../fish_functions/fix-fish-history.fish}"
+    source ${../../../fish_functions/fix-fish-history.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/cnup.fish"
-    source ${__fish_config_dir}/../fish_functions/cnup.fish
+if test -f "${../../../fish_functions/cnup.fish}"
+    source ${../../../fish_functions/cnup.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/sillytavern.fish"
-    source ${__fish_config_dir}/../fish_functions/sillytavern.fish
+if test -f "${../../../fish_functions/sillytavern.fish}"
+    source ${../../../fish_functions/sillytavern.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/show-shortcuts.fish"
-    source ${__fish_config_dir}/../fish_functions/show-shortcuts.fish
+if test -f "${../../../fish_functions/show-shortcuts.fish}"
+    source ${../../../fish_functions/show-shortcuts.fish}
 end
 
-if test -f "${__fish_config_dir}/../fish_functions/lsa.fish"
-    source ${__fish_config_dir}/../fish_functions/lsa.fish
+if test -f "${../../../fish_functions/lsa.fish}"
+    source ${../../../fish_functions/lsa.fish}
 end
