@@ -34,6 +34,7 @@ with pkgs;
   # Programming Languages and Runtimes
   jdk
   nodejs_latest
+  bun
   yarn-berry
   rustup
   python3
