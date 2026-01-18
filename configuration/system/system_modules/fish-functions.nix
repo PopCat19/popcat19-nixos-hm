@@ -30,49 +30,9 @@
           starship init fish | source
       end
 
-      # Load individual fish function files
-      if test -f "${../../../fish_functions/nix-shell-unfree.fish}"
-          source ${../../../fish_functions/nix-shell-unfree.fish}
-      end
-
-      if test -f "${../../../fish_functions/fish-greeting.fish}"
-          source ${../../../fish_functions/fish-greeting.fish}
-      end
-
-      if test -f "${../../../fish_functions/list-fish-helpers.fish}"
-          source ${../../../fish_functions/list-fish-helpers.fish}
-      end
-
-      if test -f "${../../../fish_functions/nixos-commit-rebuild-push.fish}"
-          source ${../../../fish_functions/nixos-commit-rebuild-push.fish}
-      end
-
-      if test -f "${../../../fish_functions/nixos-rebuild-basic.fish}"
-          source ${../../../fish_functions/nixos-rebuild-basic.fish}
-      end
-
-      if test -f "${../../../fish_functions/dev-to-main.fish}"
-          source ${../../../fish_functions/dev-to-main.fish}
-      end
-
-      if test -f "${../../../fish_functions/nixos-flake-update.fish}"
-          source ${../../../fish_functions/nixos-flake-update.fish}
-      end
-
-      if test -f "${../../../fish_functions/fix-fish-history.fish}"
-          source ${../../../fish_functions/fix-fish-history.fish}
-      end
-
-      if test -f "${../../../fish_functions/cnup.fish}"
-          source ${../../../fish_functions/cnup.fish}
-      end
-
-      if test -f "${../../../fish_functions/sillytavern.fish}"
-          source ${../../../fish_functions/sillytavern.fish}
-      end
-
-      if test -f "${../../../fish_functions/show-shortcuts.fish}"
-          source ${../../../fish_functions/show-shortcuts.fish}
+      # Load all custom fish functions from default.fish
+      if test -f "${../../../fish_functions/default.fish}"
+          source ${../../../fish_functions/default.fish}
       end
     '';
 
