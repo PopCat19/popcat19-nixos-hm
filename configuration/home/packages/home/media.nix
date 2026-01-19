@@ -14,6 +14,7 @@ with pkgs;
   audacity
   furnace
   lmms
+  qtractor
 
   # Torrent
   qbittorrent
