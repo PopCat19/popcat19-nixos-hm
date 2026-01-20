@@ -24,3 +24,6 @@ Thumbs.db
 # Ignore nix build artifacts
 result-*
 .direnv/
+
+# Ignore large dirs
+node_modules
