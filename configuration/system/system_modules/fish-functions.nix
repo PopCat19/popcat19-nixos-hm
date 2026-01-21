@@ -83,17 +83,25 @@
 
   # Fish function files
   environment.etc = {
-    "fish/functions/fish_greeting.fish".text = builtins.readFile ../../../fish_functions/fish-greeting.fish;
-    "fish/functions/nixos-rebuild-basic.fish".text = builtins.readFile ../../../fish_functions/nixos-rebuild-basic.fish;
-    "fish/functions/nixos-flake-update.fish".text = builtins.readFile ../../../fish_functions/nixos-flake-update.fish;
-    "fish/functions/fix-fish-history.fish".text = builtins.readFile ../../../fish_functions/fix-fish-history.fish;
-    "fish/functions/list-fish-helpers.fish".text = builtins.readFile ../../../fish_functions/list-fish-helpers.fish;
-    "fish/functions/nixos-commit-rebuild-push.fish".text = builtins.readFile ../../../fish_functions/nixos-commit-rebuild-push.fish;
+    "fish/functions/fish_greeting.fish".text =
+      builtins.readFile ../../../fish_functions/fish-greeting.fish;
+    "fish/functions/nixos-rebuild-basic.fish".text =
+      builtins.readFile ../../../fish_functions/nixos-rebuild-basic.fish;
+    "fish/functions/nixos-flake-update.fish".text =
+      builtins.readFile ../../../fish_functions/nixos-flake-update.fish;
+    "fish/functions/fix-fish-history.fish".text =
+      builtins.readFile ../../../fish_functions/fix-fish-history.fish;
+    "fish/functions/list-fish-helpers.fish".text =
+      builtins.readFile ../../../fish_functions/list-fish-helpers.fish;
+    "fish/functions/nixos-commit-rebuild-push.fish".text =
+      builtins.readFile ../../../fish_functions/nixos-commit-rebuild-push.fish;
     "fish/functions/dev-to-main.fish".text = builtins.readFile ../../../fish_functions/dev-to-main.fish;
-    "fish/functions/nix-shell-unfree.fish".text = builtins.readFile ../../../fish_functions/nix-shell-unfree.fish;
+    "fish/functions/nix-shell-unfree.fish".text =
+      builtins.readFile ../../../fish_functions/nix-shell-unfree.fish;
     "fish/functions/cnup.fish".text = builtins.readFile ../../../fish_functions/cnup.fish;
     "fish/functions/sillytavern.fish".text = builtins.readFile ../../../fish_functions/sillytavern.fish;
-    "fish/functions/show-shortcuts.fish".text = builtins.readFile ../../../fish_functions/show-shortcuts.fish;
+    "fish/functions/show-shortcuts.fish".text =
+      builtins.readFile ../../../fish_functions/show-shortcuts.fish;
     "fish/functions/lsa.fish".text = builtins.readFile ../../../fish_functions/lsa.fish;
   };
 }
