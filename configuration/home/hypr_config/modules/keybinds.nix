@@ -44,6 +44,24 @@
 
       # === APPLICATION LAUNCHERS ===
       # cat: Applications
+      # desc: Launch terminal
+      "$mainMod, T, exec, $term"
+      # desc: Launch file manager
+      "$mainMod, E, exec, $file"
+      # desc: Launch editor
+      "$mainMod, C, exec, $editor"
+      # desc: Launch browser
+      "$mainMod, F, exec, $browser"
+      # desc: Open Vicinae
+      "$mainMod, A, exec, vicinae open"
+      # desc: Open application launcher
+      "$mainMod+Shift, A, exec, fuzzel"
+      # desc: Pick color
+      "$mainMod+Shift, C, exec, hyprpicker -a"
+      # desc: Open clipboard history
+      "$mainMod, V, exec, vicinae vicinae://extensions/vicinae/clipboard/history"
+      # desc: Select and paste clipboard
+      "$mainMod+Shift, V, exec, bash -lc \"cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v\""
       # desc: Restart HyprPanel
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
       # desc: Restart Noctalia shell
