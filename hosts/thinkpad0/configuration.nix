@@ -11,6 +11,8 @@
 
   networking.hostName = "popcat19-thinkpad0";
 
+  proxy.enable = true;
+
   # Disable autologin for thinkpad0 (override from display module)
   services.displayManager.autoLogin.enable = lib.mkForce false;
 }
