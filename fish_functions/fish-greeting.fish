@@ -88,5 +88,5 @@ function fish_greeting
     end
 
     # 6. Footer
-    set_color brblack; echo (date "+%a, %b %d %Y  %H:%M:%S"); set_color normal
+    set_color brgrey; echo (date "+%a, %b %d %Y  %H:%M:%S"); set_color normal
 end
