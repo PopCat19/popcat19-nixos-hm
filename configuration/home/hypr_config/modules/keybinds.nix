@@ -68,13 +68,17 @@
       "$mainMod+Ctrl, N, exec, systemctl --user restart noctalia-shell.service"
 
       # desc: Full screenshot
-      "$mainMod, P, exec, ~/.local/bin/screenshot monitor"
+      "$mainMod, P, exec, screenshot monitor"
       # desc: Full screenshot with shader
-      "$mainMod+Ctrl, P, exec, ~/.local/bin/screenshot monitor --keep-shader"
+      "$mainMod+Ctrl, P, exec, screenshot monitor --keep-shader"
       # desc: Region screenshot
-      "$mainMod+Shift, P, exec, ~/.local/bin/screenshot region"
+      "$mainMod+Shift, P, exec, screenshot region"
       # desc: Region screenshot with shader
-      "$mainMod+Shift+Ctrl, P, exec, ~/.local/bin/screenshot region --keep-shader"
+      "$mainMod+Shift+Ctrl, P, exec, screenshot region --keep-shader"
+      # desc: Window screenshot
+      "$mainMod+Alt, P, exec, screenshot window"
+      # desc: Window screenshot with shader
+      "$mainMod+Alt+Ctrl, P, exec, screenshot window --keep-shader"
 
       # === MEDIA KEYS ===
       # cat: Media
