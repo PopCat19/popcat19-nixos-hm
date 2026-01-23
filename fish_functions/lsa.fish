@@ -20,7 +20,7 @@ function lsa
     end
 
     # Check if in home directory (skip git check)
-    if string match -qr "^$HOME($|/)" (pwd)
+    if string match -qr '^$HOME($|/)' (pwd)
         set_color yellow; echo "[INFO] In home directory, skipping git repository check"; set_color normal
         return 0
     end
