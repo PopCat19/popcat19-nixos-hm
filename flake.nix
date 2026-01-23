@@ -4,7 +4,7 @@
   # Flake inputs
   inputs = {
     # Core Nixpkgs repository
-    nixpkgs.url = "github:nixos/nixpkgs/pull/476347/head";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # Nix User Repository
     nur = {
