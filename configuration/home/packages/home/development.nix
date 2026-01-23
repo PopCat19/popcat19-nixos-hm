@@ -9,7 +9,7 @@ with pkgs;
   # Code Formatters
   black
   prettierd
-  nixfmt-rfc-style
+  nixfmt
   alejandra
   statix
   deadnix
