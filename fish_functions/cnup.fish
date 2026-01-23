@@ -26,7 +26,7 @@ function cnup
             end
         end
         if test $use_nix_shell = true
-            nix-shell -p 'statix deadnix nixfmt-tree' --run 'statix fix . && deadnix -e . && nixfmt-tree . && nix flake check --impure --accept-flake-config --verbose'
+            nix-shell -p statix deadnix nixfmt-tree --run 'statix fix . && deadnix -e . && nixfmt-tree . && nix flake check --impure --accept-flake-config --verbose'
         else
             statix fix . && deadnix -e . && nixfmt-tree . && nix flake check --impure --accept-flake-config --verbose
         end
