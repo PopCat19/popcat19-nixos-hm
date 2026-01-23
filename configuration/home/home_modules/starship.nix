@@ -23,6 +23,7 @@ _: {
         format = "[$symbol$branch(:$remote_branch)]($style) ";
         symbol = " ";
         style = "bold pine";
+        only_attached = true;
       };
 
       git_status = {
@@ -93,7 +94,7 @@ _: {
       };
 
       memory_usage = {
-        disabled = false;
+        disabled = true;
         threshold = 70;
         format = "[$symbol\${ram}(\${swap})]($style) ";
         symbol = "🐏 ";
@@ -109,7 +110,7 @@ _: {
       };
 
       status = {
-        disabled = false;
+        disabled = true;
         format = "[$symbol$status]($style) ";
         symbol = "✖ ";
         style = "bold love";
