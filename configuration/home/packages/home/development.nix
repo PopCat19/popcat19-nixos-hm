@@ -10,6 +10,7 @@ with pkgs;
   black
   prettierd
   nixfmt
+  nixfmt-tree
   alejandra
   statix
   deadnix
