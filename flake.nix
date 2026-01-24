@@ -75,6 +75,12 @@
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Zrok tunneling service
+    zrok = {
+      url = "github:openziti/zrok/v1.1.10";
+      flake = false;
+    };
   };
 
   outputs =

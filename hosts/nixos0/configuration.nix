@@ -14,7 +14,7 @@
 
   networking.hostName = "popcat19-nixos0";
 
-  proxy.enable = true;
+  proxy.enable = false;
 
   # Host-specific packages
   environment.systemPackages = with pkgs; [
