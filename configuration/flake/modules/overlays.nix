@@ -12,6 +12,8 @@ _system: [
         stripRoot = false;
       };
 
+      nativeBuildInputs = [ final.autoPatchelfHook ];
+
       dontBuild = true;
       dontConfigure = true;
 
