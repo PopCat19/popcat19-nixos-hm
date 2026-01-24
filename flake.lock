@@ -599,7 +599,8 @@
         "rose-pine-hyprcursor": "rose-pine-hyprcursor",
         "stylix": "stylix",
         "vicinae": "vicinae",
-        "zen-browser": "zen-browser"
+        "zen-browser": "zen-browser",
+        "zrok": "zrok"
       }
     },
     "rose-pine-hyprcursor": {
@@ -936,6 +937,23 @@
       "original": {
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
+        "type": "github"
+      }
+    },
+    "zrok": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1760639688,
+        "narHash": "sha256-6R0IQy7/vO7lZkEyhMebO+6QGbPTjKy0o72qwthZqg0=",
+        "owner": "openziti",
+        "repo": "zrok",
+        "rev": "74eb6fc5f2cd210ccf40e5acb94adb71c2d98bd9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "openziti",
+        "ref": "v1.1.10",
+        "repo": "zrok",
         "type": "github"
       }
     }
