@@ -57,8 +57,12 @@
       nconf = "$EDITOR $NIXOS_CONFIG_DIR/configuration.nix";
       hconf = "$EDITOR $NIXOS_CONFIG_DIR/home.nix";
       flconf = "$EDITOR $NIXOS_CONFIG_DIR/flake.nix";
+      flup = "nixos-flake-update";
       ngit = "begin; cd $NIXOS_CONFIG_DIR; git $argv; cd -; end";
       cdh = "cd $NIXOS_CONFIG_DIR";
+
+      # NixOS Build and Switch operations
+      nrb = "nixos-rebuild-basic";
       nrbc = "nixos-commit-rebuild-push";
 
       # Package Management with nix search
