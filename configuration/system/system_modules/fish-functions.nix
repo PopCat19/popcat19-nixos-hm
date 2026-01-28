@@ -103,5 +103,6 @@
     "fish/functions/show-shortcuts.fish".text =
       builtins.readFile ../../../fish_functions/show-shortcuts.fish;
     "fish/functions/lsa.fish".text = builtins.readFile ../../../fish_functions/lsa.fish;
+    "fish/functions/proxy-env.fish".text = builtins.readFile ../../../fish_functions/proxy-env.fish;
   };
 }
