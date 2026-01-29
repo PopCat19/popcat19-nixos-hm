@@ -17,6 +17,10 @@ with pkgs;
   appimage-run
   zenity
 
+  # Android Development
+  scrcpy
+  android-tools
+
   # Gaming
   lutris
   # bottles

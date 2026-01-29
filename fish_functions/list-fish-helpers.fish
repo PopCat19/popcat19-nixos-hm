@@ -16,9 +16,17 @@ function list-fish-helpers
     set_color blue; echo "[FISH] Fish Helpers & Shortcuts"; set_color normal
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-    # List custom functions (filter for our specific functions)
+    # List custom functions (dynamically from fish_functions directory)
     set_color green; echo "[INFO] Custom Functions:"; set_color normal
-    functions | grep -E "(nix-shell-unfree|fish-greeting|list-fish-helpers|nixos-commit-rebuild-push|nixos-rebuild-basic|dev-to-main|nixos-flake-update|fix-fish-history|cnup|sillytavern|show-shortcuts|lsa)" | sort | awk '{print "   • " $0}'
+    set -l func_dir $HOME/nixos-config/fish_functions
+    if test -d $func_dir
+        for f in $func_dir/*.fish
+            set -l func_name (path basename --no-extension $f)
+            functions -q $func_name; and echo "   • $func_name"
+        end | sort
+    else
+        echo "   (fish_functions directory not found)"
+    end
 
     echo ""
     set_color green; echo "[INFO] All Abbreviations:"; set_color normal
