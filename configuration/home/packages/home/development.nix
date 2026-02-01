@@ -28,6 +28,7 @@ with pkgs;
   hyprls
   shellcheck
   fish-lsp
+  glslang
 
   # Android Tools
   android-tools
