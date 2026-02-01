@@ -8,7 +8,6 @@
 # - Enables Hyprland window manager
 # - Imports modular configuration files
 # - Sources user preferences and monitor configuration
-# - Manages shader files and wallpaper directory
 { pkgs, ... }:
 {
   imports = [
@@ -36,9 +35,5 @@
 
   home.file = {
     ".config/hypr/userprefs.conf".source = ./userprefs.conf;
-    ".config/hypr/shaders" = {
-      source = ./shaders;
-      recursive = true;
-    };
   };
 }

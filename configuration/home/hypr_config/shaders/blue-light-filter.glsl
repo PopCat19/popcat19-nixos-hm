@@ -2,8 +2,11 @@
 precision highp float;
 
 // Shader inputs
-varying vec2 v_texcoord;
+in vec2 v_texcoord;
 uniform sampler2D tex;
+
+// Shader output
+out vec4 fragColor;
 
 // Color temperature settings
 const float TEMPERATURE = 3200.0;
@@ -62,7 +65,7 @@ vec3 preserveLuminance(vec3 color, float preservationFactor) {
 
 void main() {
     // Sample original pixel color
-    vec4 pixColor = texture2D(tex, v_texcoord);
+    vec4 pixColor = texture(tex, v_texcoord);
     vec3 color = pixColor.rgb;
 
     // Optionally preserve luminance
@@ -78,5 +81,5 @@ void main() {
         );
 
     // Output final color
-    gl_FragColor = vec4(color, pixColor.a);
+    fragColor = vec4(color, pixColor.a);
 }
