@@ -1,60 +1,28 @@
 #version 320 es
 precision highp float;
 
-// =============================================================================
-// Bloom Fragment Shader
-//
-// Purpose: Apply gaussian bloom glow effect to bright screen areas.
-// Rationale: Multi-pass tent blur provides smooth, artifact-free glow.
-// Related: cool-stuff.glsl (integrated bloom), blue-light-filter.glsl
-//
-// Note: BLOOM_PASSES=6 and DIRECTIONS=32 provide good balance of quality/performance.
-// =============================================================================
-
 in vec2 v_texcoord;
 out vec4 fragColor;
 
 uniform sampler2D tex;
 uniform float time;
 
-// =============================================================================
-// Effect Parameters
-// Purpose: Centralized tuning knobs for bloom effect.
-// Rationale: Easier iteration; avoids hunting for magic numbers.
-// =============================================================================
-
-// --- Intensity & Radius ---
 const float BLOOM_INTENSITY      = 0.16;
 const float BLOOM_RADIUS         = 0.004;
-
-// --- Sampling ---
 const int   BLOOM_RADIAL_SAMPLES = 8;
 const int   DIRECTIONS           = 32;
-
-// --- Threshold ---
 const float BLOOM_THRESHOLD      = 0.96;
 const float BLOOM_SOFT_THRESHOLD = 0.4;
-
-// --- Quality ---
 const int   BLOOM_PASSES         = 6;
 const float BLOOM_SIGMA_SCALE    = 0.9;
 const float BLOOM_PASS_FALLOFF   = 0.4;
 const float BLOOM_CENTER_WEIGHT  = 2.0;
-
-// --- Appearance ---
 const vec3 BLOOM_TINT            = vec3(1.1, 0.9, 0.85);
-
-// --- Luminance Weights ---
 const float BLOOM_LUM_R_WEIGHT   = 0.299;
 const float BLOOM_LUM_G_WEIGHT   = 0.587;
 const float BLOOM_LUM_B_WEIGHT   = 0.114;
 
 const float PI = 3.14159265359;
-
-// =============================================================================
-// Utility Functions
-// Purpose: Shared primitives to reduce duplication.
-// =============================================================================
 
 float random(vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
@@ -69,12 +37,6 @@ float hash12(vec2 p) {
 float luminance(vec3 c) {
     return dot(c, vec3(BLOOM_LUM_R_WEIGHT, BLOOM_LUM_G_WEIGHT, BLOOM_LUM_B_WEIGHT));
 }
-
-// =============================================================================
-// Bloom Effect
-// Purpose: Add soft glow around bright areas using tent blur.
-// Rationale: Multiple blur sizes with direction sampling creates smooth light diffusion.
-// =============================================================================
 
 vec3 calculateBloom(vec2 uv) {
     vec3 bloomAccum = vec3(0.0);
@@ -148,11 +110,6 @@ vec3 calculateBloom(vec2 uv) {
 
     return bloomAccum * BLOOM_INTENSITY * BLOOM_TINT;
 }
-
-// =============================================================================
-// Main Pipeline
-// Purpose: Apply bloom to rendered scene.
-// =============================================================================
 
 void main() {
     vec2 uv = v_texcoord;
