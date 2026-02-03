@@ -1,45 +1,18 @@
 #version 320 es
 precision highp float;
 
-// =============================================================================
-// Blue Light Filter Fragment Shader
-//
-// Purpose: Reduce blue light emission by adjusting color temperature.
-// Rationale: Color temperature matrices provide physically-accurate color shifting.
-// Related: cool-stuff.glsl (color temperature effect)
-//
-// Note: Uses Tanner Helland's algorithm with luminance preservation for natural results.
-// =============================================================================
-
 in vec2 v_texcoord;
 out vec4 fragColor;
 
 uniform sampler2D tex;
 
-// =============================================================================
-// Effect Parameters
-// Purpose: Centralized tuning knobs for blue light filtering.
-// Rationale: Easier iteration; avoids hunting for magic numbers.
-// =============================================================================
-
-// --- Color Temperature ---
 const float TEMPERATURE           = 3200.0;
 const float TEMPERATURE_STRENGTH  = 1.0;
-
-// --- Luminance Preservation ---
 const float LUMINANCE_PRESERVATION_FACTOR = 1.0;
 const float MIN_LUMINANCE         = 1e-5;
-
-// --- Luminance Weights ---
 const vec3 LUMINANCE_WEIGHTS      = vec3(0.2126, 0.7152, 0.0722);
 
 const float PI = 3.14159265359;
-
-// =============================================================================
-// Color Temperature Conversion
-// Purpose: Convert Kelvin temperature to RGB color representation.
-// Rationale: Uses piecewise matrix for low (<6500K) and high temperature ranges.
-// =============================================================================
 
 vec3 colorTemperatureToRGB(float temperature) {
     mat3 lowTempMatrix = mat3(
@@ -66,12 +39,6 @@ vec3 colorTemperatureToRGB(float temperature) {
     return mix(tempColor, vec3(1.0), smoothstep(1000.0, 0.0, temperature));
 }
 
-// =============================================================================
-// Luminance Preservation
-// Purpose: Maintain perceived brightness when applying color shifts.
-// Rationale: Prevents colors from becoming too dim after temperature adjustment.
-// =============================================================================
-
 vec3 preserveLuminance(vec3 color, float preservationFactor) {
     float originalLuminance = dot(color, LUMINANCE_WEIGHTS);
     float adjustedLuminance = max(originalLuminance, MIN_LUMINANCE);
@@ -82,11 +49,6 @@ vec3 preserveLuminance(vec3 color, float preservationFactor) {
         preservationFactor
     );
 }
-
-// =============================================================================
-// Main Pipeline
-// Purpose: Apply blue light filter to rendered scene.
-// =============================================================================
 
 void main() {
     vec4 pixColor = texture(tex, v_texcoord);
