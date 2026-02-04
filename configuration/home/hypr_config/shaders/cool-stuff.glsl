@@ -190,23 +190,30 @@ vec3 apply_film_grain(vec2 uv, vec3 color) {
     if (!ENABLE_FILM_GRAIN) return color;
 
     float frame = floor(mod(time, 1000.0) * GRAIN.speed);
-    vec2 grain_uv = (uv * get_resolution()) / max(GRAIN.size, 0.1);
-    grain_uv += hash22(vec2(frame)) * 100.0;
+    vec2 noise_coord = (uv * get_resolution()) / (max(GRAIN.size, 0.1) * 0.4);
 
-    float mono_grain = hash(vec3(grain_uv, frame));
+    float n1 = hash(vec3(noise_coord, frame));
+    float n2 = hash(vec3(noise_coord * 1.5, frame + 0.5));
+    float noise = pow(n1 * n2, 0.5); 
 
-    vec3 chroma_grain = vec3(
-        hash(vec3(grain_uv + 0.1, frame)),
-        hash(vec3(grain_uv + 0.2, frame)),
-        hash(vec3(grain_uv + 0.3, frame))
-    );
+    vec2 off1 = (hash22(noise_coord + frame) - 0.5) * (GRAIN.intensity * 0.05);
+    vec2 off2 = (hash22(noise_coord * 1.2 - frame) - 0.5) * (GRAIN.intensity * 0.02);
+    
+    vec3 s1 = texture(tex, uv + off1).rgb;
+    vec3 s2 = texture(tex, uv + off2).rgb;
+    vec3 inherited = mix(s1, s2, 0.5);
+
+    // Opacity Levels: 0x8c = 0.549, 0x48 = 0.282
+    float tint_opacity = 0.282; 
+    
+    // Higher power (16.0) ensures particles are rare and sharp
+    float tint_mask = pow(noise, 16.0) * tint_opacity; 
+    inherited = mix(inherited, vec3(0.549), tint_mask);
 
     float response = 1.0 - pow(luma(color), 2.0);
-
-    color += (mono_grain - 0.5) * GRAIN.intensity * GRAIN.luma_amount * response;
-    color += (chroma_grain - 0.5) * GRAIN.intensity * GRAIN.chroma_amount * response;
-
-    return clamp(color, 0.0, 1.0);
+    float blend = noise * GRAIN.intensity * 14.0 * response;
+    
+    return mix(color, inherited, clamp(blend, 0.0, 1.0));
 }
 
 void main() {
