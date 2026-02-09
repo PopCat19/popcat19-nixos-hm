@@ -14,6 +14,9 @@ with pkgs;
   audacity
   furnace
   lmms
+  vital
+  carla
+  helio-workstation
   qtractor
 
   # Torrent
