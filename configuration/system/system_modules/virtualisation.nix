@@ -25,13 +25,33 @@
   # virtualisation.waydroid.enable = true;
   virtualisation.waydroid.enable = false;
 
-  # KVM virtualization support
+  # QEMU/KVM virtualization with VirGL and Virt-manager
   virtualisation.libvirtd = {
     enable = true;
     qemu = {
       package = pkgs.qemu_kvm;
-      runAsRoot = true;
       swtpm.enable = true;
     };
   };
+
+  # Enable SPICE for better graphical performance
+  virtualisation.spiceUSBRedirection.enable = true;
+
+  # Install virt-manager and related packages
+  programs.virt-manager.enable = true;
+
+  # Required packages for QEMU/Virt-manager
+  environment.systemPackages = with pkgs; [
+    qemu_kvm
+    virt-manager
+    virt-viewer
+    spice
+    spice-gtk
+    spice-protocol
+    virtio-win
+    win-spice
+  ];
+
+  # Enable dconf for virt-manager settings
+  programs.dconf.enable = true;
 }
