@@ -1,103 +1,48 @@
-# Vesktop Configuration Module
+# vesktop.nix
 #
 # Purpose: Configure Vesktop (Discord client with Vencord) with user preferences
-# Dependencies: vesktop package, stylix (for theming)
-# Related: packages.nix, window-rules.nix, stylix.nix
 #
 # This module:
 # - Enables Vesktop with custom settings
-# - Configures application preferences and appearance
-# - Sets up Vencord integration and plugins
-# - Integrates with Stylix for automatic theming
+# - Configures Vencord integration and plugins
+# - Sets up application preferences and appearance
 _: {
-  # Enable Vesktop with custom settings
   programs.vesktop = {
     enable = true;
 
-    # Vesktop settings written to $XDG_CONFIG_HOME/vesktop/settings.json
-    # Configuration imported from backup, excluding theme settings (handled by Stylix)
-    # See https://github.com/Vencord/Vesktop/blob/main/src/shared/settings.d.ts
-    # for available options
     settings = {
-      # Application behavior (from backup)
       appBadge = false;
       arRPC = true;
+      autoUpdate = true;
+      autoUpdateNotification = true;
       checkUpdates = false;
       customTitleBar = false;
       disableMinSize = true;
-      minimizeToTray = false;
-      tray = false;
-      staticTitle = true;
-      hardwareAcceleration = true;
-      notifyAboutUpdates = true;
-      autoUpdate = true;
-      autoUpdateNotification = true;
-      useQuickCss = true;
+      discordBranch = "stable";
       enableReactDevtools = false;
       frameless = false;
-      transparent = false;
-      winCtrlQ = false;
+      hardwareAcceleration = true;
       macosTranslucency = false;
+      minimizeToTray = false;
+      notifyAboutUpdates = true;
+      staticTitle = true;
+      tray = false;
+      transparent = false;
+      useQuickCss = true;
+      winCtrlQ = false;
       winNativeTitleBar = false;
 
-      # Discord branch
-      discordBranch = "stable";
-
-      # Splash screen theming
       splashBackground = "#000000";
       splashColor = "#ffffff";
       splashTheming = true;
 
-      # Window appearance is handled by Stylix theming
-
-      # Vencord plugin configurations (from backup, filtered)
       plugins = {
-        # Core APIs
+        "AI Noise Suppression" = {
+          enabled = true;
+        };
         BadgeAPI = {
           enabled = true;
         };
-        CommandsAPI = {
-          enabled = true;
-        };
-        ContextMenuAPI = {
-          enabled = true;
-        };
-        MessageAccessoriesAPI = {
-          enabled = true;
-        };
-        MessageEventsAPI = {
-          enabled = true;
-        };
-        NoticesAPI = {
-          enabled = true;
-        };
-        ServerListAPI = {
-          enabled = true;
-        };
-
-        # Utility plugins
-        NoTrack = {
-          enabled = true;
-          disableAnalytics = true;
-        };
-        Settings = {
-          enabled = true;
-          settingsLocation = "aboveActivity";
-        };
-        CrashHandler = {
-          enabled = true;
-        };
-        Experiments = {
-          enabled = true;
-          enableIsStaff = false;
-          forceStagingBanner = false;
-          toolbarDevMenu = false;
-        };
-        SupportHelper = {
-          enabled = true;
-        };
-
-        # Content enhancement
         BetterNotesBox = {
           enabled = true;
           hide = false;
@@ -110,7 +55,45 @@ _: {
           enabled = true;
           blurAmount = 10;
         };
+        ChatInputButtonAPI = {
+          enabled = true;
+        };
         ColorSighted = {
+          enabled = true;
+        };
+        CommandsAPI = {
+          enabled = true;
+        };
+        ContextMenuAPI = {
+          enabled = true;
+        };
+        CrashHandler = {
+          enabled = true;
+        };
+        DisableDeepLinks = {
+          enabled = true;
+        };
+        Experiments = {
+          enabled = true;
+          enableIsStaff = false;
+          forceStagingBanner = false;
+          toolbarDevMenu = false;
+        };
+        FakeNitro = {
+          enabled = true;
+          disableEmbedPermissionCheck = false;
+          emojiSize = 64;
+          enableEmojiBypass = true;
+          enableStickerBypass = true;
+          enableStreamQualityBypass = true;
+          hyperLinkText = "{{NAME}}";
+          stickerSize = 256;
+          transformCompoundSentence = false;
+          transformEmojis = true;
+          transformStickers = true;
+          useHyperLinks = true;
+        };
+        FixYoutubeEmbeds = {
           enabled = true;
         };
         ForceOwnerCrown = {
@@ -119,16 +102,19 @@ _: {
         GifPaste = {
           enabled = true;
         };
+        GreetStickerPicker = {
+          enabled = true;
+        };
         ImageZoom = {
           enabled = true;
-          size = 750;
-          zoom = 2.2;
-          nearestNeighbour = false;
-          square = false;
-          saveZoomValues = true;
           invertScroll = true;
-          zoomSpeed = 0.5;
+          nearestNeighbour = false;
           preventCarouselFromClosingOnClick = true;
+          saveZoomValues = true;
+          size = 750;
+          square = false;
+          zoom = 2.2;
+          zoomSpeed = 0.5;
         };
         MemberCount = {
           enabled = true;
@@ -136,12 +122,18 @@ _: {
           toolTip = true;
           voiceActivity = true;
         };
+        MessageAccessoriesAPI = {
+          enabled = true;
+        };
         MessageClickActions = {
           enabled = true;
           enableDeleteOnClick = true;
           enableDoubleClickToEdit = true;
           enableDoubleClickToReply = true;
           requireModifier = false;
+        };
+        MessageEventsAPI = {
+          enabled = true;
         };
         MessageTags = {
           enabled = true;
@@ -151,30 +143,73 @@ _: {
         MoreKaomoji = {
           enabled = true;
         };
-        petpet = {
+        NewGuildSettings = {
           enabled = true;
+          everyone = true;
+          events = true;
+          guild = true;
+          highlights = true;
+          messages = 3;
+          role = true;
+          showAllChannels = true;
+        };
+        NoProfileThemes = {
+          enabled = true;
+        };
+        NoReplyMention = {
+          enabled = true;
+          inverseShiftReply = false;
+          shouldPingListed = true;
+          userList = "";
+        };
+        NoTrack = {
+          enabled = true;
+          disableAnalytics = true;
+        };
+        NoTypingAnimation = {
+          enabled = true;
+        };
+        NoticesAPI = {
+          enabled = true;
+        };
+        PictureInPicture = {
+          enabled = true;
+        };
+        PinDMs = {
+          enabled = true;
+          canCollapseDmSection = false;
+          dmSectionCollapsed = false;
+          pinOrder = 0;
+          userBasedCategoryList = { };
         };
         ReadAllNotificationsButton = {
-          enabled = true;
-        };
-        RevealAllSpoilers = {
           enabled = true;
         };
         ReverseImageSearch = {
           enabled = true;
         };
+        RevealAllSpoilers = {
+          enabled = true;
+        };
         ReviewDB = {
           enabled = true;
+          hideBlockedUsers = true;
           notifyReviews = true;
           reviewsDropdownState = false;
           showWarning = true;
-          hideBlockedUsers = true;
+        };
+        ServerListAPI = {
+          enabled = true;
+        };
+        Settings = {
+          enabled = true;
+          settingsLocation = "aboveActivity";
         };
         SilentTyping = {
           enabled = true;
-          showIcon = false;
-          isEnabled = true;
           contextMenu = true;
+          isEnabled = true;
+          showIcon = false;
         };
         SpotifyControls = {
           enabled = true;
@@ -182,201 +217,139 @@ _: {
         };
         SpotifyCrack = {
           enabled = true;
-          noSpotifyAutoPause = true;
           keepSpotifyActivityOnIdle = false;
+          noSpotifyAutoPause = true;
+        };
+        SupportHelper = {
+          enabled = true;
         };
         TypingIndicator = {
           enabled = true;
-          includeMutedChannels = false;
           includeBlockedUsers = false;
           includeCurrentChannel = true;
+          includeMutedChannels = false;
           indicatorMode = 3;
         };
         TypingTweaks = {
           enabled = true;
+          alternativeFormatting = true;
           showAvatars = true;
           showRoleColors = true;
-          alternativeFormatting = true;
         };
         USRBG = {
           enabled = true;
-          voiceBackground = true;
           nitroFirst = true;
+          voiceBackground = true;
+        };
+        UserMessagesPronouns = {
+          enabled = true;
+          pronounSource = 0;
+          pronounsFormat = "LOWERCASE";
+          showInMessages = true;
+          showInProfile = true;
+          showSelf = true;
+        };
+        UserSettingsAPI = {
+          enabled = true;
         };
         ValidUser = {
           enabled = true;
+        };
+        VoiceMessages = {
+          enabled = true;
+          echoCancellation = false;
+          noiseSuppression = false;
         };
         WebContextMenus = {
           enabled = true;
           addBack = false;
         };
-        GreetStickerPicker = {
+        WebKeybinds = {
           enabled = true;
         };
         WhoReacted = {
           enabled = true;
         };
-        VoiceMessages = {
-          enabled = true;
-          noiseSuppression = false;
-          echoCancellation = false;
-        };
-        PictureInPicture = {
-          enabled = true;
-        };
-        "AI Noise Suppression" = {
-          enabled = true;
-        };
-        NoTypingAnimation = {
-          enabled = true;
-        };
-        WebKeybinds = {
-          enabled = true;
-        };
-        ChatInputButtonAPI = {
-          enabled = true;
-        };
-        NewGuildSettings = {
-          enabled = true;
-          guild = true;
-          everyone = true;
-          role = true;
-          events = true;
-          highlights = true;
-          messages = 3;
-          showAllChannels = true;
-        };
-        UserSettingsAPI = {
-          enabled = true;
-        };
-        UserMessagesPronouns = {
-          enabled = true;
-          showInMessages = true;
-          showSelf = true;
-          pronounSource = 0;
-          showInProfile = true;
-          pronounsFormat = "LOWERCASE";
-        };
-        FixYoutubeEmbeds = {
-          enabled = true;
-        };
         YoutubeAdblock = {
           enabled = true;
         };
-        DisableDeepLinks = {
+        petpet = {
           enabled = true;
-        };
-
-        # Enhanced functionality
-        FakeNitro = {
-          enabled = true;
-          enableEmojiBypass = true;
-          enableStickerBypass = true;
-          enableStreamQualityBypass = true;
-          transformStickers = true;
-          transformEmojis = true;
-          transformCompoundSentence = false;
-          emojiSize = 64;
-          stickerSize = 256;
-          hyperLinkText = "{{NAME}}";
-          useHyperLinks = true;
-          disableEmbedPermissionCheck = false;
-        };
-        PinDMs = {
-          enabled = true;
-          pinOrder = 0;
-          dmSectionCollapsed = false;
-          canCollapseDmSection = false;
-          userBasedCategoryList = { };
-        };
-        NoProfileThemes = {
-          enabled = true;
-        };
-        NoReplyMention = {
-          enabled = true;
-          userList = "";
-          shouldPingListed = true;
-          inverseShiftReply = false;
         };
       };
 
-      # Vencord settings
       vencord = {
         enable = true;
         settings = {
-          notifyAboutUpdates = true;
           autoUpdate = true;
           autoUpdateNotification = true;
+          notifyAboutUpdates = true;
           useQuickCss = true;
         };
         plugins = {
-          # Core functionality plugins
+          "AI Noise Suppression" = true;
           BadgeAPI = true;
-          CommandsAPI = true;
-          ContextMenuAPI = true;
-          MessageAccessoriesAPI = true;
-          MessageEventsAPI = true;
-          NoticesAPI = true;
-          ServerListAPI = true;
-          SettingsStoreAPI = false;
-
-          # Utility plugins
-          NoTrack = true;
-          Settings = true;
-          CrashHandler = true;
-          Experiments = true;
-          SupportHelper = true;
-
-          # Enhanced features
-          FakeNitro = true;
           BetterNotesBox = true;
           BiggerStreamPreview = true;
           BlurNSFW = true;
+          ChatInputButtonAPI = true;
           ColorSighted = true;
+          CommandsAPI = true;
+          ContextMenuAPI = true;
+          CrashHandler = true;
+          DisableDeepLinks = true;
+          Experiments = true;
+          FakeNitro = true;
+          FixYoutubeEmbeds = true;
           ForceOwnerCrown = true;
           GifPaste = true;
+          GreetStickerPicker = true;
           ImageZoom = true;
           MemberCount = true;
+          MessageAccessoriesAPI = true;
           MessageClickActions = true;
+          MessageEventsAPI = true;
           MessageTags = true;
           MoreKaomoji = true;
-          petpet = true;
+          NewGuildSettings = true;
+          NoProfileThemes = true;
+          NoReplyMention = true;
+          NoTrack = true;
+          NoTypingAnimation = true;
+          NoticesAPI = true;
+          PictureInPicture = true;
           PinDMs = true;
           ReadAllNotificationsButton = true;
-          RevealAllSpoilers = true;
           ReverseImageSearch = true;
+          RevealAllSpoilers = true;
           ReviewDB = true;
+          ServerListAPI = true;
+          Settings = true;
+          SettingsStoreAPI = false;
           SilentTyping = true;
           SpotifyControls = true;
           SpotifyCrack = true;
+          SupportHelper = true;
           TypingIndicator = true;
           TypingTweaks = true;
           USRBG = true;
-          ValidUser = true;
-          WebContextMenus = true;
-          GreetStickerPicker = true;
-          WhoReacted = true;
-          VoiceMessages = true;
-          PictureInPicture = true;
-          "AI Noise Suppression" = true;
-          NoTypingAnimation = true;
-          WebKeybinds = true;
-          ChatInputButtonAPI = true;
-          NewGuildSettings = true;
-          UserSettingsAPI = true;
           UserMessagesPronouns = true;
-          FixYoutubeEmbeds = true;
+          UserSettingsAPI = true;
+          ValidUser = true;
+          VoiceMessages = true;
+          WebContextMenus = true;
+          WebKeybinds = true;
+          WhoReacted = true;
           YoutubeAdblock = true;
-          DisableDeepLinks = true;
+          petpet = true;
         };
       };
 
-      # Additional settings from backup
       notifications = {
-        timeout = 5000;
-        position = "top-right";
-        useNative = "not-focused";
         logLimit = 50;
+        position = "top-right";
+        timeout = 5000;
+        useNative = "not-focused";
       };
     };
   };
