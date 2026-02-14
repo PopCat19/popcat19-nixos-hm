@@ -12,7 +12,8 @@
     "fish/completions/proxify.fish".text =
       builtins.readFile ../../base/system/fish_functions/completions/proxify.fish;
     "fish/functions/cnup.fish".text = builtins.readFile ../../base/system/fish_functions/cnup.fish;
-    "fish/functions/dev-to-main.fish".text = builtins.readFile ../../base/system/fish_functions/dev-to-main.fish;
+    "fish/functions/dev-to-main.fish".text =
+      builtins.readFile ../../base/system/fish_functions/dev-to-main.fish;
     "fish/functions/fix-fish-history.fish".text =
       builtins.readFile ../../base/system/fish_functions/fix-fish-history.fish;
     "fish/functions/fish_greeting.fish".text =
@@ -28,12 +29,16 @@
       builtins.readFile ../../base/system/fish_functions/nixos-flake-update.fish;
     "fish/functions/nixos-rebuild-basic.fish".text =
       builtins.readFile ../../base/system/fish_functions/nixos-rebuild-basic.fish;
-    "fish/functions/proxy_off.fish".text = builtins.readFile ../../base/system/fish_functions/proxy_off.fish;
-    "fish/functions/proxy_on.fish".text = builtins.readFile ../../base/system/fish_functions/proxy_on.fish;
-    "fish/functions/proxify.fish".text = builtins.readFile ../../base/system/fish_functions/proxify.fish;
+    "fish/functions/proxy_off.fish".text =
+      builtins.readFile ../../base/system/fish_functions/proxy_off.fish;
+    "fish/functions/proxy_on.fish".text =
+      builtins.readFile ../../base/system/fish_functions/proxy_on.fish;
+    "fish/functions/proxify.fish".text =
+      builtins.readFile ../../base/system/fish_functions/proxify.fish;
     "fish/functions/show-shortcuts.fish".text =
       builtins.readFile ../../base/system/fish_functions/show-shortcuts.fish;
-    "fish/functions/sillytavern.fish".text = builtins.readFile ../../base/system/fish_functions/sillytavern.fish;
+    "fish/functions/sillytavern.fish".text =
+      builtins.readFile ../../base/system/fish_functions/sillytavern.fish;
   };
 
   programs.fish = {
