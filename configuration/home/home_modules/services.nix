@@ -1,20 +1,17 @@
+# services.nix
+#
+# Purpose: Configure user-level services for media, storage, and clipboard
+#
+# This module:
+# - Enables media player D-Bus and MPRIS proxy
+# - Configures automatic removable media mounting
+# - Enables audio effects and clipboard history
 _: {
-  # **SYSTEM SERVICES**
-  # Enables user-level services.
   services = {
-    # Media Control services.
-    playerctld.enable = true; # D-Bus interface for media players.
-    mpris-proxy.enable = true; # MPRIS proxy for media players.
-
-    # Storage Management.
-    udiskie.enable = true; # Automount removable media.
-
-    # Audio Effects.
-    easyeffects.enable = true; # Audio effects for PipeWire.
-
-    # Clipboard Management.
-    cliphist.enable = true; # Clipboard history manager.
-
-    # AI/ML Services moved to ../../home_modules/generative.nix
+    cliphist.enable = true;
+    easyeffects.enable = true;
+    mpris-proxy.enable = true;
+    playerctld.enable = true;
+    udiskie.enable = true;
   };
 }
