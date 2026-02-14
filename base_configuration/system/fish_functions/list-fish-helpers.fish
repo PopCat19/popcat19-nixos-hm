@@ -1,10 +1,6 @@
-#!/usr/bin/env fish
-
-# List Fish Helpers Function
+# list-fish-helpers.fish
 #
 # Purpose: Display all available Fish functions and abbreviations
-# Dependencies: fish, functions, abbr, awk, grep
-# Related: fish.nix, fish-greeting.fish
 #
 # This function:
 # - Lists all custom Fish functions
@@ -14,15 +10,14 @@
 
 function list-fish-helpers
     set_color blue; echo "[FISH] Fish Helpers & Shortcuts"; set_color normal
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯"
 
-    # List custom functions (dynamically from fish_functions directory)
     set_color green; echo "[INFO] Custom Functions:"; set_color normal
     set -l func_dir $HOME/nixos-config/fish_functions
     if test -d $func_dir
         for f in $func_dir/*.fish
             set -l func_name (path basename --no-extension $f)
-            functions -q $func_name; and echo "   • $func_name"
+            functions -q $func_name; and echo "   - $func_name"
         end | sort
     else
         echo "   (fish_functions directory not found)"
@@ -30,9 +25,9 @@ function list-fish-helpers
 
     echo ""
     set_color green; echo "[INFO] All Abbreviations:"; set_color normal
-    abbr --list | sort | awk '{print "   • " $0}'
+    abbr --list | sort | awk '{print "   - " $0}'
 
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯"
     set_color cyan; echo "[INFO] Tips:"; set_color normal
     echo "   Type 'type <name>' to see definition"
     echo "   Type 'fixhist' to repair corrupt history"
