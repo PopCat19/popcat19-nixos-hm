@@ -7,7 +7,6 @@
 # - Enables power management optimizations
 # - Configures ZRAM swap for memory efficiency
 # - Enables proxy support for mobile networking
-{ userConfig, ... }:
 let
   stateVersion = import ../stateversion.nix;
 in
@@ -32,10 +31,4 @@ in
   };
 
   system.stateVersion = stateVersion.system;
-
-  home-manager = {
-    users.${userConfig.username} = {
-      home.stateVersion = stateVersion.home;
-    };
-  };
 }

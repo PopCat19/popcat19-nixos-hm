@@ -6,7 +6,7 @@
 # - Imports only essential system modules
 # - Skips extended/desktop modules
 # - Suitable for servers, VMs, or resource-constrained devices
-{ lib, ... }:
+{ lib, userConfig, ... }:
 let
   stateVersion = import ../stateversion.nix;
 in
@@ -18,6 +18,8 @@ in
     ../base/system/environment.nix
     ../base/system/localization.nix
     ../base/system/users.nix
+    # Centralized nix configuration
+    ../nix-options.nix
     # Additional essential modules
     ../system/modules/hardware.nix
     ../system/modules/networking.nix
@@ -26,23 +28,12 @@ in
     ../system/modules/ssh.nix
   ];
 
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "03:00";
-      options = "--delete-older-than 7d";
-    };
-
-    settings = {
-      auto-optimise-store = true;
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-    };
+  _module.args = {
+    inherit userConfig;
   };
 
-  nixpkgs.config.allowUnfree = lib.mkDefault true;
+  # Override gc options for minimal systems
+  nix.gc.options = "--delete-older-than 7d";
 
   system.stateVersion = lib.mkDefault stateVersion.system;
 }

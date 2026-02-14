@@ -24,10 +24,7 @@ in
 
   system.stateVersion = stateVersion.system;
 
-  home-manager = {
-    users.${userConfig.username} = {
-      home.stateVersion = stateVersion.home;
-      imports = [ ../home/modules ];
-    };
+  home-manager.users.${userConfig.username} = {
+    imports = [ ../home/modules ];
   };
 }
