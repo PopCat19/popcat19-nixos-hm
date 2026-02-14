@@ -1,8 +1,6 @@
-# Git Configuration Module
+# git.nix
 #
 # Purpose: Configure Git version control settings
-# Dependencies: None
-# Related: None
 #
 # This module:
 # - Enables Git functionality
@@ -12,8 +10,6 @@
 {
   programs.git = {
     enable = true;
-    inherit (userConfig.git) userName;
-    inherit (userConfig.git) userEmail;
-    inherit (userConfig.git) extraConfig;
+    inherit (userConfig.git) userName userEmail extraConfig;
   };
 }
