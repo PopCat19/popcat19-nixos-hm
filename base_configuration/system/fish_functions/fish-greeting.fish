@@ -1,10 +1,6 @@
-#!/usr/bin/env fish
-
-# Fish Greeting Function
+# fish-greeting.fish
 #
-# Purpose: Display customized shell greeting with system information
-# Dependencies: fastfetch, git, hostname, whoami, stat
-# Related: fish.nix, list-fish-helpers.fish
+# Purpose: Displays customized shell greeting with system information
 #
 # This function:
 # - Shows user@hostname with colors
@@ -14,36 +10,28 @@
 # - Lists available helper functions
 
 function fish_greeting
-    # 1. Use built-in variables (Instant, no external process)
     set -l config_dir "$NIXOS_CONFIG_DIR"
     set -l host $hostname
     set -l user $USER
     set -l cache_file "/tmp/.fastfetch_cache_$user"
 
-    # 2. Header
     set_color brgreen; echo -n "$user"
     set_color normal; echo -n "@"
     set_color brcyan; echo "$host"
 
-    # 3. Async Fastfetch (The major speedup)
     if type -q fastfetch
-        # If cache exists, print it immediately (instant)
         if test -f $cache_file
             cat $cache_file
         else
-            # Fallback for very first run only
             set_color green; echo "System: Initializing cache..."
             set_color normal
         end
 
-        # Update cache in the BACKGROUND (&) so it never blocks startup.
-        # This checks age and updates if needed without making you wait.
         begin
             set -l needs_update 0
             if not test -f $cache_file
                 set needs_update 1
             else
-                # Check if older than 30 mins (1800s)
                 set -l last_mod (stat -c %Y $cache_file 2>/dev/null; or echo 0)
                 set -l now (date +%s)
                 if test (math "$now - $last_mod") -gt 1800
@@ -52,26 +40,21 @@ function fish_greeting
             end
 
             if test $needs_update -eq 1
-                # Run fastfetch and save to cache
                 fastfetch --load-config none \
                     --disable title os kernel uptime packages \
                     --disable wm dde resolution theme icons term \
                     --disable font host cpu gpu memory disk \
                     > $cache_file 2>/dev/null
             end
-        end & # <--- The ampersand detaches this process
-        
-        # Disown the background job to prevent "Job ... terminated" messages
+        end &
+
         disown 2>/dev/null
 
     else
-        # Fast fallback
         set_color green; echo "System:" (uname -sr)
         set_color normal
     end
 
-    # 4. Optimized Uptime (No 'cat' or pipes)
-    # Read /proc/uptime directly into variable using built-in 'read'
     if test -f /proc/uptime
         read -d . uptime_sec uptime_frac < /proc/uptime
         set -l uptime_min (math "$uptime_sec / 60")
@@ -80,11 +63,9 @@ function fish_greeting
         end
     end
 
-    # 5. Config Check
     if test -d "$config_dir"
         set_color brcyan; echo "Config: $config_dir"
 
-        # Git Status
         set -l git_cache_file "/tmp/.git_cache_$user"
         set -l git_info ""
         if test -d "$config_dir/.git"
@@ -113,11 +94,9 @@ function fish_greeting
                 set_color normal; echo "Git: $git_info"
             end
         end
-        
-        # 6. Helpers
+
         set_color brwhite; echo -n "Helpers: "
 
-        # Check which functions are available and build dynamic list
         set -l available_helpers ""
         set -l helper_functions nrb nrbc flup dtm fixhist list-fish-helpers show-shortcuts lsa
 
@@ -141,6 +120,5 @@ function fish_greeting
         set_color normal; echo "Run: setup_nixos to initialize"
     end
 
-    # 7. Footer
     set_color grey; echo (date "+%a, %b %d %Y  %H:%M:%S"); set_color normal
 end
