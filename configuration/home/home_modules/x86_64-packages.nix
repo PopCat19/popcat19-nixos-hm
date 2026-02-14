@@ -1,13 +1,14 @@
-# x86_64-specific Home Manager packages
+# x86_64-packages.nix
+#
+# Purpose: Define x86_64-specific home manager packages
+#
+# This module:
+# - Provides system monitoring with ROCm support
+# - Includes hardware control tools
 { pkgs, ... }:
 with pkgs;
 [
-  # System monitoring with ROCm support
   btop-rocm
-
-  # Hardware control tools
   ddcui
   openrgb-with-all-plugins
-
-  # x86_64-specific packages can be added here
 ]
