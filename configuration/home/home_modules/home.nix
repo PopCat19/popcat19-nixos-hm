@@ -1,10 +1,15 @@
+# home.nix
+#
+# Purpose: Configure home activation scripts for directory creation
+#
+# This module:
+# - Creates Syncthing directories on home activation
 {
   lib,
   userConfig,
   ...
 }:
 let
-  # Syncthing configuration constants
   syncthingPaths = {
     shared = userConfig.directories.syncthing;
     passwords = "${userConfig.directories.home}/Passwords";
@@ -13,7 +18,6 @@ let
   };
 in
 {
-  # User-level directory creation and configuration
   home.activation.createSyncthingDirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p ${syncthingPaths.shared}
     mkdir -p ${syncthingPaths.dataDir}
