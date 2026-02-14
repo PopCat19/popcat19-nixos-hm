@@ -1,16 +1,19 @@
-# configuration.nix
+# surface.nix
 #
 # Purpose: Configuration preset for Microsoft Surface devices
 #
-# This module:
+# This profile:
 # - Imports the default profile as base
 # - Includes Surface-specific thermal management
 # - Enables Surface hardware support (libwacom-surface, surface-control)
 # - Applies clear-bdprochot fix for thermal issues
-{ ... }:
+{ inputs, userConfig, ... }:
+let
+  stateVersion = import ../configuration/stateversion.nix;
+in
 {
   imports = [
-    ../default/configuration.nix
+    ./default.nix
   ];
 
   boot = {
@@ -81,5 +84,13 @@
       SUBSYSTEM=="powercap", MODE="0664", GROUP="users"
       KERNEL=="coretemp.*", MODE="0664", GROUP="users"
     '';
+  };
+
+  system.stateVersion = stateVersion.system;
+
+  home-manager = {
+    users.${userConfig.username} = {
+      home.stateVersion = stateVersion.home;
+    };
   };
 }

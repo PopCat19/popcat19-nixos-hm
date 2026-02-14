@@ -9,7 +9,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../profiles/${userConfig.profile}/configuration.nix
+    ../../profiles/${userConfig.profile}.nix
     ./modules/boot.nix
     ./modules/clear-bdprochot.nix
     ./modules/hardware.nix

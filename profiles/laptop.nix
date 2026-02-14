@@ -1,16 +1,19 @@
-# configuration.nix
+# laptop.nix
 #
 # Purpose: Configuration preset for laptop devices with power management needs
 #
-# This module:
+# This profile:
 # - Imports the default profile as base
 # - Enables power management optimizations
 # - Configures ZRAM swap for memory efficiency
 # - Enables proxy support for mobile networking
-{ ... }:
+{ inputs, userConfig, ... }:
+let
+  stateVersion = import ../configuration/stateversion.nix;
+in
 {
   imports = [
-    ../default/configuration.nix
+    ./default.nix
   ];
 
   boot.kernelParams = [
@@ -26,5 +29,13 @@
   zramSwap = {
     enable = true;
     memoryPercent = 100;
+  };
+
+  system.stateVersion = stateVersion.system;
+
+  home-manager = {
+    users.${userConfig.username} = {
+      home.stateVersion = stateVersion.home;
+    };
   };
 }

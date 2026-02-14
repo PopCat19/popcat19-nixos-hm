@@ -9,7 +9,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../profiles/${userConfig.profile}/configuration.nix
+    ../../profiles/${userConfig.profile}.nix
     ./modules/hardware.nix
   ];
 

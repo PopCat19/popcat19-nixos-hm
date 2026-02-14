@@ -8,19 +8,26 @@
 # - Enables core system functionality
 # - Sets system state version
 # - Injects userConfig and selectedProfile for all imported modules
-{ userConfig, selectedProfile, ... }:
+{ lib, userConfig, selectedProfile, ... }:
+let
+  stateVersion = import ../configuration/stateversion.nix;
+in
 {
   imports = [
+    # Boot-critical files from ./system/
+    ./system/boot.nix
+    ./system/core-packages.nix
+    ./system/environment.nix
+    ./system/localization.nix
+    ./system/users.nix
+
+    # Additional system modules from configuration/system/modules/
     ../configuration/system/modules/audio.nix
-    ../configuration/system/modules/boot.nix
-    ../configuration/system/modules/core-packages.nix
     ../configuration/system/modules/display.nix
-    ../configuration/system/modules/environment.nix
     ../configuration/system/modules/fish.nix
     ../configuration/system/modules/fonts.nix
     ../configuration/system/modules/gnome-keyring.nix
     ../configuration/system/modules/hardware.nix
-    ../configuration/system/modules/localization.nix
     ../configuration/system/modules/networking.nix
     ../configuration/system/modules/noctalia.nix
     ../configuration/system/modules/packages.nix
@@ -28,7 +35,6 @@
     ../configuration/system/modules/services.nix
     ../configuration/system/modules/ssh.nix
     ../configuration/system/modules/tablet.nix
-    ../configuration/system/modules/users.nix
     ../configuration/system/modules/virtualisation.nix
   ];
 
@@ -76,7 +82,7 @@
     ];
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfree = lib.mkDefault true;
 
-  system.stateVersion = "25.05";
+  system.stateVersion = lib.mkDefault stateVersion.system;
 }

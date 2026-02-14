@@ -7,13 +7,16 @@
 # - Imports central home configuration
 # - Applies host-specific monitor settings
 { userConfig, ... }:
+let
+  stateVersion = import ../../configuration/stateversion.nix;
+in
 {
   home.username = userConfig.username;
   home.homeDirectory = userConfig.directories.home;
-  home.stateVersion = "24.05";
+  home.stateVersion = stateVersion.home;
 
   imports = [
-    ../../configuration/home/home.nix
+    ../../configuration/home/modules
   ];
 
   home.file.".config/hypr/monitors.conf".source = ./hyprland/monitors.conf;
