@@ -1,15 +1,13 @@
+# ollama.nix
+#
+# Purpose: Configures Ollama LLM service with Vulkan acceleration.
+#
+# This module:
+# - Enables Ollama service
+# - Adds Vulkan-enabled package for GPU support
+
 { pkgs, ... }:
 {
-  # Ollama with ROCm acceleration configuration
-  # This module provides ollama service with ROCm GPU acceleration support
-
-  home.packages = [
-    pkgs.ollama-vulkan
-  ];
-
-  services = {
-    ollama = {
-      enable = true;
-    };
-  };
+  home.packages = [ pkgs.ollama-vulkan ];
+  services.ollama.enable = true;
 }
