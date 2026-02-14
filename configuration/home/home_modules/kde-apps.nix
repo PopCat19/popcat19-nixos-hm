@@ -1,43 +1,38 @@
+# kde-apps.nix
+#
+# Purpose: Configure KDE applications without desktop environment
+#
+# This module:
+# - Installs Dolphin file manager and related utilities
+# - Configures thumbnailers for various file types
+# - Sets up Dolphin bookmarks
 {
   pkgs,
   config,
   ...
 }:
 {
-  # KDE applications and utilities (no desktop environment)
   home.packages = with pkgs; [
-    # Dolphin and KDE file management packages
     kdePackages.dolphin
-    kdePackages.ark # Archive manager
-    unrar # RAR archive support
-    kdePackages.gwenview # Image viewer
-    kdePackages.okular # Document viewer
+    kdePackages.ark
+    unrar
+    kdePackages.gwenview
+    kdePackages.okular
 
-    # KDE file system integration and thumbnails
     kdePackages.kdegraphics-thumbnailers
     kdePackages.kimageformats
     kdePackages.kio-extras
 
-    # Additional thumbnail support
-    ffmpegthumbnailer # Video thumbnails
-    poppler-utils # PDF thumbnails
-    libgsf # OLE/MSO thumbnails
-    webp-pixbuf-loader # WebP image support
+    ffmpegthumbnailer
+    poppler-utils
+    libgsf
+    webp-pixbuf-loader
 
-    # KDE utilities
-    kdePackages.kdialog # Dialog boxes from shell scripts
-    kdePackages.keditbookmarks # Bookmark editor
-    kdePackages.kleopatra # Certificate manager and GUI for GnuPG
-
-    # Note: Qt theming and icon packages are now handled by stylix.nix
-    # to avoid duplication following DRY principle
+    kdePackages.kdialog
+    kdePackages.keditbookmarks
+    kdePackages.kleopatra
   ];
 
-  # KDE configuration files - keeping minimal config here, main theme config in stylix.nix
-
-  # Qt environment variables for Kvantum
-
-  # Dolphin file manager bookmarks
   home.file.".local/share/user-places.xbel".text = ''
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE xbel PUBLIC "+//IDN pyxml.sourceforge.net//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://pyxml.sourceforge.net/topics/dtds/xbel-1.0.dtd">
@@ -74,6 +69,4 @@
      </bookmark>
     </xbel>
   '';
-
-  # XDG MIME associations so Dolphin opens files with user-configured defaults
 }
