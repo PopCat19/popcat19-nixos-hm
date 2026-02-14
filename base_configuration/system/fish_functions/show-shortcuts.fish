@@ -1,15 +1,11 @@
-#!/usr/bin/env fish
-
-# Show Shortcuts Function
+# show-shortcuts.fish
 #
-# Purpose: Display Hyprland keybindings with descriptions and categories
-# Tags: # cat: CategoryName, # desc: Description Text
-# Dependencies: string, math, column
+# Purpose: Displays Hyprland keybindings with descriptions and categories
 #
-# Usage:
-#   show-shortcuts            - Show all
-#   show-shortcuts <cat>      - Filter by category
-#   show-shortcuts <search>   - Search descriptions/keys
+# This function:
+# - Parses keybinds.nix and userprefs.conf for shortcut definitions
+# - Filters and searches shortcuts by category or description
+# - Supports fuzzy search with fzf integration
 
 function show-shortcuts
     set -l config_dir "$NIXOS_CONFIG_DIR"
@@ -41,7 +37,6 @@ function show-shortcuts
         end
     end
 
-    # Handle --list option
     if test "$list_only" = true
         set -l categories (get_detected_categories "$keybinds_file" "$userprefs_file")
         set_color brgreen
@@ -59,24 +54,19 @@ function show-shortcuts
     set -l current_cat "General"
     set -l current_desc ""
 
-    # Helper to parse files
     function parse_config -S
         set -l file $argv[1]
         test -f "$file"; or return
 
         cat "$file" | while read -l line
-            # Detect Section Header as Category (=== Name ===)
             if string match -qr '^\s*#\s*=== (.+) ===\s*$' "$line"
                 set current_cat (string replace -r '^\s*#\s*=== (.+) ===\s*$' '$1' "$line")
-            # Detect Category Tag (# cat: Name)
             else if string match -qr '^\s*#\s*cat:\s*(.+)' "$line"
                 set current_cat (string replace -r '^\s*#\s*cat:\s*' '' "$line")
 
-            # Detect Description Tag
             else if string match -qr '^\s*#\s*desc:\s*(.+)' "$line"
                 set current_desc (string replace -r '^\s*#\s*desc:\s*' '' "$line")
 
-            # Match Nix Binding ("mod, key, action")
             else if string match -qr '^\s*"([^"]+)"' "$line"; and test -n "$current_desc"
                 set -l raw (string replace -r '^\s*"([^"]+)".*' '$1' "$line")
                 set -l parts (string split ',' "$raw")
@@ -86,7 +76,6 @@ function show-shortcuts
                 end
                 set current_desc ""
 
-            # Match Conf Binding (bind = mod, key, action)
             else if string match -qr '^\s*bind[elmn]*\s*=' "$line"; and test -n "$current_desc"
                 set -l binding (string replace -r '^\s*bind[elmn]*\s*=\s*([^,]+,\s*[^,]+),.*' '$1' "$line")
                 set -a all_shortcuts (normalize_binding "$binding")"|"$current_desc"|"$current_cat
@@ -103,7 +92,6 @@ function show-shortcuts
         return
     end
 
-    # Apply Filters
     set -l filtered
     for item in $all_shortcuts
         set -l parts (string split '|' "$item")
@@ -116,7 +104,6 @@ function show-shortcuts
         end
     end
 
-    # Render Header
     set -l box_width 62
     set -l title " HYPRLAND SHORTCUTS "
     test -n "$filter"; and set title " CATEGORY: "(string upper "$filter")" "
@@ -133,7 +120,6 @@ function show-shortcuts
     echo "╚"(string repeat -n $box_width "═")"╝"
     set_color normal; echo ""
 
-    # Group by dynamically discovered categories
     set -l found_cats
     for i in $filtered; set -a found_cats (string split '|' "$i")[3]; end
     set found_cats (printf '%s\n' $found_cats | sort -u)
@@ -150,13 +136,11 @@ function show-shortcuts
         echo ""
     end
 
-    # Check if fzf is available
     set -l fzf_available false
     if command -v fzf > /dev/null 2>&1
         set fzf_available true
     end
 
-    # Handle fzf output
     if test "$use_fzf" = true
         if test "$fzf_available" = false
             set_color red; echo "Error: fzf is not installed. Please install fzf to use fuzzy search."; set_color normal
