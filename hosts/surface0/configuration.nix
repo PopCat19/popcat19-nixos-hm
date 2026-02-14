@@ -10,10 +10,10 @@
   imports = [
     ./hardware-configuration.nix
     ../../profiles/${userConfig.profile}/configuration.nix
-    ./system_modules/boot.nix
-    ./system_modules/clear-bdprochot.nix
-    ./system_modules/hardware.nix
-    ./system_modules/thermal-config.nix
+    ./modules/boot.nix
+    ./modules/clear-bdprochot.nix
+    ./modules/hardware.nix
+    ./modules/thermal-config.nix
   ];
 
   networking.hostName = userConfig.hostname;

@@ -10,7 +10,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../profiles/${userConfig.profile}/configuration.nix
-    ./system_modules/hardware.nix
+    ./modules/hardware.nix
   ];
 
   networking.hostName = userConfig.hostname;

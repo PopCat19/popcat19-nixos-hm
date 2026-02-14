@@ -1,12 +1,3 @@
-# .gitignore
-#
-# Purpose: Exclude build artifacts and editor files from version control
-#
-# This module:
-# - Ignores Nix build results and artifacts
-# - Excludes editor and IDE configuration
-# - Filters backup and temporary files
-
 # Build results
 result
 result-*

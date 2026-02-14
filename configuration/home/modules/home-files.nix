@@ -9,7 +9,7 @@
 { config, ... }:
 {
   home.file.".config/hypr" = {
-    source = ../hypr_config;
+    source = ../hyprland;
     recursive = true;
   };
 

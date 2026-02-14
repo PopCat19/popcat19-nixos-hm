@@ -1,8 +1,6 @@
-# Extended System Configuration Module
+# system-extended.nix
 #
 # Purpose: Extended system configuration combining base and additional user modules
-# Dependencies: configuration/system, user system modules
-# Related: configuration/system/configuration.nix, flake.nix
 #
 # This module:
 # - Imports base system configuration as foundation
@@ -12,12 +10,12 @@
 {
   imports = [
     ./configuration.nix
-    ./system_modules/programs.nix
-    ./system_modules/power-management.nix
-    ./system_modules/vpn.nix
-    ./system_modules/syncthing.nix
-    ./system_modules/dconf.nix
-    ./system_modules/openrgb.nix
-    ./system_modules/stylix-lightdm.nix
+    ./modules/programs.nix
+    ./modules/power-management.nix
+    ./modules/vpn.nix
+    ./modules/syncthing.nix
+    ./modules/dconf.nix
+    ./modules/openrgb.nix
+    ./modules/stylix-lightdm.nix
   ];
 }

@@ -1,5 +1,11 @@
-# Global user configuration file
-# Contains all user-configurable variables shared across NixOS hosts
+# user-config.nix
+#
+# Purpose: Global user configuration variables shared across NixOS hosts
+#
+# This module:
+# - Defines host configuration and architecture detection
+# - Provides user credentials and default applications
+# - Configures directories, git, theme, and fonts
 {
   hostname ? null,
   system ? "x86_64-linux",
@@ -144,14 +150,14 @@ rec {
       syncthing = "${home}/syncthing-shared";
     };
 
-  # Git configuration (used by home_modules/git.nix)
+  # Git configuration (used by modules/git.nix)
   git = {
     userName = user.fullName;
     userEmail = user.email;
     extraConfig = { };
   };
 
-  # Network configuration moved to system_modules/networking.nix
+  # Network configuration moved to modules/networking.nix
   # Host-specific overrides may still set `network` in userConfig if needed.
 
   # Theme configuration for PMD

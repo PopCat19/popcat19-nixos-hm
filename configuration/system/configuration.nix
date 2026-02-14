@@ -1,8 +1,6 @@
-# System Configuration Module
+# configuration.nix
 #
 # Purpose: Core NixOS configuration for nixos-config base system
-# Dependencies: All base system_modules, userConfig (passed via specialArgs)
-# Related: configuration/home/home.nix, configuration/system/system-extended.nix
 #
 # This module:
 # - Imports all base system modules
@@ -12,25 +10,25 @@
 { userConfig, ... }:
 {
   imports = [
-    ./system_modules/environment.nix
-    ./system_modules/fish.nix
-    ./system_modules/boot.nix
-    ./system_modules/networking.nix
-    ./system_modules/proxy.nix
-    ./system_modules/ssh.nix
-    ./system_modules/hardware.nix
-    ./system_modules/tablet.nix
-    ./system_modules/packages.nix
-    ./system_modules/core-packages.nix
-    ./system_modules/localization.nix
-    ./system_modules/users.nix
-    ./system_modules/services.nix
-    ./system_modules/display.nix
-    ./system_modules/noctalia.nix
-    ./system_modules/audio.nix
-    ./system_modules/virtualisation.nix
-    ./system_modules/fonts.nix
-    ./system_modules/gnome-keyring.nix
+    ./modules/environment.nix
+    ./modules/fish.nix
+    ./modules/boot.nix
+    ./modules/networking.nix
+    ./modules/proxy.nix
+    ./modules/ssh.nix
+    ./modules/hardware.nix
+    ./modules/tablet.nix
+    ./modules/packages.nix
+    ./modules/core-packages.nix
+    ./modules/localization.nix
+    ./modules/users.nix
+    ./modules/services.nix
+    ./modules/display.nix
+    ./modules/noctalia.nix
+    ./modules/audio.nix
+    ./modules/virtualisation.nix
+    ./modules/fonts.nix
+    ./modules/gnome-keyring.nix
   ];
 
   nix.settings = {

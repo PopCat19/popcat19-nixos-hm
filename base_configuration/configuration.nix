@@ -11,25 +11,25 @@
 { userConfig, selectedProfile, ... }:
 {
   imports = [
-    ../configuration/system/system_modules/audio.nix
-    ../configuration/system/system_modules/boot.nix
-    ../configuration/system/system_modules/core-packages.nix
-    ../configuration/system/system_modules/display.nix
-    ../configuration/system/system_modules/environment.nix
-    ../configuration/system/system_modules/fish.nix
-    ../configuration/system/system_modules/fonts.nix
-    ../configuration/system/system_modules/gnome-keyring.nix
-    ../configuration/system/system_modules/hardware.nix
-    ../configuration/system/system_modules/localization.nix
-    ../configuration/system/system_modules/networking.nix
-    ../configuration/system/system_modules/noctalia.nix
-    ../configuration/system/system_modules/packages.nix
-    ../configuration/system/system_modules/proxy.nix
-    ../configuration/system/system_modules/services.nix
-    ../configuration/system/system_modules/ssh.nix
-    ../configuration/system/system_modules/tablet.nix
-    ../configuration/system/system_modules/users.nix
-    ../configuration/system/system_modules/virtualisation.nix
+    ../configuration/system/modules/audio.nix
+    ../configuration/system/modules/boot.nix
+    ../configuration/system/modules/core-packages.nix
+    ../configuration/system/modules/display.nix
+    ../configuration/system/modules/environment.nix
+    ../configuration/system/modules/fish.nix
+    ../configuration/system/modules/fonts.nix
+    ../configuration/system/modules/gnome-keyring.nix
+    ../configuration/system/modules/hardware.nix
+    ../configuration/system/modules/localization.nix
+    ../configuration/system/modules/networking.nix
+    ../configuration/system/modules/noctalia.nix
+    ../configuration/system/modules/packages.nix
+    ../configuration/system/modules/proxy.nix
+    ../configuration/system/modules/services.nix
+    ../configuration/system/modules/ssh.nix
+    ../configuration/system/modules/tablet.nix
+    ../configuration/system/modules/users.nix
+    ../configuration/system/modules/virtualisation.nix
   ];
 
   _module.args = {

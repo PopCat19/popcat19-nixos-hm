@@ -16,5 +16,5 @@
     ../../configuration/home/home.nix
   ];
 
-  home.file.".config/hypr/monitors.conf".source = ./hypr_config/monitors.conf;
+  home.file.".config/hypr/monitors.conf".source = ./hyprland/monitors.conf;
 }

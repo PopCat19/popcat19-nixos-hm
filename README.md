@@ -1,12 +1,3 @@
-# README.md
-#
-# Purpose: Project overview and quick start guide for NixOS configuration
-#
-# This module:
-# - Describes the repository architecture and key components
-# - Documents available hosts and their purposes
-# - Provides quick start instructions for building configurations
-
 # NixOS Configuration
 
 Personal NixOS configuration with Hyprland Wayland compositor and PMD theming.
@@ -28,18 +19,20 @@ nixos-config/
 ├── configuration/
 │   ├── flake/modules/
 │   ├── home/
-│   │   ├── home_modules/
-│   │   ├── hypr_config/
-│   │   ├── packages/
-│   │   └── wallpaper/
-│   ├── system/system_modules/
+│   │   ├── modules/
+│   │   ├── hyprland/
+│   │   ├── noctalia/
+│   │   ├── wallpaper/
+│   │   ├── home_packages.nix
+│   │   ├── system_packages.nix
+│   │   └── home.nix
+│   ├── system/modules/
 │   └── user-config.nix
 ├── hosts/
 │   ├── nixos0/
 │   ├── surface0/
 │   └── thinkpad0/
 ├── conventions/
-├── fish_functions/
 └── flake.nix
 ```
 

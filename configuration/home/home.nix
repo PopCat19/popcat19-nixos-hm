@@ -1,8 +1,6 @@
-# Home Configuration Module
+# home.nix
 #
 # Purpose: Home Manager configuration for user-facing applications
-# Dependencies: All home_modules, user-config.nix
-# Related: configuration/system/configuration.nix, configuration/system/system-extended.nix
 #
 # This module:
 # - Imports all home modules
@@ -22,39 +20,39 @@
   home.stateVersion = "24.05";
 
   imports = [
-    ./hypr_config/hyprland.nix
-    ./home_modules/stylix.nix
-    ./home_modules/fonts.nix
-    ./noctalia_config/noctalia.nix
-    ./home_modules/zed.nix
-    ./home_modules/vscodium.nix
-    ./home_modules/screenshot.nix
-    ./home_modules/zen-browser.nix
-    ./home_modules/generative.nix
-    ./home_modules/ollama.nix
-    ./home_modules/environment.nix
-    ./home_modules/services.nix
-    ./home_modules/home-files.nix
-    ./home_modules/systemd-services.nix
-    ./home_modules/kde-apps.nix
-    ./home_modules/qt-gtk-config.nix
-    ./home_modules/fuzzel-config.nix
-    ./home_modules/kitty.nix
+    ./hyprland/hyprland.nix
+    ./modules/stylix.nix
+    ./modules/fonts.nix
+    ./noctalia/noctalia.nix
+    ./modules/zed.nix
+    ./modules/vscodium.nix
+    ./modules/screenshot.nix
+    ./modules/zen-browser.nix
+    ./modules/generative.nix
+    ./modules/ollama.nix
+    ./modules/environment.nix
+    ./modules/services.nix
+    ./modules/home-files.nix
+    ./modules/systemd-services.nix
+    ./modules/kde-apps.nix
+    ./modules/qt-gtk-config.nix
+    ./modules/fuzzel-config.nix
+    ./modules/kitty.nix
 
-    ./home_modules/vesktop.nix
-    ./home_modules/starship.nix
-    ./home_modules/micro.nix
-    ./home_modules/fcitx5.nix
-    ./home_modules/mangohud.nix
-    ./home_modules/privacy.nix
-    ./home_modules/obs.nix
-    ./home_modules/syncthing.nix
-    ./home_modules/audio-control.nix
-    ./home_modules/vicinae.nix
+    ./modules/vesktop.nix
+    ./modules/starship.nix
+    ./modules/micro.nix
+    ./modules/fcitx5.nix
+    ./modules/mangohud.nix
+    ./modules/privacy.nix
+    ./modules/obs.nix
+    ./modules/syncthing.nix
+    ./modules/audio-control.nix
+    ./modules/vicinae.nix
   ];
 
-  # Use the centralized packages list from home_modules/packages.nix
-  home.packages = import ./home_modules/packages.nix {
+  # Use the centralized packages list from modules/packages.nix
+  home.packages = import ./modules/packages.nix {
     inherit
       pkgs
       inputs

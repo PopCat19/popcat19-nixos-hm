@@ -9,16 +9,16 @@
 { ... }:
 {
   imports = [
-    ../../configuration/system/system_modules/boot.nix
-    ../../configuration/system/system_modules/core-packages.nix
-    ../../configuration/system/system_modules/environment.nix
-    ../../configuration/system/system_modules/hardware.nix
-    ../../configuration/system/system_modules/localization.nix
-    ../../configuration/system/system_modules/networking.nix
-    ../../configuration/system/system_modules/packages.nix
-    ../../configuration/system/system_modules/services.nix
-    ../../configuration/system/system_modules/ssh.nix
-    ../../configuration/system/system_modules/users.nix
+    ../../configuration/system/modules/boot.nix
+    ../../configuration/system/modules/core-packages.nix
+    ../../configuration/system/modules/environment.nix
+    ../../configuration/system/modules/hardware.nix
+    ../../configuration/system/modules/localization.nix
+    ../../configuration/system/modules/networking.nix
+    ../../configuration/system/modules/packages.nix
+    ../../configuration/system/modules/services.nix
+    ../../configuration/system/modules/ssh.nix
+    ../../configuration/system/modules/users.nix
   ];
 
   nix = {
