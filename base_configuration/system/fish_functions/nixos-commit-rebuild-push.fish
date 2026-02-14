@@ -1,10 +1,6 @@
-#!/usr/bin/env fish
-
-# NixOS Commit Rebuild Push Function
+# nixos-commit-rebuild-push.fish
 #
-# Purpose: Commit, rebuild, and push NixOS configuration changes
-# Dependencies: git, sudo, nixos-rebuild, git-push
-# Related: nixos-rebuild-basic.fish, dev-to-main.fish
+# Purpose: Commits, rebuilds, and pushes NixOS configuration changes
 #
 # This function:
 # - Commits configuration changes with provided message
