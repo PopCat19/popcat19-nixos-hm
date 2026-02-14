@@ -1,15 +1,11 @@
-#!/usr/bin/env fish
-
-# Cnup Function
+# cnup.fish
 #
 # Purpose: Comprehensive NixOS configuration linting and formatting
-# Dependencies: statix, deadnix, treefmt (from nixfmt-tree), nix flake check
-# Related: fish.nix, nixos-rebuild-basic.fish
 #
 # This function:
 # - Runs statix to fix security issues and bad practices
 # - Removes dead nix code with deadnix
-# - Formats code with treefmt (RFC-style, from nixfmt-tree package)
+# - Formats code with treefmt (RFC-style)
 # - Validates flake configuration (unless --no-check)
 # - Automatically uses nix-shell if tools are not available
 
