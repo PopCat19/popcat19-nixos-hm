@@ -1,106 +1,91 @@
-# Zen Browser Configuration Module
+# zen-browser.nix
 #
 # Purpose: Configure Zen Browser with extensions and PWA support
-# Dependencies: inputs.zen-browser, pkgs.firefoxpwa
-# Related: None
 #
 # This module:
 # - Imports Zen Browser Home Manager module
 # - Enables PWA support via firefoxpwa
 # - Configures browser policies and extensions
-# - Sets up security and privacy settings
+
 {
   pkgs,
   inputs,
   ...
 }:
+let
+  forceInstall = "force_installed";
+in
 {
-  # Import the Zen Browser Home Manager module
   imports = [ inputs.zen-browser.homeModules.twilight ];
 
-  # Enable Zen Browser with configuration
   programs.zen-browser = {
     enable = true;
-
-    # Add PWA support via firefoxpwa
     nativeMessagingHosts = [ pkgs.firefoxpwa ];
 
-    # Configure browser policies and extensions
     policies = {
-      # Basic browser policies
-      DisableAppUpdate = true;
-      DisableTelemetry = true;
-      DisableFirefoxStudies = true;
-      DisablePocket = true;
-      DisableFeedbackCommands = true;
-      DontCheckDefaultBrowser = true;
-      NoDefaultBookmarks = true;
-      OfferToSaveLogins = false;
       AutofillAddressEnabled = false;
       AutofillCreditCardEnabled = false;
-
-      # Enhanced tracking protection
+      DisableAppUpdate = true;
+      DisableFeedbackCommands = true;
+      DisableFirefoxStudies = true;
+      DisablePocket = true;
+      DisableTelemetry = true;
+      DontCheckDefaultBrowser = true;
       EnableTrackingProtection = {
-        Value = true;
-        Locked = true;
         Cryptomining = true;
         Fingerprinting = true;
+        Locked = true;
+        Value = true;
       };
-
-      # Default extensions
       ExtensionSettings = {
-        # uBlock Origin
-        "uBlock0@raymondhill.net" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
-          installation_mode = "force_installed";
-        };
-
         # Dark Reader
         "addon@darkreader.org" = {
+          inherit forceInstall;
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi";
-          installation_mode = "force_installed";
         };
-
-        # SponsorBlock
-        "sponsorBlocker@ajay.app" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
-          installation_mode = "force_installed";
-        };
-
         # Return YouTube Dislikes
         "{762f9885-5a13-4abd-9c77-433d12138f26}" = {
+          inherit forceInstall;
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/return-youtube-dislikes/latest.xpi";
-          installation_mode = "force_installed";
         };
-
+        # SponsorBlock
+        "sponsorBlocker@ajay.app" = {
+          inherit forceInstall;
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
+        };
+        # uBlock Origin
+        "uBlock0@raymondhill.net" = {
+          inherit forceInstall;
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
+        };
         # YouTube NonStop
         "youtube-nonstop@eliasfox" = {
+          inherit forceInstall;
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/youtube-nonstop/latest.xpi";
-          installation_mode = "force_installed";
         };
       };
-
-      # Browser preferences
+      NoDefaultBookmarks = true;
+      OfferToSaveLogins = false;
       Preferences = {
-        "browser.tabs.warnOnClose" = {
-          Value = true;
+        "browser.compactmode.show" = {
           Status = "locked";
+          Value = true;
         };
         "browser.startup.page" = {
-          Value = 3; # Restore previous session
           Status = "locked";
+          Value = 3;
         };
-        "browser.compactmode.show" = {
-          Value = true;
+        "browser.tabs.warnOnClose" = {
           Status = "locked";
+          Value = true;
         };
         "zen.theme.mode" = {
-          Value = "dark";
           Status = "locked";
+          Value = "dark";
         };
         "zen.view.compact" = {
-          Value = true;
           Status = "locked";
+          Value = true;
         };
       };
     };
