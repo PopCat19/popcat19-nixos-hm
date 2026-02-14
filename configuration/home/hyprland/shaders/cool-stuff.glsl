@@ -1,7 +1,9 @@
+#version 320 es
+
 # cool-stuff.glsl
 #
 # Purpose: Apply retro CRT-style effects (chromatic aberration, glitch, film grain)
-#version 320 es
+
 precision highp float;
 
 in vec2 v_texcoord;

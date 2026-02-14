@@ -1,7 +1,9 @@
+#version 320 es
+
 # blue-light-filter.glsl
 #
 # Purpose: Apply warm color temperature (3200K) to reduce blue light emission
-#version 320 es
+
 precision highp float;
 
 in vec2 v_texcoord;
