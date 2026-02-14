@@ -17,7 +17,7 @@
 }:
 {
   # Basic home configuration
-  home.username = userConfig.user.username;
+  home.username = userConfig.username;
   home.homeDirectory = userConfig.directories.home;
   home.stateVersion = "24.05";
 

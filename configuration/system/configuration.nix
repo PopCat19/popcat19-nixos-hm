@@ -1,18 +1,15 @@
 # System Configuration Module
 #
 # Purpose: Core NixOS configuration for nixos-config base system
-# Dependencies: All base system_modules, user-config.nix
-# Related: configuration/home/home.nix, configuration/system/system-extended.nix, user-config.nix
+# Dependencies: All base system_modules, userConfig (passed via specialArgs)
+# Related: configuration/home/home.nix, configuration/system/system-extended.nix
 #
 # This module:
 # - Imports all base system modules
 # - Configures Nix settings and binary caches
 # - Enables core system functionality
 # - Sets system state version
-_:
-let
-  userConfig = import ../../configuration/user-config.nix { };
-in
+{ userConfig, ... }:
 {
   imports = [
     ./system_modules/environment.nix
@@ -36,8 +33,6 @@ in
     ./system_modules/gnome-keyring.nix
   ];
 
-  _module.args.userConfig = userConfig;
-
   nix.settings = {
     experimental-features = [
       "nix-command"
@@ -54,7 +49,7 @@ in
 
     trusted-users = [
       "root"
-      "${userConfig.user.username}"
+      "${userConfig.username}"
     ];
 
     substituters = [

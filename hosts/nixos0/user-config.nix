@@ -1,71 +1,21 @@
-# surface0 Profile User Configuration
+# nixos0 Host User Configuration
 #
-# Purpose: User configuration specific to the surface0 profile
+# Purpose: User configuration specific to the nixos0 host
 # Dependencies: None (standalone configuration)
-# Related: profiles/nixos0/user-config.nix, profiles/thinkpad0/user-config.nix
+# Related: hosts/nixos0/configuration.nix
 #
 # This module:
-# - Defines user settings for the surface0 machine
-# - Sets surface0 as the default machine for this profile
-# - Contains all user-configurable variables for this host
-{
-  hostname ? null,
-  system ? "x86_64-linux",
-  username ? "popcat19",
-  machine ? "surface0",
-}:
+# - Defines system and hostname for this host
+# - Specifies which profile preset to use
+# - Contains all user-configurable variables
 rec {
-  # Host configuration
-  host = {
-    inherit system;
-    hostname = if hostname == null then "${username}-${machine}" else hostname;
-  };
-
-  # Hosts metadata and helpers
-  hosts = rec {
-    # Machines defined across all profiles
-    machines = [
-      "nixos0"
-      "surface0"
-      "thinkpad0"
-    ];
-    owner = username;
-    defaultMachine = "surface0";
-    mk = m: "${owner}-${m}";
-    isValid = m: builtins.elem m machines;
-    # Selected machine (argument 'machine' may be overridden by callers)
-    selectedMachine = if isValid machine then machine else defaultMachine;
-    # Derived hostname for the selected machine
-    derivedHostname = mk selectedMachine;
-  };
-
-  # Architecture detection helpers
-  arch =
-    let
-      current = system;
-    in
-    rec {
-      inherit current;
-
-      # Architecture detection
-      isX86_64 = current == "x86_64-linux";
-
-      # Hardware capabilities
-      supportsROCm = isX86_64;
-      supportsVirtualization = isX86_64;
-      supportsGaming = isX86_64;
-
-      # Package preferences
-      preferredVideoPlayer = "mpv";
-      preferredTerminal = "kitty";
-
-      # Helper functions
-      onlyX86_64 = packages: if isX86_64 then packages else [ ];
-    };
+  system = "x86_64-linux";
+  hostname = "popcat19-nixos0";
+  username = "popcat19";
+  profile = "default";
 
   # User credentials
   user = {
-    inherit username;
     fullName = "PopCat19";
     email = "atsuo11111@gmail.com";
     shell = "fish";
@@ -79,7 +29,6 @@ rec {
       "input"
       "libvirtd"
       "docker"
-      "surface-control"  # Surface-specific group for surface-control
     ];
   };
 
@@ -152,7 +101,7 @@ rec {
       syncthing = "${home}/syncthing-shared";
     };
 
-  # Git configuration (used by home_modules/git.nix)
+  # Git configuration
   git = {
     userName = user.fullName;
     userEmail = user.email;
@@ -162,7 +111,7 @@ rec {
   # Theme configuration for PMD
   theme = {
     hue = 345;
-    variant = "dark"; # "dark" or "light"
+    variant = "dark";
   };
 
   # Font configuration
