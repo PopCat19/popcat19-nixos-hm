@@ -1,10 +1,6 @@
-#!/usr/bin/env fish
-
-# Nix Shell Unfree Function
+# nix-shell-unfree.fish
 #
 # Purpose: Enable Nix shell with unfree and insecure packages
-# Dependencies: nix-shell, NIXPKGS_ALLOW_UNFREE, NIXPKGS_ALLOW_INSECURE
-# Related: fish.nix, nixos-rebuild-basic.fish
 #
 # This function:
 # - Sets environment variables for unfree/insecure packages
