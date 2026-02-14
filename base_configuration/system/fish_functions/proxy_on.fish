@@ -1,8 +1,12 @@
-#!/usr/bin/env fish
-
-# Proxy Environment On
+# proxy_on.fish
+#
 # Purpose: Enable proxy variables with overwritable defaults
-# Usage: proxy_on [HOST] [HTTP_PORT] [SOCKS_PORT]
+#
+# This function:
+# - Sets http_proxy, https_proxy, all_proxy, no_proxy
+# - Accepts optional HOST, HTTP_PORT, SOCKS_PORT arguments
+# - Integrates with systemd user environment
+# - Falls back to dbus for non-systemd setups
 
 function proxy_on
     set -l _host (test -n "$argv[1]"; and echo "$argv[1]"; or echo (set -q PROXY_HOST; and echo $PROXY_HOST; or echo "192.168.49.1"))
@@ -14,8 +18,6 @@ function proxy_on
     set -gx all_proxy "socks5h://$_host:$_socks_port"
     set -gx no_proxy "localhost,127.0.0.1,::1"
 
-    # UWSM/Systemd Integration: Use systemctl to set user session env vars
-    # This makes the proxy available to apps launched via uwsm app, rofi, etc.
     if command -q systemctl
         systemctl --user set-environment http_proxy=$http_proxy
         systemctl --user set-environment https_proxy=$https_proxy
@@ -23,7 +25,6 @@ function proxy_on
         systemctl --user set-environment no_proxy=$no_proxy
     end
 
-    # Backup for non-systemd setups
     if command -q dbus-update-activation-environment
         dbus-update-activation-environment --systemd http_proxy https_proxy all_proxy no_proxy 2>/dev/null
     end
