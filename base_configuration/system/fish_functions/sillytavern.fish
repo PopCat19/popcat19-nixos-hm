@@ -1,10 +1,6 @@
-#!/usr/bin/env fish
-
-# SillyTavern Function
+# sillytavern.fish
 #
 # Purpose: Launch SillyTavern with automatic updates
-# Dependencies: git, SillyTavern-Launcher
-# Related: fish.nix
 #
 # This function:
 # - Navigates to SillyTavern directory
