@@ -91,7 +91,7 @@
           };
         };
 
-      hostsDir = ./hosts;
+      hostsDir = ./configuration/hosts;
       hostEntries = builtins.readDir hostsDir;
       hostDirs = nixpkgs.lib.filterAttrs (_: type: type == "directory") hostEntries;
 

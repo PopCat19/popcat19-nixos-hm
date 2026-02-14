@@ -9,7 +9,7 @@
 # - Applies clear-bdprochot fix for thermal issues
 { userConfig, ... }:
 let
-  stateVersion = import ../configuration/stateversion.nix;
+  stateVersion = import ../stateversion.nix;
 in
 {
   imports = [

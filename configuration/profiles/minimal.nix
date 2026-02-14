@@ -8,22 +8,22 @@
 # - Suitable for servers, VMs, or resource-constrained devices
 { lib, ... }:
 let
-  stateVersion = import ../configuration/stateversion.nix;
+  stateVersion = import ../stateversion.nix;
 in
 {
   imports = [
-    # Boot-critical files from base_configuration/system/
-    ../base_configuration/system/boot.nix
-    ../base_configuration/system/core-packages.nix
-    ../base_configuration/system/environment.nix
-    ../base_configuration/system/localization.nix
-    ../base_configuration/system/users.nix
+    # Boot-critical files from base/system/
+    ../base/system/boot.nix
+    ../base/system/core-packages.nix
+    ../base/system/environment.nix
+    ../base/system/localization.nix
+    ../base/system/users.nix
     # Additional essential modules
-    ../configuration/system/modules/hardware.nix
-    ../configuration/system/modules/networking.nix
-    ../configuration/system/modules/packages.nix
-    ../configuration/system/modules/services.nix
-    ../configuration/system/modules/ssh.nix
+    ../system/modules/hardware.nix
+    ../system/modules/networking.nix
+    ../system/modules/packages.nix
+    ../system/modules/services.nix
+    ../system/modules/ssh.nix
   ];
 
   nix = {

@@ -9,7 +9,7 @@
 # - Enables proxy support for mobile networking
 { userConfig, ... }:
 let
-  stateVersion = import ../configuration/stateversion.nix;
+  stateVersion = import ../stateversion.nix;
 in
 {
   imports = [

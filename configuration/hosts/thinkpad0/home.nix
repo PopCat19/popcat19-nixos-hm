@@ -1,6 +1,6 @@
 # home.nix
 #
-# Purpose: Home Manager configuration for the nixos0 host
+# Purpose: Home Manager configuration for the thinkpad0 host
 #
 # This module:
 # - Sets up home configuration from userConfig
@@ -8,7 +8,7 @@
 # - Applies host-specific monitor settings
 { userConfig, ... }:
 let
-  stateVersion = import ../../configuration/stateversion.nix;
+  stateVersion = import ../../stateversion.nix;
 in
 {
   home.username = userConfig.username;
@@ -16,7 +16,7 @@ in
   home.stateVersion = stateVersion.home;
 
   imports = [
-    ../../configuration/home/modules
+    ../../home/modules
   ];
 
   home.file.".config/hypr/monitors.conf".source = ./hyprland/monitors.conf;

@@ -15,7 +15,7 @@
   ...
 }:
 let
-  stateVersion = import ../configuration/stateversion.nix;
+  stateVersion = import ../stateversion.nix;
 in
 {
   imports = [
@@ -26,21 +26,21 @@ in
     ./system/localization.nix
     ./system/users.nix
 
-    # Additional system modules from configuration/system/modules/
-    ../configuration/system/modules/audio.nix
-    ../configuration/system/modules/display.nix
-    ../configuration/system/modules/fish.nix
-    ../configuration/system/modules/fonts.nix
-    ../configuration/system/modules/gnome-keyring.nix
-    ../configuration/system/modules/hardware.nix
-    ../configuration/system/modules/networking.nix
-    ../configuration/system/modules/noctalia.nix
-    ../configuration/system/modules/packages.nix
-    ../configuration/system/modules/proxy.nix
-    ../configuration/system/modules/services.nix
-    ../configuration/system/modules/ssh.nix
-    ../configuration/system/modules/tablet.nix
-    ../configuration/system/modules/virtualisation.nix
+    # Additional system modules from ../system/modules/
+    ../system/modules/audio.nix
+    ../system/modules/display.nix
+    ../system/modules/fish.nix
+    ../system/modules/fonts.nix
+    ../system/modules/gnome-keyring.nix
+    ../system/modules/hardware.nix
+    ../system/modules/networking.nix
+    ../system/modules/noctalia.nix
+    ../system/modules/packages.nix
+    ../system/modules/proxy.nix
+    ../system/modules/services.nix
+    ../system/modules/ssh.nix
+    ../system/modules/tablet.nix
+    ../system/modules/virtualisation.nix
   ];
 
   _module.args = {
