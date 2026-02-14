@@ -17,21 +17,33 @@ Personal dotfiles repository for a NixOS setup focused on:
 ```
 nixos-config/
 ├── configuration/
-│   ├── flake/modules/
-│   ├── home/
+│   ├── base/                    # Minimal bootable configuration
+│   │   ├── configuration.nix
+│   │   └── system/
+│   ├── flake/modules/           # Flake-related modules
+│   ├── home/                    # Home-manager configuration
 │   │   ├── modules/
 │   │   ├── hyprland/
 │   │   ├── noctalia/
 │   │   ├── wallpaper/
 │   │   ├── home_packages.nix
-│   │   ├── system_packages.nix
 │   │   └── home.nix
-│   ├── system/modules/
-│   └── user-config.nix
-├── hosts/
-│   ├── nixos0/
-│   ├── surface0/
-│   └── thinkpad0/
+│   ├── hosts/                   # Host-specific configurations
+│   │   ├── nixos0/
+│   │   ├── surface0/
+│   │   └── thinkpad0/
+│   ├── profiles/                # Profile presets
+│   │   ├── default.nix          # Desktop workstation
+│   │   ├── laptop.nix           # Laptop profile
+│   │   ├── minimal.nix          # Minimal profile
+│   │   └── surface.nix          # Surface Pro profile
+│   ├── system/                  # System-level configuration
+│   │   ├── packages.nix         # System packages
+│   │   └── modules/
+│   ├── home-manager.nix
+│   ├── nix-options.nix
+│   ├── user-config.nix
+│   └── user.nix
 ├── conventions/
 └── flake.nix
 ```
