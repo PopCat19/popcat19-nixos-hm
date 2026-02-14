@@ -1,3 +1,14 @@
+# NixOS Configuration Flake
+#
+# Purpose: Main flake entry point for NixOS configuration
+# Dependencies: nixpkgs, home-manager, and various external inputs
+# Related: selected-profile.nix, profiles/*/user-config.nix
+#
+# This flake:
+# - Reads selected-profile.nix to determine active profile
+# - Loads user configuration from the selected profile
+# - Builds NixOS configurations using the profile-based structure
+# - Passes userConfig and selectedProfile via specialArgs
 {
   description = "NixOS configuration with custom packages and overlays";
 
@@ -86,18 +97,44 @@
   outputs =
     inputs@{ nixpkgs, ... }:
     let
-      # Import modules
-      modules = import ./configuration/flake/modules/modules.nix;
-      hosts = import ./configuration/flake/modules/hosts.nix;
+      # Import helper modules
+      overlays = import ./configuration/flake/modules/overlays.nix;
 
       # Supported systems
       supportedSystems = [ "x86_64-linux" ];
 
-      # Base user configuration
-      baseUserConfig = import ./configuration/user-config.nix { };
+      # Profile selection - read from selected-profile.nix
+      profileConfig = import ./selected-profile.nix;
+      selectedProfile = profileConfig.profile;
+
+      # Validate profile exists
+      validProfiles = [ "nixos0" "surface0" "thinkpad0" ];
+      isValidProfile = builtins.elem selectedProfile validProfiles;
+
+      # Profile paths - constructed based on selected profile
+      profilePath = ./profiles + "/${selectedProfile}";
+      userConfigPath = profilePath + "/user-config.nix";
+      configPath = profilePath + "/main_configuration/configuration.nix";
+      homePath = profilePath + "/main_configuration/home/home.nix";
+
+      # Load user configuration from the selected profile
+      userConfig = import userConfigPath { };
+
+      # Extract host information
+      inherit (userConfig.host) system hostname;
+
+      # Gaming module factory (AAGL integration)
+      mkGamingModule = system: { inputs }: {
+        imports = [ inputs.aagl.nixosModules.default ];
+        nix.settings = inputs.aagl.nixConfig;
+        programs = {
+          anime-game-launcher.enable = system == "x86_64-linux";
+          honkers-railway-launcher.enable = system == "x86_64-linux";
+        };
+      };
     in
     {
-      # Packages output (no vicinae now that the overlay was removed)
+      # Packages output
       packages = nixpkgs.lib.genAttrs supportedSystems (system: {
         # Export agenix for secret management
         agenix = inputs.agenix.packages.${system}.default;
@@ -107,33 +144,45 @@
       formatter = nixpkgs.lib.genAttrs supportedSystems (
         system: nixpkgs.legacyPackages.${system}.nixfmt-tree
       );
-      # Host-specific NixOS configurations generated dynamically
-      # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
-      nixosConfigurations =
-        let
-          inherit (baseUserConfig.hosts) machines;
-        in
-        nixpkgs.lib.listToAttrs (
-          map (
-            m:
-            let
-              perHostConfig = import ./configuration/user-config.nix {
-                inherit (baseUserConfig.user) username;
-                machine = m;
-                system = "x86_64-linux";
+
+      # NixOS configuration for the selected profile
+      # The hostname is derived from userConfig (e.g., popcat19-nixos0)
+      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+        inherit system;
+
+        specialArgs = {
+          inherit inputs userConfig selectedProfile;
+        };
+
+        modules = [
+          # Profile's main configuration
+          configPath
+
+          # External modules
+          inputs.home-manager.nixosModules.home-manager
+
+          # Gaming module (AAGL)
+          (mkGamingModule system { inherit inputs; })
+
+          # Home Manager configuration
+          {
+            home-manager = {
+              useGlobalPkgs = false;
+              useUserPackages = true;
+              sharedModules = [
+                {
+                  nixpkgs.config.allowUnfree = true;
+                  nixpkgs.overlays = (overlays system) ++ [ inputs.nur.overlays.default ];
+                }
+              ];
+              users.${userConfig.user.username} = import homePath;
+              extraSpecialArgs = {
+                hostPlatform = system;
+                inherit inputs userConfig selectedProfile;
               };
-              inherit (perHostConfig.host) hostname;
-            in
-            {
-              name = hostname;
-              value =
-                hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix
-                  {
-                    inherit inputs nixpkgs modules;
-                    userConfig = perHostConfig;
-                  };
-            }
-          ) machines
-        );
+            };
+          }
+        ];
+      };
     };
 }
