@@ -1,4 +1,4 @@
-# system_packages.nix
+# packages.nix
 #
 # Purpose: Consolidated system-level package list
 #

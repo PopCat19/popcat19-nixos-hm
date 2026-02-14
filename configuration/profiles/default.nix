@@ -24,7 +24,7 @@ in
     ../system/modules/hardware.nix
     ../system/modules/networking.nix
     ../system/modules/noctalia.nix
-    ../system/modules/packages.nix
+    ../system/packages.nix
     ../system/modules/proxy.nix
     ../system/modules/services.nix
     ../system/modules/ssh.nix
