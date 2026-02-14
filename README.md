@@ -1,3 +1,12 @@
+# README.md
+#
+# Purpose: Project overview and quick start guide for NixOS configuration
+#
+# This module:
+# - Describes the repository architecture and key components
+# - Documents available hosts and their purposes
+# - Provides quick start instructions for building configurations
+
 # NixOS Configuration
 
 Personal NixOS configuration with Hyprland Wayland compositor and PMD theming.
@@ -16,24 +25,22 @@ Personal dotfiles repository for a NixOS setup focused on:
 
 ```
 nixos-config/
-├── configuration/          # Main configuration directory
-│   ├── flake/             # Flake modules
-│   │   └── modules/       # NixOS module definitions
-│   ├── home/              # Home Manager configuration
-│   │   ├── home_modules/  # User-level modules
-│   │   ├── hypr_config/   # Hyprland settings and shaders
-│   │   ├── packages/      # Organized package lists
-│   │   └── wallpaper/     # Wallpaper assets
-│   ├── system/            # System-level configuration
-│   │   └── system_modules/
-│   └── user-config.nix    # Central user configuration
-├── hosts/                 # Host-specific configurations
-│   ├── nixos0/           # Desktop workstation
-│   ├── surface0/         # Surface Pro tablet
-│   └── thinkpad0/        # ThinkPad laptop
-├── conventions/          # Development conventions
-├── fish_functions/       # Custom Fish shell functions
-└── flake.nix             # Flake entry point
+├── configuration/
+│   ├── flake/modules/
+│   ├── home/
+│   │   ├── home_modules/
+│   │   ├── hypr_config/
+│   │   ├── packages/
+│   │   └── wallpaper/
+│   ├── system/system_modules/
+│   └── user-config.nix
+├── hosts/
+│   ├── nixos0/
+│   ├── surface0/
+│   └── thinkpad0/
+├── conventions/
+├── fish_functions/
+└── flake.nix
 ```
 
 ## Key Components
