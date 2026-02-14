@@ -1,4 +1,4 @@
-# Base Configuration Module
+# configuration.nix
 #
 # Purpose: Core NixOS configuration for nixos-config base system
 #
@@ -8,72 +8,72 @@
 # - Enables core system functionality
 # - Sets system state version
 # - Injects userConfig and selectedProfile for all imported modules
-{ inputs, userConfig, selectedProfile, ... }:
+{ userConfig, selectedProfile, ... }:
 {
   imports = [
+    ../configuration/system/system_modules/audio.nix
+    ../configuration/system/system_modules/boot.nix
+    ../configuration/system/system_modules/core-packages.nix
+    ../configuration/system/system_modules/display.nix
     ../configuration/system/system_modules/environment.nix
     ../configuration/system/system_modules/fish.nix
-    ../configuration/system/system_modules/boot.nix
-    ../configuration/system/system_modules/networking.nix
-    ../configuration/system/system_modules/proxy.nix
-    ../configuration/system/system_modules/ssh.nix
-    ../configuration/system/system_modules/hardware.nix
-    ../configuration/system/system_modules/tablet.nix
-    ../configuration/system/system_modules/packages.nix
-    ../configuration/system/system_modules/core-packages.nix
-    ../configuration/system/system_modules/localization.nix
-    ../configuration/system/system_modules/users.nix
-    ../configuration/system/system_modules/services.nix
-    ../configuration/system/system_modules/display.nix
-    ../configuration/system/system_modules/noctalia.nix
-    ../configuration/system/system_modules/audio.nix
-    ../configuration/system/system_modules/virtualisation.nix
     ../configuration/system/system_modules/fonts.nix
     ../configuration/system/system_modules/gnome-keyring.nix
+    ../configuration/system/system_modules/hardware.nix
+    ../configuration/system/system_modules/localization.nix
+    ../configuration/system/system_modules/networking.nix
+    ../configuration/system/system_modules/noctalia.nix
+    ../configuration/system/system_modules/packages.nix
+    ../configuration/system/system_modules/proxy.nix
+    ../configuration/system/system_modules/services.nix
+    ../configuration/system/system_modules/ssh.nix
+    ../configuration/system/system_modules/tablet.nix
+    ../configuration/system/system_modules/users.nix
+    ../configuration/system/system_modules/virtualisation.nix
   ];
 
   _module.args = {
     inherit userConfig selectedProfile;
   };
 
+  nix.gc = {
+    automatic = true;
+    dates = "03:00";
+    options = "--delete-older-than 3d";
+  };
+
   nix.settings = {
+    accept-flake-config = true;
+    auto-optimise-store = true;
+    cores = 0;
+    download-buffer-size = 67108864;
     experimental-features = [
       "nix-command"
       "flakes"
       "fetch-tree"
       "impure-derivations"
     ];
-    accept-flake-config = true;
-    auto-optimise-store = true;
     max-jobs = "auto";
-    cores = 0;
     min-free = 0;
-    download-buffer-size = 67108864;
+
+    substituters = [
+      "https://attic.xuyh0120.win/lantian"
+      "https://cache.garnix.io"
+      "https://shimboot-systemd-nixos.cachix.org"
+      "https://vicinae.cachix.org"
+    ];
+
+    trusted-public-keys = [
+      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+      "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
+      "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
+    ];
 
     trusted-users = [
       "root"
       "${userConfig.user.username}"
     ];
-
-    substituters = [
-      "https://vicinae.cachix.org"
-      "https://shimboot-systemd-nixos.cachix.org"
-      "https://attic.xuyh0120.win/lantian"
-      "https://cache.garnix.io"
-    ];
-
-    trusted-public-keys = [
-      "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
-      "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
-      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
-      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-    ];
-  };
-
-  nix.gc = {
-    automatic = true;
-    dates = "03:00";
-    options = "--delete-older-than 3d";
   };
 
   nixpkgs.config.allowUnfree = true;
