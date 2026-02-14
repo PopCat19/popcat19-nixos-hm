@@ -1,22 +1,19 @@
-# Screenshot Module
+# screenshot.nix
 #
-# Purpose: Configure screenshot tools and wrapper script for Hyprland using grimblast
+# Purpose: Configure screenshot tools and wrapper script for Hyprland
 #
 # This module:
 # - Installs screenshot tools (grimblast, gwenview, libnotify, jq)
-# - Creates Screenshots directory
-# - Installs screenshot wrapper script with hyprshade integration
+# - Creates wrapper script with hyprshade integration
 { pkgs, ... }:
 let
   screenshotScript = pkgs.writeShellScriptBin "screenshot" ''
     set -euo pipefail
 
-    # Configuration
     DEFAULT_DIR="$HOME/Pictures/Screenshots"
     XDG_SCREENSHOTS_DIR="''${XDG_SCREENSHOTS_DIR:-$DEFAULT_DIR}"
     mkdir -p "$XDG_SCREENSHOTS_DIR"
 
-    # Parse arguments
     MODE="output"
     KEEP_SHADER=false
     POSITIONAL_ARGS=()
@@ -206,13 +203,13 @@ let
   '';
 in
 {
+  home.file."Pictures/Screenshots/.keep".text = "";
+
   home.packages = with pkgs; [
     grimblast
+    jq
     kdePackages.gwenview
     libnotify
-    jq
     screenshotScript
   ];
-
-  home.file."Pictures/Screenshots/.keep".text = "";
 }
