@@ -1,8 +1,8 @@
 #version 320 es
 
-# cool-stuff.glsl
-#
-# Purpose: Apply retro CRT-style effects (chromatic aberration, glitch, film grain)
+// cool-stuff.glsl
+//
+// Purpose: Apply retro CRT-style effects (chromatic aberration, glitch, film grain)
 
 precision highp float;
 

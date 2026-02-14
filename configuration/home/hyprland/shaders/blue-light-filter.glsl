@@ -1,8 +1,8 @@
 #version 320 es
 
-# blue-light-filter.glsl
-#
-# Purpose: Apply warm color temperature (3200K) to reduce blue light emission
+// blue-light-filter.glsl
+//
+// Purpose: Apply warm color temperature (3200K) to reduce blue light emission
 
 precision highp float;
 
