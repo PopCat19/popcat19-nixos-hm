@@ -1,14 +1,11 @@
-# Noctalia Configuration Module
+# noctalia.nix
 #
 # Purpose: Main module for Noctalia configuration
-# Dependencies: inputs.noctalia (flake input), home-manager
-# Related: home_modules/noctalia.nix
 #
 # This module:
 # - Imports Noctalia home manager module
 # - Applies user's personalized settings
 # - Configures systemd service for autostart
-# - Integrates with the centralized configuration
 {
   pkgs,
   config,
@@ -17,8 +14,8 @@
   ...
 }:
 let
-  inherit (import ./settings.nix { inherit pkgs config hostname; }) settings;
   hostname = config.networking.hostName or userConfig.hostname;
+  settings = (import ./settings.nix { inherit pkgs config hostname; }).settings;
 in
 {
   imports = [
@@ -27,13 +24,10 @@ in
 
   programs.noctalia-shell = {
     enable = true;
-    # Disable built-in systemd starter
     systemd.enable = false;
-
-    inherit ((import ./settings.nix { inherit pkgs config hostname; })) settings;
+    inherit settings;
   };
 
-  # Custom systemd service with 10-second delay
   systemd.user.services.noctalia-shell = {
     Unit = {
       Description = "Noctalia Shell (with delay)";
@@ -42,11 +36,11 @@ in
     };
 
     Service = {
-      Type = "simple";
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
       ExecStart = "${pkgs.noctalia-shell}/bin/noctalia-shell";
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
       Restart = "on-failure";
       RestartSec = "5s";
+      Type = "simple";
     };
 
     Install = {

@@ -1,27 +1,27 @@
-# Media packages
+# media.nix
+#
+# Purpose: Media packages for audio, video, and images
+#
+# This module:
+# - Provides media players and viewers
+# - Provides audio production tools
+# - Provides torrent client
 { pkgs, ... }:
 with pkgs;
 [
-  mpv
   audacious
   audacious-plugins
-  pureref
-  pear-desktop
-  mangayomi
-  kdePackages.gwenview
-
-  # Audio Applications
   audacity
-  furnace
-  lmms
-  vital
   carla
+  furnace
   helio-workstation
-  qtractor
-
-  # Torrent
+  kdePackages.gwenview
+  lmms
+  mangayomi
+  mpv
+  pear-desktop
+  pureref
   qbittorrent
-
-  # Streaming and Gaming
-  # obs-studio moved to home_modules/obs.nix
+  qtractor
+  vital
 ]

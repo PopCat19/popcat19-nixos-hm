@@ -1,8 +1,14 @@
-# Development tools
+# development.nix
+#
+# Purpose: System-level development tools
+#
+# This module:
+# - Provides GitHub CLI and archive utilities
+# - Provides Python pip package
 { pkgs, ... }:
 with pkgs;
 [
-  python313Packages.pip
   gh
+  python313Packages.pip
   unzip
 ]

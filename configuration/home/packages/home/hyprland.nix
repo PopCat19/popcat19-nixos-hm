@@ -1,9 +1,15 @@
-# Hyprland window manager essentials
+# hyprland.nix
+#
+# Purpose: Hyprland window manager essentials
+#
+# This module:
+# - Provides Hyprland utilities and agents
+# - Provides screen locker configuration
 { pkgs, ... }:
 with pkgs;
 [
-  hyprshade
-  hyprpolkitagent
-  hyprutils
   hyprlock
+  hyprpolkitagent
+  hyprshade
+  hyprutils
 ]

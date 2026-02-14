@@ -1,43 +1,40 @@
-# Development tools and language support
+# development.nix
+#
+# Purpose: Development tools and language support
+#
+# This module:
+# - Provides Nix language servers and tooling
+# - Provides code formatters and linters
+# - Provides programming language runtimes
 { pkgs, ... }:
 with pkgs;
 [
-  # Nix Development
+  alejandra
+  android-tools
+  black
+  bun
+  clang-tools
+  deadnix
+  fd
+  fish-lsp
+  git-lfs
+  glslang
+  hyprlang
+  hyprls
+  jdk
+  lazygit
   nil
   nixd
-
-  # Code Formatters
-  black
-  prettierd
   nixfmt
   nixfmt-tree
-  alejandra
-  statix
-  deadnix
-  yamllint
-  shfmt
-  glslang
-  clang-tools
-  hyprlang
-
-  # Development Tools
-  ripgrep
-  fd
-  lazygit
-  git-lfs
-  hyprls
-  shellcheck
-  fish-lsp
-  glslang
-
-  # Android Tools
-  android-tools
-
-  # Programming Languages and Runtimes
-  jdk
   nodejs_latest
-  bun
-  yarn-berry
-  rustup
+  prettierd
   python3
+  ripgrep
+  rustup
+  shellcheck
+  shfmt
+  statix
+  yamllint
+  yarn-berry
 ]

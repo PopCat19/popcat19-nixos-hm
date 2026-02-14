@@ -1,12 +1,10 @@
-# Noctalia Settings Configuration
+# settings.nix
 #
-# Purpose: Contains the complete Noctalia settings configuration
-# Source: User's personalized settings from syncthing-shared
+# Purpose: Provides complete Noctalia settings as Nix attribute set
 #
 # This module:
-# - Provides complete Noctalia settings as Nix attribute set
-# - Matches user's personalized configuration from JSON
-# - Can be imported by the main Noctalia home manager module
+# - Exports settings attribute set for Noctalia shell configuration
+# - Conditionally enables battery widget for laptop hosts
 {
   pkgs,
   config,
@@ -14,18 +12,13 @@
   ...
 }:
 let
-  # Determine if host has battery based on hostname
   hasBattery =
     if hostname != null then
       hostname == "popcat19-surface0" || hostname == "popcat19-thinkpad0"
     else
       false;
 
-  # Complete Noctalia settings based on user's configuration
   settings = {
-    settingsVersion = 26;
-
-    # Bar configuration with user's custom layout
     bar = {
       position = "top";
       monitors = [ ];
@@ -137,7 +130,6 @@ let
       };
     };
 
-    # General appearance settings
     general = {
       avatarImage = "${pkgs.writeText "face" ""}/.face";
       dimmerOpacity = 0.4;
@@ -162,7 +154,6 @@ let
       allowPanelsOnScreenWithoutBar = true;
     };
 
-    # UI settings
     ui = {
       fontDefaultScale = 1;
       fontFixedScale = 1;
@@ -171,7 +162,6 @@ let
       settingsPanelAttachToBar = false;
     };
 
-    # Location settings
     location = {
       name = "New York";
       weatherEnabled = false;
@@ -185,7 +175,6 @@ let
       firstDayOfWeek = -1;
     };
 
-    # Calendar configuration
     calendar = {
       cards = [
         {
@@ -207,7 +196,6 @@ let
       ];
     };
 
-    # Screen recorder settings
     screenRecorder = {
       directory = "";
       frameRate = 60;
@@ -220,7 +208,6 @@ let
       videoSource = "portal";
     };
 
-    # Wallpaper configuration
     wallpaper = {
       enabled = true;
       overviewEnabled = false;
@@ -249,7 +236,6 @@ let
       wallhavenResolutionHeight = "";
     };
 
-    # App launcher settings
     appLauncher = {
       enableClipboardHistory = true;
       enableClipPreview = true;
@@ -264,7 +250,6 @@ let
       showCategories = true;
     };
 
-    # Control center configuration
     controlCenter = {
       position = "close_to_bar_button";
       shortcuts = {
@@ -321,7 +306,6 @@ let
       ];
     };
 
-    # System monitor settings
     systemMonitor = {
       cpuWarningThreshold = 80;
       cpuCriticalThreshold = 90;
@@ -351,12 +335,10 @@ let
       inactiveIndicators = false;
       animationSpeed = 1;
     };
-    # Network configuration
     network = {
       wifiEnabled = true;
     };
 
-    # Session menu settings
     sessionMenu = {
       enableCountdown = true;
       countdownDuration = 10000;
@@ -396,7 +378,6 @@ let
       ];
     };
 
-    # Notifications settings
     notifications = {
       enabled = true;
       monitors = [ ];
@@ -418,7 +399,6 @@ let
       };
     };
 
-    # OSD settings
     osd = {
       enabled = true;
       location = "top";
@@ -432,7 +412,6 @@ let
       monitors = [ ];
     };
 
-    # Audio settings
     audio = {
       volumeStep = 4;
       volumeOverdrive = true;
@@ -444,14 +423,12 @@ let
       externalMixer = "pwvucontrol || pavucontrol";
     };
 
-    # Brightness settings
     brightness = {
       brightnessStep = 10;
       enforceMinimum = true;
       enableDdcSupport = false;
     };
 
-    # Color schemes
     colorSchemes = {
       useWallpaperColors = false;
       darkMode = true;
@@ -461,7 +438,6 @@ let
       generateTemplatesForPredefined = true;
     };
 
-    # Templates (all disabled)
     templates = {
       gtk = false;
       qt = false;
@@ -485,7 +461,6 @@ let
       enableUserTemplates = false;
     };
 
-    # Night light (disabled)
     nightLight = {
       enabled = false;
       forced = false;
@@ -496,7 +471,6 @@ let
       manualSunset = "18:30";
     };
 
-    # Hooks (disabled)
     hooks = {
       enabled = false;
       wallpaperChange = "";

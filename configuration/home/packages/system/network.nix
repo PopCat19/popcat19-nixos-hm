@@ -1,4 +1,9 @@
-# Network tools
+# network.nix
+#
+# Purpose: Network tools
+#
+# This module:
+# - Provides WireGuard VPN utilities
 { pkgs, ... }:
 with pkgs;
 [

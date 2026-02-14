@@ -1,8 +1,5 @@
-# Micro Editor Theme Configuration
-# Colors are handled by stylix Base16 scheme
-
-# Manual color configuration can be added here if needed:
-# color-link default "<foreground>,<background>"
-# color-link comment "<color>"
-# color-link identifier "<color>"
-# ...
+# rose-pine.micro
+#
+# Purpose: Micro editor theme configuration
+#
+# Colors are handled by stylix Base16 scheme.

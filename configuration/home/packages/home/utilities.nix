@@ -1,39 +1,35 @@
-# Utility packages
+# utilities.nix
+#
+# Purpose: System utilities and tools
+#
+# This module:
+# - Provides audio control and file sharing tools
+# - Provides Android device management
+# - Provides gaming platforms
+# - Provides Shimboot project tools
 { pkgs, ... }:
 with pkgs;
 [
-  # Audio & Hardware Control
-  pavucontrol
-  playerctl
-
-  # File Sharing
-  localsend
-  zrok
-
-  # System Utilities
-  appstream
-  jq
-  tree
-  appimage-run
-  zenity
-
-  # Android Development
-  scrcpy
   android-tools
-
-  # Gaming
-  lutris
-  # bottles
-  osu-lazer-bin
-  winboat
-
-  # Shimboot Project Tools
-  pv
-  parted
-  squashfsTools
-  nixos-install-tools
-  nixos-generators
-  sshpass
+  appimage-run
+  appstream
   coreutils-full
   file
+  jq
+  localsend
+  lutris
+  nixos-generators
+  nixos-install-tools
+  osu-lazer-bin
+  parted
+  pavucontrol
+  playerctl
+  pv
+  scrcpy
+  squashfsTools
+  sshpass
+  tree
+  winboat
+  zenity
+  zrok
 ]
