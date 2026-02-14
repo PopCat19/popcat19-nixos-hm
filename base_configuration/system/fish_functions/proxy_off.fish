@@ -1,8 +1,11 @@
-#!/usr/bin/env fish
-
-# Proxy Environment Off
+# proxy_off.fish
+#
 # Purpose: Disable proxy environment variables
-# Usage: proxy_off
+#
+# This function:
+# - Unsets http_proxy, https_proxy, all_proxy, no_proxy
+# - Clears systemd user environment if available
+# - Confirms proxy disabled status
 
 function proxy_off
     set -e http_proxy
