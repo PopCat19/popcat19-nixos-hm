@@ -9,15 +9,18 @@
 # - Provides modern shell prompt
 { lib, pkgs, ... }:
 {
-  environment.systemPackages = lib.mkDefault (with pkgs; [
-    curl
-    fuse
-    git
-    micro
-    shared-mime-info
-    starship
-    vim
-    wget
-    xdg-utils
-  ]);
+  environment.systemPackages = lib.mkDefault (
+    with pkgs;
+    [
+      curl
+      fuse
+      git
+      micro
+      shared-mime-info
+      starship
+      vim
+      wget
+      xdg-utils
+    ]
+  );
 }

@@ -6,7 +6,6 @@
 # - Creates systemd service to clear BD-PROCHOT on boot
 # - Ensures MSR module is loaded
 {
-  lib,
   pkgs,
   ...
 }:

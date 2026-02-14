@@ -6,7 +6,7 @@
 # - Imports base system configuration
 # - Configures standard desktop environment
 # - Sets up home manager with default modules
-{ inputs, userConfig, ... }:
+{ userConfig, ... }:
 let
   stateVersion = import ../configuration/stateversion.nix;
 in

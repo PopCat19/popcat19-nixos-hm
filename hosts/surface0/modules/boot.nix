@@ -5,8 +5,7 @@
 # This module:
 # - Configures systemd-boot and kernel modules
 # - Applies Surface-specific kernel parameters
-{ pkgs, ... }:
-{
+_: {
   boot = {
     loader = {
       systemd-boot.enable = true;

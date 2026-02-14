@@ -7,7 +7,7 @@
 # - Enables power management optimizations
 # - Configures ZRAM swap for memory efficiency
 # - Enables proxy support for mobile networking
-{ inputs, userConfig, ... }:
+{ userConfig, ... }:
 let
   stateVersion = import ../configuration/stateversion.nix;
 in

@@ -8,11 +8,15 @@
 { pkgs, ... }:
 with pkgs;
 let
-  x86_64Packages = if pkgs.stdenv.isx86_64 then [
-    btop-rocm
-    ddcui
-    openrgb-with-all-plugins
-  ] else [];
+  x86_64Packages =
+    if pkgs.stdenv.isx86_64 then
+      [
+        btop-rocm
+        ddcui
+        openrgb-with-all-plugins
+      ]
+    else
+      [ ];
 in
 # Browsers
 [

@@ -15,7 +15,7 @@
 }:
 let
   hostname = config.networking.hostName or userConfig.hostname;
-  settings = (import ./settings.nix { inherit pkgs config hostname; }).settings;
+  inherit ((import ./settings.nix { inherit pkgs config hostname; })) settings;
 in
 {
   imports = [

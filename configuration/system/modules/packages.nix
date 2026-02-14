@@ -9,4 +9,4 @@
   inputs,
   ...
 }:
-import ../home/system_packages.nix { inherit pkgs inputs; }
+import ../../home/system_packages.nix { inherit pkgs inputs; }

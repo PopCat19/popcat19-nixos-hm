@@ -11,37 +11,43 @@
   ...
 }:
 let
-  x86_64Packages = if pkgs.stdenv.isx86_64 then [
-    pkgs.freerdp
-    pkgs.rocmPackages.rpp
-  ] else [];
+  x86_64Packages =
+    if pkgs.stdenv.isx86_64 then
+      [
+        pkgs.freerdp
+        pkgs.rocmPackages.rpp
+      ]
+    else
+      [ ];
 in
 {
-  environment.systemPackages = with pkgs; [
-    # Development
-    gh
-    python313Packages.pip
-    unzip
+  environment.systemPackages =
+    with pkgs;
+    [
+      # Development
+      gh
+      python313Packages.pip
+      unzip
 
-    # GUI
-    anki
-    drawpile
-    fuzzel
-    kdePackages.filelight
-    kdePackages.qtstyleplugin-kvantum
+      # GUI
+      anki
+      drawpile
+      fuzzel
+      kdePackages.filelight
+      kdePackages.qtstyleplugin-kvantum
 
-    # Hardware
-    brightnessctl
-    ddcutil
-    e2fsprogs
-    eza
-    i2c-tools
-    usbutils
-    util-linux
+      # Hardware
+      brightnessctl
+      ddcutil
+      e2fsprogs
+      eza
+      i2c-tools
+      usbutils
+      util-linux
 
-    # Network
-    wireguard-tools
-  ]
-  ++ x86_64Packages
-  ++ [ inputs.llm-agents.packages.${pkgs.system}.opencode ];
+      # Network
+      wireguard-tools
+    ]
+    ++ x86_64Packages
+    ++ [ inputs.llm-agents.packages.${pkgs.system}.opencode ];
 }

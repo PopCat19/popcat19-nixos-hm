@@ -8,7 +8,12 @@
 # - Enables core system functionality
 # - Sets system state version
 # - Injects userConfig and selectedProfile for all imported modules
-{ lib, userConfig, selectedProfile, ... }:
+{
+  lib,
+  userConfig,
+  selectedProfile,
+  ...
+}:
 let
   stateVersion = import ../configuration/stateversion.nix;
 in

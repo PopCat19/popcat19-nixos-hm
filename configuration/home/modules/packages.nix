@@ -4,5 +4,4 @@
 #
 # This module:
 # - Imports the consolidated home_packages.nix
-{ pkgs, ... }:
-import ../home_packages.nix { inherit pkgs; }
+{ pkgs, ... }: import ../home_packages.nix { inherit pkgs; }

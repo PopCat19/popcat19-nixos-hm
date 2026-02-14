@@ -6,7 +6,12 @@
 # - Sets up Rose Pine Base16 color scheme via Stylix
 # - Configures fonts and font sizes
 # - Manages GTK, Qt, and desktop environment theming
-{ pkgs, inputs, userConfig, ... }:
+{
+  pkgs,
+  inputs,
+  userConfig,
+  ...
+}:
 {
   imports = [
     inputs.pmd.homeManagerModules.pmd

@@ -7,7 +7,7 @@
 # - Includes Surface-specific thermal management
 # - Enables Surface hardware support (libwacom-surface, surface-control)
 # - Applies clear-bdprochot fix for thermal issues
-{ inputs, userConfig, ... }:
+{ userConfig, ... }:
 let
   stateVersion = import ../configuration/stateversion.nix;
 in

@@ -65,7 +65,7 @@ in
       };
       folders = {
         keepass-vault = {
-          devices = devices;
+          inherit devices;
           id = "keepass-vault";
           ignorePerms = true;
           label = "KeePass Vault";
@@ -74,7 +74,7 @@ in
           type = "sendreceive";
         };
         syncthing-shared = {
-          devices = devices;
+          inherit devices;
           id = "syncthing-shared";
           ignorePerms = true;
           label = "Syncthing Shared";
