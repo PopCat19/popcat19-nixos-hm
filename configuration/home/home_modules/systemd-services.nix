@@ -1,22 +1,24 @@
+# systemd-services.nix
+#
+# Purpose: Configure custom systemd user services
+#
+# This module:
+# - Initializes theme settings on graphical session start
 { pkgs, ... }:
 {
-  # **SYSTEMD USER SERVICES**
-  # Custom systemd services for theme initialization and other user-level services.
-
-  # Systemd services for theme initialization
   systemd.user.services.theme-init = {
-    Unit = {
-      Description = "Initialize theme settings";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'sleep 2 && ${pkgs.dconf}/bin/dconf load / < /dev/null'";
-      RemainAfterExit = true;
-    };
     Install = {
       WantedBy = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.bash}/bin/bash -c 'sleep 2 && ${pkgs.dconf}/bin/dconf load / < /dev/null'";
+      RemainAfterExit = true;
+      Type = "oneshot";
+    };
+    Unit = {
+      After = [ "graphical-session-pre.target" ];
+      Description = "Initialize theme settings";
+      PartOf = [ "graphical-session.target" ];
     };
   };
 }
