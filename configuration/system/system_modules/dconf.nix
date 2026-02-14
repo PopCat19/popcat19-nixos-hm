@@ -1,8 +1,6 @@
-# DConf Configuration Module
+# dconf.nix
 #
 # Purpose: Enable dconf for GTK/Qt settings and desktop configuration
-# Dependencies: None
-# Related: display.nix, stylix.nix, fonts.nix
 #
 # This module:
 # - Enables dconf at system level for desktop settings

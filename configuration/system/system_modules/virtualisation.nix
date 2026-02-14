@@ -1,8 +1,6 @@
-# Virtualisation Module
+# virtualisation.nix
 #
 # Purpose: Configure virtualization technologies including Docker and KVM
-# Dependencies: docker, docker-compose
-# Related: users.nix
 #
 # This module:
 # - Enables Docker and Docker Compose v2 for containerization
@@ -10,22 +8,29 @@
 # - Sets up Docker daemon to start on boot
 { pkgs, ... }:
 {
-  # Docker and Docker Compose v2
+  environment.systemPackages = with pkgs; [
+    qemu_kvm
+    spice
+    spice-gtk
+    spice-protocol
+    virt-manager
+    virt-viewer
+    virtio-win
+    win-spice
+  ];
+
+  programs.dconf.enable = true;
+  programs.virt-manager.enable = true;
+
   virtualisation.docker = {
+    autoPrune = {
+      dates = "weekly";
+      enable = true;
+    };
     enable = true;
     enableOnBoot = true;
-    autoPrune = {
-      enable = true;
-      dates = "weekly";
-    };
   };
 
-  # Waydroid (Android emulation) - disabled by default
-  # To enable Waydroid on specific hosts, add:
-  # virtualisation.waydroid.enable = true;
-  virtualisation.waydroid.enable = false;
-
-  # QEMU/KVM virtualization with VirGL and Virt-manager
   virtualisation.libvirtd = {
     enable = true;
     qemu = {
@@ -34,24 +39,6 @@
     };
   };
 
-  # Enable SPICE for better graphical performance
   virtualisation.spiceUSBRedirection.enable = true;
-
-  # Install virt-manager and related packages
-  programs.virt-manager.enable = true;
-
-  # Required packages for QEMU/Virt-manager
-  environment.systemPackages = with pkgs; [
-    qemu_kvm
-    virt-manager
-    virt-viewer
-    spice
-    spice-gtk
-    spice-protocol
-    virtio-win
-    win-spice
-  ];
-
-  # Enable dconf for virt-manager settings
-  programs.dconf.enable = true;
+  virtualisation.waydroid.enable = false;
 }

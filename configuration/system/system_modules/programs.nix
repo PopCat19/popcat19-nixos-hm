@@ -1,19 +1,21 @@
+# programs.nix
+#
+# Purpose: Configure system-level programs and gaming support
+#
+# This module:
+# - Enables Fish shell at system level
+# - Configures Steam with gamescope session
+# - Enables GameMode for gaming performance
 _: {
-  # System programs configuration
-  # Fish and Starship are configured in home_modules for user-specific settings.
-
   programs = {
-    # Shell configuration
     fish.enable = true;
-
-    # Gaming programs
     gamemode.enable = true;
     steam = {
+      dedicatedServer.openFirewall = true;
       enable = true;
       gamescopeSession.enable = true;
-      remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
+      remotePlay.openFirewall = true;
     };
   };
 }

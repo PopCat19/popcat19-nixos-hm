@@ -1,5 +1,11 @@
+# hardware.nix
+#
+# Purpose: Configure hardware support for Bluetooth and I2C
+#
+# This module:
+# - Enables Bluetooth with auto-power-on
+# - Configures I2C access for user group
 _: {
-  # Hardware configuration
   hardware = {
     bluetooth = {
       enable = true;
@@ -11,8 +17,7 @@ _: {
     };
   };
 
-  # Udev rules
   services.udev.extraRules = ''
-    KERNEL=="i2c-[0-9]*"             , GROUP="i2c",   MODE="0660"
+    KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
   '';
 }

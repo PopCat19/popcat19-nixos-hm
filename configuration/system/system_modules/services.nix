@@ -1,8 +1,20 @@
+# services.nix
+#
+# Purpose: Configure system-level services and daemons
+#
+# This module:
+# - Configures journald log retention
+# - Enables input device support
+# - Sets up udev rules for brightness control
+# - Enables D-Bus, UDisks2, Flatpak, and GVFS
 { pkgs, ... }:
 {
-  # System services configuration
+  security.polkit.enable = true;
+  security.rtkit.enable = true;
 
-  # Journald configuration
+  services.dbus.enable = true;
+  services.flatpak.enable = true;
+  services.gvfs.enable = true;
   services.journald.extraConfig = ''
     MaxRetentionSec=3day
     SystemMaxUse=500M
@@ -11,33 +23,14 @@
     ForwardToSyslog=no
     ForwardToWall=no
   '';
-
-  # Input services
   services.libinput.enable = true;
+  services.udisks2.enable = true;
+  services.upower.enable = true;
 
-  # Add udev rules to allow non-root brightness control (group=video, g+w)
   services.udev.extraRules = ''
     SUBSYSTEM=="backlight", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
     SUBSYSTEM=="backlight", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
     SUBSYSTEM=="leds", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/leds/%k/brightness"
     SUBSYSTEM=="leds", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/leds/%k/brightness"
   '';
-
-  # System services
-  services = {
-    # Storage / Packaging
-    udisks2.enable = true;
-    flatpak.enable = true;
-    gvfs.enable = true;
-
-    # Hardware
-    upower.enable = true;
-
-    # D-Bus service
-    dbus.enable = true;
-  };
-
-  # Security & authentication
-  security.polkit.enable = true;
-  security.rtkit.enable = true;
 }

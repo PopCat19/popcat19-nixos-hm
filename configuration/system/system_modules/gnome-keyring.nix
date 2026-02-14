@@ -1,15 +1,16 @@
+# gnome-keyring.nix
+#
+# Purpose: Enable GNOME Keyring as the Secret Service provider
+#
+# This module:
+# - Enables GNOME Keyring for credential storage
+# - Configures D-Bus for keyring components
+# - Disables SSH agent in favor of GNOME Keyring's
 _: {
-  # Enable GNOME Keyring globally (Secret Service provider)
-  services.gnome.gnome-keyring.enable = true;
+  programs.ssh.startAgent = false;
 
-  # Ensure D-Bus is available for the keyring components
-  services.dbus.enable = true;
-
-  # Prefer GNOME Keyring's SSH agent over the built-in one
-  programs.ssh = {
-    startAgent = false;
-  };
-
-  # Optional: make sure Polkit is enabled (many desktops expect it)
   security.polkit.enable = true;
+
+  services.dbus.enable = true;
+  services.gnome.gnome-keyring.enable = true;
 }

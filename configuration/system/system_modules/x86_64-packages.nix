@@ -1,12 +1,13 @@
-# x86_64-specific system packages
+# x86_64-packages.nix
+#
+# Purpose: Define x86_64-specific system packages
+#
+# This module:
+# - Provides AMD GPU acceleration packages
+# - Includes Remote Desktop Protocol client
 { pkgs, ... }:
 with pkgs;
 [
-  # AMD GPU acceleration
-  rocmPackages.rpp
-
-  # Remote Desktop Protocol client
   freerdp
-
-  # x86_64-specific system packages can be added here
+  rocmPackages.rpp
 ]
