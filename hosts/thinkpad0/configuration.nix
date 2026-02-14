@@ -1,14 +1,11 @@
-# NixOS Configuration for thinkpad0
+# configuration.nix
 #
-# Purpose: Main configuration for the thinkpad0 host
-# Dependencies: hardware-configuration.nix, profile preset
-# Related: hosts/thinkpad0/user-config.nix
+# Purpose: Main NixOS configuration for the thinkpad0 host
 #
 # This module:
-# - Imports hardware configuration
-# - Imports the profile preset specified in user-config.nix
-# - Adds host-specific overrides and modules
-{ lib, pkgs, inputs, userConfig, ... }:
+# - Imports hardware configuration and profile preset
+# - Applies host-specific modules and settings
+{ lib, userConfig, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -20,6 +17,5 @@
 
   proxy.enable = true;
 
-  # Disable autologin for thinkpad0 (override from display module)
   services.displayManager.autoLogin.enable = lib.mkForce false;
 }

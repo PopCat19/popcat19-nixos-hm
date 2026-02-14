@@ -1,8 +1,6 @@
-# nixos0 Host User Configuration
+# user-config.nix
 #
 # Purpose: User configuration specific to the nixos0 host
-# Dependencies: None (standalone configuration)
-# Related: hosts/nixos0/configuration.nix
 #
 # This module:
 # - Defines system and hostname for this host
@@ -14,25 +12,23 @@ rec {
   username = "popcat19";
   profile = "default";
 
-  # User credentials
   user = {
     fullName = "PopCat19";
     email = "atsuo11111@gmail.com";
     shell = "fish";
 
     extraGroups = [
-      "wheel"
-      "video"
       "audio"
-      "networkmanager"
+      "docker"
       "i2c"
       "input"
       "libvirtd"
-      "docker"
+      "networkmanager"
+      "video"
+      "wheel"
     ];
   };
 
-  # Default applications
   defaultApps = {
     browser = {
       desktop = "zen-twilight.desktop";
@@ -85,36 +81,32 @@ rec {
     };
   };
 
-  # System directories
   directories =
     let
       home = "/home/${username}";
     in
     {
       inherit home;
+      desktop = "${home}/Desktop";
       documents = "${home}/Documents";
       downloads = "${home}/Downloads";
-      pictures = "${home}/Pictures";
-      videos = "${home}/Videos";
       music = "${home}/Music";
-      desktop = "${home}/Desktop";
+      pictures = "${home}/Pictures";
       syncthing = "${home}/syncthing-shared";
+      videos = "${home}/Videos";
     };
 
-  # Git configuration
   git = {
     userName = user.fullName;
     userEmail = user.email;
     extraConfig = { };
   };
 
-  # Theme configuration for PMD
   theme = {
     hue = 345;
     variant = "dark";
   };
 
-  # Font configuration
   fonts = {
     monospace = {
       packageName = "fira-code";

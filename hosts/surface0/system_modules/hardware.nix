@@ -1,59 +1,58 @@
+# hardware.nix
+#
+# Purpose: Hardware configuration for Surface device
+#
+# This module:
+# - Configures graphics, bluetooth, and firmware
+# - Sets up power management and environment variables
 { pkgs, ... }:
 {
-  # Surface-specific hardware settings
   hardware = {
-    # Enable firmware updates and include wifi firmware
     enableRedistributableFirmware = true;
     enableAllFirmware = true;
 
-    # CPU microcode updates
     cpu.intel.updateMicrocode = true;
 
-    # IIO sensor support for accelerometer/gyroscope
     sensor.iio.enable = true;
 
-    # Additional firmware for WiFi and other hardware
     firmware = with pkgs; [
       linux-firmware
       wireless-regdb
     ];
 
-    # Graphics configuration for Surface
     graphics = {
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        mesa
-        intel-media-driver
-        intel-vaapi-driver
-        libvdpau-va-gl
+        freeglut
         intel-compute-runtime
+        intel-media-driver
         intel-ocl
-        vulkan-loader
-        vulkan-validation-layers
-        vulkan-extension-layer
-        vpl-gpu-rt
+        intel-vaapi-driver
         libGL
         libGLU
-        freeglut
-        mesa-demos
         libva
         libva-utils
+        libvdpau-va-gl
+        mesa
+        mesa-demos
         vdpauinfo
+        vulkan-extension-layer
+        vulkan-loader
+        vulkan-validation-layers
+        vpl-gpu-rt
       ];
 
-      # 32-bit support for Intel graphics
       extraPackages32 = with pkgs.pkgsi686Linux; [
-        mesa
-        intel-vaapi-driver
         intel-media-driver
+        intel-vaapi-driver
         libGL
         libGLU
+        mesa
         vulkan-loader
       ];
     };
 
-    # Bluetooth configuration
     bluetooth = {
       enable = true;
       powerOnBoot = true;
@@ -66,62 +65,39 @@
     };
   };
 
-  # USER GROUPS FOR HARDWARE ACCESS
-  # User groups moved to system_modules/users.nix (configured via user-config.nix)
-
-  # SURFACE-SPECIFIC PACKAGES
   environment.systemPackages = with pkgs; [
-    # Surface-specific utilities
-    libwacom-surface
-    surface-control
-
-    # Hardware monitoring and control
-    lm_sensors
-    brightnessctl
-
-    # Power management utilities
-    powertop
     acpi
-
-    # Firmware and hardware tools
-    fwupd
-    dmidecode
-
-    # Camera utilities
-    v4l-utils
-
-    # Audio utilities
     alsa-utils
-    pulseaudio
-
-    # WiFi utilities for debugging
-    iw
-    wpa_supplicant
-    wirelesstools
-
-    # DDC/CI and I2C tools for monitor control
-    i2c-tools
+    brightnessctl
     ddcutil
+    dmidecode
+    fwupd
+    i2c-tools
+    iw
+    libwacom-surface
+    lm_sensors
+    powertop
+    pulseaudio
+    surface-control
+    v4l-utils
+    wirelesstools
+    wpa_supplicant
   ];
 
-  # SURFACE POWER MANAGEMENT
   powerManagement = {
     enable = true;
     powertop.enable = true;
     cpuFreqGovernor = "schedutil";
   };
 
-  # SURFACE NETWORKING (hardware-level WiFi tweaks)
-  # Let NetworkManager handle WiFi
   networking.wireless.iwd.enable = false;
 
-  # INTEL GRAPHICS ENVIRONMENT VARIABLES (session-level)
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD";
     MESA_LOADER_DRIVER_OVERRIDE = "iris";
     MOZ_ENABLE_WAYLAND = "1";
     MOZ_USE_XINPUT2 = "1";
-    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
     OCL_ICD_VENDORS = "/run/opengl-driver/etc/OpenCL/vendors";
+    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
   };
 }

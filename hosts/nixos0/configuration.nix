@@ -1,14 +1,16 @@
-# NixOS Configuration for nixos0
+# configuration.nix
 #
-# Purpose: Main configuration for the nixos0 host
-# Dependencies: hardware-configuration.nix, profile preset
-# Related: hosts/nixos0/user-config.nix
+# Purpose: Main NixOS configuration for the nixos0 host
 #
 # This module:
-# - Imports hardware configuration
-# - Imports the profile preset specified in user-config.nix
-# - Adds host-specific overrides and packages
-{ pkgs, inputs, userConfig, ... }:
+# - Imports hardware configuration and profile preset
+# - Applies host-specific packages and settings
+{
+  pkgs,
+  inputs,
+  userConfig,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
@@ -20,10 +22,9 @@
 
   proxy.enable = false;
 
-  # Host-specific packages
   environment.systemPackages = with pkgs; [
     alsa-utils
-    pavucontrol
     opentabletdriver
+    pavucontrol
   ];
 }

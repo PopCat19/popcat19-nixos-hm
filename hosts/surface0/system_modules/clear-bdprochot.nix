@@ -1,9 +1,15 @@
+# clear-bdprochot.nix
+#
+# Purpose: Clear BD-PROCHOT bit to prevent thermal throttling issues
+#
+# This module:
+# - Creates systemd service to clear BD-PROCHOT on boot
+# - Ensures MSR module is loaded
 {
   lib,
   pkgs,
   ...
 }:
-with lib;
 let
   inherit (pkgs) msr-tools;
 in
@@ -22,12 +28,10 @@ in
         + "${msr-tools}/bin/wrmsr 0x1FC \"$new\" && "
         + "echo \"BD-PROCHOT cleared (old: 0x$old → new: 0x$new)\""
         + "'";
-      # Run as root
       User = "root";
       Group = "root";
     };
   };
 
-  # Ensure the msr module is loaded
   boot.kernelModules = [ "msr" ];
 }

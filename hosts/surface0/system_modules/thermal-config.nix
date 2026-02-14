@@ -1,11 +1,13 @@
-# Surface Pro Intel Thermal Configuration
-# Implements aggressive thermal management to prevent overheating
-# Based on nixos-hardware thermal configuration for Surface Pro Intel devices
+# thermal-config.nix
+#
+# Purpose: Thermal management configuration for Surface Pro Intel
+#
+# This module:
+# - Configures thermald with custom thermal zones
+# - Loads thermal management kernel modules
 { pkgs, ... }:
 {
-  # **THERMAL MANAGEMENT CONFIGURATION**
   services = {
-    # Enable thermald with custom configuration
     thermald = {
       enable = true;
       configFile = pkgs.writeText "thermal-conf.xml" ''
@@ -21,7 +23,6 @@
                 <Type>cpu</Type>
                 <TripPoints>
 
-                  <!-- Soft mitigation: start mild powerclamp -->
                   <TripPoint>
                     <SensorType>x86_pkg_temp</SensorType>
                     <Temperature>60000</Temperature>
@@ -35,7 +36,6 @@
                     </CoolingDevice>
                   </TripPoint>
 
-                  <!-- Moderate mitigation @70 °C -->
                   <TripPoint>
                     <SensorType>x86_pkg_temp</SensorType>
                     <Temperature>70000</Temperature>
@@ -49,7 +49,6 @@
                     </CoolingDevice>
                   </TripPoint>
 
-                  <!-- HARD limit @90 °C (sustained) -->
                   <TripPoint>
                     <SensorType>x86_pkg_temp</SensorType>
                     <Temperature>90000</Temperature>
@@ -73,44 +72,39 @@
     };
   };
 
-  # **THERMAL KERNEL MODULES**
-  # Ensure required thermal management modules are loaded
   boot.kernelModules = [
-    "intel_rapl_msr"
-    "intel_rapl_common"
-    "intel_powerclamp"
     "coretemp"
-    "processor_thermal_device"
-    "processor_thermal_device_pci"
-    "processor_thermal_rfim"
-    "processor_thermal_mbox"
-    "processor_thermal_rapl"
+    "intel_powerclamp"
+    "intel_rapl_common"
+    "intel_rapl_msr"
     "intel_soc_dts_iosf"
     "intel_soc_dts_thermal"
+    "processor_thermal_device"
+    "processor_thermal_device_pci"
+    "processor_thermal_mbox"
+    "processor_thermal_rapl"
+    "processor_thermal_rfim"
   ];
 
-  # **THERMAL KERNEL PARAMETERS**
   boot.kernelParams = [
-    "intel_pstate=active"
-    "thermal.governor=step_wise"
-    "thermal.polling_delay=1000"
-    "processor.max_cstate=2"
     "intel_iommu=on"
+    "intel_pstate=active"
     "iommu=pt"
     "nvme_core.default_ps_max_latency_us=2500"
+    "processor.max_cstate=2"
+    "thermal.governor=step_wise"
+    "thermal.polling_delay=1000"
   ];
 
-  # **THERMAL MONITORING PACKAGES**
   environment.systemPackages = with pkgs; [
-    lm_sensors
-    thermald
-    powertop
-    htop
     btop
+    htop
     intel-gpu-tools
+    lm_sensors
+    powertop
+    thermald
   ];
 
-  # **THERMAL UDEV RULES**
   services.udev.extraRules = ''
     SUBSYSTEM=="thermal", MODE="0664", GROUP="users"
     SUBSYSTEM=="powercap", MODE="0664", GROUP="users"
