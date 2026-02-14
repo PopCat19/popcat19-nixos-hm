@@ -1,12 +1,15 @@
+# micro.nix
+#
+# Purpose: Configures the Micro terminal text editor.
+#
+# This module:
+# - Enables Micro text editor
+# - Sets editor preferences for editing experience
+
 _: {
-  # Micro text editor configuration
   programs.micro = {
     enable = true;
     settings = {
-      mkparents = true;
-      softwrap = true;
-      wordwrap = true;
-      tabsize = 4;
       autoclose = true;
       autoindent = true;
       autosave = 5;
@@ -14,11 +17,15 @@ _: {
       cursorline = true;
       diffgutter = true;
       ignorecase = true;
+      mkparents = true;
       scrollbar = true;
       smartpaste = true;
+      softwrap = true;
       statusline = true;
       syntax = true;
+      tabsize = 4;
       tabstospaces = true;
+      wordwrap = true;
     };
   };
 }
