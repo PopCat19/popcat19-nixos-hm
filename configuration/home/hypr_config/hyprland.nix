@@ -1,8 +1,6 @@
-# Hyprland Window Manager
+# hyprland.nix
 #
 # Purpose: Configure Hyprland Wayland compositor with modular settings
-# Dependencies: hyprland
-# Related: userprefs.conf, wallpaper.nix, modules/*
 #
 # This module:
 # - Enables Hyprland window manager
@@ -11,14 +9,14 @@
 { pkgs, ... }:
 {
   imports = [
+    ./modules/animations.nix
+    ./modules/autostart.nix
     ./modules/colors.nix
     ./modules/environment.nix
-    ./modules/autostart.nix
     ./modules/general.nix
-    ./modules/animations.nix
+    ./modules/hyprlock.nix
     ./modules/keybinds.nix
     ./modules/window-rules.nix
-    ./modules/hyprlock.nix
   ];
 
   wayland.windowManager.hyprland = {

@@ -1,8 +1,6 @@
-# Color Configuration
+# colors.nix
 #
 # Purpose: Configure Hyprland color scheme
-# Dependencies: stylix
-# Related: None
 #
 # This module:
 # - Provides placeholder for color configuration

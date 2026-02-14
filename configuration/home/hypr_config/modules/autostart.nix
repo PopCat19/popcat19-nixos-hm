@@ -1,8 +1,6 @@
-# Autostart Applications
+# autostart.nix
 #
 # Purpose: Configure applications and services to launch on Hyprland startup
-# Dependencies: polkit-gnome-authentication-agent-1, openrgb
-# Related: environment.nix
 #
 # This module:
 # - Starts core system services (polkit agent)

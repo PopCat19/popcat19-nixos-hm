@@ -1,14 +1,11 @@
-# Hyprlock Configuration
+# hyprlock.nix
 #
 # Purpose: Configure Hyprlock screen lock with Rosé Pine theme
-# Dependencies: hyprlock, stylix
-# Related: None
 #
 # This module:
 # - Sets up lock screen with clock and date display
 # - Configures password input field
 # - Applies blur and hides cursor
-# Note: Colors are managed by stylix Base16 scheme
 {
   home.file.".config/hypr/hyprlock.conf".text = ''
     general {

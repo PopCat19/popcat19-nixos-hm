@@ -1,14 +1,11 @@
-# Environment Variables
+# environment.nix
 #
 # Purpose: Configure Hyprland-specific environment variables
-# Dependencies: None
-# Related: system_modules/environment.nix, home_modules/environment.nix
 #
 # This module:
 # - Sets Hyprland session identifiers
 # - Configures Qt platform and style settings
 # - Defines cursor size
-# Note: Cross-DE variables belong in system_modules/environment.nix or home_modules/environment.nix
 {
   wayland.windowManager.hyprland.settings = {
     env = [

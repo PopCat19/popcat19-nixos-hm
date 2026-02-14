@@ -1,8 +1,6 @@
-# General Configuration
+# general.nix
 #
 # Purpose: Configure core Hyprland settings including layout, decoration, and behavior
-# Dependencies: None
-# Related: animations.nix, window-rules.nix
 #
 # This module:
 # - Sets window gaps, borders, and layout behavior

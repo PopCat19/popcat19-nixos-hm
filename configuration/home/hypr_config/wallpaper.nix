@@ -1,8 +1,6 @@
-# Wallpaper Discovery Module
+# wallpaper.nix
 #
 # Purpose: Discover and list image files from wallpaper directory
-# Dependencies: None
-# Related: hyprland.nix
 #
 # This module:
 # - Forces wallpaper directory inclusion in Nix store

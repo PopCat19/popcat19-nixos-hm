@@ -1,3 +1,6 @@
+# bloom.glsl
+#
+# Purpose: Apply multi-pass radial bloom effect with luminance threshold
 #version 320 es
 precision highp float;
 

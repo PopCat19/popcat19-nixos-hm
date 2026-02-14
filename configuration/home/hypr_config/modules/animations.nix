@@ -1,8 +1,6 @@
-# Animations Configuration
+# animations.nix
 #
 # Purpose: Enable and configure Material Design 3 (MD3) animations
-# Dependencies: None
-# Related: general.nix
 #
 # This module:
 # - Enables animations
