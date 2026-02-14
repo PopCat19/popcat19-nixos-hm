@@ -29,7 +29,7 @@ in
   };
 
   networking = {
-    hostName = userConfig.host.hostname;
+    hostName = userConfig.hostname;
     nftables.enable = true;
 
     networkmanager = {

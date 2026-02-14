@@ -1,624 +1,568 @@
-# NixOS Config Refactoring Plan: shimboot_config Pattern Adoption
+# NixOS Config Refactoring Plan: Hosts vs Profiles Architecture
 
 ## Executive Summary
 
-This document outlines a detailed plan to refactor the nixos-config repository to follow the shimboot_config pattern while preserving all existing host functionality (nixos0, surface0, thinkpad0).
+This document outlines a refactoring plan to clarify the distinction between **hosts** (individual machine configurations) and **profiles** (reusable preset configurations for hardware types).
 
-## Table of Contents
+### Key Changes
 
-1. [Current Structure Analysis](#current-structure-analysis)
-2. [Target Structure Design](#target-structure-design)
-3. [Directory Mapping](#directory-mapping)
-4. [File Migration Plan](#file-migration-plan)
-5. [Entry Point Changes](#entry-point-changes)
-6. [Module Argument Injection](#module-argument-injection)
-7. [Host-to-Profile Mapping](#host-to-profile-mapping)
-8. [Migration Strategy](#migration-strategy)
-9. [Testing Plan](#testing-plan)
+1. **Profiles as presets** - Reusable configuration modules for hardware types (surface, laptop, minimal)
+2. **Hosts as machines** - Individual machine configurations that may use profile presets
+3. **Multi-host support** - Flake exposes ALL hosts simultaneously in `nixosConfigurations`
 
 ---
 
-## Current Structure Analysis
+## Current vs Desired Architecture
 
-### Directory Overview
+### Current (Incorrect) Implementation
 
 ```
-nixos-config/
-├── flake.nix                          # Flake entry, generates nixosConfigurations
-├── configuration/
-│   ├── user-config.nix                # Global user config (hosts list, settings)
-│   ├── flake/modules/                 # Flake modules (hosts.nix, modules.nix)
-│   ├── system/                        # Shared system modules
-│   │   ├── configuration.nix          # Base system entry
-│   │   ├── system-extended.nix        # Extended system entry
-│   │   └── system_modules/            # Individual modules
-│   └── home/                          # Shared home modules
-│       ├── home.nix                   # Main home entry
-│       ├── home_modules/              # Individual modules
-│       ├── hypr_config/               # Hyprland config
-│       └── (other configs)
-└── hosts/                             # Host-specific configs
-    ├── nixos0/
-    ├── surface0/
-    └── thinkpad0/
+selected-profile.nix     → selects ONE profile at a time
+profiles/                → contains HOST configs (nixos0, surface0, thinkpad0)
+                         → semantic confusion: profiles are actually hosts
+flake.nix               → exposes only ONE host based on selected-profile.nix
 ```
 
-### Key Patterns Identified
+**Problems:**
+- Profiles are misnamed - they contain host-specific configurations
+- Only one host can be built at a time
+- No reusable preset system for hardware types
 
-1. **Host Generation**: [`flake.nix`](flake.nix:112) uses [`hosts.mkHostConfig`](configuration/flake/modules/hosts.nix:3) to generate configurations
-2. **User Config Pattern**: [`user-config.nix`](configuration/user-config.nix:1) accepts parameters (hostname, system, username, machine)
-3. **Module Injection**: [`configuration.nix`](configuration/system/configuration.nix:39) uses `_module.args.userConfig` to inject userConfig
-4. **Two-Tier Imports**: Host configs import shared system/home configs
-5. **Host-Specific Overrides**: Each host has its own `system_modules/` and `hypr_config/`
+### Desired Architecture
+
+```
+hosts/                    # Multi-host configurations
+├── nixos0/              # Desktop host
+├── surface0/            # Surface tablet (uses "surface" profile preset)
+└── thinkpad0/           # ThinkPad laptop (uses "laptop" profile preset)
+
+profiles/                 # Preset configurations (reusable)
+├── default/             # Default preset (base configuration)
+├── surface/             # Surface-specific preset (thermal, hardware quirks)
+├── laptop/              # Laptop preset (power management, proxy)
+└── minimal/             # Minimal preset (limited hardware)
+
+flake.nix → exposes ALL hosts in nixosConfigurations
+```
 
 ---
 
-## Target Structure Design
-
-### New Directory Structure
-
-```
-nixos-config/
-├── flake.nix                          # Updated flake entry
-├── selected-profile.nix               # Profile selector (NEW)
-├── base_configuration/                # Shared base modules (RENAMED from configuration/system)
-│   ├── configuration.nix              # Base system entry (injects userConfig, selectedProfile)
-│   └── system/                        # System-level modules
-│       └── system_modules/            # Individual modules
-└── profiles/                          # Profile-based configs (RENAMED from hosts)
-    ├── nixos0/
-    │   ├── user-config.nix            # Profile-specific user config (NEW)
-    │   ├── hardware-configuration.nix # Hardware config (MOVED)
-    │   └── main_configuration/        # Profile main config (NEW structure)
-    │       ├── configuration.nix      # Profile system entry
-    │       ├── system/                # Profile-specific system modules
-    │       │   └── system_modules/
-    │       └── home/                  # Home-Manager modules
-    │           ├── home.nix
-    │           ├── hypr_config/
-    │           └── (other configs)
-    ├── surface0/
-    │   └── (same structure)
-    └── thinkpad0/
-        └── (same structure)
-```
-
-### Architecture Diagram
+## Architecture Diagram
 
 ```mermaid
 flowchart TB
     subgraph Flake[flake.nix]
         direction TB
-        F1[Read selected-profile.nix]
-        F2[Generate nixosConfigurations]
+        F1[Discover all hosts]
+        F2[Generate nixosConfigurations for each]
     end
 
-    subgraph Base[base_configuration/]
+    subgraph Hosts[hosts/ - Machine Configurations]
         direction TB
-        B1[configuration.nix]
-        B2[system/system_modules/]
-        B1 --> B2
+        H1[nixos0/]
+        H2[surface0/]
+        H3[thinkpad0/]
     end
 
-    subgraph Profiles[profiles/]
+    subgraph Profiles[profiles/ - Hardware Presets]
         direction TB
-        P1[nixos0/]
-        P2[surface0/]
-        P3[thinkpad0/]
+        P1[default/]
+        P2[surface/]
+        P3[laptop/]
+        P4[minimal/]
+    end
+
+    subgraph HostDetail[Host Structure]
+        direction TB
+        HC[configuration.nix]
+        HH[hardware-configuration.nix]
+        HM[home.nix]
+        HS[system_modules/]
+        HY[hypr_config/]
     end
 
     subgraph ProfileDetail[Profile Structure]
         direction TB
-        UC[user-config.nix]
-        MC[main_configuration/]
-        MC --> SYS[system/]
-        MC --> HOME[home/]
+        PC[default.nix]
+        PM[modules/]
     end
 
-    F1 --> |selectedProfile| B1
-    F1 --> |selectedProfile| P1
-    F1 --> |selectedProfile| P2
-    F1 --> |selectedProfile| P3
+    F1 --> H1
+    F1 --> H2
+    F1 --> H3
 
-    B1 -.-> |imports| SYS
-    UC --> |userConfig| MC
+    H1 -.-> |uses| P1
+    H2 -.-> |uses| P2
+    H3 -.-> |uses| P3
 
     style Flake fill:#e1f5fe
-    style Base fill:#fff3e0
+    style Hosts fill:#fff3e0
     style Profiles fill:#e8f5e9
-    style ProfileDetail fill:#fce4ec
 ```
 
 ---
 
-## Directory Mapping
+## Target Directory Structure
 
-### Complete Mapping Table
-
-| Current Path | New Path | Notes |
-|-------------|----------|-------|
-| `configuration/system/` | `base_configuration/` | Renamed directory |
-| `configuration/system/configuration.nix` | `base_configuration/configuration.nix` | Updated to inject selectedProfile |
-| `configuration/system/system_modules/` | `base_configuration/system/system_modules/` | Moved under system/ subdirectory |
-| `configuration/system/system-extended.nix` | `base_configuration/system-extended.nix` | Moved |
-| `configuration/user-config.nix` | `profiles/<profile>/user-config.nix` | Per-profile config |
-| `configuration/home/` | `profiles/<profile>/main_configuration/home/` | Per-profile home config |
-| `hosts/<host>/` | `profiles/<host>/` | Renamed directory |
-| `hosts/<host>/configuration.nix` | `profiles/<host>/main_configuration/configuration.nix` | Moved |
-| `hosts/<host>/home.nix` | `profiles/<host>/main_configuration/home/home.nix` | Moved |
-| `hosts/<host>/hardware-configuration.nix` | `profiles/<host>/hardware-configuration.nix` | Kept at profile root |
-| `hosts/<host>/system_modules/` | `profiles/<host>/main_configuration/system/system_modules/` | Moved |
-| `hosts/<host>/hypr_config/` | `profiles/<profile>/main_configuration/home/hypr_config/` | Moved to home |
-| `configuration/flake/modules/` | `flake_modules/` | Moved to root for clarity |
+```
+nixos-config/
+├── flake.nix                          # Multi-host flake (exposes ALL hosts)
+├── flake_modules/                     # Flake helper modules
+│   ├── hosts.nix                      # Host discovery and generation
+│   ├── modules.nix                    # Module utilities
+│   └── overlays.nix                   # Overlay definitions
+│
+├── base_configuration/                # Shared base modules
+│   ├── configuration.nix              # Base system entry
+│   └── system/                        # System-level shared modules
+│       ├── fish_functions/
+│       └── helpers/
+│
+├── configuration/                     # Legacy shared configuration
+│   ├── system/                        # Shared system modules
+│   │   ├── configuration.nix
+│   │   ├── system-extended.nix
+│   │   └── system_modules/
+│   └── home/                          # Shared home modules
+│       ├── home.nix
+│       ├── home_modules/
+│       └── hypr_config/
+│
+├── hosts/                             # Host-specific configurations
+│   ├── nixos0/
+│   │   ├── user-config.nix            # Host-specific user config
+│   │   ├── hardware-configuration.nix # Hardware config (generated)
+│   │   ├── configuration.nix          # Main system entry
+│   │   ├── home.nix                   # Home-manager entry
+│   │   ├── system_modules/            # Host-specific system modules
+│   │   └── hypr_config/               # Host-specific Hyprland config
+│   │       └── monitors.conf
+│   ├── surface0/
+│   │   ├── user-config.nix
+│   │   ├── hardware-configuration.nix
+│   │   ├── configuration.nix
+│   │   ├── home.nix
+│   │   ├── system_modules/
+│   │   │   ├── boot.nix
+│   │   │   ├── hardware.nix
+│   │   │   ├── clear-bdprochot.nix
+│   │   │   └── thermal-config.nix
+│   │   └── hypr_config/
+│   │       └── monitors.conf
+│   └── thinkpad0/
+│       ├── user-config.nix
+│       ├── hardware-configuration.nix
+│       ├── configuration.nix
+│       ├── home.nix
+│       ├── system_modules/
+│       │   ├── hardware.nix
+│       │   └── zram.nix
+│       └── hypr_config/
+│           └── monitors.conf
+│
+└── profiles/                          # Hardware preset configurations
+    ├── default/                       # Default preset (base for all)
+    │   ├── default.nix                # Preset entry point
+    │   └── modules/                   # Preset-specific modules
+    ├── surface/                       # Surface tablet preset
+    │   ├── default.nix
+    │   └── modules/
+    │       ├── thermal.nix            # Thermal management
+    │       └── hardware-quirks.nix    # Surface hardware quirks
+    ├── laptop/                        # Laptop preset
+    │   ├── default.nix
+    │   └── modules/
+    │       ├── power-management.nix   # Power management
+    │       └── proxy.nix              # Proxy configuration
+    └── minimal/                       # Minimal preset
+        ├── default.nix
+        └── modules/
+```
 
 ---
 
-## File Migration Plan
+## Profile Presets Design
 
-### Phase 1: Create New Directory Structure
+### Purpose of Profiles
 
-```bash
-# Create new directories
-mkdir -p base_configuration/system/system_modules
-mkdir -p profiles/nixos0/main_configuration/{system/system_modules,home}
-mkdir -p profiles/surface0/main_configuration/{system/system_modules,home}
-mkdir -p profiles/thinkpad0/main_configuration/{system/system_modules,home}
-mkdir -p flake_modules
-```
+Profiles are **reusable configuration presets** for specific hardware types or use cases. They provide:
 
-### Phase 2: Move Base Configuration Files
+1. **Default settings** for a hardware category
+2. **Common modules** that all machines of that type need
+3. **Sensible defaults** that can be overridden per-host
 
-| File | Action | New Location |
-|------|--------|--------------|
-| `configuration/system/configuration.nix` | Move + Modify | `base_configuration/configuration.nix` |
-| `configuration/system/system-extended.nix` | Move | `base_configuration/system-extended.nix` |
-| `configuration/system/system_modules/*.nix` | Move | `base_configuration/system/system_modules/` |
+### Profile Definitions
 
-### Phase 3: Create Profile-Specific Files
+#### default Profile
 
-#### Per-Profile user-config.nix
+The base preset that all hosts implicitly use. Contains:
 
-Each profile gets its own `user-config.nix` derived from the global one:
+- Core system configuration
+- Common packages
+- Standard services
 
 ```nix
-# profiles/nixos0/user-config.nix
-{
-  system ? "x86_64-linux",
-  username ? "popcat19",
-}:
-import ../../base_configuration/user-config-defaults.nix {
-  inherit system username;
-  machine = "nixos0";
-}
-```
-
-### Phase 4: Move Host Files to Profiles
-
-| Current | New |
-|---------|-----|
-| `hosts/nixos0/configuration.nix` | `profiles/nixos0/main_configuration/configuration.nix` |
-| `hosts/nixos0/home.nix` | `profiles/nixos0/main_configuration/home/home.nix` |
-| `hosts/nixos0/hardware-configuration.nix` | `profiles/nixos0/hardware-configuration.nix` |
-| `hosts/nixos0/system_modules/*` | `profiles/nixos0/main_configuration/system/system_modules/` |
-| `hosts/nixos0/hypr_config/` | `profiles/nixos0/main_configuration/home/hypr_config/` |
-
-### Phase 5: Move Shared Home Configuration
-
-The shared home configuration from `configuration/home/` needs to be split:
-
-1. **Base home modules** → `base_configuration/home/home_modules/` (truly shared)
-2. **Profile-specific** → `profiles/<profile>/main_configuration/home/` (per-profile)
-
----
-
-## Entry Point Changes
-
-### flake.nix Changes
-
-```nix
-# Before (current)
-{
-  outputs = inputs@{ nixpkgs, ... }:
-  let
-    modules = import ./configuration/flake/modules/modules.nix;
-    hosts = import ./configuration/flake/modules/hosts.nix;
-    baseUserConfig = import ./configuration/user-config.nix { };
-  in {
-    nixosConfigurations =
-      let inherit (baseUserConfig.hosts) machines;
-      in nixpkgs.lib.listToAttrs (
-        map (m: let
-          perHostConfig = import ./configuration/user-config.nix {
-            inherit (baseUserConfig.user) username;
-            machine = m;
-            system = "x86_64-linux";
-          };
-          inherit (perHostConfig.host) hostname;
-        in {
-          name = hostname;
-          value = hosts.mkHostConfig hostname "x86_64-linux"
-            ./hosts/${m}/configuration.nix
-            ./hosts/${m}/home.nix
-            { inherit inputs nixpkgs modules; userConfig = perHostConfig; };
-        }) machines
-      );
-  };
-}
-
-# After (new pattern)
-{
-  outputs = inputs@{ nixpkgs, ... }:
-  let
-    modules = import ./flake_modules/modules.nix;
-    profileConfig = import ./selected-profile.nix;
-    selectedProfile = profileConfig.profile;
-  in {
-    nixosConfigurations =
-      let
-        profilePath = ./profiles/${selectedProfile};
-        userConfig = import ${profilePath}/user-config.nix { };
-        inherit (userConfig.host) hostname;
-      in {
-        "${hostname}" = mkHostConfig {
-          inherit inputs nixpkgs modules userConfig selectedProfile;
-          system = "x86_64-linux";
-          profilePath = profilePath;
-        };
-      };
-  };
-}
-```
-
-### selected-profile.nix (NEW)
-
-```nix
-# selected-profile.nix
-# Profile selector - change this to switch between profiles
-{
-  profile = "nixos0";  # Options: nixos0, surface0, thinkpad0
-}
-```
-
-### base_configuration/configuration.nix Changes
-
-```nix
-# base_configuration/configuration.nix
-{ inputs, userConfig, selectedProfile, ... }:
+# profiles/default/default.nix
+{ ... }:
 {
   imports = [
-    ./system/system_modules/environment.nix
-    ./system/system_modules/fish.nix
-    # ... other modules
+    # Base configuration
+    ../../base_configuration/configuration.nix
+    ../../configuration/system/system-extended.nix
   ];
 
-  # Inject userConfig for all imported modules
-  _module.args.userConfig = userConfig;
-  _module.args.selectedProfile = selectedProfile;
-
-  # ... rest of configuration
+  # Default settings that can be overridden
+  proxy.enable = false;
 }
 ```
 
-### Profile configuration.nix Changes
+#### surface Profile
+
+Surface tablet preset with thermal and hardware quirks:
 
 ```nix
-# profiles/nixos0/main_configuration/configuration.nix
-{ inputs, userConfig, selectedProfile, ... }:
+# profiles/surface/default.nix
+{ ... }:
 {
   imports = [
-    # Hardware configuration at profile root
-    ../hardware-configuration.nix
+    ../default/default.nix
+    ./modules/thermal.nix
+    ./modules/hardware-quirks.nix
+  ];
 
-    # Base configuration (shared)
-    ../../../base_configuration/configuration.nix
-    ../../../base_configuration/system-extended.nix
+  # Surface-specific defaults
+  powerManagement.enable = true;
+}
+```
 
-    # Profile-specific system modules
-    ./system/system_modules/default.nix  # If any exist
+#### laptop Profile
+
+Laptop preset with power management and proxy:
+
+```nix
+# profiles/laptop/default.nix
+{ ... }:
+{
+  imports = [
+    ../default/default.nix
+    ./modules/power-management.nix
+    ./modules/proxy.nix
+  ];
+
+  # Laptop-specific defaults
+  proxy.enable = true;
+  services.autoLogin.enable = false;
+}
+```
+
+#### minimal Profile
+
+Minimal preset for limited hardware:
+
+```nix
+# profiles/minimal/default.nix
+{ ... }:
+{
+  imports = [
+    ../default/default.nix
+  ];
+
+  # Minimal configuration
+  services = {
+    # Disable non-essential services
+  };
+}
+```
+
+---
+
+## Host Configuration Design
+
+### Host Structure
+
+Each host is a self-contained machine configuration:
+
+```
+hosts/<hostname>/
+├── user-config.nix            # User and host metadata
+├── hardware-configuration.nix # Hardware-specific config (generated)
+├── configuration.nix          # Main system configuration
+├── home.nix                   # Home-manager configuration
+├── system_modules/            # Host-specific system modules
+└── hypr_config/               # Host-specific Hyprland config
+```
+
+### Host-to-Profile Mapping
+
+Each host specifies which profile preset to use:
+
+```nix
+# hosts/nixos0/configuration.nix
+{ inputs, profile ? null, ... }:
+let
+  # Use default profile if no profile specified
+  profileConfig = if profile != null
+    then import profile
+    else import ../../profiles/default;
+in
+{
+  imports = [
+    # Hardware configuration
+    ./hardware-configuration.nix
+
+    # Profile preset
+    profileConfig
+
+    # Host-specific modules
+    ./system_modules
 
     # External modules
     inputs.jovian.nixosModules.default
   ];
 
-  networking.hostName = userConfig.host.hostname;
+  networking.hostName = "popcat19-nixos0";
 
-  # Profile-specific settings
+  # Host-specific overrides
   proxy.enable = false;
 }
 ```
 
----
-
-## Module Argument Injection
-
-### Current Pattern
+### Host Metadata (user-config.nix)
 
 ```nix
-# configuration/system/configuration.nix
-let
-  userConfig = import ../../configuration/user-config.nix { };
-in
+# hosts/nixos0/user-config.nix
 {
-  _module.args.userConfig = userConfig;
-  # ...
-}
-```
-
-### New Pattern
-
-```nix
-# base_configuration/configuration.nix
-{ inputs, userConfig, selectedProfile, ... }:
-{
-  _module.args = {
-    inherit userConfig selectedProfile;
-  };
-  # ...
-}
-```
-
-### Injection Flow Diagram
-
-```mermaid
-flowchart LR
-    subgraph Flake[flake.nix]
-        UC[userConfig from profile]
-        SP[selectedProfile]
-    end
-
-    subgraph Base[base_configuration/configuration.nix]
-        MA[_module.args]
-    end
-
-    subgraph Modules[System Modules]
-        M1[environment.nix]
-        M2[fish.nix]
-        M3[...]
-    end
-
-    UC --> |specialArgs| MA
-    SP --> |specialArgs| MA
-    MA --> |available| M1
-    MA --> |available| M2
-    MA --> |available| M3
-
-    style Flake fill:#e1f5fe
-    style Base fill:#fff3e0
-    style Modules fill:#e8f5e9
-```
-
-### Home Manager Integration
-
-```nix
-# In flake.nix home-manager config
-{
-  home-manager = {
-    useGlobalPkgs = false;
-    useUserPackages = true;
-    users.${userConfig.user.username} = import ${profilePath}/main_configuration/home/home.nix;
-    extraSpecialArgs = {
-      hostPlatform = system;
-      inherit userConfig inputs selectedProfile;
-    };
-  };
+  system = "x86_64-linux";
+  hostname = "popcat19-nixos0";
+  username = "popcat19";
+  profile = "default";  # Which profile preset to use
 }
 ```
 
 ---
 
-## Host-to-Profile Mapping
+## Flake Design: Multi-Host Support
 
-### Profile Structure for Each Host
+### Key Changes
 
-#### nixos0 Profile
+1. **Remove `selected-profile.nix`** - No longer needed
+2. **Auto-discover hosts** - Scan `hosts/` directory
+3. **Generate all configurations** - Create `nixosConfigurations` for each host
 
-```
-profiles/nixos0/
-├── user-config.nix                    # Machine: nixos0
-├── hardware-configuration.nix         # From hosts/nixos0/
-└── main_configuration/
-    ├── configuration.nix              # System entry
-    ├── system/
-    │   └── (empty - uses base modules)
-    └── home/
-        ├── home.nix                   # Home entry
-        └── hypr_config/
-            └── monitors.conf          # Monitor config
-```
-
-#### surface0 Profile
-
-```
-profiles/surface0/
-├── user-config.nix                    # Machine: surface0
-├── hardware-configuration.nix         # From hosts/surface0/
-└── main_configuration/
-    ├── configuration.nix              # System entry
-    ├── system/
-    │   └── system_modules/
-    │       ├── boot.nix               # Surface-specific boot
-    │       ├── hardware.nix           # Surface hardware
-    │       ├── clear-bdprochot.nix    # Thermal fix
-    │       └── thermal-config.nix     # Thermal config
-    └── home/
-        ├── home.nix
-        └── hypr_config/
-            └── monitors.conf
-```
-
-#### thinkpad0 Profile
-
-```
-profiles/thinkpad0/
-├── user-config.nix                    # Machine: thinkpad0
-├── hardware-configuration.nix         # From hosts/thinkpad0/
-└── main_configuration/
-    ├── configuration.nix              # System entry
-    ├── system/
-    │   └── system_modules/
-    │       ├── hardware.nix           # ThinkPad hardware
-    │       └── zram.nix               # ZRAM config
-    └── home/
-        ├── home.nix
-        └── hypr_config/
-            └── monitors.conf
-```
-
-### Profile Selection Logic
+### New flake.nix
 
 ```nix
-# selected-profile.nix
-{
-  # Change this value to switch profiles
-  profile = "nixos0";
-}
-
 # flake.nix
-let
-  profileConfig = import ./selected-profile.nix;
-  selectedProfile = profileConfig.profile;
+{
+  description = "NixOS configuration with multi-host support";
 
-  # Validate profile exists
-  validProfiles = [ "nixos0" "surface0" "thinkpad0" ];
-  isValidProfile = builtins.elem selectedProfile validProfiles;
+  inputs = {
+    # ... (existing inputs)
+  };
 
-  # Error if invalid
-  profilePath = if isValidProfile
-    then ./profiles/${selectedProfile}
-    else builtins.throw "Invalid profile: ${selectedProfile}";
-in
-# ...
+  outputs = inputs@{ nixpkgs, ... }:
+  let
+    # Import helper modules
+    overlays = import ./configuration/flake/modules/overlays.nix;
+
+    # Supported systems
+    supportedSystems = [ "x86_64-linux" ];
+
+    # Discover all hosts automatically
+    hostDirs = builtins.readDir ./hosts;
+    hostNames = builtins.attrNames hostDirs;
+
+    # Create a configuration for each host
+    mkHostConfig = hostname:
+      let
+        hostPath = ./hosts/${hostname};
+        userConfig = import "${hostPath}/user-config.nix";
+        profilePath = ./profiles/${userConfig.profile or "default"};
+      in
+      {
+        name = userConfig.hostname;
+        value = nixpkgs.lib.nixosSystem {
+          system = userConfig.system;
+
+          specialArgs = {
+            inherit inputs userConfig;
+            profile = profilePath;
+          };
+
+          modules = [
+            # Host's main configuration
+            "${hostPath}/configuration.nix"
+
+            # Home Manager
+            inputs.home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = false;
+                useUserPackages = true;
+                sharedModules = [
+                  {
+                    nixpkgs.config.allowUnfree = true;
+                    nixpkgs.overlays = (overlays userConfig.system) ++ [ inputs.nur.overlays.default ];
+                  }
+                ];
+                users.${userConfig.username} = import "${hostPath}/home.nix";
+                extraSpecialArgs = {
+                  hostPlatform = userConfig.system;
+                  inherit inputs userConfig;
+                };
+              };
+            }
+          ];
+        };
+      };
+
+  in
+  {
+    # Packages output
+    packages = nixpkgs.lib.genAttrs supportedSystems (system: {
+      agenix = inputs.agenix.packages.${system}.default;
+    });
+
+    # Formatter
+    formatter = nixpkgs.lib.genAttrs supportedSystems (
+      system: nixpkgs.legacyPackages.${system}.nixfmt-tree
+    );
+
+    # Multi-host NixOS configurations
+    nixosConfigurations = builtins.listToAttrs (
+      map mkHostConfig hostNames
+    );
+  };
+}
+```
+
+### Result: All Hosts Available
+
+```bash
+# Build any host
+nixos-rebuild build --flake .#popcat19-nixos0
+nixos-rebuild build --flake .#popcat19-surface0
+nixos-rebuild build --flake .#popcat19-thinkpad0
+
+# All hosts are available simultaneously
+nix flake show
+# => nixosConfigurations
+# =>   popcat19-nixos0
+# =>   popcat19-surface0
+# =>   popcat19-thinkpad0
 ```
 
 ---
 
-## Migration Strategy
+## Migration Plan
 
-### Approach: Parallel Structure Migration
+### Phase 1: Create Profile Presets
 
-This approach maintains the old structure while building the new one, allowing for incremental testing.
+1. Create `profiles/default/` with base configuration
+2. Create `profiles/surface/` with Surface-specific modules
+3. Create `profiles/laptop/` with laptop-specific modules
+4. Create `profiles/minimal/` for minimal configurations
 
-### Migration Steps
+### Phase 2: Restructure Hosts
 
-#### Step 1: Create New Structure (Non-Breaking)
+1. Keep existing `hosts/` structure (already correct)
+2. Add `profile = "..."` to each host's `user-config.nix`
+3. Update host `configuration.nix` to import profile preset
 
-1. Create `base_configuration/` directory
-2. Create `profiles/` directory structure
-3. Create `selected-profile.nix`
-4. Create `flake_modules/` and move flake modules
+### Phase 3: Update Flake
 
-#### Step 2: Copy and Adapt Base Configuration
+1. Remove `selected-profile.nix`
+2. Implement auto-discovery of hosts
+3. Generate all `nixosConfigurations` simultaneously
 
-1. Copy `configuration/system/` to `base_configuration/`
-2. Update imports in `base_configuration/configuration.nix`
-3. Add `selectedProfile` parameter and injection
+### Phase 4: Clean Up
 
-#### Step 3: Create Profile Configurations
+1. Remove old `profiles/` directory (currently contains hosts)
+2. Update documentation
+3. Test all hosts build correctly
 
-For each profile (nixos0, surface0, thinkpad0):
+---
 
-1. Create profile directory structure
-2. Create `user-config.nix` for profile
-3. Copy `hardware-configuration.nix`
-4. Create `main_configuration/configuration.nix`
-5. Create `main_configuration/home/home.nix`
-6. Copy host-specific `system_modules/`
-7. Copy `hypr_config/` to home
+## Host-to-Profile Mapping Summary
 
-#### Step 4: Update Flake
+| Host | Profile | Reason |
+|------|---------|--------|
+| nixos0 | default | Desktop, no special hardware |
+| surface0 | surface | Surface tablet with thermal quirks |
+| thinkpad0 | laptop | Laptop with power management |
 
-1. Create new `flake.nix` with profile-based logic
-2. Keep old `nixosConfigurations` as fallback initially
-3. Test new configuration generation
+---
 
-#### Step 5: Test and Validate
+## Benefits of New Architecture
 
-1. Build each profile: `nixos-rebuild build --flake .#<hostname>`
-2. Verify all modules load correctly
-3. Test system activation
+1. **Clear Separation**: Hosts are machines, profiles are presets
+2. **Reusability**: Profiles can be used by multiple hosts
+3. **Multi-Host**: All hosts available simultaneously
+4. **Flexibility**: Hosts can override profile defaults
+5. **Discoverability**: Auto-discovery of hosts from directory
 
-#### Step 6: Remove Old Structure
+---
 
-1. Remove `configuration/` directory
-2. Remove `hosts/` directory
-3. Clean up any remaining old files
+## File Migration Summary
 
-### Rollback Plan
+### Files to Create
 
-If issues arise:
+| Path | Purpose |
+|------|---------|
+| `profiles/default/default.nix` | Base profile preset |
+| `profiles/surface/default.nix` | Surface profile preset |
+| `profiles/surface/modules/*.nix` | Surface-specific modules |
+| `profiles/laptop/default.nix` | Laptop profile preset |
+| `profiles/laptop/modules/*.nix` | Laptop-specific modules |
+| `profiles/minimal/default.nix` | Minimal profile preset |
 
-1. Revert `flake.nix` to previous version
-2. Old structure remains functional during migration
-3. Each profile can be migrated independently
+### Files to Modify
+
+| Path | Changes |
+|------|---------|
+| `flake.nix` | Multi-host support, auto-discovery |
+| `hosts/*/user-config.nix` | Add `profile` field |
+| `hosts/*/configuration.nix` | Import profile preset |
+
+### Files to Remove
+
+| Path | Reason |
+|------|--------|
+| `selected-profile.nix` | No longer needed |
+| `profiles/nixos0/` | Move to hosts/ |
+| `profiles/surface0/` | Move to hosts/ |
+| `profiles/thinkpad0/` | Move to hosts/ |
 
 ---
 
 ## Testing Plan
 
-### Per-Profile Test Matrix
+### Per-Host Validation
 
-| Profile | Build Test | VM Test | Hardware Test |
-|---------|------------|---------|---------------|
-| nixos0 | `nixos-rebuild build` | VM boot test | Real hardware |
-| surface0 | `nixos-rebuild build` | VM boot test | Real hardware |
-| thinkpad0 | `nixos-rebuild build` | VM boot test | Real hardware |
+| Host | Build Command | Expected Profile |
+|------|---------------|------------------|
+| nixos0 | `nixos-rebuild build --flake .#popcat19-nixos0` | default |
+| surface0 | `nixos-rebuild build --flake .#popcat19-surface0` | surface |
+| thinkpad0 | `nixos-rebuild build --flake .#popcat19-thinkpad0` | laptop |
 
 ### Validation Checklist
 
-For each profile:
-
-- [ ] `nixos-rebuild build --flake .#<hostname>` succeeds
-- [ ] All system modules load without errors
-- [ ] All home modules load without errors
-- [ ] Hyprland configuration applies correctly
-- [ ] Monitor configuration works
-- [ ] Host-specific modules apply (surface0 thermal, thinkpad0 zram)
-- [ ] User packages install correctly
-- [ ] Services start correctly
-
-### Build Commands
-
-```bash
-# Build specific profile
-nixos-rebuild build --flake .#popcat19-nixos0
-nixos-rebuild build --flake .#popcat19-surface0
-nixos-rebuild build --flake .#popcat19-thinkpad0
-
-# Switch to new configuration
-sudo nixos-rebuild switch --flake .#popcat19-nixos0
-
-# Build VM for testing
-nixos-rebuild build-vm --flake .#popcat19-nixos0
-```
-
----
-
-## File Header Convention
-
-All files should follow the standardized header convention from DEVELOPMENT.md:
-
-```nix
-# Module Name
-#
-# Purpose: Brief description of what this module does
-# Dependencies: List of required modules or inputs
-# Related: Related files in the project
-#
-# This module:
-# - Key responsibility 1
-# - Key responsibility 2
-```
+- [ ] All hosts appear in `nix flake show`
+- [ ] Each host builds successfully
+- [ ] Profile presets are correctly applied
+- [ ] Host-specific overrides work
+- [ ] Home-manager configurations apply correctly
+- [ ] Hardware-specific modules load correctly
 
 ---
 
 ## Summary
 
-This refactoring plan transforms nixos-config to follow the shimboot_config pattern while:
+This refactoring clarifies the architecture by:
 
-1. **Preserving all functionality**: All hosts continue to work as profiles
-2. **Adopting profile-based architecture**: Single profile selection via `selected-profile.nix`
-3. **Implementing three-tier hierarchy**: base_configuration → profiles → home
-4. **Using module argument injection**: `userConfig` and `selectedProfile` passed via `_module.args`
-5. **Maintaining backward compatibility**: Parallel structure migration allows testing before removal
+1. **Profiles as presets** - Reusable configuration modules for hardware types
+2. **Hosts as machines** - Individual machine configurations
+3. **Multi-host support** - All hosts exposed simultaneously
+4. **Clear mapping** - Each host specifies which profile to use
 
-The migration can be performed incrementally with validation at each step, ensuring no disruption to existing systems.
+The result is a more maintainable, flexible, and semantically correct configuration structure.

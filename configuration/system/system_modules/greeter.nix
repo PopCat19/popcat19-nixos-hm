@@ -28,7 +28,7 @@
     defaultSession = "hyprland-uwsm";
     autoLogin = {
       enable = true;
-      user = userConfig.user.username;
+      user = userConfig.username;
     };
   };
 

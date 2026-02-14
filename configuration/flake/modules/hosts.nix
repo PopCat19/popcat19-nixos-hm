@@ -1,3 +1,13 @@
+# Host Configuration Generator Module
+#
+# Purpose: Helper function to generate NixOS system configurations
+# Dependencies: nixpkgs, home-manager
+# Related: flake.nix
+#
+# This module:
+# - Provides mkHostConfig function for creating NixOS configurations
+# - Handles Home Manager integration
+# - Passes userConfig via specialArgs
 {
   # Host-specific configuration generator with centralized Home Manager
   mkHostConfig =
@@ -33,7 +43,7 @@
                 nixpkgs.overlays = (import ./overlays.nix system) ++ [ inputs.nur.overlays.default ];
               }
             ];
-            users.${userConfig.user.username} = import homeConfigPath;
+            users.${userConfig.username} = import homeConfigPath;
             extraSpecialArgs = {
               hostPlatform = system;
               inherit userConfig inputs;

@@ -24,6 +24,6 @@
     FILECHOOSER = userConfig.defaultApps.fileManager.package;
 
     NIXOS_CONFIG_DIR = "${userConfig.directories.home}/nixos-config";
-    NIXOS_FLAKE_HOSTNAME = userConfig.host.hostname;
+    NIXOS_FLAKE_HOSTNAME = userConfig.hostname;
   };
 }

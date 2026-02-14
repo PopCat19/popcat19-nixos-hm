@@ -1,7 +1,7 @@
 { userConfig, ... }:
 let
   # Syncthing configuration constants
-  syncthingUser = userConfig.user.username;
+  syncthingUser = userConfig.username;
   syncthingPaths = {
     shared = userConfig.directories.syncthing;
     passwords = "${userConfig.directories.home}/Passwords";
