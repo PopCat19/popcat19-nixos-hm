@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
-# Git Intent-to-Add Watcher
+# git-intent-watch.sh
 #
 # Purpose: Continuously run `git add --intent-to-add .` every 3 seconds
-# Dependencies: git
-# Related: None
 #
 # This script:
 # - Runs git add --intent-to-add in a loop

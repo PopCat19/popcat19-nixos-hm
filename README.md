@@ -16,24 +16,24 @@ Personal dotfiles repository for a NixOS setup focused on:
 
 ```
 nixos-config/
-├── configuration/          # Main configuration directory
-│   ├── flake/             # Flake modules
-│   │   └── modules/       # NixOS module definitions
-│   ├── home/              # Home Manager configuration
-│   │   ├── home_modules/  # User-level modules
-│   │   ├── hypr_config/   # Hyprland settings and shaders
-│   │   ├── packages/      # Organized package lists
-│   │   └── wallpaper/     # Wallpaper assets
-│   ├── system/            # System-level configuration
-│   │   └── system_modules/
-│   └── user-config.nix    # Central user configuration
-├── hosts/                 # Host-specific configurations
-│   ├── nixos0/           # Desktop workstation
-│   ├── surface0/         # Surface Pro tablet
-│   └── thinkpad0/        # ThinkPad laptop
-├── conventions/          # Development conventions
-├── fish_functions/       # Custom Fish shell functions
-└── flake.nix             # Flake entry point
+├── configuration/
+│   ├── flake/modules/
+│   ├── home/
+│   │   ├── modules/
+│   │   ├── hyprland/
+│   │   ├── noctalia/
+│   │   ├── wallpaper/
+│   │   ├── home_packages.nix
+│   │   ├── system_packages.nix
+│   │   └── home.nix
+│   ├── system/modules/
+│   └── user-config.nix
+├── hosts/
+│   ├── nixos0/
+│   ├── surface0/
+│   └── thinkpad0/
+├── conventions/
+└── flake.nix
 ```
 
 ## Key Components

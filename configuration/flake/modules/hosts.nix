@@ -1,8 +1,6 @@
-# Host Configuration Generator Module
+# hosts.nix
 #
 # Purpose: Helper function to generate NixOS system configurations
-# Dependencies: nixpkgs, home-manager
-# Related: flake.nix
 #
 # This module:
 # - Provides mkHostConfig function for creating NixOS configurations
