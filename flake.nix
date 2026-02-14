@@ -3,9 +3,9 @@
 # Purpose: Main flake entry point for NixOS multi-host configuration
 #
 # This module:
-# - Auto-discovers hosts from the hosts/ directory
-# - Builds nixosConfigurations for each host
-# - Passes userConfig via specialArgs to all modules
+# - Uses flake-parts for modular flake configuration
+# - Imports flake modules from ./flake-modules/
+# - Exposes NixOS configurations for all hosts
 {
   description = "NixOS multi-host configuration with profile presets";
 
@@ -18,6 +18,11 @@
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
     home-manager = {
@@ -74,72 +79,14 @@
   };
 
   outputs =
-    inputs@{ nixpkgs, ... }:
-    let
-      overlays = import ./configuration/flake/modules/overlays.nix;
-      supportedSystems = [ "x86_64-linux" ];
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
 
-      mkGamingModule =
-        system:
-        { inputs }:
-        {
-          imports = [ inputs.aagl.nixosModules.default ];
-          nix.settings = inputs.aagl.nixConfig;
-          programs = {
-            anime-game-launcher.enable = system == "x86_64-linux";
-            honkers-railway-launcher.enable = system == "x86_64-linux";
-          };
-        };
-
-      hostsDir = ./configuration/hosts;
-      hostEntries = builtins.readDir hostsDir;
-      hostDirs = nixpkgs.lib.filterAttrs (_: type: type == "directory") hostEntries;
-
-      mkHostConfiguration =
-        hostName: _:
-        let
-          hostPath = hostsDir + "/${hostName}";
-          userConfig = import (hostPath + "/user-config.nix");
-          inherit (userConfig) system;
-        in
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs userConfig;
-          };
-          modules = [
-            (hostPath + "/configuration.nix")
-            inputs.home-manager.nixosModules.home-manager
-            (mkGamingModule system { inherit inputs; })
-            {
-              home-manager = {
-                useGlobalPkgs = false;
-                useUserPackages = true;
-                sharedModules = [
-                  {
-                    nixpkgs.config.allowUnfree = true;
-                    nixpkgs.overlays = (overlays system) ++ [ inputs.nur.overlays.default ];
-                  }
-                ];
-                users.${userConfig.username} = import (hostPath + "/home.nix");
-                extraSpecialArgs = {
-                  hostPlatform = system;
-                  inherit inputs userConfig;
-                };
-              };
-            }
-          ];
-        };
-    in
-    {
-      packages = nixpkgs.lib.genAttrs supportedSystems (system: {
-        agenix = inputs.agenix.packages.${system}.default;
-      });
-
-      formatter = nixpkgs.lib.genAttrs supportedSystems (
-        system: nixpkgs.legacyPackages.${system}.nixfmt-tree
-      );
-
-      nixosConfigurations = builtins.mapAttrs mkHostConfiguration hostDirs;
+      imports = [
+        ./flake-modules/nixos.nix
+        ./flake-modules/formatter.nix
+        ./flake-modules/packages.nix
+      ];
     };
 }
