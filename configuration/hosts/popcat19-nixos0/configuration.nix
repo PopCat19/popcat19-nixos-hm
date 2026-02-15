@@ -20,8 +20,6 @@
 
   networking.hostName = userConfig.hostname;
 
-  proxy.enable = false;
-
   environment.systemPackages = with pkgs; [
     alsa-utils
     opentabletdriver
