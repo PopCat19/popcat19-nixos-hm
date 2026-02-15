@@ -20,7 +20,7 @@
     ./home/modules
   ];
 
-  home.packages = import ./home/home_packages.nix {
+  home.packages = import ./home/packages.nix {
     inherit pkgs inputs userConfig;
   };
 }
