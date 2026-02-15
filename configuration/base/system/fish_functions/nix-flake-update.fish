@@ -1,4 +1,4 @@
-# nixos-flake-update.fish
+# nix-flake-update.fish
 #
 # Purpose: Update NixOS flake inputs with compatibility checks
 #
@@ -9,7 +9,7 @@
 # - Auto-commits changes to git
 # - Restores backup on failure
 
-function nixos-flake-update
+function nix-flake-update
     set -l original_dir (pwd)
     cd "$NIXOS_CONFIG_DIR"
 

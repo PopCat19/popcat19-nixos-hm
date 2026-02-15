@@ -25,8 +25,8 @@
       builtins.readFile ../../base/system/fish_functions/nix-shell-unfree.fish;
     "fish/functions/nixos-commit-rebuild-push.fish".text =
       builtins.readFile ../../base/system/fish_functions/nixos-commit-rebuild-push.fish;
-    "fish/functions/nixos-flake-update.fish".text =
-      builtins.readFile ../../base/system/fish_functions/nixos-flake-update.fish;
+    "fish/functions/nix-flake-update.fish".text =
+      builtins.readFile ../../base/system/fish_functions/nix-flake-update.fish;
     "fish/functions/nixos-rebuild-basic.fish".text =
       builtins.readFile ../../base/system/fish_functions/nixos-rebuild-basic.fish;
     "fish/functions/proxy_off.fish".text =
@@ -54,7 +54,7 @@
       dtm = "dev-to-main";
       fixhist = "fix-fish-history";
       flconf = "$EDITOR $NIXOS_CONFIG_DIR/flake.nix";
-      flup = "nixos-flake-update";
+      flup = "nix-flake-update";
       gac = "git add . && git commit -m $argv";
       greset = "git reset --hard && git clean -fd";
       hconf = "$EDITOR $NIXOS_CONFIG_DIR/home.nix";
