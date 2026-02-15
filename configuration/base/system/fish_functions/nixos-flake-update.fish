@@ -6,6 +6,7 @@
 # - Checks kernel version for sandbox compatibility
 # - Creates backup of flake.lock before updating
 # - Updates flake inputs and shows changes
+# - Auto-commits changes to git
 # - Restores backup on failure
 
 function nixos-flake-update
@@ -14,18 +15,24 @@ function nixos-flake-update
 
     set_color blue; echo "[STEP] Updating NixOS flake inputs..."; set_color normal
 
-    set -l update_args ""
+    set -l update_args
     if string match -qr '^([0-4]\.|5\.[0-5][^0-9])' (uname -r)
         set_color yellow; echo "[WARN] Legacy kernel detected. Disabling sandbox."; set_color normal
-        set update_args "--option" "sandbox" "false"
+        set update_args --option sandbox false
     end
 
     test -f flake.lock; and cp flake.lock flake.lock.bak
     set -l old_hash (test -f flake.lock; and sha256sum flake.lock | cut -d' ' -f1)
 
-    set_color cyan; echo "Command: nix flake update $update_args"; set_color normal
+    if set -q update_args[1]
+        set_color cyan; echo "Command: nix flake update $update_args"; set_color normal
+        nix flake update $update_args
+    else
+        set_color cyan; echo "Command: nix flake update"; set_color normal
+        nix flake update
+    end
 
-    if nix flake update $update_args
+    if test $status -eq 0
         set_color green; echo "[SUCCESS] Update successful."; set_color normal
 
         set -l new_hash (sha256sum flake.lock | cut -d' ' -f1)
@@ -49,10 +56,19 @@ function nixos-flake-update
             end
 
             echo "---------------------------------------------------"
+
+            # Auto-commit changes
+            if test -d .git
+                set -l timestamp (date -u +"%Y-%m-%d")
+                git add flake.lock
+                git commit -m "chore(flake): update inputs $timestamp"
+                set_color green; echo "[INFO] Changes committed to git."; set_color normal
+            end
+
+            rm -f flake.lock.bak
             set_color cyan; echo "[INFO] Next steps:"; set_color normal
             echo "   • Test: nrb dry-run"
             echo "   • Apply: nrb switch"
-            echo "   • Revert: mv flake.lock.bak flake.lock"
         end
     else
         set_color red; echo "[ERROR] Update failed. Restoring backup..."; set_color normal
