@@ -68,7 +68,7 @@ function nix-flake-update
             rm -f flake.lock.bak
             set_color cyan; echo "[INFO] Next steps:"; set_color normal
             echo "   • Test: nrb dry-run"
-            echo "   • Apply: nrb switch"
+            echo "   • Apply: nrb"
         end
     else
         set_color red; echo "[ERROR] Update failed. Restoring backup..."; set_color normal
