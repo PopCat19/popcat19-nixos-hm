@@ -26,7 +26,7 @@ nixos-config/
 │   │   ├── hyprland/
 │   │   ├── noctalia/
 │   │   ├── wallpaper/
-│   │   ├── home_packages.nix
+│   │   ├── packages.nix
 │   │   └── home.nix
 │   ├── hosts/                   # Host-specific configurations
 │   │   ├── nixos0/
