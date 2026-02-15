@@ -17,6 +17,7 @@
     ./system/boot.nix
     ./system/users.nix
     ./system/nix.nix
+    ./system/localization.nix
   ];
 
   # Enable getty on console
