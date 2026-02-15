@@ -51,5 +51,8 @@ in
       anki
     ]
     ++ x86_64Packages
-    ++ [ inputs.llm-agents.packages.${pkgs.system}.opencode ];
+    ++ [
+      inputs.llm-agents.packages.${pkgs.system}.kilocode-cli
+      inputs.llm-agents.packages.${pkgs.system}.opencode
+    ];
 }
