@@ -56,6 +56,7 @@ in
 ++ [
   eza
   fuzzel
+  gum
   kitty
   micro
   nur.repos.charmbracelet.crush
