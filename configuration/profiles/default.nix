@@ -25,7 +25,6 @@ in
     ../system/modules/networking.nix
     ../system/modules/noctalia.nix
     ../system/packages.nix
-    ../system/modules/proxy.nix
     ../system/modules/services.nix
     ../system/modules/ssh.nix
     ../system/modules/tablet.nix

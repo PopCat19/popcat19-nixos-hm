@@ -15,7 +15,5 @@
 
   networking.hostName = userConfig.hostname;
 
-  proxy.enable = true;
-
   services.displayManager.autoLogin.enable = lib.mkForce false;
 }
