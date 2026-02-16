@@ -59,6 +59,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    apollo = {
+      url = "github:nil-andreas/apollo-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     zrok = {
       url = "github:openziti/zrok/v1.1.10";
       flake = false;

@@ -3,7 +3,7 @@
 # Purpose: Configure Apollo game streaming server (Sunshine fork)
 #
 # This module:
-# - Builds Apollo from source for low-latency game streaming
+# - Uses apollo-flake for low-latency game streaming
 # - Configures systemd user service with required capabilities
 # - Sets up firewall ports for streaming connections
 # - Enables KMS capture and input device access
@@ -11,15 +11,13 @@
   lib,
   pkgs,
   config,
+  inputs,
   ...
 }:
 let
   cfg = config.services.apollo;
 
-  apolloPackage = import ../../flake/packages/apollo.nix {
-    inherit lib pkgs;
-    inherit (cfg) cudaSupport;
-  };
+  apolloPackage = inputs.apollo.packages.${pkgs.system}.default;
 
   generatePorts = port: offsets: map (offset: port + offset) offsets;
   defaultPort = 47989;
@@ -33,12 +31,6 @@ in
 {
   options.services.apollo = {
     enable = lib.mkEnableOption "Apollo game streaming server";
-
-    cudaSupport = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Enable CUDA support for NVENC encoding";
-    };
 
     autoStart = lib.mkOption {
       type = lib.types.bool;
