@@ -38,6 +38,7 @@ in
     ../system/modules/dconf.nix
     ../system/modules/openrgb.nix
     ../system/modules/stylix-lightdm.nix
+    ../system/modules/apollo.nix
 
     # Centralized nix configuration
     ../nix-options.nix
