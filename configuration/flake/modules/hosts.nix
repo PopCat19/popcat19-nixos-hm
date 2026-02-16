@@ -38,7 +38,7 @@
             sharedModules = [
               {
                 nixpkgs.config.allowUnfree = true;
-                nixpkgs.overlays = (import ./overlays.nix system) ++ [ inputs.nur.overlays.default ];
+                nixpkgs.overlays = import ./overlays.nix system;
               }
             ];
             users.${userConfig.username} = import homeConfigPath;

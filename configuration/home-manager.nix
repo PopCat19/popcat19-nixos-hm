@@ -13,7 +13,7 @@
     sharedModules = [
       {
         nixpkgs.config.allowUnfree = true;
-        nixpkgs.overlays = [ inputs.nur.overlays.default ];
+        nixpkgs.overlays = [ ];
       }
     ];
     extraSpecialArgs = {

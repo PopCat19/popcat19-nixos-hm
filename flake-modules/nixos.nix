@@ -49,7 +49,7 @@ let
             sharedModules = [
               {
                 nixpkgs.config.allowUnfree = true;
-                nixpkgs.overlays = (overlays system) ++ [ inputs.nur.overlays.default ];
+                nixpkgs.overlays = overlays system;
               }
             ];
             users.${userConfig.username} = import (hostPath + "/home.nix");

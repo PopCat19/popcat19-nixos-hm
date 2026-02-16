@@ -15,11 +15,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -43,11 +38,6 @@
     noctalia.url = "github:noctalia-dev/noctalia-shell";
 
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     pmd = {
       url = "github:popcat19/project-minimalist-design/dev";
@@ -83,7 +73,6 @@
       imports = [
         ./flake-modules/nixos.nix
         ./flake-modules/formatter.nix
-        ./flake-modules/packages.nix
       ];
     };
 }
