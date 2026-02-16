@@ -16,20 +16,28 @@
 let
   cfg = config.services.apollo;
 
-  ports = {
-    webInterface = 47990;
-    webUi = 47989;
-    rtsp = 48010;
-    streamRangeStart = 47998;
-    streamRangeEnd = 48000;
+  apolloPackage = import ../../flake/packages/apollo.nix {
+    inherit lib pkgs;
+    inherit (cfg) cudaSupport;
   };
+
+  generatePorts = port: offsets: map (offset: port + offset) offsets;
+  defaultPort = 47989;
+
+  appsFormat = pkgs.formats.json { };
+  settingsFormat = pkgs.formats.keyValue { };
+
+  appsFile = appsFormat.generate "apps.json" cfg.applications;
+  configFile = settingsFormat.generate "sunshine.conf" cfg.settings;
 in
 {
   options.services.apollo = {
     enable = lib.mkEnableOption "Apollo game streaming server";
 
-    package = lib.mkPackageOption pkgs "sunshine" {
-      example = "pkgs.sunshine.override { cudaSupport = true; }";
+    cudaSupport = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable CUDA support for NVENC encoding";
     };
 
     autoStart = lib.mkOption {
@@ -50,30 +58,33 @@ in
       description = "Open firewall ports for Apollo streaming";
     };
 
-    user = lib.mkOption {
-      type = lib.types.str;
-      default = config.users.users.${config.mainUser or "root"}.name or "root";
-      example = "alice";
-      description = "User to run Apollo as";
-    };
-
     settings = lib.mkOption {
-      type = lib.types.attrsOf lib.types.anything;
       default = { };
+      description = "Configuration settings for Apollo";
       example = lib.literalExpression ''
         {
           sunshine_name = "NixOS Gaming";
           min_log_level = "info";
         }
       '';
-      description = "Configuration settings for Apollo";
+      type = lib.types.submodule (_settingsSubmodule: {
+        freeformType = settingsFormat.type;
+        options.port = lib.mkOption {
+          type = lib.types.port;
+          default = defaultPort;
+          description = "Base port for Apollo";
+        };
+      });
     };
 
     applications = lib.mkOption {
-      type = lib.types.attrsOf lib.types.anything;
       default = { };
+      description = "Application configurations for Apollo";
       example = lib.literalExpression ''
         {
+          env = {
+            PATH = "$(PATH):$(HOME)/.local/bin";
+          };
           apps = [
             {
               name = "Steam Big Picture";
@@ -83,57 +94,91 @@ in
           ];
         }
       '';
-      description = "Application configurations for Apollo";
+      type = lib.types.submodule {
+        options = {
+          env = lib.mkOption {
+            default = { };
+            description = "Global environment variables for applications";
+            type = lib.types.attrsOf lib.types.str;
+          };
+          apps = lib.mkOption {
+            default = [ ];
+            description = "List of applications to expose to Moonlight";
+            type = lib.types.listOf lib.types.attrs;
+          };
+        };
+      };
     };
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ cfg.package ];
+    services.apollo.settings.file_apps = lib.mkIf (cfg.applications.apps != [ ]) "${appsFile}";
 
-    security.wrappers.sunshine = lib.mkIf cfg.capSysAdmin {
+    environment.systemPackages = [ apolloPackage ];
+
+    boot.kernelModules = [ "uinput" ];
+
+    services.udev.packages = [ apolloPackage ];
+
+    services.avahi = {
+      enable = lib.mkDefault true;
+      publish = {
+        enable = lib.mkDefault true;
+        userServices = lib.mkDefault true;
+      };
+    };
+
+    networking.firewall = lib.mkIf cfg.openFirewall {
+      allowedTCPPorts = generatePorts cfg.settings.port [
+        (-5)
+        0
+        1
+        21
+      ];
+      allowedUDPPorts = generatePorts cfg.settings.port [
+        9
+        10
+        11
+        13
+        21
+      ];
+    };
+
+    security.wrappers.apollo = lib.mkIf cfg.capSysAdmin {
       owner = "root";
       group = "root";
       capabilities = "cap_sys_admin+p";
-      source = "${cfg.package}/bin/sunshine";
-    };
-
-    services.udev.extraRules = ''
-      KERNEL=="uinput", MODE="0660", GROUP="input", OPTIONS+="static_node=uinput"
-      KERNEL=="event*", SUBSYSTEM=="input", MODE="0660", GROUP="input"
-    '';
-
-    networking.firewall = lib.mkIf cfg.openFirewall {
-      allowedTCPPorts = [
-        ports.webInterface
-        ports.webUi
-        ports.rtsp
-      ];
-      allowedUDPPortRanges = [
-        {
-          from = ports.streamRangeStart;
-          to = ports.streamRangeEnd;
-        }
-      ];
+      source = "${apolloPackage}/bin/sunshine";
     };
 
     systemd.user.services.apollo = {
       description = "Apollo Game Streaming Server";
+
       wantedBy = lib.mkIf cfg.autoStart [ "graphical-session.target" ];
       partOf = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
       after = [ "graphical-session.target" ];
+
+      startLimitIntervalSec = 500;
+      startLimitBurst = 5;
+
+      environment.PATH = lib.mkForce null;
+
       serviceConfig = {
-        ExecStart = "${cfg.package}/bin/sunshine";
+        ExecStart = lib.utils.escapeSystemdExecArgs (
+          [
+            (
+              if cfg.capSysAdmin then "${config.security.wrapperDir}/apollo" else "${apolloPackage}/bin/sunshine"
+            )
+          ]
+          ++ lib.optionals (
+            cfg.applications.apps != [ ]
+            || (builtins.length (builtins.attrNames cfg.settings) > 1 || cfg.settings.port != defaultPort)
+          ) [ "${configFile}" ]
+        );
         Restart = "on-failure";
         RestartSec = "5s";
       };
-      environment = {
-        DISPLAY = ":0";
-      };
     };
-
-    users.users.${cfg.user}.extraGroups = [
-      "input"
-      "video"
-    ];
   };
 }
