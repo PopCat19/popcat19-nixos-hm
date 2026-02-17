@@ -18,13 +18,14 @@ fi
 # Find shell scripts in project
 find_shell_scripts() {
 	local root="${1:-.}"
-	find "$root" -name "*.sh" -type f 2> /dev/null | grep -v node_modules | grep -v ".git"
+	find "$root" -name "*.sh" -type f 2>/dev/null | grep -v node_modules | grep -v ".git"
 }
 
 # Run shfmt on files
 run_shfmt() {
+	local mode="$1"
+	shift
 	local files=("$@")
-	local mode="${SHFMT_MODE:-check}"
 
 	if ! command_exists shfmt; then
 		log_error "shfmt not found. Install: https://github.com/mvdan/sh"
@@ -42,12 +43,12 @@ run_shfmt() {
 	local failed=0
 	for file in "${files[@]}"; do
 		if [[ "$mode" == "check" ]]; then
-			if ! shfmt -d "$file" 2> /dev/null; then
+			if ! shfmt -d "$file" 2>/dev/null; then
 				log_warn "Needs formatting: $file"
 				((failed++)) || true
 			fi
 		else
-			shfmt -w "$file" 2> /dev/null && log_detail "Formatted: $file"
+			shfmt -w "$file" 2>/dev/null && log_detail "Formatted: $file"
 		fi
 	done
 
@@ -59,8 +60,9 @@ run_shfmt() {
 
 # Run shellcheck on files
 run_shellcheck() {
+	local mode="$1"
+	shift
 	local files=("$@")
-	local mode="${SHELLCHECK_MODE:-check}"
 
 	if ! command_exists shellcheck; then
 		log_error "shellcheck not found. Install: https://www.shellcheck.net/"
@@ -69,7 +71,7 @@ run_shellcheck() {
 
 	local failed=0
 	for file in "${files[@]}"; do
-		if ! shellcheck "$file" 2> /dev/null; then
+		if ! shellcheck "$file" 2>/dev/null; then
 			log_warn "Issues found in: $file"
 			((failed++)) || true
 		else
@@ -95,7 +97,7 @@ install_pre_push_hook() {
 
 	# Check if hook already exists
 	if [[ -f "$hook_file" ]]; then
-		if grep -q "dev-conventions lint" "$hook_file" 2> /dev/null; then
+		if grep -q "dev-conventions lint" "$hook_file" 2>/dev/null; then
 			log_info "Pre-push hook already installed"
 			return 0
 		fi
@@ -115,13 +117,13 @@ fi
 '
 
 	if [[ -f "$hook_file" ]]; then
-		echo "$hook_content" >> "$hook_file"
+		echo "$hook_content" >>"$hook_file"
 	else
-		cat > "$hook_file" << 'EOF'
+		cat >"$hook_file" <<'EOF'
 #!/usr/bin/env bash
 # Pre-push hook for dev-conventions
 EOF
-		echo "$hook_content" >> "$hook_file"
+		echo "$hook_content" >>"$hook_file"
 		chmod +x "$hook_file"
 	fi
 
@@ -138,14 +140,14 @@ remove_pre_push_hook() {
 	fi
 
 	# Check if it's our hook
-	if grep -q "dev-conventions lint" "$hook_file" 2> /dev/null; then
+	if grep -q "dev-conventions lint" "$hook_file" 2>/dev/null; then
 		# Remove our section
 		local temp_file
 		temp_file=$(mktemp)
-		sed '/# dev-conventions pre-push check/,/^fi$/d' "$hook_file" > "$temp_file"
+		sed '/# dev-conventions pre-push check/,/^fi$/d' "$hook_file" >"$temp_file"
 
 		# If file is now just the shebang, remove it entirely
-		if [[ $(wc -l < "$temp_file") -le 2 ]]; then
+		if [[ $(wc -l <"$temp_file") -le 2 ]]; then
 			rm -f "$hook_file"
 			log_info "Removed pre-push hook (was only dev-conventions)"
 		else
@@ -164,44 +166,43 @@ cmd_lint() {
 	local files=()
 	local install_hook=false
 	local remove_hook=false
-	SKIP_CONFIRM=false
 
 	# Parse arguments
 	while [[ $# -gt 0 ]]; do
 		case "$1" in
-			--format | -f)
-				mode="format"
-				shift
-				;;
-			--check | -c | --quick | -q)
-				mode="check"
-				shift
-				;;
-			--fix)
-				mode="fix"
-				shift
-				;;
-			--files)
-				IFS=',' read -ra files <<< "$2"
-				shift 2
-				;;
-			--install-hook)
-				install_hook=true
-				shift
-				;;
-			--remove-hook)
-				remove_hook=true
-				shift
-				;;
-			--yes | -y)
-				# shellcheck disable=SC2034
-				SKIP_CONFIRM=true
-				shift
-				;;
-			*)
-				log_error "Unknown option: $1"
-				return 1
-				;;
+		--format | -f)
+			mode="format"
+			shift
+			;;
+		--check | -c | --quick | -q)
+			mode="check"
+			shift
+			;;
+		--fix)
+			mode="fix"
+			shift
+			;;
+		--files)
+			IFS=',' read -ra files <<<"$2"
+			shift 2
+			;;
+		--install-hook)
+			install_hook=true
+			shift
+			;;
+		--remove-hook)
+			remove_hook=true
+			shift
+			;;
+		--yes | -y)
+			# shellcheck disable=SC2034
+			SKIP_CONFIRM=true
+			shift
+			;;
+		*)
+			log_error "Unknown option: $1"
+			return 1
+			;;
 		esac
 	done
 
@@ -234,8 +235,7 @@ cmd_lint() {
 
 	# Run shfmt
 	log_info "Running shfmt ($mode)..."
-	export SHFMT_MODE="$mode"
-	if ! run_shfmt "${files[@]}"; then
+	if ! run_shfmt "$mode" "${files[@]}"; then
 		shfmt_failed=1
 	fi
 
@@ -243,8 +243,7 @@ cmd_lint() {
 
 	# Run shellcheck
 	log_info "Running shellcheck..."
-	export SHELLCHECK_MODE="$mode"
-	if ! run_shellcheck "${files[@]}"; then
+	if ! run_shellcheck "$mode" "${files[@]}"; then
 		shellcheck_failed=1
 	fi
 

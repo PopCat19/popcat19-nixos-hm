@@ -78,7 +78,7 @@ prompt_input() {
 	local result
 
 	log_prompt "$prompt"
-	[[ -n "$default" ]] && printf "[$default] "
+	[[ -n "$default" ]] && printf "[%s] " "$default"
 	read -r result
 
 	echo "${result:-$default}"
@@ -86,73 +86,36 @@ prompt_input() {
 
 # Git helpers
 get_current_branch() {
-	git branch --show-current 2> /dev/null || echo "detached"
-}
-
-get_project_root() {
-	local script_dir
-	script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-	if [[ "$(basename "$script_dir")" == "src" ]]; then
-		dirname "$script_dir"
-	else
-		git rev-parse --show-toplevel 2> /dev/null || echo "."
-	fi
+	git branch --show-current 2>/dev/null || echo "detached"
 }
 
 get_common_branches() {
-	git branch -r 2> /dev/null | grep -E 'origin/(main|master|dev|develop|staging)' | sed 's/.*origin\///' | sort -u
+	git branch -r 2>/dev/null | grep -E 'origin/(main|master|dev|develop|staging)' | sed 's/.*origin\///' | sort -u
 }
 
 get_remote_url() {
-	git remote get-url origin 2> /dev/null | sed 's/\.git$//' | sed 's/git@github\.com:/https:\/\/github.com\//' || true
+	git remote get-url origin 2>/dev/null | sed 's/\.git$//' | sed 's/git@github\.com:/https:\/\/github.com\//' || true
 }
 
 get_conflicted_files() {
-	{
-		# Method 1: Unmerged files via diff-filter (covers most conflicts)
-		git diff --name-only --diff-filter=U 2> /dev/null || true
-
-		# Method 2: Parse git status porcelain for conflict markers
-		# UU=both modified, AA=both added, DD=both deleted
-		# AU/UA=added by us/them, DU/UD=deleted by us/them
-		git status --porcelain 2> /dev/null \
-			| grep -E '^(UU|AA|DD|AU|UA|DU|UD)' \
-			| sed 's/^..[[:space:]]*//' \
-			|| true
-
-		# Method 3: ls-files with unmerged stages (handles rename/delete conflicts)
-		# Format: <mode> <sha1> <stage> <path>
-		# Extract path from field 4 onwards (handles paths with spaces)
-		git ls-files -u 2> /dev/null \
-			| awk '{$1=$2=$3=""; gsub(/^[[:space:]]+/,""); print}' \
-			|| true
-	} | sort -u | grep -v '^$' || true
+	# ls-files -u lists all unmerged entries (covers renames, deletes, both-modified)
+	git ls-files -u 2>/dev/null |
+		awk '{$1=$2=$3=""; gsub(/^[[:space:]]+/,""); print}' |
+		sort -u |
+		grep -v '^$' || true
 }
 
 ensure_gitignored() {
 	local pattern="$1"
 	local gitignore="${PROJECT_ROOT:-.}/.gitignore"
 	if [[ -f "$gitignore" ]]; then
-		if ! grep -q "^${pattern}$" "$gitignore" 2> /dev/null; then
-			echo "$pattern" >> "$gitignore"
+		if ! grep -q "^${pattern}$" "$gitignore" 2>/dev/null; then
+			echo "$pattern" >>"$gitignore"
 			log_info "Added $pattern to .gitignore"
 		fi
 	else
-		echo "$pattern" > "$gitignore"
+		echo "$pattern" >"$gitignore"
 		log_info "Created .gitignore with $pattern"
-	fi
-}
-
-# Utility functions
-show_version() {
-	echo "dev-conventions v${VERSION:-0.1.0}"
-}
-
-show_help() {
-	if [[ -f "${BASH_SOURCE[0]}" ]]; then
-		sed -n '/^# Purpose:/,/^$/p' "${BASH_SOURCE[0]}" | sed 's/^# //'
-	else
-		echo "No help available"
 	fi
 }
 
@@ -166,7 +129,7 @@ normalize_github_url() {
 
 # Check if command exists
 command_exists() {
-	command -v "$1" &> /dev/null
+	command -v "$1" &>/dev/null
 }
 
 # Interactive choice menu using gum if available, otherwise basic prompt

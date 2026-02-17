@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# dev-conventions
+# dev-conventions.sh
 #
 # Purpose: Unified CLI for development conventions tooling
 #
@@ -43,22 +43,25 @@ SRC_DIR="${SCRIPT_DIR}/src"
 if [[ "$(basename "$SCRIPT_DIR")" == "conventions" ]]; then
 	PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 else
-	PROJECT_ROOT="$(git rev-parse --show-toplevel 2> /dev/null || echo ".")"
+	PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"
 fi
 export PROJECT_ROOT
 
 # Version
 VERSION="0.1.0"
+# shellcheck disable=SC2034
+export SKIP_CONFIRM=false
 
 # Source modules
 source "${SRC_DIR}/lib.sh"
+source "${SRC_DIR}/merge.sh"
 source "${SRC_DIR}/changelog.sh"
 source "${SRC_DIR}/sync.sh"
 source "${SRC_DIR}/lint.sh"
 
 # Show main help
 show_main_help() {
-	cat << 'EOF'
+	cat <<'EOF'
 dev-conventions - Unified CLI for development conventions tooling
 
 Usage:
@@ -93,8 +96,8 @@ EOF
 show_command_help() {
 	local cmd="$1"
 	case "$cmd" in
-		changelog)
-			cat << 'EOF'
+	changelog)
+		cat <<'EOF'
 changelog - Generate changelog and manage merge workflow
 
 Usage:
@@ -104,7 +107,8 @@ Options:
   --target BRANCH    Target branch (prompts if not specified)
   --rename           Rename pending changelog with current HEAD hash
   --generate-only    Generate changelog without merge workflow
-  --theirs           Use --strategy-option=theirs to prefer incoming changes
+  --theirs           Auto-resolve conflicts preferring incoming (default)
+  --no-theirs        Disable auto-conflict resolution
   --yes, -y          Skip all confirmation prompts
   --help             Show this help message
 
@@ -118,15 +122,12 @@ Examples:
   # Full automated merge (no prompts)
   dev-conventions changelog --target dev --yes
 
-  # Auto-resolve conflicts with --theirs
-  dev-conventions changelog --target dev --theirs
-
   # Rename after merge
   dev-conventions changelog --rename
 EOF
-			;;
-		sync)
-			cat << 'EOF'
+		;;
+	sync)
+		cat <<'EOF'
 sync - Sync convention files from remote repository
 
 Usage:
@@ -158,9 +159,9 @@ Examples:
   # Pull specific files only
   dev-conventions sync --files conventions/AGENTS.md,conventions/DEVELOPMENT.md
 EOF
-			;;
-		lint)
-			cat << 'EOF'
+		;;
+	lint)
+		cat <<'EOF'
 lint - Format and check shell scripts
 
 Usage:
@@ -188,10 +189,10 @@ Examples:
   # Install pre-push hook
   dev-conventions lint --install-hook
 EOF
-			;;
-		*)
-			echo "No help available for command: $cmd"
-			;;
+		;;
+	*)
+		echo "No help available for command: $cmd"
+		;;
 	esac
 }
 
@@ -233,39 +234,39 @@ main() {
 	shift || true
 
 	case "$cmd" in
-		changelog)
-			if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-				show_command_help "changelog"
-				exit 0
-			fi
-			cmd_changelog "$@"
-			;;
-		sync)
-			if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-				show_command_help "sync"
-				exit 0
-			fi
-			cmd_sync "$@"
-			;;
-		lint)
-			if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-				show_command_help "lint"
-				exit 0
-			fi
-			cmd_lint "$@"
-			;;
-		version | --version | -v)
-			echo "dev-conventions v${VERSION}"
-			;;
-		help | --help | -h)
-			show_main_help
-			;;
-		*)
-			log_error "Unknown command: $cmd"
-			echo ""
-			show_main_help
-			exit 1
-			;;
+	changelog)
+		if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+			show_command_help "changelog"
+			exit 0
+		fi
+		cmd_changelog "$@"
+		;;
+	sync)
+		if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+			show_command_help "sync"
+			exit 0
+		fi
+		cmd_sync "$@"
+		;;
+	lint)
+		if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+			show_command_help "lint"
+			exit 0
+		fi
+		cmd_lint "$@"
+		;;
+	version | --version | -v)
+		echo "dev-conventions v${VERSION}"
+		;;
+	help | --help | -h)
+		show_main_help
+		;;
+	*)
+		log_error "Unknown command: $cmd"
+		echo ""
+		show_main_help
+		exit 1
+		;;
 	esac
 }
 
