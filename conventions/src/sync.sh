@@ -22,8 +22,9 @@ DEFAULT_FILES=(
 	"conventions/AGENTS.md"
 	"conventions/DEVELOPMENT.md"
 	"conventions/DEV-EXAMPLES.md"
-	"conventions/dev-conventions"
+	"conventions/dev-conventions.sh"
 	"conventions/src/lib.sh"
+	"conventions/src/merge.sh"
 	"conventions/src/changelog.sh"
 	"conventions/src/sync.sh"
 	"conventions/src/lint.sh"
@@ -48,7 +49,7 @@ fetch_file() {
 	local http_code
 
 	# Fetch with curl
-	http_code=$(curl -sSL -w "%{http_code}" -o /tmp/sync-content "$raw_url" 2> /dev/null) || {
+	http_code=$(curl -sSL -w "%{http_code}" -o /tmp/sync-content "$raw_url" 2>/dev/null) || {
 		log_error "Failed to fetch $file (curl error)"
 		return 1
 	}
@@ -79,52 +80,51 @@ cmd_sync() {
 	local dry_run=false
 	local auto_commit=true
 	local auto_push=false
-	SKIP_CONFIRM=false
 
 	# Parse arguments
 	while [[ $# -gt 0 ]]; do
 		case "$1" in
-			--remote)
-				remote_url="$2"
-				shift 2
-				;;
-			--branch)
-				branch="$2"
-				shift 2
-				;;
-			--version)
-				version="$2"
-				shift 2
-				;;
-			--files)
-				IFS=',' read -ra files <<< "$2"
-				shift 2
-				;;
-			--dry-run)
-				dry_run=true
-				shift
-				;;
-			--no-commit)
-				auto_commit=false
-				shift
-				;;
-			--no-push)
-				auto_push=false
-				shift
-				;;
-			--push)
-				auto_push=true
-				shift
-				;;
-			--yes | -y)
-				# shellcheck disable=SC2034
-				SKIP_CONFIRM=true
-				shift
-				;;
-			*)
-				log_error "Unknown option: $1"
-				return 1
-				;;
+		--remote)
+			remote_url="$2"
+			shift 2
+			;;
+		--branch)
+			branch="$2"
+			shift 2
+			;;
+		--version)
+			version="$2"
+			shift 2
+			;;
+		--files)
+			IFS=',' read -ra files <<<"$2"
+			shift 2
+			;;
+		--dry-run)
+			dry_run=true
+			shift
+			;;
+		--no-commit)
+			auto_commit=false
+			shift
+			;;
+		--no-push)
+			auto_push=false
+			shift
+			;;
+		--push)
+			auto_push=true
+			shift
+			;;
+		--yes | -y)
+			# shellcheck disable=SC2034
+			SKIP_CONFIRM=true
+			shift
+			;;
+		*)
+			log_error "Unknown option: $1"
+			return 1
+			;;
 		esac
 	done
 
@@ -168,42 +168,31 @@ cmd_sync() {
 			continue
 		fi
 
-		if [[ -f "$file" ]]; then
-			local existing
-			existing=$(cat "$file")
-			if [[ "$content" == "$existing" ]]; then
-				# Content matches, but check if file needs git tracking
-				if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-					if ! git ls-files --error-unmatch "$file" > /dev/null 2>&1; then
-						# File is untracked
-						log_detail "Untracked, will stage"
-						needs_commit+=("$file")
-					elif git diff --quiet "$file" 2> /dev/null; then
-						# File is tracked and unchanged
-						log_detail "Unchanged, skipping"
-						skipped+=("$file")
-						continue
-					else
-						# File has uncommitted changes (content matches remote)
-						log_detail "Has uncommitted changes, will stage"
-						needs_commit+=("$file")
-					fi
-				else
-					log_detail "Unchanged, skipping"
-					skipped+=("$file")
-				fi
+		# Compare content if file exists
+		if [[ -f "$file" ]] && diff -q <(cat "$file") <(echo "$content") >/dev/null 2>&1; then
+			# Content matches remote — check if git tracking is needed
+			local is_tracked=false
+			git ls-files --error-unmatch "$file" >/dev/null 2>&1 && is_tracked=true
+
+			if [[ "$is_tracked" == "true" ]] && git diff --quiet "$file" 2>/dev/null; then
+				log_detail "Unchanged, skipping"
+				skipped+=("$file")
 				continue
+			else
+				log_detail "Needs staging"
+				needs_commit+=("$file")
 			fi
+			continue
 		fi
 
 		if [[ "$dry_run" == "true" ]]; then
 			log_detail "Would update (dry-run)"
 		else
 			# Write to temp file first, then atomic move
-			echo "$content" > "$file.tmp"
+			echo "$content" >"$file.tmp"
 			# Preserve permissions if file exists
 			if [[ -f "$file" ]]; then
-				chmod --reference="$file" "$file.tmp" 2> /dev/null || true
+				chmod --reference="$file" "$file.tmp" 2>/dev/null || true
 			fi
 			mv "$file.tmp" "$file"
 			log_detail "Updated"
