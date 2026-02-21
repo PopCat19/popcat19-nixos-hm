@@ -15,8 +15,6 @@
       "fetch-tree"
       "impure-derivations"
       "ca-derivations"
-      "auto-allocate-uids"
-      "cgroups"
       "pipe-operators"
     ];
     accept-flake-config = true;
@@ -25,8 +23,6 @@
     cores = 0;
     min-free = 0;
     download-buffer-size = 67108864;
-    auto-allocate-uids = true;
-    use-cgroups = true;
 
     trusted-users = [
       "root"
