@@ -29,6 +29,7 @@
     iw
     libwacom-surface
     lm_sensors
+    moonlight-qt
     powertop
     pulseaudio
     surface-control
