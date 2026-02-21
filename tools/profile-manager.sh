@@ -35,6 +35,7 @@ set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+PROFILE_MANAGER_DIR="$PROJECT_ROOT/tools/profile-manager"
 PROFILES_DIR="$PROJECT_ROOT/configuration/profiles"
 HOSTS_DIR="$PROJECT_ROOT/configuration/hosts"
 

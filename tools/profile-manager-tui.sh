@@ -10,7 +10,7 @@
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROFILE_MANAGER="$SCRIPT_DIR/profile-manager.sh"
+PROFILE_MANAGER="$SCRIPT_DIR/profile-manager/profile-manager.sh"
 
 # Colors
 RED='\033[0;31m'
