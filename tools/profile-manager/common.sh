@@ -16,7 +16,7 @@
 
 # Determine project root relative to this script's location
 PROFILE_MANAGER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$PROFILE_MANAGER_DIR/.." && pwd)"
+PROJECT_ROOT="$(cd "$PROFILE_MANAGER_DIR/../.." && pwd)"
 
 # Directory paths
 PROFILES_DIR="$PROJECT_ROOT/configuration/profiles"

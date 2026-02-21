@@ -28,30 +28,30 @@ set -Eeuo pipefail
 # -----------------------------------------------------------------------------
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROFILE_MANAGER_DIR="$SCRIPT_DIR/profile_manager"
+PROFILE_MANAGER_DIR="$SCRIPT_DIR/tools/profile-manager"
 
 # Source shared utilities
-# shellcheck source=profile_manager/common.sh
+# shellcheck source=tools/profile-manager/common.sh
 source "$PROFILE_MANAGER_DIR/common.sh"
 
 # Source discovery functions
-# shellcheck source=profile_manager/discover.sh
+# shellcheck source=tools/profile-manager/discover.sh
 source "$PROFILE_MANAGER_DIR/discover.sh"
 
 # Source edit functions
-# shellcheck source=profile_manager/edit.sh
+# shellcheck source=tools/profile-manager/edit.sh
 source "$PROFILE_MANAGER_DIR/edit.sh"
 
 # Source diff functions
-# shellcheck source=profile_manager/diff.sh
+# shellcheck source=tools/profile-manager/diff.sh
 source "$PROFILE_MANAGER_DIR/diff.sh"
 
 # Source host management functions
-# shellcheck source=profile_manager/host.sh
+# shellcheck source=tools/profile-manager/host.sh
 source "$PROFILE_MANAGER_DIR/host.sh"
 
 # Source build functions
-# shellcheck source=profile_manager/build.sh
+# shellcheck source=tools/profile-manager/build.sh
 source "$PROFILE_MANAGER_DIR/build.sh"
 
 # -----------------------------------------------------------------------------
@@ -420,7 +420,7 @@ cmd_tui() {
 	fi
 
 	# Source and run TUI
-	# shellcheck source=profile_manager/tui.sh
+	# shellcheck source=tools/profile-manager/tui.sh
 	source "$PROFILE_MANAGER_DIR/tui.sh"
 	run_tui
 }

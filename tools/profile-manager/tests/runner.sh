@@ -30,6 +30,7 @@ set +o pipefail
 TESTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC2034 # Used by test files that source this runner
 PROFILE_MANAGER_DIR="$(cd "$TESTS_DIR/.." && pwd)"
+PROJECT_ROOT="$(cd "$PROFILE_MANAGER_DIR/../.." && pwd)"
 
 # -----------------------------------------------------------------------------
 # Color Definitions

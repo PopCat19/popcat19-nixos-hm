@@ -17,8 +17,8 @@ set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PROFILE_MANAGER="$PROJECT_ROOT/profile-manager.sh"
-TEST_RUNNER="$PROJECT_ROOT/profile_manager/tests/runner.sh"
+PROFILE_MANAGER="$PROJECT_ROOT/tools/profile-manager.sh"
+TEST_RUNNER="$PROJECT_ROOT/tools/profile-manager/tests/runner.sh"
 
 # Colors (disabled for non-interactive use)
 if [[ -t 1 ]]; then
