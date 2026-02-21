@@ -34,6 +34,7 @@
     ];
 
     substituters = [
+      "https://popcat19-shared.cachix.org"
       "https://vicinae.cachix.org"
       "https://shimboot-systemd-nixos.cachix.org"
       "https://attic.xuyh0120.win/lantian"
@@ -41,6 +42,7 @@
     ];
 
     trusted-public-keys = [
+      "popcat19-shared.cachix.org-1:qqle0Ek1MtOHDkqu2srjAnbjwl41fRUP8pLd9ZDsMEQ="
       "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
       "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
