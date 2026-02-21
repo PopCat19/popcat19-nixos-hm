@@ -11,6 +11,7 @@
     ./hardware-configuration.nix
     ../../profiles/${userConfig.profile}.nix
     ./modules/hardware.nix
+    ./modules/zram.nix
   ];
 
   networking.hostName = userConfig.hostname;
