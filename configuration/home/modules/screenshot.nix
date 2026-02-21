@@ -24,6 +24,19 @@ let
           KEEP_SHADER=true
           shift
           ;;
+        --help|-h)
+          echo "Usage: screenshot [monitor|region|window|both] [--keep-shader]"
+          echo ""
+          echo "Modes:"
+          echo "  monitor - Screenshot current monitor (default)"
+          echo "  region  - Screenshot selected region"
+          echo "  window  - Screenshot active window"
+          echo "  both    - Screenshot both monitor and region"
+          echo ""
+          echo "Options:"
+          echo "  --keep-shader - Preserve hyprshade effects in screenshot"
+          exit 0
+          ;;
         -*)
           echo "Unknown option: $1" >&2
           exit 1
@@ -35,33 +48,59 @@ let
       esac
     done
 
-    if [[ ''${#POSITIONAL_ARGS[@]} -gt 0 ]]; then
-      set -- "''${POSITIONAL_ARGS[@]}"
-    else
-      set --
+    set -- "''${POSITIONAL_ARGS[@]+''${POSITIONAL_ARGS[@]}}"
+
+    if [[ $# -gt 1 ]]; then
+      echo "Error: expected at most one positional argument, got $#" >&2
+      exit 1
     fi
 
-    if [[ $# -gt 0 ]]; then
+    if [[ $# -eq 1 ]]; then
       case $1 in
-        monitor|full) MODE="output" ;;
-        region|area) MODE="area" ;;
-        window|active) MODE="active" ;;
-        both) MODE="both" ;;
+        monitor|full)   MODE="output" ;;
+        region|area)    MODE="area" ;;
+        window|active)  MODE="active" ;;
+        both)           MODE="both" ;;
         *)
-          echo "Usage: screenshot [monitor|region|window|both] [--keep-shader]" >&2
-          echo ""
-          echo "Modes:"
-          echo "  monitor - Screenshot current monitor (default)"
-          echo "  region  - Screenshot selected region"
-          echo "  window  - Screenshot active window"
-          echo "  both    - Screenshot both monitor and region"
-          echo ""
-          echo "Options:"
-          echo "  --keep-shader - Preserve hyprshade effects in screenshot"
+          echo "Error: unknown mode '$1'" >&2
+          echo "Run 'screenshot --help' for usage." >&2
           exit 1
           ;;
       esac
     fi
+
+    # ── Hyprshade: save/restore once around the entire operation ──
+
+    SAVED_SHADER=""
+
+    save_hyprshade() {
+      if [[ "$KEEP_SHADER" == "true" ]]; then
+        return
+      fi
+      if ! command -v hyprshade >/dev/null 2>&1; then
+        return
+      fi
+      SAVED_SHADER=$(hyprshade current 2>/dev/null || echo "")
+      if [[ -n "$SAVED_SHADER" && "$SAVED_SHADER" != "Off" ]]; then
+        hyprshade off >/dev/null 2>&1 || true
+      else
+        SAVED_SHADER=""
+      fi
+    }
+
+    restore_hyprshade() {
+      if [[ -n "$SAVED_SHADER" ]]; then
+        hyprshade on "$SAVED_SHADER" >/dev/null 2>&1 || true
+        SAVED_SHADER=""
+      fi
+    }
+
+    cleanup() {
+      restore_hyprshade
+    }
+    trap cleanup EXIT INT TERM HUP
+
+    # ── Helpers ──
 
     slugify_app_name() {
       local s="''${1:-}"
@@ -76,11 +115,7 @@ let
       done
       s="''${s#-}"
       s="''${s%-}"
-      if [[ -z "$s" ]]; then
-        echo "screen"
-      else
-        echo "$s"
-      fi
+      echo "''${s:-screen}"
     }
 
     get_app_name() {
@@ -102,58 +137,33 @@ let
     next_filename() {
       local dir="$1"
       local app="$2"
+      local suffix="''${3:-}"
       local date
       date=$(date +%Y%m%d)
       local prefix="''${app}_''${date}-"
       local n=1
-      while [[ -e "$dir/''${prefix}''${n}.png" ]] || \
-            [[ -e "$dir/''${prefix}''${n}_output.png" ]] || \
-            [[ -e "$dir/''${prefix}''${n}_area.png" ]]; do
+      while [[ -e "$dir/''${prefix}''${n}''${suffix}.png" ]]; do
         ((n++))
       done
-      echo "''${prefix}''${n}.png"
-    }
-
-    run_with_hyprshade() {
-      local keep_shader="$1"
-      shift
-
-      if [[ "$keep_shader" == "true" ]]; then
-        "$@"
-        return $?
-      fi
-
-      if command -v hyprshade >/dev/null 2>&1; then
-        local shader
-        shader=$(hyprshade current 2>/dev/null || echo "")
-        if [[ -n "$shader" && "$shader" != "Off" ]]; then
-          hyprshade off >/dev/null 2>&1
-          "$@"
-          local ret=$?
-          hyprshade on "$shader" >/dev/null 2>&1 || true
-          return $ret
-        fi
-      fi
-
-      "$@"
+      echo "''${prefix}''${n}''${suffix}.png"
     }
 
     take_screenshot() {
       local mode="$1"
       local dir="$2"
       local filename="$3"
-      local keep_shader="$4"
       local screenshot_path="$dir/$filename"
 
-      local grimblast_cmd=(
+      # --freeze is only useful for area selection
+      local -a grimblast_cmd=(
         ${pkgs.grimblast}/bin/grimblast
-        --freeze
-        copysave
-        "$mode"
-        "$screenshot_path"
       )
+      if [[ "$mode" == "area" ]]; then
+        grimblast_cmd+=(--freeze)
+      fi
+      grimblast_cmd+=(copysave "$mode" "$screenshot_path")
 
-      if run_with_hyprshade "$keep_shader" "''${grimblast_cmd[@]}"; then
+      if "''${grimblast_cmd[@]}"; then
         if [[ -f "$screenshot_path" ]]; then
           ${pkgs.libnotify}/bin/notify-send \
             "Screenshot" \
@@ -161,45 +171,37 @@ let
             -i camera-photo \
             2>/dev/null || true
           echo "Saved: $screenshot_path"
-        else
-          echo "Screenshot cancelled - no file created"
-          return 1
+          return 0
         fi
-      else
-        if [[ -f "$screenshot_path" ]]; then
-          rm -f "$screenshot_path"
-          echo "Screenshot cancelled - cleaned up partial file"
-        else
-          echo "Screenshot cancelled"
-        fi
-        return 1
       fi
+
+      # Clean up partial file on failure / cancellation
+      rm -f "$screenshot_path"
+      echo "Screenshot cancelled ($mode)" >&2
+      return 1
     }
 
-    take_both_screenshots() {
-      local dir="$1"
-      local base_filename="$2"
-      local keep_shader="$3"
-      local base_name="''${base_filename%.png}"
-
-      local output_filename="''${base_name}_output.png"
-      take_screenshot "output" "$dir" "$output_filename" "$keep_shader"
-
-      local area_filename="''${base_name}_area.png"
-      take_screenshot "area" "$dir" "$area_filename" "$keep_shader"
-    }
+    # ── Main ──
 
     APP_NAME=$(get_app_name)
-    FILENAME=$(next_filename "$XDG_SCREENSHOTS_DIR" "$APP_NAME")
+
+    save_hyprshade
 
     case "$MODE" in
       output|area|active)
-        take_screenshot "$MODE" "$XDG_SCREENSHOTS_DIR" "$FILENAME" "$KEEP_SHADER"
+        FILENAME=$(next_filename "$XDG_SCREENSHOTS_DIR" "$APP_NAME")
+        take_screenshot "$MODE" "$XDG_SCREENSHOTS_DIR" "$FILENAME"
         ;;
       both)
-        take_both_screenshots "$XDG_SCREENSHOTS_DIR" "$FILENAME" "$KEEP_SHADER"
+        FILENAME_OUTPUT=$(next_filename "$XDG_SCREENSHOTS_DIR" "$APP_NAME" "_output")
+        take_screenshot "output" "$XDG_SCREENSHOTS_DIR" "$FILENAME_OUTPUT"
+
+        FILENAME_AREA=$(next_filename "$XDG_SCREENSHOTS_DIR" "$APP_NAME" "_area")
+        take_screenshot "area" "$XDG_SCREENSHOTS_DIR" "$FILENAME_AREA"
         ;;
     esac
+
+    # restore_hyprshade runs automatically via the EXIT trap
   '';
 in
 {
