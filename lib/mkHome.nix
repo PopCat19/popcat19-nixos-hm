@@ -6,15 +6,12 @@
 # - Wraps home-manager configuration with standard settings
 # - Handles user and platform configuration
 # - Provides consistent specialArgs
-{ lib, inputs }:
-{
+_: {
   mkHomeConfiguration =
     {
       username,
       homeDirectory,
       stateVersion,
-      hostPlatform,
-      userConfig,
       extraImports ? [ ],
     }:
     {
@@ -24,6 +21,7 @@
 
       imports = [
         ../configuration/home/modules
-      ] ++ extraImports;
+      ]
+      ++ extraImports;
     };
 }

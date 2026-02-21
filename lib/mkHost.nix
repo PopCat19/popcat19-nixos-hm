@@ -6,24 +6,22 @@
 # - Wraps nixosSystem with standard configuration
 # - Handles Home Manager integration
 # - Passes userConfig and inputs via specialArgs
-{ lib, inputs }:
+{ inputs }:
 let
   overlays = import ../flake-modules/overlays.nix;
 
-  mkGamingModule =
-    system:
-    {
-      imports = [ inputs.aagl.nixosModules.default ];
-      nix.settings = inputs.aagl.nixConfig;
-      programs = {
-        anime-game-launcher.enable = system == "x86_64-linux";
-        honkers-railway-launcher.enable = system == "x86_64-linux";
-      };
+  mkGamingModule = system: {
+    imports = [ inputs.aagl.nixosModules.default ];
+    nix.settings = inputs.aagl.nixConfig;
+    programs = {
+      anime-game-launcher.enable = system == "x86_64-linux";
+      honkers-railway-launcher.enable = system == "x86_64-linux";
     };
+  };
 in
 {
   mkHostConfiguration =
-    hostName: hostPath:
+    _hostName: hostPath:
     let
       userConfig = import (hostPath + "/user-config.nix");
       inherit (userConfig) system;

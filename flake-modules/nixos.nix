@@ -8,11 +8,15 @@
 # - Uses shared lib helpers for configuration
 { inputs, ... }:
 let
-  lib = import ../lib { lib = inputs.nixpkgs.lib; inherit inputs; };
+  inherit (inputs.nixpkgs) lib;
+  customLib = import ../lib {
+    inherit lib inputs;
+  };
   hostsDir = ../configuration/hosts;
   hostEntries = builtins.readDir hostsDir;
-  hostDirs = inputs.nixpkgs.lib.filterAttrs (_: type: type == "directory") hostEntries;
+  hostDirs = lib.filterAttrs (_: type: type == "directory") hostEntries;
+  hostPaths = lib.mapAttrs (name: _: hostsDir + "/${name}") hostDirs;
 in
 {
-  flake.nixosConfigurations = builtins.mapAttrs lib.mkHost.mkHostConfiguration hostDirs;
+  flake.nixosConfigurations = lib.mapAttrs customLib.mkHost.mkHostConfiguration hostPaths;
 }
