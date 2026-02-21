@@ -2,12 +2,13 @@
 #
 # Purpose: Validates Nix flake configuration, formats .nix files automatically
 # Triggers: Push/PR to main/dev branches with Nix file changes, manual dispatch
-# Dependencies: DeterminateSystems/nix-installer-action, actions/checkout
+# Dependencies: DeterminateSystems/nix-installer-action, cachix/cachix-action
 #
 # Portable and reusable across any Nix-based repo.
 # - Auto-formats and checks all .nix files
 # - Pushes formatting back on manual runs
 # - Validates flake integrity after formatting
+# - Pushes builds to popcat19-shared Cachix cache
 # - Safe defaults for any branch
 
 name: flake-check
@@ -51,8 +52,12 @@ jobs:
             experimental-features = nix-command flakes
             accept-flake-config = true
 
-      - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v2
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: popcat19-shared
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          extraPullNames: vicinae,shimboot-systemd-nixos
 
       - name: Auto-format Nix files
         run: |
