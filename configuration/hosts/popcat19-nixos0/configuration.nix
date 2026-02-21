@@ -7,7 +7,6 @@
 # - Applies host-specific packages and settings
 {
   pkgs,
-  inputs,
   userConfig,
   ...
 }:
@@ -16,7 +15,6 @@
     ./hardware-configuration.nix
     ../../profiles/${userConfig.profile}.nix
     ../../system/modules/sunshine.nix
-    inputs.jovian.nixosModules.default
   ];
 
   networking.hostName = userConfig.hostname;
