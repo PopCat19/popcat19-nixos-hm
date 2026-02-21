@@ -16,12 +16,14 @@ in
     ../base/configuration.nix
 
     # System modules previously in base
+    ../system/modules/boot.nix
     ../system/modules/audio.nix
     ../system/modules/display.nix
     ../system/modules/fish.nix
     ../system/modules/fonts.nix
     ../system/modules/gnome-keyring.nix
     ../system/modules/hardware.nix
+    ../system/modules/hyprland.nix
     ../system/modules/networking.nix
     ../system/modules/noctalia.nix
     ../system/packages.nix
@@ -29,9 +31,12 @@ in
     ../system/modules/ssh.nix
     ../system/modules/tablet.nix
     ../system/modules/virtualisation.nix
+    ../system/modules/xdg.nix
 
     # Additional profile modules
     ../system/modules/programs.nix
+    ../system/modules/users.nix
+    ../system/modules/environment.nix
     ../system/modules/power-management.nix
     ../system/modules/vpn.nix
     ../system/modules/syncthing.nix
