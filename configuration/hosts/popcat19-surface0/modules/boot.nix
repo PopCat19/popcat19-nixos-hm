@@ -80,6 +80,7 @@ _: {
       "surface_aggregator.dyndbg=+p"
       "surface_serial_hub.dyndbg=+pfl"
       "video.brightness_switch_enabled=0"
+      "video=eDP-1:d"
     ];
 
     extraModulePackages = [ ];
