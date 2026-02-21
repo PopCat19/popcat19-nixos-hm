@@ -15,6 +15,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../profiles/${userConfig.profile}.nix
+    ../../system/modules/sunshine.nix
     inputs.jovian.nixosModules.default
   ];
 
