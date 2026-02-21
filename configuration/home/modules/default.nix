@@ -43,6 +43,7 @@
     ./syncthing.nix
     ./audio-control.nix
     ./vicinae.nix
+    ./git.nix
     ./home.nix
   ];
 
