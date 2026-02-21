@@ -14,8 +14,8 @@ in
   imports = [
     # Boot-critical files from base/system/
     ../base/system/boot.nix
-    ../base/system/core-packages.nix
-    ../base/system/environment.nix
+    ../system/modules/core-packages.nix
+    ../system/modules/environment.nix
     ../base/system/localization.nix
     ../base/system/users.nix
     # Centralized nix configuration
