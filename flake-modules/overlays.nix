@@ -1,5 +1,10 @@
 # Architecture-aware overlays
 _system: [
+  # OpenTabletDriver git latest overlay
+  (final: _prev: {
+    opentabletdriver = final.callPackage ../overlays/opentabletdriver-git.nix { };
+  })
+
   # Zrok v1.1.10 overlay - provides latest binary release
   (final: _prev: {
     zrok = final.stdenv.mkDerivation rec {

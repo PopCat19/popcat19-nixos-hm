@@ -35,6 +35,7 @@ in
         (hostPath + "/configuration.nix")
         inputs.home-manager.nixosModules.home-manager
         (mkGamingModule system)
+        { nixpkgs.overlays = overlays system; }
         {
           home-manager = {
             useGlobalPkgs = false;
