@@ -16,6 +16,7 @@
 {
   imports = [
     ../hyprland/hyprland.nix
+    ./niri.nix
     ./stylix.nix
     ./fonts.nix
     ../noctalia/noctalia.nix
