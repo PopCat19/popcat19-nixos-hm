@@ -3,7 +3,7 @@
 # Purpose: Build OpenTabletDriver from git latest
 #
 # This module:
-# - Fetches latest commit from master branch
+# - Uses flake input for source (auto-updates with flake update)
 # - Uses date-based version string
 # - Builds with dotnet SDK 8.0
 {
@@ -12,7 +12,6 @@
   copyDesktopItems,
   coreutils,
   dotnetCorePackages,
-  fetchFromGitHub,
   gtk3,
   jq,
   libappindicator,
@@ -25,18 +24,14 @@
   udev,
   wrapGAppsHook3,
   udevCheckHook,
+  src,
 }:
 
 buildDotnetModule (finalAttrs: {
   pname = "OpenTabletDriver";
-  version = "0.6.6.3-unstable-2025-02-22";
+  version = "0.6.6.3-unstable-${lib.substring 0 10 (src.lastModifiedDate or "1970-01-01")}";
 
-  src = fetchFromGitHub {
-    owner = "OpenTabletDriver";
-    repo = "OpenTabletDriver";
-    rev = "df28455f68f2282b2244b51e575ca1a2828523b7";
-    hash = "sha256-6/JphClTB5LKj7uu6RD/zZp++UVs3EEusGj/2DVj6ZY=";
-  };
+  inherit src;
 
   dotnet-sdk = dotnetCorePackages.sdk_8_0;
 
