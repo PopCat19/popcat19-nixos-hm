@@ -528,6 +528,22 @@
         "type": "github"
       }
     },
+    "opentabletdriver": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771723431,
+        "narHash": "sha256-6/JphClTB5LKj7uu6RD/zZp++UVs3EEusGj/2DVj6ZY=",
+        "owner": "OpenTabletDriver",
+        "repo": "OpenTabletDriver",
+        "rev": "df28455f68f2282b2244b51e575ca1a2828523b7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "OpenTabletDriver",
+        "repo": "OpenTabletDriver",
+        "type": "github"
+      }
+    },
     "pmd": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -560,6 +576,7 @@
         "llm-agents": "llm-agents",
         "nixpkgs": "nixpkgs_2",
         "noctalia": "noctalia",
+        "opentabletdriver": "opentabletdriver",
         "pmd": "pmd",
         "rose-pine-hyprcursor": "rose-pine-hyprcursor",
         "stylix": "stylix",

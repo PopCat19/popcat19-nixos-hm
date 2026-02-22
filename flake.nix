@@ -68,6 +68,11 @@
       url = "github:openziti/zrok/v1.1.10";
       flake = false;
     };
+
+    opentabletdriver = {
+      url = "github:OpenTabletDriver/OpenTabletDriver";
+      flake = false;
+    };
   };
 
   outputs =

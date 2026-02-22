@@ -8,7 +8,7 @@
 # - Passes userConfig and inputs via specialArgs
 { inputs }:
 let
-  overlays = import ../flake-modules/overlays.nix;
+  overlays = import ../flake-modules/overlays.nix { inherit inputs; };
 
   mkGamingModule = system: {
     imports = [ inputs.aagl.nixosModules.default ];
@@ -35,7 +35,7 @@ in
         (hostPath + "/configuration.nix")
         inputs.home-manager.nixosModules.home-manager
         (mkGamingModule system)
-        { nixpkgs.overlays = overlays system; }
+        { nixpkgs.overlays = overlays; }
         {
           home-manager = {
             useGlobalPkgs = false;
@@ -43,7 +43,7 @@ in
             sharedModules = [
               {
                 nixpkgs.config.allowUnfree = true;
-                nixpkgs.overlays = overlays system;
+                nixpkgs.overlays = overlays;
               }
             ];
             users.${userConfig.username} = import (hostPath + "/home.nix");
