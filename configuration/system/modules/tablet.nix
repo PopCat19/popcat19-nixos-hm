@@ -13,7 +13,7 @@ _: {
   };
 
   services.udev.extraRules = ''
-    KERNEL=="hidraw*", ATTRS{idVendor}=="b33f", ATTRS{idProduct}=="c4k3", TAG+="uaccess", TAG+="udev-acl"
-    SUBSYSTEM=="usb", ATTRS{idVendor}=="b33f", ATTRS{idProduct}=="c4k3", TAG+="uaccess", TAG+="udev-acl"
+    KERNEL=="hidraw*", ATTRS{idVendor}=="256c", ATTRS{idProduct}=="006d", TAG+="uaccess", TAG+="udev-acl"
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="256c", ATTRS{idProduct}=="006d", TAG+="uaccess", TAG+="udev-acl"
   '';
 }
