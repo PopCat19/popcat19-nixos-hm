@@ -37,6 +37,8 @@
 
     noctalia.url = "github:noctalia-dev/noctalia-shell";
 
+    niri.url = "github:sodiboo/niri-flake";
+
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     pmd = {
