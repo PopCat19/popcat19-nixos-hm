@@ -36,6 +36,8 @@
     ./vesktop.nix
     ./starship.nix
     ./micro.nix
+    ./nvim.nix
+    ./tmux.nix
     ./fcitx5.nix
     ./mangohud.nix
     ./privacy.nix
