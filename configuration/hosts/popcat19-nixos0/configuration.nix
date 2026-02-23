@@ -15,6 +15,7 @@
     ./hardware-configuration.nix
     ../../profiles/${userConfig.profile}.nix
     ../../system/modules/sunshine.nix
+    ../../system/modules/agenix.nix
   ];
 
   networking.hostName = userConfig.hostname;
