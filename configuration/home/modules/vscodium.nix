@@ -1,3 +1,11 @@
+# vscodium.nix
+#
+# Purpose: Configure VSCodium editor with extensions and settings
+#
+# This module:
+# - Enables VSCodium (VS Code without telemetry)
+# - Configures Nix language support extensions
+# - Sets editor preferences and keybindings
 { pkgs, ... }:
 {
   programs.vscode = {
