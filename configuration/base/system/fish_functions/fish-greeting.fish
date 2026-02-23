@@ -98,7 +98,7 @@ function fish_greeting
         set_color brwhite; echo -n "Helpers: "
 
         set -l available_helpers ""
-        set -l helper_functions nrb nrbc flup dtm fixhist list-fish-helpers show-shortcuts lsa
+        set -l helper_functions nrb nrbc flup dtm devs fixhist list-fish-helpers show-shortcuts lsa
 
         for func in $helper_functions
             if functions -q $func

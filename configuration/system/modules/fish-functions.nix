@@ -39,6 +39,8 @@
       builtins.readFile ../../base/system/fish_functions/show-shortcuts.fish;
     "fish/functions/sillytavern.fish".text =
       builtins.readFile ../../base/system/fish_functions/sillytavern.fish;
+    "fish/functions/dev-session.fish".text =
+      builtins.readFile ../../base/system/fish_functions/dev-session.fish;
   };
 
   programs.fish = {
@@ -51,6 +53,7 @@
       ".4" = "cd ../../../..";
       ".5" = "cd ../../../../..";
       cdh = "cd $NIXOS_CONFIG_DIR";
+      devs = "dev-session";
       dtm = "dev-to-main";
       fixhist = "fix-fish-history";
       flconf = "$EDITOR $NIXOS_CONFIG_DIR/flake.nix";
