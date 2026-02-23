@@ -34,6 +34,7 @@ in
       modules = [
         (hostPath + "/configuration.nix")
         inputs.home-manager.nixosModules.home-manager
+        inputs.agenix.nixosModules.default
         (mkGamingModule system)
         { nixpkgs.overlays = overlays; }
         {

@@ -45,6 +45,7 @@ in
     ../system/modules/openrgb.nix
     ../system/modules/stylix-lightdm.nix
     ../system/modules/apollo.nix
+    ../system/modules/agenix.nix
 
     # Centralized nix configuration
     ../nix-options.nix
