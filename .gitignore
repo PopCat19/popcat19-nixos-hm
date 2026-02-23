@@ -25,3 +25,4 @@ Thumbs.db
 
 # Large directories
 node_modules
+.changelog-merge-state
