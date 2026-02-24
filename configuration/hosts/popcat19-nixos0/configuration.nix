@@ -22,6 +22,7 @@
 
   environment.systemPackages = with pkgs; [
     alsa-utils
+    moonlight-qt
     opentabletdriver
     pavucontrol
   ];
