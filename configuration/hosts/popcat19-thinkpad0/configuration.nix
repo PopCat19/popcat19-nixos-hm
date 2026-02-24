@@ -5,7 +5,12 @@
 # This module:
 # - Imports hardware configuration and profile preset
 # - Applies host-specific modules and settings
-{ pkgs, lib, userConfig, ... }:
+{
+  pkgs,
+  lib,
+  userConfig,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
