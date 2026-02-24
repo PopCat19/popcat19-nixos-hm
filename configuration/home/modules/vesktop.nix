@@ -5,7 +5,6 @@
 # This module:
 # - Enables Vesktop with custom settings
 # - Configures Vencord integration and plugins
-# - Sets up application preferences and appearance
 _: {
   programs.vesktop = {
     enable = true;
@@ -35,44 +34,40 @@ _: {
       splashBackground = "#000000";
       splashColor = "#ffffff";
       splashTheming = true;
+    };
+
+    vencord.settings = {
+      autoUpdate = true;
+      autoUpdateNotification = true;
+      notifyAboutUpdates = true;
+      useQuickCss = true;
+
+      notifications = {
+        logLimit = 50;
+        position = "top-right";
+        timeout = 5000;
+        useNative = "not-focused";
+      };
 
       plugins = {
-        "AI Noise Suppression" = {
-          enabled = true;
-        };
-        BadgeAPI = {
-          enabled = true;
-        };
+        "AI Noise Suppression".enabled = true;
+        BadgeAPI.enabled = true;
         BetterNotesBox = {
           enabled = true;
           hide = false;
           noSpellCheck = false;
         };
-        BiggerStreamPreview = {
-          enabled = true;
-        };
+        BiggerStreamPreview.enabled = true;
         BlurNSFW = {
           enabled = true;
           blurAmount = 10;
         };
-        ChatInputButtonAPI = {
-          enabled = true;
-        };
-        ColorSighted = {
-          enabled = true;
-        };
-        CommandsAPI = {
-          enabled = true;
-        };
-        ContextMenuAPI = {
-          enabled = true;
-        };
-        CrashHandler = {
-          enabled = true;
-        };
-        DisableDeepLinks = {
-          enabled = true;
-        };
+        ChatInputButtonAPI.enabled = true;
+        ColorSighted.enabled = true;
+        CommandsAPI.enabled = true;
+        ContextMenuAPI.enabled = true;
+        CrashHandler.enabled = true;
+        DisableDeepLinks.enabled = true;
         Experiments = {
           enabled = true;
           enableIsStaff = false;
@@ -93,18 +88,10 @@ _: {
           transformStickers = true;
           useHyperLinks = true;
         };
-        FixYoutubeEmbeds = {
-          enabled = true;
-        };
-        ForceOwnerCrown = {
-          enabled = true;
-        };
-        GifPaste = {
-          enabled = true;
-        };
-        GreetStickerPicker = {
-          enabled = true;
-        };
+        FixYoutubeEmbeds.enabled = true;
+        ForceOwnerCrown.enabled = true;
+        GifPaste.enabled = true;
+        GreetStickerPicker.enabled = true;
         ImageZoom = {
           enabled = true;
           invertScroll = true;
@@ -122,9 +109,7 @@ _: {
           toolTip = true;
           voiceActivity = true;
         };
-        MessageAccessoriesAPI = {
-          enabled = true;
-        };
+        MessageAccessoriesAPI.enabled = true;
         MessageClickActions = {
           enabled = true;
           enableDeleteOnClick = true;
@@ -132,17 +117,13 @@ _: {
           enableDoubleClickToReply = true;
           requireModifier = false;
         };
-        MessageEventsAPI = {
-          enabled = true;
-        };
+        MessageEventsAPI.enabled = true;
         MessageTags = {
           enabled = true;
           clyde = true;
           tagsList = { };
         };
-        MoreKaomoji = {
-          enabled = true;
-        };
+        MoreKaomoji.enabled = true;
         NewGuildSettings = {
           enabled = true;
           everyone = true;
@@ -153,9 +134,7 @@ _: {
           role = true;
           showAllChannels = true;
         };
-        NoProfileThemes = {
-          enabled = true;
-        };
+        NoProfileThemes.enabled = true;
         NoReplyMention = {
           enabled = true;
           inverseShiftReply = false;
@@ -166,15 +145,9 @@ _: {
           enabled = true;
           disableAnalytics = true;
         };
-        NoTypingAnimation = {
-          enabled = true;
-        };
-        NoticesAPI = {
-          enabled = true;
-        };
-        PictureInPicture = {
-          enabled = true;
-        };
+        NoTypingAnimation.enabled = true;
+        NoticesAPI.enabled = true;
+        PictureInPicture.enabled = true;
         PinDMs = {
           enabled = true;
           canCollapseDmSection = false;
@@ -182,15 +155,9 @@ _: {
           pinOrder = 0;
           userBasedCategoryList = { };
         };
-        ReadAllNotificationsButton = {
-          enabled = true;
-        };
-        ReverseImageSearch = {
-          enabled = true;
-        };
-        RevealAllSpoilers = {
-          enabled = true;
-        };
+        ReadAllNotificationsButton.enabled = true;
+        ReverseImageSearch.enabled = true;
+        RevealAllSpoilers.enabled = true;
         ReviewDB = {
           enabled = true;
           hideBlockedUsers = true;
@@ -198,9 +165,7 @@ _: {
           reviewsDropdownState = false;
           showWarning = true;
         };
-        ServerListAPI = {
-          enabled = true;
-        };
+        ServerListAPI.enabled = true;
         Settings = {
           enabled = true;
           settingsLocation = "aboveActivity";
@@ -220,9 +185,7 @@ _: {
           keepSpotifyActivityOnIdle = false;
           noSpotifyAutoPause = true;
         };
-        SupportHelper = {
-          enabled = true;
-        };
+        SupportHelper.enabled = true;
         TypingIndicator = {
           enabled = true;
           includeBlockedUsers = false;
@@ -249,12 +212,8 @@ _: {
           showInProfile = true;
           showSelf = true;
         };
-        UserSettingsAPI = {
-          enabled = true;
-        };
-        ValidUser = {
-          enabled = true;
-        };
+        UserSettingsAPI.enabled = true;
+        ValidUser.enabled = true;
         VoiceMessages = {
           enabled = true;
           echoCancellation = false;
@@ -264,92 +223,10 @@ _: {
           enabled = true;
           addBack = false;
         };
-        WebKeybinds = {
-          enabled = true;
-        };
-        WhoReacted = {
-          enabled = true;
-        };
-        YoutubeAdblock = {
-          enabled = true;
-        };
-        petpet = {
-          enabled = true;
-        };
-      };
-
-      vencord = {
-        enable = true;
-        settings = {
-          autoUpdate = true;
-          autoUpdateNotification = true;
-          notifyAboutUpdates = true;
-          useQuickCss = true;
-        };
-        plugins = {
-          "AI Noise Suppression" = true;
-          BadgeAPI = true;
-          BetterNotesBox = true;
-          BiggerStreamPreview = true;
-          BlurNSFW = true;
-          ChatInputButtonAPI = true;
-          ColorSighted = true;
-          CommandsAPI = true;
-          ContextMenuAPI = true;
-          CrashHandler = true;
-          DisableDeepLinks = true;
-          Experiments = true;
-          FakeNitro = true;
-          FixYoutubeEmbeds = true;
-          ForceOwnerCrown = true;
-          GifPaste = true;
-          GreetStickerPicker = true;
-          ImageZoom = true;
-          MemberCount = true;
-          MessageAccessoriesAPI = true;
-          MessageClickActions = true;
-          MessageEventsAPI = true;
-          MessageTags = true;
-          MoreKaomoji = true;
-          NewGuildSettings = true;
-          NoProfileThemes = true;
-          NoReplyMention = true;
-          NoTrack = true;
-          NoTypingAnimation = true;
-          NoticesAPI = true;
-          PictureInPicture = true;
-          PinDMs = true;
-          ReadAllNotificationsButton = true;
-          ReverseImageSearch = true;
-          RevealAllSpoilers = true;
-          ReviewDB = true;
-          ServerListAPI = true;
-          Settings = true;
-          SettingsStoreAPI = false;
-          SilentTyping = true;
-          SpotifyControls = true;
-          SpotifyCrack = true;
-          SupportHelper = true;
-          TypingIndicator = true;
-          TypingTweaks = true;
-          USRBG = true;
-          UserMessagesPronouns = true;
-          UserSettingsAPI = true;
-          ValidUser = true;
-          VoiceMessages = true;
-          WebContextMenus = true;
-          WebKeybinds = true;
-          WhoReacted = true;
-          YoutubeAdblock = true;
-          petpet = true;
-        };
-      };
-
-      notifications = {
-        logLimit = 50;
-        position = "top-right";
-        timeout = 5000;
-        useNative = "not-focused";
+        WebKeybinds.enabled = true;
+        WhoReacted.enabled = true;
+        YoutubeAdblock.enabled = true;
+        petpet.enabled = true;
       };
     };
   };

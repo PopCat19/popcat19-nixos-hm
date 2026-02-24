@@ -5,11 +5,16 @@
 # This module:
 # - Enables Git functionality
 # - Sets user identity from configuration
-# - Applies additional Git configuration
 { userConfig, ... }:
 {
   programs.git = {
     enable = true;
-    inherit (userConfig.git) userName userEmail extraConfig;
+    settings = {
+      user = {
+        name = userConfig.git.userName;
+        email = userConfig.git.userEmail;
+      };
+    }
+    // userConfig.git.extraConfig;
   };
 }
