@@ -14,6 +14,7 @@
     ./modules/clear-bdprochot.nix
     ./modules/hardware.nix
     ./modules/thermal-config.nix
+    ../../system/modules/sunshine.nix
   ];
 
   networking.hostName = userConfig.hostname;
