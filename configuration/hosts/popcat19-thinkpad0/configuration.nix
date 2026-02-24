@@ -20,6 +20,7 @@
   services.displayManager.autoLogin.enable = lib.mkForce false;
 
   environment.systemPackages = with pkgs; [
+    bleachbit
     moonlight-qt
   ];
 }

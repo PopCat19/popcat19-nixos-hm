@@ -22,6 +22,7 @@
   environment.systemPackages = with pkgs; [
     acpi
     alsa-utils
+    bleachbit
     brightnessctl
     ddcutil
     dmidecode
