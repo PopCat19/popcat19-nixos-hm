@@ -84,6 +84,7 @@ with pkgs;
   osu-lazer-bin
 
   # Graphics
+  friction-graphics
   kdePackages.gwenview
   pureref
 
