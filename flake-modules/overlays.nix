@@ -8,6 +8,11 @@
     };
   })
 
+  # Friction graphics overlay
+  (final: _prev: {
+    friction-graphics = final.callPackage ../overlays/friction-graphics.nix { };
+  })
+
   # Zrok v1.1.10 overlay - provides latest binary release
   (final: _prev: {
     zrok = final.stdenv.mkDerivation rec {
