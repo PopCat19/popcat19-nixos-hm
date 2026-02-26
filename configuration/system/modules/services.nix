@@ -4,6 +4,7 @@
 #
 # This module:
 # - Configures journald log retention
+# - Disables systemd coredumps
 # - Enables input device support
 # - Sets up udev rules for brightness control
 # - Enables D-Bus, UDisks2, Flatpak, and GVFS
@@ -11,6 +12,9 @@
 {
   security.polkit.enable = true;
   security.rtkit.enable = true;
+
+  # Disable coredumps to save disk space
+  systemd.coredump.enable = false;
 
   services.dbus.enable = true;
   services.flatpak.enable = true;
