@@ -24,6 +24,7 @@ with pkgs;
   mpv
   pavucontrol
   playerctl
+  qtractor
 
   # Communication
   keepassxc
