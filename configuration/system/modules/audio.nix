@@ -1,9 +1,9 @@
 # audio.nix
 #
-# Purpose: Configure PipeWire audio system with HDMI support
+# Purpose: Configure PipeWire audio system with JACK and ALSA support
 #
 # This module:
-# - Enables PipeWire with ALSA and PulseAudio compatibility
+# - Enables PipeWire with ALSA, PulseAudio, and JACK compatibility
 # - Configures HDMI audio sample rates
 # - Provides ALSA utilities for audio management
 { pkgs, ... }:
@@ -18,6 +18,10 @@
       enable = true;
       support32Bit = true;
     };
+    jack = {
+      enable = true;
+    };
+    pulse.enable = true;
     extraConfig.pipewire."91-hdmi-audio" = {
       "context.properties" = {
         "default.clock.allowed-rates" = [
@@ -28,6 +32,5 @@
         "default.clock.rate" = 48000;
       };
     };
-    pulse.enable = true;
   };
 }
