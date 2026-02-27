@@ -18,6 +18,7 @@ in
     # System modules previously in base
     ../system/modules/boot.nix
     ../system/modules/audio.nix
+    ../system/modules/zrythm.nix
     ../system/modules/display.nix
     ../system/modules/fish.nix
     ../system/modules/fonts.nix
