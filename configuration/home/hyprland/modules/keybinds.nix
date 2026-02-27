@@ -34,11 +34,9 @@
       "$mainMod, E, exec, $file"
       "$mainMod, C, exec, $editor"
       "$mainMod, F, exec, $browser"
-      "$mainMod, A, exec, vicinae open"
-      "$mainMod+Shift, A, exec, fuzzel"
+      "$mainMod, A, exec, fuzzel"
       "$mainMod+Shift, C, exec, hyprpicker -a"
-      "$mainMod, V, exec, vicinae vicinae://extensions/vicinae/clipboard/history"
-      "$mainMod+Shift, V, exec, bash -lc \"cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v\""
+      "$mainMod, V, exec, bash -lc \"cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v\""
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
       "$mainMod+Ctrl, N, exec, systemctl --user restart noctalia-shell.service"
 

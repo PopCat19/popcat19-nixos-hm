@@ -75,9 +75,9 @@ rec {
     };
 
     launcher = {
-      desktop = "vicinae.desktop";
-      package = "vicinae";
-      command = "vicinae";
+      desktop = "fuzzel.desktop";
+      package = "fuzzel";
+      command = "fuzzel";
     };
   };
 

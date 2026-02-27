@@ -102,7 +102,6 @@ nixos-config/
 | zen-browser | Zen browser package |
 | noctalia | Wayland bar/launcher |
 | pmd | Personal Material Design theme |
-| vicinae | Application launcher |
 | llm-agents | LLM agent utilities |
 
 ## Hosts
