@@ -24,7 +24,7 @@ with pkgs;
   mpv
   pavucontrol
   playerctl
-  qtractor
+  zrythm
 
   # Communication
   keepassxc
