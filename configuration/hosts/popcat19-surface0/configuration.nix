@@ -19,6 +19,8 @@
 
   networking.hostName = userConfig.hostname;
 
+  services.iptsd.enable = false;
+
   environment.systemPackages = with pkgs; [
     acpi
     alsa-utils
