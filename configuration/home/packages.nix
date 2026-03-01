@@ -34,7 +34,6 @@ with pkgs;
   brightnessctl
   fuzzel
   hyprlock
-  hyprpolkitagent
   hyprshade
   hyprutils
 
