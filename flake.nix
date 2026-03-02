@@ -75,6 +75,11 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     opentabletdriver = {
       url = "github:OpenTabletDriver/OpenTabletDriver";
       flake = false;
