@@ -37,7 +37,7 @@
     ./vesktop.nix
     ./starship.nix
     ./micro.nix
-    ./nvim
+    ./nvim/nvim.nix
     ./tmux.nix
     ./fcitx5.nix
     ./mangohud.nix
