@@ -17,9 +17,6 @@ _: {
           select = "underline";
         };
         selection-mode = "replace";
-        edit = {
-          use-commit-timestamps = true;
-        };
         indent = {
           unit = "2tabs";
         };
