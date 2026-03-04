@@ -41,6 +41,7 @@
     ./nvim/nvim.nix
     ./helix.nix
     ./broot.nix
+    ./lazygit.nix
     ./tmux.nix
     ./fcitx5.nix
     ./mangohud.nix
