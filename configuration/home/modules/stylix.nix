@@ -84,6 +84,7 @@
     };
 
     targets = {
+      helix.enable = true;
       nixcord.enable = true;
       vencord.enable = true;
       vesktop.enable = true;
