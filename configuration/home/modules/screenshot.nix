@@ -26,15 +26,6 @@ let
           ;;
         --help|-h)
           echo "Usage: screenshot [monitor|region|window|both] [--keep-shader]"
-          echo ""
-          echo "Modes:"
-          echo "  monitor - Screenshot current monitor (default)"
-          echo "  region  - Screenshot selected region"
-          echo "  window  - Screenshot active window"
-          echo "  both    - Screenshot both monitor and region"
-          echo ""
-          echo "Options:"
-          echo "  --keep-shader - Preserve hyprshade effects in screenshot"
           exit 0
           ;;
         -*)
@@ -50,26 +41,22 @@ let
 
     set -- "''${POSITIONAL_ARGS[@]+''${POSITIONAL_ARGS[@]}}"
 
-    if [[ $# -gt 1 ]]; then
-      echo "Error: expected at most one positional argument, got $#" >&2
-      exit 1
+    if [[ $# -gt 0 && "${"1:-"}" == "--keep-shader" ]]; then
+      KEEP_SHADER=true
     fi
 
     if [[ $# -eq 1 ]]; then
       case $1 in
-        monitor|full)   MODE="output" ;;
-        region|area)    MODE="area" ;;
-        window|active)  MODE="active" ;;
-        both)           MODE="both" ;;
+        monitor|"")    MODE="output" ;;
+        region)        MODE="area" ;;
+        window)        MODE="active" ;;
+        both)          MODE="both" ;;
         *)
           echo "Error: unknown mode '$1'" >&2
-          echo "Run 'screenshot --help' for usage." >&2
           exit 1
           ;;
       esac
     fi
-
-    # ── Hyprshade: save/restore once around the entire operation ──
 
     SAVED_SHADER=""
 
@@ -94,44 +81,20 @@ let
         SAVED_SHADER=""
       fi
     }
-
-    cleanup() {
-      restore_hyprshade
-    }
-    trap cleanup EXIT INT TERM HUP
-
-    # ── Helpers ──
+    trap restore_hyprshade EXIT INT TERM HUP
 
     slugify_app_name() {
-      local s="''${1:-}"
-      if [[ -z "$s" ]]; then
-        echo "screen"
-        return
-      fi
-      s="''${s,,}"
-      s="''${s//[^a-z0-9._-]/-}"
-      while [[ "$s" == *--* ]]; do
-        s="''${s//--/-}"
-      done
-      s="''${s#-}"
-      s="''${s%-}"
-      echo "''${s:-screen}"
+      tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9._-' '-'
     }
 
     get_app_name() {
-      local app="screen"
       if command -v hyprctl >/dev/null 2>&1; then
-        local json
-        json=$(hyprctl activewindow -j 2>/dev/null || true)
-        if [[ -n "$json" ]]; then
-          local cls
-          cls=$(echo "$json" | ${pkgs.jq}/bin/jq -r '.class // empty' 2>/dev/null || true)
-          if [[ -n "$cls" && "$cls" != "null" ]]; then
-            app="$cls"
-          fi
-        fi
+        hyprctl activewindow -j 2>/dev/null \
+          | ${pkgs.jq}/bin/jq -r '.class // "screen"' 2>/dev/null \
+          | slugify_app_name
+      else
+        echo "screen"
       fi
-      slugify_app_name "$app"
     }
 
     next_filename() {
@@ -154,7 +117,6 @@ let
       local filename="$3"
       local screenshot_path="$dir/$filename"
 
-      # --freeze is only useful for area selection
       local -a grimblast_cmd=(
         ${pkgs.grimblast}/bin/grimblast
       )
@@ -165,23 +127,16 @@ let
 
       if "''${grimblast_cmd[@]}"; then
         if [[ -f "$screenshot_path" ]]; then
-          ${pkgs.libnotify}/bin/notify-send \
-            "Screenshot" \
-            "$mode screenshot saved: $filename" \
-            -i camera-photo \
-            2>/dev/null || true
+          ${pkgs.libnotify}/bin/notify-send "Screenshot" "$filename saved" -i camera-photo 2>/dev/null || true
           echo "Saved: $screenshot_path"
           return 0
         fi
       fi
 
-      # Clean up partial file on failure / cancellation
       rm -f "$screenshot_path"
       echo "Screenshot cancelled ($mode)" >&2
       return 1
     }
-
-    # ── Main ──
 
     APP_NAME=$(get_app_name)
 
@@ -200,8 +155,6 @@ let
         take_screenshot "area" "$XDG_SCREENSHOTS_DIR" "$FILENAME_AREA"
         ;;
     esac
-
-    # restore_hyprshade runs automatically via the EXIT trap
   '';
 in
 {
