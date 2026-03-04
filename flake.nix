@@ -80,11 +80,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    lazyvim = {
-      url = "github:pfassina/lazyvim-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     opentabletdriver = {
       url = "github:OpenTabletDriver/OpenTabletDriver";
       flake = false;
