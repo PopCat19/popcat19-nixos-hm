@@ -10,53 +10,41 @@ let
   screenshotScript = pkgs.writeShellScriptBin "screenshot" ''
     set -euo pipefail
 
-    DEFAULT_DIR="$HOME/Pictures/Screenshots"
-    XDG_SCREENSHOTS_DIR="''${XDG_SCREENSHOTS_DIR:-$DEFAULT_DIR}"
-    mkdir -p "$XDG_SCREENSHOTS_DIR"
+    SCREENSHOTS_DIR="''${XDG_SCREENSHOTS_DIR:-$HOME/Pictures/Screenshots}"
+    mkdir -p "$SCREENSHOTS_DIR"
 
     MODE="output"
     KEEP_SHADER=false
-    POSITIONAL_ARGS=()
+
+    usage() {
+      echo "Usage: screenshot [monitor|region|window|both] [--keep-shader]"
+      echo ""
+      echo "Modes:"
+      echo "  monitor   Capture the current output (default)"
+      echo "  region    Select a region to capture"
+      echo "  window    Capture the active window"
+      echo "  both      Capture output, then select a region"
+      echo ""
+      echo "Options:"
+      echo "  --keep-shader   Don't disable hyprshade during capture"
+      exit 0
+    }
 
     while [[ $# -gt 0 ]]; do
       case $1 in
-        --keep-shader)
-          KEEP_SHADER=true
-          shift
-          ;;
-        --help|-h)
-          echo "Usage: screenshot [monitor|region|window|both] [--keep-shader]"
-          exit 0
-          ;;
-        -*)
-          echo "Unknown option: $1" >&2
-          exit 1
-          ;;
-        *)
-          POSITIONAL_ARGS+=("$1")
-          shift
-          ;;
+        --keep-shader)  KEEP_SHADER=true ;;
+        --help|-h)      usage ;;
+        -*)             echo "Unknown option: $1" >&2; exit 1 ;;
+        monitor|"")     MODE="output" ;;
+        region)         MODE="area" ;;
+        window)         MODE="active" ;;
+        both)           MODE="both" ;;
+        *)              echo "Error: unknown mode '$1'" >&2; exit 1 ;;
       esac
+      shift
     done
 
-    set -- "''${POSITIONAL_ARGS[@]+''${POSITIONAL_ARGS[@]}}"
-
-    if [[ $# -gt 0 && "${"1:-"}" == "--keep-shader" ]]; then
-      KEEP_SHADER=true
-    fi
-
-    if [[ $# -eq 1 ]]; then
-      case $1 in
-        monitor|"")    MODE="output" ;;
-        region)        MODE="area" ;;
-        window)        MODE="active" ;;
-        both)          MODE="both" ;;
-        *)
-          echo "Error: unknown mode '$1'" >&2
-          exit 1
-          ;;
-      esac
-    fi
+    # -- Hyprshade management --------------------------------------------------
 
     SAVED_SHADER=""
 
@@ -67,9 +55,10 @@ let
       if ! command -v hyprshade >/dev/null 2>&1; then
         return
       fi
-      SAVED_SHADER=$(hyprshade current 2>/dev/null || echo "")
+      SAVED_SHADER=$(hyprshade current 2>/dev/null || true)
       if [[ -n "$SAVED_SHADER" && "$SAVED_SHADER" != "Off" ]]; then
         hyprshade off >/dev/null 2>&1 || true
+        sleep 0.15
       else
         SAVED_SHADER=""
       fi
@@ -77,30 +66,29 @@ let
 
     restore_hyprshade() {
       if [[ -n "$SAVED_SHADER" ]]; then
-        hyprshade on "$SAVED_SHADER" >/dev/null 2>&1 || true
+        local shader="$SAVED_SHADER"
         SAVED_SHADER=""
+        hyprshade on "$shader" >/dev/null 2>&1 || true
       fi
     }
-    trap restore_hyprshade EXIT INT TERM HUP
 
-    slugify_app_name() {
-      tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9._-' '-'
-    }
+    trap restore_hyprshade EXIT
+
+    # -- Helpers ---------------------------------------------------------------
 
     get_app_name() {
       if command -v hyprctl >/dev/null 2>&1; then
         hyprctl activewindow -j 2>/dev/null \
           | ${pkgs.jq}/bin/jq -r '.class // "screen"' 2>/dev/null \
-          | slugify_app_name
+          | tr '[:upper:]' '[:lower:]' \
+          | tr -c 'a-z0-9._-' '-'
       else
         echo "screen"
       fi
     }
 
     next_filename() {
-      local dir="$1"
-      local app="$2"
-      local suffix="''${3:-}"
+      local dir="$1" app="$2" suffix="''${3:-}"
       local date
       date=$(date +%Y%m%d)
       local prefix="''${app}_''${date}-"
@@ -112,47 +100,42 @@ let
     }
 
     take_screenshot() {
-      local mode="$1"
-      local dir="$2"
-      local filename="$3"
-      local screenshot_path="$dir/$filename"
+      local mode="$1" dir="$2" filename="$3"
+      local filepath="$dir/$filename"
 
-      local -a grimblast_cmd=(
-        ${pkgs.grimblast}/bin/grimblast
-      )
-      if [[ "$mode" == "area" ]]; then
-        grimblast_cmd+=(--freeze)
-      fi
-      grimblast_cmd+=(copysave "$mode" "$screenshot_path")
+      local -a cmd=(${pkgs.grimblast}/bin/grimblast)
+      [[ "$mode" == "area" ]] && cmd+=(--freeze)
+      cmd+=(copysave "$mode" "$filepath")
 
-      if "''${grimblast_cmd[@]}"; then
-        if [[ -f "$screenshot_path" ]]; then
-          ${pkgs.libnotify}/bin/notify-send "Screenshot" "$filename saved" -i camera-photo 2>/dev/null || true
-          echo "Saved: $screenshot_path"
-          return 0
-        fi
+      if "''${cmd[@]}" && [[ -f "$filepath" ]]; then
+        ${pkgs.libnotify}/bin/notify-send \
+          "Screenshot" "$filename saved" \
+          -i camera-photo 2>/dev/null || true
+        echo "Saved: $filepath"
+        return 0
       fi
 
-      rm -f "$screenshot_path"
+      rm -f "$filepath"
       echo "Screenshot cancelled ($mode)" >&2
       return 1
     }
 
-    APP_NAME=$(get_app_name)
+    # -- Main ------------------------------------------------------------------
 
+    APP_NAME=$(get_app_name)
     save_hyprshade
 
     case "$MODE" in
       output|area|active)
-        FILENAME=$(next_filename "$XDG_SCREENSHOTS_DIR" "$APP_NAME")
-        take_screenshot "$MODE" "$XDG_SCREENSHOTS_DIR" "$FILENAME"
+        FILENAME=$(next_filename "$SCREENSHOTS_DIR" "$APP_NAME")
+        take_screenshot "$MODE" "$SCREENSHOTS_DIR" "$FILENAME"
         ;;
       both)
-        FILENAME_OUTPUT=$(next_filename "$XDG_SCREENSHOTS_DIR" "$APP_NAME" "_output")
-        take_screenshot "output" "$XDG_SCREENSHOTS_DIR" "$FILENAME_OUTPUT"
+        FILENAME=$(next_filename "$SCREENSHOTS_DIR" "$APP_NAME" "_output")
+        take_screenshot "output" "$SCREENSHOTS_DIR" "$FILENAME"
 
-        FILENAME_AREA=$(next_filename "$XDG_SCREENSHOTS_DIR" "$APP_NAME" "_area")
-        take_screenshot "area" "$XDG_SCREENSHOTS_DIR" "$FILENAME_AREA"
+        FILENAME=$(next_filename "$SCREENSHOTS_DIR" "$APP_NAME" "_area")
+        take_screenshot "area" "$SCREENSHOTS_DIR" "$FILENAME"
         ;;
     esac
   '';
