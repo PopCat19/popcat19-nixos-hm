@@ -14,7 +14,7 @@
 }:
 {
   imports = [
-    inputs.pmd.homeManagerModules.pmd
+    inputs.pmd.homeModules.pmd
     inputs.stylix.homeModules.stylix
   ];
 
