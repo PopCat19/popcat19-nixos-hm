@@ -23,7 +23,7 @@
     Theme=Papirus-Dark
 
     [UiSettings]
-    ColorScheme=kvantum
+    ColorScheme=Stylix
   '';
 
   home.packages = with pkgs; [
