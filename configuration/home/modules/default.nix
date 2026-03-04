@@ -21,6 +21,7 @@
     ./fonts.nix
     ../noctalia/noctalia.nix
     ./zed.nix
+    ./zathura.nix
     ./vscodium.nix
     ./screenshot.nix
     ./zen-browser.nix
