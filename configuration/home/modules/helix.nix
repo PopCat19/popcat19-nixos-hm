@@ -17,9 +17,6 @@ _: {
           select = "underline";
         };
         selection-mode = "replace";
-        indent = {
-          unit = "2tabs";
-        };
       };
     };
   };
