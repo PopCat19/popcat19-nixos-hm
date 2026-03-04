@@ -68,7 +68,6 @@ with pkgs;
   yarn-berry
 
   # Editors
-  helix
   vscodium
   zed-editor
 

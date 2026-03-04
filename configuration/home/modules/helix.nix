@@ -1,9 +1,9 @@
 # helix.nix
 #
-# Purpose: Configure Helix editor with stylix theming
+# Purpose: Configure Helix editor with home-manager and stylix theming
 #
 # This module:
-# - Enables helix editor via home-manager
+# - Enables Helix via home-manager
 # - Configures basic editor settings
 _: {
   programs.helix = {
