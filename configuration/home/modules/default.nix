@@ -42,7 +42,6 @@
     ./helix.nix
     ./broot.nix
     ./lazygit.nix
-    ./vivid.nix
     ./tmux.nix
     ./fcitx5.nix
     ./mangohud.nix
