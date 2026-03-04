@@ -38,6 +38,7 @@
     ./starship.nix
     ./micro.nix
     ./nvim/nvim.nix
+    ./helix.nix
     ./tmux.nix
     ./fcitx5.nix
     ./mangohud.nix
