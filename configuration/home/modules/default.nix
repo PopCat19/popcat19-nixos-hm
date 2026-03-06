@@ -44,6 +44,7 @@
     ./lazygit.nix
     ./tmux.nix
     ./fcitx5.nix
+    ./glance.nix
     ./mangohud.nix
     ./privacy.nix
     ./obs.nix
