@@ -22,6 +22,7 @@ with pkgs;
   furnace
   lmms
   mpv
+  openutau
   pavucontrol
   playerctl
   zrythm
