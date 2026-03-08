@@ -25,6 +25,7 @@ with pkgs;
   openutau
   pavucontrol
   playerctl
+  voicevox
   zrythm
 
   # Communication
