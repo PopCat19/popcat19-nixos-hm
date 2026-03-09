@@ -1,10 +1,10 @@
 # screenshot.nix
 #
-# Purpose: Provide simple hyprshot wrapper with predictable shader handling
+# Purpose: Provide hyprshot wrapper with shader suspend/restore around capture
 #
 # This module:
 # - Installs hyprshot
-# - Creates minimal screenshot wrapper
+# - Creates screenshot wrapper handling shader state and capture mode
 { pkgs, ... }:
 let
   screenshotScript = pkgs.writeShellScriptBin "screenshot" ''
@@ -13,27 +13,33 @@ let
     SCREENSHOTS_DIR="''${XDG_SCREENSHOTS_DIR:-$HOME/Pictures/Screenshots}"
     mkdir -p "$SCREENSHOTS_DIR"
 
-    MODE="output"
+    MODE=""
+    KEEP_SHADER=false
 
-    case "''${1:-monitor}" in
-      monitor) MODE="output" ;;
-      region) MODE="region" ;;
-      window) MODE="window" ;;
-      *) echo "Usage: screenshot [monitor|region|window]" >&2; exit 1 ;;
-    esac
+    for arg in "$@"; do
+      case "$arg" in
+        monitor)       MODE="output" ;;
+        region)        MODE="region" ;;
+        window)        MODE="window" ;;
+        --keep-shader) KEEP_SHADER=true ;;
+        *)
+          echo "Usage: screenshot [monitor|region|window] [--keep-shader]" >&2
+          exit 1
+          ;;
+      esac
+    done
 
-    shader=""
-    restore_shader() {
-      if [[ -n "$shader" && "$shader" != "Off" ]]; then
-        hyprshade on "$shader"
-      fi
-    }
+    : "''${MODE:=output}"
 
-    if command -v hyprshade >/dev/null 2>&1; then
-      shader=$(hyprshade current 2>/dev/null || true)
-      if [[ -n "$shader" && "$shader" != "Off" ]]; then
+    ACTIVE_SHADER=""
+    if ! $KEEP_SHADER && command -v hyprshade >/dev/null 2>&1; then
+      ACTIVE_SHADER=$(hyprshade current 2>/dev/null || true)
+      if [[ -n "$ACTIVE_SHADER" && "$ACTIVE_SHADER" != "off" ]]; then
         hyprshade off
-        trap restore_shader EXIT
+        # hyprshade off is async; without delay hyprshot freezes before shader clears
+        sleep 0.1
+      else
+        ACTIVE_SHADER=""
       fi
     fi
 
@@ -41,6 +47,12 @@ let
       --freeze \
       --mode "$MODE" \
       -o "$SCREENSHOTS_DIR"
+
+    # Restore after hyprshot exits — not via trap, which fires on hyprshot errors
+    # and causes double-restore stacking
+    if [[ -n "$ACTIVE_SHADER" ]]; then
+      hyprshade on "$ACTIVE_SHADER"
+    fi
   '';
 in
 {
