@@ -27,7 +27,6 @@ in
       inherit (userConfig) system;
     in
     inputs.nixpkgs.lib.nixosSystem {
-      inherit system;
       specialArgs = {
         inherit inputs userConfig;
       };
