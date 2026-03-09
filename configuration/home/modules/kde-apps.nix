@@ -33,40 +33,50 @@
     kdePackages.kleopatra
   ];
 
-  home.file.".local/share/user-places.xbel".text = ''
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE xbel PUBLIC "+//IDN pyxml.sourceforge.net//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://pyxml.sourceforge.net/topics/dtds/xbel-1.0.dtd">
-    <xbel version="1.0">
-     <bookmark href="file:///home/${config.home.username}">
-      <title>Home</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Desktop">
-      <title>Desktop</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Documents">
-      <title>Documents</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Downloads">
-      <title>Downloads</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Pictures">
-      <title>Pictures</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Music">
-      <title>Music</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/Videos">
-      <title>Videos</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/syncthing-shared">
-      <title>Syncthing Shared</title>
-     </bookmark>
-     <bookmark href="file:///home/${config.home.username}/nixos-config">
-      <title>nixos-config</title>
-     </bookmark>
-     <bookmark href="trash://">
-      <title>Trash</title>
-     </bookmark>
-    </xbel>
-  '';
+  home.file = {
+    "bin/dolphin".text = ''
+      #!/bin/sh
+      export XDG_CONFIG_DIRS="${pkgs.libsForQt5.kservice}/etc/xdg:$XDG_CONFIG_DIRS"
+      unset KDE_SESSION_VERSION
+      ${pkgs.libsForQt5.kservice}/bin/kbuildsycoca6 --noincremental
+      exec ${pkgs.kdePackages.dolphin}/bin/dolphin "$@"
+    '';
+
+    ".local/share/user-places.xbel".text = ''
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE xbel PUBLIC "+//IDN pyxml.sourceforge.net//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://pyxml.sourceforge.net/topics/dtds/xbel-1.0.dtd">
+      <xbel version="1.0">
+       <bookmark href="file:///home/${config.home.username}">
+        <title>Home</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Desktop">
+        <title>Desktop</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Documents">
+        <title>Documents</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Downloads">
+        <title>Downloads</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Pictures">
+        <title>Pictures</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Music">
+        <title>Music</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Videos">
+        <title>Videos</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/syncthing-shared">
+        <title>Syncthing Shared</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/nixos-config">
+        <title>nixos-config</title>
+       </bookmark>
+       <bookmark href="trash://">
+        <title>Trash</title>
+       </bookmark>
+      </xbel>
+    '';
+  };
 }
