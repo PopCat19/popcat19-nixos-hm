@@ -16,6 +16,7 @@
     ./modules/general.nix
     ./modules/hyprlock.nix
     ./modules/keybinds.nix
+    ./modules/scrolling.nix
     ./modules/window-rules.nix
   ];
 
