@@ -182,24 +182,29 @@ main() {
 
 	check_deps || exit 1
 
-	if [[ ${#HOSTS[@]} -eq 0 && ${ALL_HOSTS:-0} -eq 0 ]]; then
-		log_error "No hosts specified. Use --host or --all-hosts"
+	# Allow profiles alone, require hosts only if hosts specified
+	if [[ ${#HOSTS[@]} -eq 0 && ${ALL_HOSTS:-0} -eq 0 && ${#PROFILES[@]} -eq 0 ]]; then
+		log_error "No hosts or profiles specified. Use --host, --profile, or --all-hosts"
 		exit 1
 	fi
 
 	local failed=0
-	for host in "${HOSTS[@]}"; do
-		if is_skipped "$host"; then
-			log_info "Skipping host: $host"
-			continue
-		fi
 
-		if ! should_push_host "$host"; then
-			continue
-		fi
+	# Push hosts if any specified
+	if [[ ${#HOSTS[@]} -gt 0 || "${ALL_HOSTS:-0}" -eq 1 ]]; then
+		for host in "${HOSTS[@]}"; do
+			if is_skipped "$host"; then
+				log_info "Skipping host: $host"
+				continue
+			fi
 
-		push_host "$host" || ((failed++))
-	done
+			if ! should_push_host "$host"; then
+				continue
+			fi
+
+			push_host "$host" || ((failed++))
+		done
+	fi
 
 	[[ ${#PROFILES[@]} -gt 0 ]] && push_profiles
 
