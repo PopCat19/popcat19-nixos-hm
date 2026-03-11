@@ -124,7 +124,7 @@
 
       # Scrolling layout
       "$mainMod+Shift, h, layoutmsg, move -col"
-      "$mainMod+Shift, l, layoutmsg, promote"
+      "$mainMod+Shift, l, layoutmsg, move +col"
       "$mainMod+Shift, comma, layoutmsg, swapcol l"
       "$mainMod+Shift, period, layoutmsg, swapcol r"
       "$mainMod+Shift, bracketleft, layoutmsg, colresize -0.1"
