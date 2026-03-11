@@ -5,7 +5,7 @@
 #
 # This module:
 # - Pushes NixOS system derivations to personal Cachix cache
-# - Supports selective host/profile pushing
+# - Supports selective host pushing
 # - Provides dry-run mode for testing
 set -Eeuo pipefail
 
@@ -15,7 +15,6 @@ source "${SCRIPT_DIR}/lib/logging.sh"
 # === Configuration ===
 CACHE="popcat19-shared"
 HOSTS=()
-PROFILES=()
 SKIP_HOSTS=()
 DRY_RUN=0
 
@@ -26,7 +25,6 @@ Usage: push-to-cachix.sh [OPTIONS]
 
 Options:
     --host HOST              Host to push (can be specified multiple times)
-    --profile PROFILE       Profile to push (can be specified multiple times)
     --all-hosts             Push all hosts
     --skip-host HOST        Skip specific host (can be specified multiple times)
     --dry-run               Show what would be done
@@ -49,10 +47,6 @@ while [[ $# -gt 0 ]]; do
 	case "$1" in
 	--host)
 		HOSTS+=("${2:-}")
-		shift 2
-		;;
-	--profile)
-		PROFILES+=("${2:-}")
 		shift 2
 		;;
 	--all-hosts)
@@ -144,35 +138,6 @@ push_host() {
 	fi
 }
 
-# === Push profiles ===
-push_profiles() {
-	for profile in "${PROFILES[@]}"; do
-		log_info "Pushing profile: $profile"
-
-		local drv=".#profiles.${profile}"
-		local store_path
-		store_path=$(nix path-info --impure --accept-flake-config "$drv" 2>/dev/null || echo "")
-
-		if [[ -z "$store_path" ]]; then
-			log_warn "Could not resolve $drv"
-			continue
-		fi
-
-		if [[ "$DRY_RUN" -eq 1 ]]; then
-			log_info "[DRY-RUN] Would push: $store_path"
-			continue
-		fi
-
-		log_info "Pushing to $CACHE: $(basename "$store_path")"
-
-		if cachix push "$CACHE" "$store_path" 2>&1 | grep -v -E "(Compressing|All done)" | grep -q .; then
-			log_success "Pushed profile: $profile"
-		else
-			log_error "Failed to push profile: $profile"
-		fi
-	done
-}
-
 # === Main ===
 main() {
 	log_info "Cachix Push Tool"
@@ -182,31 +147,24 @@ main() {
 
 	check_deps || exit 1
 
-	# Allow profiles alone, require hosts only if hosts specified
-	if [[ ${#HOSTS[@]} -eq 0 && ${ALL_HOSTS:-0} -eq 0 && ${#PROFILES[@]} -eq 0 ]]; then
-		log_error "No hosts or profiles specified. Use --host, --profile, or --all-hosts"
+	if [[ ${#HOSTS[@]} -eq 0 && "${ALL_HOSTS:-0}" -eq 0 ]]; then
+		log_error "No hosts specified. Use --host or --all-hosts"
 		exit 1
 	fi
 
 	local failed=0
+	for host in "${HOSTS[@]}"; do
+		if is_skipped "$host"; then
+			log_info "Skipping host: $host"
+			continue
+		fi
 
-	# Push hosts if any specified
-	if [[ ${#HOSTS[@]} -gt 0 || "${ALL_HOSTS:-0}" -eq 1 ]]; then
-		for host in "${HOSTS[@]}"; do
-			if is_skipped "$host"; then
-				log_info "Skipping host: $host"
-				continue
-			fi
+		if ! should_push_host "$host"; then
+			continue
+		fi
 
-			if ! should_push_host "$host"; then
-				continue
-			fi
-
-			push_host "$host" || ((failed++))
-		done
-	fi
-
-	[[ ${#PROFILES[@]} -gt 0 ]] && push_profiles
+		push_host "$host" || ((failed++))
+	done
 
 	[[ $failed -gt 0 ]] && log_error "$failed host(s) failed to push" && exit 1
 
