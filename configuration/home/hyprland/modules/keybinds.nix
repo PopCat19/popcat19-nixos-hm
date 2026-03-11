@@ -23,7 +23,7 @@
       "Alt, F4, killactive"
       "$mainMod+Ctrl, Q, exec, hyprctl kill"
       "$mainMod, Delete, exit"
-      "$mainMod+Shift, L, exec, hyprlock"
+      "$mainMod+Ctrl, L, exec, hyprlock"
 
       "$mainMod, W, togglefloating"
       "$mainMod, G, togglegroup"
