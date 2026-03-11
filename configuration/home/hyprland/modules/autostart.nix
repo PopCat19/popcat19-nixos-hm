@@ -18,7 +18,6 @@
 
       "openrgb -p orang-full"
       "${userConfig.defaultApps.terminal.command}"
-      "hyprctl plugin load ~/.local/share/hyprland/$(uname -m)/libscrolling.so"
     ];
   };
 }
