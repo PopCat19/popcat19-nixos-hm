@@ -60,9 +60,13 @@
       "$mainMod, Right, movefocus, r"
       "$mainMod, Up, movefocus, u"
       "$mainMod, Down, movefocus, d"
-      "Alt, Tab, movefocus, d"
 
-      "$mainMod+Ctrl, H, changegroupactive, b"
+      # Vim-style focus
+      "$mainMod+Shift, h, movefocus, l"
+      "$mainMod+Shift, l, movefocus, r"
+      "$mainMod+Shift, k, movefocus, u"
+      "$mainMod+Shift, j, movefocus, d"
+      "Alt, Tab, movefocus, d"
       "$mainMod+Ctrl, L, changegroupactive, f"
 
       "$mainMod, 1, workspace, 1"
@@ -117,6 +121,19 @@
       "$mainMod, S, togglespecialworkspace"
 
       "$mainMod+Shift, N, exec, sh -c 'hyprctl layers > ~/hyprctl-layer-out.txt && $term $editor ~/hyprctl-layer-out.txt'"
+
+      # Scrolling layout
+      "$mainMod, period, layoutmsg, move +col"
+      "$mainMod, comma, layoutmsg, move -col"
+      "$mainMod+Shift, comma, layoutmsg, swapcol l"
+      "$mainMod+Shift, period, layoutmsg, swapcol r"
+      "$mainMod+Shift, bracketleft, layoutmsg, colresize -0.1"
+      "$mainMod+Shift, bracketright, layoutmsg, colresize +0.1"
+      "$mainMod, o, layoutmsg, colresize 0.5"
+      "$mainMod+Shift, O, layoutmsg, colresize 1.0"
+      "$mainMod+Alt, F, layoutmsg, fit active"
+      "$mainMod, P, layoutmsg, promote"
+      "$mainMod, F, layoutmsg, focus right"
     ];
 
     binde = [
