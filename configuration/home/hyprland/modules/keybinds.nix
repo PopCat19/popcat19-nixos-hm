@@ -62,10 +62,10 @@
       "$mainMod, Down, movefocus, d"
 
       # Vim-style focus
-      "$mainMod+Shift, h, movefocus, l"
-      "$mainMod+Shift, l, movefocus, r"
-      "$mainMod+Shift, k, movefocus, u"
-      "$mainMod+Shift, j, movefocus, d"
+      "$mainMod, h, movefocus, l"
+      "$mainMod, l, movefocus, r"
+      "$mainMod, k, movefocus, u"
+      "$mainMod, j, movefocus, d"
       "Alt, Tab, movefocus, d"
       "$mainMod+Ctrl, L, changegroupactive, f"
 
@@ -123,8 +123,8 @@
       "$mainMod+Shift, N, exec, sh -c 'hyprctl layers > ~/hyprctl-layer-out.txt && $term $editor ~/hyprctl-layer-out.txt'"
 
       # Scrolling layout
-      "$mainMod, period, layoutmsg, move +col"
-      "$mainMod, comma, layoutmsg, move -col"
+      "$mainMod+Shift, h, layoutmsg, move -col"
+      "$mainMod+Shift, l, layoutmsg, promote"
       "$mainMod+Shift, comma, layoutmsg, swapcol l"
       "$mainMod+Shift, period, layoutmsg, swapcol r"
       "$mainMod+Shift, bracketleft, layoutmsg, colresize -0.1"
