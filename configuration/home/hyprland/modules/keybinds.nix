@@ -132,7 +132,7 @@
       "$mainMod, o, layoutmsg, colresize 0.5"
       "$mainMod+Shift, O, layoutmsg, colresize 1.0"
       "$mainMod+Alt, F, layoutmsg, fit active"
-      "$mainMod, P, layoutmsg, promote"
+      "$mainMod, period, layoutmsg, promote"
       "$mainMod, F, layoutmsg, focus right"
     ];
 
