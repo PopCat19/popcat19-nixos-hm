@@ -80,6 +80,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     opentabletdriver = {
       url = "github:OpenTabletDriver/OpenTabletDriver";
       flake = false;
