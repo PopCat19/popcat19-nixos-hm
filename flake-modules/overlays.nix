@@ -1,6 +1,11 @@
 # Architecture-aware overlays
 { inputs }:
 [
+  # Hyprland from git
+  (final: _prev: {
+    inherit (inputs.hyprland.packages.${final.system}) hyprland;
+  })
+
   # OpenTabletDriver git latest overlay
   (final: _prev: {
     opentabletdriver = final.callPackage ../overlays/opentabletdriver-git.nix {
