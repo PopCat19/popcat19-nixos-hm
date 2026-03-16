@@ -64,9 +64,5 @@
       "float on, match:title ^(Confirm to replace files)$"
       "float on, match:title ^(File Operation Progress)$"
     ];
-
-    workspace = [
-      "2, layout:dwindle"
-    ];
   };
 }
