@@ -28,7 +28,7 @@
       "$mainMod, W, togglefloating"
       "$mainMod, G, togglegroup"
       "Alt, Return, fullscreen"
-      "$mainMod, J, togglesplit"
+      "$mainMod, J, exec, $HYPRLAND_CONFIG_DIR/scripts/togglesplit.sh"
 
       "$mainMod, T, exec, $term"
       "$mainMod, E, exec, $file"

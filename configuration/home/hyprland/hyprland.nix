@@ -33,5 +33,10 @@
 
   home.file = {
     ".config/hypr/userprefs.conf".source = ./userprefs.conf;
+    ".config/hypr/scripts" = {
+      source = ./scripts;
+      recursive = true;
+      executable = true;
+    };
   };
 }
