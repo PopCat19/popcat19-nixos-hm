@@ -17,38 +17,35 @@
     "$browser" = userConfig.defaultApps.browser.command;
     "$menu" = "fuzzel --dmenu";
     "$launcher" = userConfig.defaultApps.launcher.command;
-    "$clipboard" =
-      "bash -lc \"cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v\"";
 
     bind = [
       "$mainMod, Q, killactive"
       "Alt, F4, killactive"
-      "$mainMod, X, exec, hyprlock"
-      "$mainMod+Shift, Escape, exit"
-      "$mainMod+Ctrl+Shift, Escape, exec, hyprctl kill"
+      "$mainMod+Ctrl, Q, exec, hyprctl kill"
+      "$mainMod, Delete, exit"
+      "$mainMod+Ctrl, L, exec, hyprlock"
 
       "$mainMod, W, togglefloating"
       "$mainMod, G, togglegroup"
-      "$mainMod, F, fullscreen"
-      "$mainMod+Ctrl, J, togglesplit"
+      "Alt, Return, fullscreen"
+      "$mainMod, J, togglesplit"
 
       "$mainMod, T, exec, $term"
       "$mainMod, E, exec, $file"
       "$mainMod, C, exec, $editor"
-      "$mainMod, R, exec, $browser"
-      "$mainMod, A, exec, $launcher"
-      "$mainMod+Shift, A, exec, $menu"
+      "$mainMod, F, exec, $browser"
+      "$mainMod, A, exec, fuzzel"
       "$mainMod+Shift, C, exec, hyprpicker -a"
-      "$mainMod, V, exec, $clipboard"
+      "$mainMod, V, exec, bash -lc \"cliphist list | fuzzel --dmenu --with-nth 2 | cliphist decode | wl-copy && sleep 0.05 && wtype -M ctrl -k v\""
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
       "$mainMod+Ctrl, N, exec, systemctl --user restart noctalia-shell.service"
 
-      "$mainMod, P, exec, screenshot region"
-      "$mainMod+Shift, P, exec, screenshot window"
-      "$mainMod+Ctrl, P, exec, screenshot monitor"
-      "$mainMod+Alt, P, exec, screenshot region --keep-shader"
-      "$mainMod+Alt+Shift, P, exec, screenshot window --keep-shader"
-      "$mainMod+Alt+Ctrl, P, exec, screenshot monitor --keep-shader"
+      "$mainMod, P, exec, screenshot monitor"
+      "$mainMod+Ctrl, P, exec, screenshot monitor --keep-shader"
+      "$mainMod+Shift, P, exec, screenshot region"
+      "$mainMod+Shift+Ctrl, P, exec, screenshot region --keep-shader"
+      "$mainMod+Alt, P, exec, screenshot window"
+      "$mainMod+Alt+Ctrl, P, exec, screenshot window --keep-shader"
 
       ",XF86AudioPlay, exec, playerctl play-pause"
       ",XF86AudioPause, exec, playerctl play-pause"
@@ -64,13 +61,12 @@
       "$mainMod, Up, movefocus, u"
       "$mainMod, Down, movefocus, d"
 
+      # Vim-style focus
       "$mainMod, h, movefocus, l"
       "$mainMod, l, movefocus, r"
       "$mainMod, k, movefocus, u"
       "$mainMod, j, movefocus, d"
       "Alt, Tab, movefocus, d"
-
-      "$mainMod+Ctrl, H, changegroupactive, b"
       "$mainMod+Ctrl, L, changegroupactive, f"
 
       "$mainMod, 1, workspace, 1"
@@ -113,30 +109,31 @@
       "$mainMod+Alt, 9, movetoworkspacesilent, 9"
       "$mainMod+Alt, 0, movetoworkspacesilent, 10"
 
-      "$mainMod+Shift+Ctrl, Left, exec, bash -c 'if [ \"$(hyprctl activewindow -j | jq -r .floating)\" = \"true\" ]; then hyprctl dispatch moveactive -30 0; else hyprctl dispatch movewindow l; fi'"
-      "$mainMod+Shift+Ctrl, Right, exec, bash -c 'if [ \"$(hyprctl activewindow -j | jq -r .floating)\" = \"true\" ]; then hyprctl dispatch moveactive 30 0; else hyprctl dispatch movewindow r; fi'"
-      "$mainMod+Shift+Ctrl, Up, exec, bash -c 'if [ \"$(hyprctl activewindow -j | jq -r .floating)\" = \"true\" ]; then hyprctl dispatch moveactive 0 -30; else hyprctl dispatch movewindow u; fi'"
-      "$mainMod+Shift+Ctrl, Down, exec, bash -c 'if [ \"$(hyprctl activewindow -j | jq -r .floating)\" = \"true\" ]; then hyprctl dispatch moveactive 0 30; else hyprctl dispatch movewindow d; fi'"
+      "$mainMod+Shift+Ctrl, Left, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive -30 0; else hyprctl dispatch movewindow l; fi'"
+      "$mainMod+Shift+Ctrl, Right, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 30 0; else hyprctl dispatch movewindow r; fi'"
+      "$mainMod+Shift+Ctrl, Up, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 0 -30; else hyprctl dispatch movewindow u; fi'"
+      "$mainMod+Shift+Ctrl, Down, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 0 30; else hyprctl dispatch movewindow d; fi'"
 
       "$mainMod, mouse_down, workspace, e+1"
       "$mainMod, mouse_up, workspace, e-1"
 
-      "$mainMod, S, togglespecialworkspace"
       "$mainMod+Alt, S, movetoworkspacesilent, special"
+      "$mainMod, S, togglespecialworkspace"
 
       "$mainMod+Shift, N, exec, sh -c 'hyprctl layers > ~/hyprctl-layer-out.txt && $term $editor ~/hyprctl-layer-out.txt'"
 
+      # Scrolling layout
       "$mainMod+Shift, h, layoutmsg, move -col"
       "$mainMod+Shift, l, layoutmsg, move +col"
       "$mainMod+Shift, comma, layoutmsg, swapcol l"
       "$mainMod+Shift, period, layoutmsg, swapcol r"
       "$mainMod+Shift, bracketleft, layoutmsg, colresize -0.1"
       "$mainMod+Shift, bracketright, layoutmsg, colresize +0.1"
-      "$mainMod, O, layoutmsg, colresize 0.5"
+      "$mainMod, o, layoutmsg, colresize 0.5"
       "$mainMod+Shift, O, layoutmsg, colresize 1.0"
       "$mainMod+Alt, F, layoutmsg, fit active"
       "$mainMod, period, layoutmsg, promote"
-      "$mainMod, semicolon, layoutmsg, focus right"
+      "$mainMod, F, layoutmsg, focus right"
     ];
 
     binde = [
@@ -162,6 +159,8 @@
     bindm = [
       "$mainMod, mouse:272, movewindow"
       "$mainMod, mouse:273, resizewindow"
+      "$mainMod, Z, movewindow"
+      "$mainMod, X, resizewindow"
     ];
   };
 }
