@@ -23,6 +23,16 @@ function proxy_on
         systemctl --user set-environment https_proxy=$https_proxy
         systemctl --user set-environment all_proxy=$all_proxy
         systemctl --user set-environment no_proxy=$no_proxy
+
+        # System-level for nix-daemon (no proxy.nix to handle this)
+        sudo systemctl set-environment \
+            http_proxy=$http_proxy \
+            https_proxy=$https_proxy \
+            HTTP_PROXY=$http_proxy \
+            HTTPS_PROXY=$https_proxy \
+            no_proxy=$no_proxy \
+            NO_PROXY=$no_proxy
+        sudo systemctl restart nix-daemon
     end
 
     if command -q dbus-update-activation-environment
