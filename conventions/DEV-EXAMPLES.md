@@ -215,6 +215,44 @@ handle_error() {
 trap 'handle_error "${CURRENT_STEP:-unknown}"' ERR
 ```
 
+## Agent Interaction (Rule 18)
+
+**Basic one-shot:**
+```fish
+begin; systemctl --user status cliphist.service --no-pager -l; echo ===; cliphist list | head -10; end | wl-copy
+```
+
+**Multi-file review:**
+```fish
+begin; cat ~/config/services.nix; echo ===; cat ~/config/portals.nix; echo ===; cat ~/config/environment.nix; end | wl-copy
+```
+
+**With timeout for blocking commands:**
+```fish
+begin; systemctl --user status cliphist.service --no-pager -l; echo ===; timeout 2 wl-paste --watch echo 2>&1; echo "wl-paste exit: $status"; end | wl-copy
+```
+
+**Safe restart + status:**
+```fish
+begin; systemctl --user restart cliphist.service; sleep 1; systemctl --user status cliphist.service --no-pager -l; end | wl-copy
+```
+
+**Search with tool fallback:**
+```fish
+# Check for rg, fallback to grep
+begin; command -v rg &>/dev/null; and rg "WAYLAND_DISPLAY" ~/config --nix; or grep -r "WAYLAND_INCLUDE" ~/config --include="*.nix"; end | wl-copy
+```
+
+**Cross-reference a config value:**
+```fish
+begin; command -v rg &>/dev/null; and rg "graphical-session" ~/nixos-config --type nix -n; or grep -rn "graphical-session" ~/nixos-config --include="*.nix"; end | wl-copy
+```
+
+**Systemd-aware status check:**
+```fish
+begin; if command -v systemctl &>/dev/null; systemctl --user status cliphist.service --no-pager -l; echo ===; systemctl --user list-units --state=failed --no-pager; else; echo "systemd not available"; end | wl-copy
+```
+
 ## Naming (Rule 3)
 
 **File naming conventions:**
