@@ -274,7 +274,7 @@ test_host_profile_roundtrip() {
 	local original_profile
 	original_profile=$(get_host_profile "$hosts" 2>/dev/null)
 
-	# If we have a profile, verify we can read it
+	# If a profile exists, verify it can be read
 	if [[ -n "$original_profile" ]]; then
 		test_case "$test_name" "pass"
 	else

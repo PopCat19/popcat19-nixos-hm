@@ -3,7 +3,7 @@
 # Purpose: Configure Fish shell with custom functions and abbreviations
 #
 # This module:
-# - Loads custom Fish functions from fish_functions directory
+# - Loads custom Fish functions from fish directory
 # - Configures Fish shell environment and abbreviations
 # - Sets up NixOS-specific environment variables
 { userConfig, ... }:
@@ -30,9 +30,9 @@
     "fish/functions/nixos-rebuild-basic.fish".text =
       builtins.readFile ../../base/system/fish_functions/nixos-rebuild-basic.fish;
     "fish/functions/proxy_off.fish".text =
-      builtins.readFile ../../base/system/fish_functions/proxy_off.fish;
+      builtins.readFile ../../base/system/fish_functions/proxy-off.fish;
     "fish/functions/proxy_on.fish".text =
-      builtins.readFile ../../base/system/fish_functions/proxy_on.fish;
+      builtins.readFile ../../base/system/fish_functions/proxy-on.fish;
     "fish/functions/proxify.fish".text =
       builtins.readFile ../../base/system/fish_functions/proxify.fish;
     "fish/functions/show-shortcuts.fish".text =

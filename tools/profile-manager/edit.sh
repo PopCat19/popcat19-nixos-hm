@@ -311,7 +311,7 @@ rewrite_home_imports() {
 		' "$profile_file" >"$tmp_file"
 	else
 		# No home-manager imports block - need to create one within home-manager.users block
-		# This is more complex - we need to find or create the home-manager.users block
+		# This requires finding or creating the home-manager.users block
 		# For now, just copy the file and warn
 		print_warning "No home-manager imports block found, cannot add imports"
 		cp "$profile_file" "$tmp_file"

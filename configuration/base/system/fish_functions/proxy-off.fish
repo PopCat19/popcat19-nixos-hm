@@ -1,4 +1,4 @@
-# proxy_off.fish
+# proxy-off.fish
 #
 # Purpose: Disable proxy environment variables
 #

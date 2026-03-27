@@ -1,3 +1,10 @@
+# overlays.nix
+#
+# Purpose: Define architecture-aware package overlays
+#
+# This module:
+# - Provides Hyprland, OpenTabletDriver, Friction, and Zrok overlays
+#
 # Architecture-aware overlays
 { inputs }:
 [
