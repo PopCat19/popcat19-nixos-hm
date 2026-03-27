@@ -115,19 +115,19 @@ run_all_tests() {
 	echo -e "${BLUE}========================================${NC}"
 
 	# Run common.sh tests
-	run_test_file "$TESTS_DIR/test_common.sh" run_test_common
+	run_test_file "$TESTS_DIR/test-common.sh" run_test_common
 
 	# Run discover.sh tests
-	run_test_file "$TESTS_DIR/test_discover.sh" run_test_discover
+	run_test_file "$TESTS_DIR/test-discover.sh" run_test_discover
 
 	# Run edit.sh tests
-	run_test_file "$TESTS_DIR/test_edit.sh" run_test_edit
+	run_test_file "$TESTS_DIR/test-edit.sh" run_test_edit
 
 	# Run host.sh tests
-	run_test_file "$TESTS_DIR/test_host.sh" run_test_host
+	run_test_file "$TESTS_DIR/test-host.sh" run_test_host
 
 	# Run build.sh tests
-	run_test_file "$TESTS_DIR/test_build.sh" run_test_build
+	run_test_file "$TESTS_DIR/test-build.sh" run_test_build
 
 	# Print summary
 	print_summary
@@ -144,19 +144,19 @@ run_specific_tests() {
 
 	case "$module" in
 	common)
-		run_test_file "$TESTS_DIR/test_common.sh" run_test_common
+		run_test_file "$TESTS_DIR/test-common.sh" run_test_common
 		;;
 	discover)
-		run_test_file "$TESTS_DIR/test_discover.sh" run_test_discover
+		run_test_file "$TESTS_DIR/test-discover.sh" run_test_discover
 		;;
 	edit)
-		run_test_file "$TESTS_DIR/test_edit.sh" run_test_edit
+		run_test_file "$TESTS_DIR/test-edit.sh" run_test_edit
 		;;
 	host)
-		run_test_file "$TESTS_DIR/test_host.sh" run_test_host
+		run_test_file "$TESTS_DIR/test-host.sh" run_test_host
 		;;
 	build)
-		run_test_file "$TESTS_DIR/test_build.sh" run_test_build
+		run_test_file "$TESTS_DIR/test-build.sh" run_test_build
 		;;
 	*)
 		echo -e "${RED}Error:${NC} Unknown test module: $module"

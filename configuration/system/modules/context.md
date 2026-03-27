@@ -1,0 +1,35 @@
+# Context
+
+- `agenix.nix` — Configure agenix for secret management
+- `apollo.nix` — Configure Apollo game streaming server (Sunshine fork)
+- `audio.nix` — Configure PipeWire audio system with JACK and ALSA support
+- `boot.nix` — Manage bootloader configuration and kernel settings
+- `catch-22-rebuild.sh` — Rebuild NixOS through proxy to bypass sandbox restrictions
+- `core-packages.nix` — Install essential system utilities and tools
+- `dconf.nix` — Enable dconf for GTK/Qt settings and desktop configuration
+- `display.nix` — Orchestrate display system configuration through separated modules
+- `environment.nix` — Configure system-level environment variables
+- `fish-functions.nix` — Configure Fish shell with custom functions and abbreviations
+- `fish.nix` — Configure Fish shell as the default system shell
+- `fonts.nix` — Configure system fonts using centralized userConfig
+- `gnome-keyring.nix` — Enable GNOME Keyring as the Secret Service provider
+- `greeter.nix` — Configure SDDM display manager for Wayland login sessions
+- `hardware.nix` — Configure hardware support for Bluetooth and I2C
+- `hyprland.nix` — Configure Hyprland Wayland compositor with UWSM integration
+- `networking.nix` — Manage firewall, IP forwarding, and NetworkManager configuration
+- `niri.nix` — Configure Niri scrollable-tiling Wayland compositor
+- `noctalia.nix` — Enable Noctalia shell globally for Wayland systems
+- `openrgb.nix` — Enable OpenRGB service for RGB lighting control
+- `power-management.nix` — Provide basic power management for desktop systems
+- `programs.nix` — Configure system-level programs and gaming support
+- `services.nix` — Configure system-level services and daemons
+- `ssh.nix` — Enable and configure OpenSSH server for remote system access
+- `stylix-lightdm.nix` — Configure LightDM theming using Stylix framework
+- `sunshine.nix` — Configure Sunshine game streaming server
+- `syncthing.nix` — Configure Syncthing file synchronization service
+- `tablet.nix` — Configure OpenTabletDriver for graphics tablet support
+- `users.nix` — Configure user accounts and tmpfiles
+- `virtualisation.nix` — Configure virtualization technologies including Docker and KVM
+- `vpn.nix` — Configure Mullvad VPN service for system-wide VPN
+- `xdg.nix` — Configure XDG desktop portals and MIME type handling
+- `zrythm.nix` — Configure real-time audio scheduling for Zrythm DAW

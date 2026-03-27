@@ -1,4 +1,4 @@
-# proxy_on.fish
+# proxy-on.fish
 #
 # Purpose: Enable proxy variables with overwritable defaults
 #

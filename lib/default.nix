@@ -7,7 +7,7 @@
 # - Provides single import point for library functions
 { lib, inputs }:
 {
-  mkHost = import ./mkHost.nix { inherit inputs; };
-  mkHome = import ./mkHome.nix { };
+  mkHost = import ./mk-host.nix { inherit inputs; };
+  mkHome = import ./mk-home.nix { };
   helpers = import ./helpers.nix { inherit lib; };
 }

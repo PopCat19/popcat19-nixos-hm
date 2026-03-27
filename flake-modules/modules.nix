@@ -1,5 +1,10 @@
+# modules.nix
+#
+# Purpose: Export optional NixOS configuration modules
+#
+# This module:
+# - Provides gaming module with AAGL integration
 {
-  # Gaming configuration module
   # Integrates AAGL for gaming support (limited ARM64 support)
   mkGamingModule =
     system:
