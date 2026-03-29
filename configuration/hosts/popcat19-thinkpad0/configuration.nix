@@ -22,6 +22,25 @@
 
   networking.hostName = userConfig.hostname;
 
+  services.logind.settings.Login = {
+    HandleLidSwitch = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
+  };
+
+  environment.etc."systemd/system-sleep/hyprlock.sh" = {
+    mode = "0755";
+    text = ''
+      #!/bin/sh
+      export PATH=${pkgs.coreutils}/bin:${pkgs.gawk}/bin:${pkgs.systemd}/bin:${pkgs.hyprlock}/bin
+      if [ "$1" = "pre" ]; then
+        for uid in $(loginctl list-sessions --no-legend | awk '{print $2}'); do
+          XDG_RUNTIME_DIR=/run/user/$uid hyprlock --immediate &
+        done
+        wait
+      fi
+    '';
+  };
+
   services.displayManager.autoLogin.enable = lib.mkForce false;
 
   environment.systemPackages = with pkgs; [
