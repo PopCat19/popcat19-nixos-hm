@@ -54,5 +54,6 @@ in
     ++ [
       inputs.llm-agents.packages.${pkgs.system}.kilocode-cli
       inputs.llm-agents.packages.${pkgs.system}.opencode
+      inputs.llm-agents.packages.${pkgs.system}.pi
     ];
 }
