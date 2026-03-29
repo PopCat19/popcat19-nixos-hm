@@ -73,6 +73,7 @@
       nrbc = "nixos-commit-rebuild-push";
       nsp = "nix-shell -p";
       pkgs = "nix search nixpkgs";
+      slp = "systemctl sleep";
     };
 
     shellInit = ''
