@@ -46,6 +46,7 @@ with pkgs;
   bun
   clang-tools
   deadnix
+  dprint
   fd
   fish-lsp
   git-lfs
