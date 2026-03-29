@@ -17,14 +17,22 @@ function show-shortcuts
     set -l list_only false
     set -l use_fzf false
     set -l search_term ""
+    set -l no_pager false
+    set -l show_help false
 
     set -l i 1
     while test $i -le (count $argv)
         set -l arg "$argv[$i]"
-        if test "$arg" = "--list" -o "$arg" = "-l"
+        if test "$arg" = "--help"; or test "$arg" = "-h"
+            set show_help true
+            set i (math $i + 1)
+        else if test "$arg" = "--no-pager"; or test "$arg" = "-P"
+            set no_pager true
+            set i (math $i + 1)
+        else if test "$arg" = "--list"; or test "$arg" = "-l"
             set list_only true
             set i (math $i + 1)
-        else if test "$arg" = "--fzf" -o "$arg" = "-f"
+        else if test "$arg" = "--fzf"; or test "$arg" = "-f"
             set use_fzf true
             set i (math $i + 1)
             if test $i -le (count $argv)
@@ -35,6 +43,22 @@ function show-shortcuts
             set search "$arg"
             set i (math $i + 1)
         end
+    end
+
+    if test "$show_help" = true
+        echo "Usage: show-shortcuts [options] [search]"
+        echo ""
+        echo "Display Hyprland keybindings with descriptions and categories."
+        echo ""
+        echo "Options:"
+        echo "  -h, --help        Show this help message"
+        echo "  -l, --list        List available categories only"
+        echo "  -f, --fzf [TERM]  Fuzzy search with fzf"
+        echo "  -P, --no-pager    Don't pipe output through a pager"
+        echo ""
+        echo "Arguments:"
+        echo "  search            Filter shortcuts by keyword (case-insensitive)"
+        return
     end
 
     if test "$list_only" = true
@@ -104,38 +128,6 @@ function show-shortcuts
         end
     end
 
-    set -l box_width 62
-    set -l title " HYPRLAND SHORTCUTS "
-    test -n "$filter"; and set title " CATEGORY: "(string upper "$filter")" "
-    test -n "$search"; and set title " SEARCH: $search "
-    test "$use_fzf" = true; and set title " FUZZY SEARCH "
-
-    set -l padding (math "($box_width - "(string length "$title")") / 2")
-    set -l l_pad (math -s0 "floor($padding)")
-    set -l r_pad (math -s0 "$box_width - "(string length "$title")" - $l_pad")
-
-    set_color brgreen
-    echo "╔"(string repeat -n $box_width "═")"╗"
-    echo "║"(string repeat -n $l_pad " ")$title(string repeat -n $r_pad " ")"║"
-    echo "╚"(string repeat -n $box_width "═")"╝"
-    set_color normal; echo ""
-
-    set -l found_cats
-    for i in $filtered; set -a found_cats (string split '|' "$i")[3]; end
-    set found_cats (printf '%s\n' $found_cats | sort -u)
-
-    for cat in $found_cats
-        set_color brcyan; echo "[$cat]"; set_color normal
-        echo "─────────────────────────────────────────────────────────────────────"
-        for item in $filtered
-            set -l p (string split '|' "$item")
-            if test "$p[3]" = "$cat"
-                echo -e "$p[1]\t$p[2]"
-            end
-        end | column -t -s (printf '\t')
-        echo ""
-    end
-
     set -l fzf_available false
     if command -v fzf > /dev/null 2>&1
         set fzf_available true
@@ -168,7 +160,52 @@ function show-shortcuts
         end
     end
 
-    set_color brblack; echo "Tip: # cat: <name> and # desc: <text> in config files"; set_color normal
+    set -l output (begin
+        set -l box_width 62
+        set -l title " HYPRLAND SHORTCUTS "
+        test -n "$filter"; and set title " CATEGORY: "(string upper "$filter")" "
+        test -n "$search"; and set title " SEARCH: $search "
+        test "$use_fzf" = true; and set title " FUZZY SEARCH "
+
+        set -l padding (math "($box_width - "(string length "$title")") / 2")
+        set -l l_pad (math -s0 "floor($padding)")
+        set -l r_pad (math -s0 "$box_width - "(string length "$title")" - $l_pad")
+
+        set_color brgreen
+        echo "╔"(string repeat -n $box_width "═")"╗"
+        echo "║"(string repeat -n $l_pad " ")$title(string repeat -n $r_pad " ")"║"
+        echo "╚"(string repeat -n $box_width "═")"╝"
+        set_color normal; echo ""
+
+        set -l found_cats
+        for i in $filtered; set -a found_cats (string split '|' "$i")[3]; end
+        set found_cats (printf '%s\n' $found_cats | sort -u)
+
+        for cat in $found_cats
+            set_color brcyan; echo "[$cat]"; set_color normal
+            echo "─────────────────────────────────────────────────────────────────────"
+            for item in $filtered
+                set -l p (string split '|' "$item")
+                if test "$p[3]" = "$cat"
+                    echo -e "$p[1]\t$p[2]"
+                end
+            end | column -t -s (printf '\t')
+            echo ""
+        end
+
+        set_color brblack; echo "Tip: # cat: <name> and # desc: <text> in config files"; set_color normal
+    end 2>&1)
+
+    set -l use_pager false
+    if test "$no_pager" = false; and test -z "$search"; and isatty stdout
+        set use_pager true
+    end
+
+    if test "$use_pager" = true
+        printf '%s\n' $output | less -R
+    else
+        printf '%s\n' $output
+    end
 end
 
 function normalize_binding
