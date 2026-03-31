@@ -40,13 +40,12 @@ with pkgs;
   hyprutils
 
   # Development
-  alejandra
   android-tools
   black
   bun
   clang-tools
   deadnix
-  dprint
+  biome
   fd
   fish-lsp
   git-lfs
