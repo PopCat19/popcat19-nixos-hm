@@ -8,6 +8,8 @@
 
 { pkgs, ... }:
 {
-  home.packages = [ pkgs.ollama-rocm ];
-  services.ollama.enable = true;
+  services.ollama = {
+    enable = true;
+    package = pkgs.ollama-rocm;
+  };
 }
