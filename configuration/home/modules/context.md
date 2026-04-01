@@ -20,7 +20,7 @@
 - `micro.nix` — Configures the Micro terminal text editor.
 - `niri.nix` — Configure Niri scrollable-tiling Wayland compositor
 - `obs.nix` — Configures OBS Studio with plugins for recording and streaming.
-- `ollama.nix` — Configures Ollama LLM service with Vulkan acceleration.
+- `ollama.nix` — Configures Ollama LLM service with ROCm acceleration.
 - `packages.nix` — Re-exports consolidated home packages
 - `privacy.nix` — Configures privacy and security tools.
 - `qt-gtk-config.nix` — Configure XDG MIME defaults and GTK/Qt application integrations
