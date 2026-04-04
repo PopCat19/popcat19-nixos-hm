@@ -6,9 +6,12 @@
 # - Defines Nix experimental features
 # - Configures binary caches and trusted keys
 # - Sets up garbage collection
-_: {
+{ lib, userConfig, ... }:
+{
   nix.settings = {
     experimental-features = [
+      "nix-command"
+      "flakes"
       "fetch-tree"
       "impure-derivations"
       "ca-derivations"
@@ -20,6 +23,11 @@ _: {
     cores = 0;
     min-free = 0;
     download-buffer-size = 67108864;
+
+    trusted-users = [
+      "root"
+      "${userConfig.username}"
+    ];
 
     substituters = [
       "https://cache.nixos.org"

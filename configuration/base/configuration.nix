@@ -16,8 +16,8 @@
   imports = [
     ./system/boot.nix
     ./system/users.nix
-    ./system/nix.nix
     ./system/localization.nix
+    ../nix-options.nix
   ];
 
   # Enable getty on console
