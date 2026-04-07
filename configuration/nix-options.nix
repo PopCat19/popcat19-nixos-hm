@@ -18,7 +18,7 @@
 # a root-level override at /root/.config/nix/nix.conf. The daemon
 # runs as root and that file takes precedence over /etc/nix/nix.conf.
 # Use tools/debug-nix-config.sh to diagnose.
-{ lib, userConfig, ... }:
+{ userConfig, ... }:
 {
   nix.settings = {
     experimental-features = [
