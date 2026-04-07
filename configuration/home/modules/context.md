@@ -22,6 +22,7 @@
 - `obs.nix` — Configures OBS Studio with plugins for recording and streaming.
 - `ollama.nix` — Configures Ollama LLM service with ROCm acceleration.
 - `packages.nix` — Re-exports consolidated home packages
+- `playwright.nix` — Configure Playwright browser testing environment for NixOS
 - `privacy.nix` — Configures privacy and security tools.
 - `qt-gtk-config.nix` — Configure XDG MIME defaults and GTK/Qt application integrations
 - `screenshot.nix` — Screenshot capture with optional shader bypass
