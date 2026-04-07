@@ -48,7 +48,6 @@
 
     misc = {
       force_default_wallpaper = -1;
-      vfr = true;
     };
 
     debug = {
