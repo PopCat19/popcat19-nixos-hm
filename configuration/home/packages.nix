@@ -59,7 +59,6 @@ with pkgs;
   nixfmt
   nixfmt-tree
   nodejs_22
-  playwright-mcp
   prettierd
   python3
   ripgrep

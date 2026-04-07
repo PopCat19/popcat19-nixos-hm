@@ -46,6 +46,7 @@
     ./fcitx5.nix
     ./glance.nix
     ./mangohud.nix
+    ./playwright.nix
     ./privacy.nix
     ./obs.nix
     ./syncthing.nix
