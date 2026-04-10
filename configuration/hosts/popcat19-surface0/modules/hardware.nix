@@ -27,7 +27,6 @@
         freeglut
         intel-compute-runtime
         intel-media-driver
-        intel-ocl
         intel-vaapi-driver
         libGL
         libGLU
