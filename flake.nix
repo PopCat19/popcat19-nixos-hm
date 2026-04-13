@@ -89,6 +89,11 @@
       url = "github:OpenTabletDriver/OpenTabletDriver";
       flake = false;
     };
+
+    llama-cpp-src = {
+      url = "github:ggml-org/llama.cpp/b8770";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
