@@ -25,6 +25,11 @@
     friction-graphics = final.callPackage ../overlays/friction-graphics.nix { };
   })
 
+  # llama.cpp ROCm from upstream flake
+  (final: _prev: {
+    llama-cpp-rocm = inputs.llama-cpp-src.packages.${final.system}.rocm;
+  })
+
   # Zrok v1.1.10 overlay - provides latest binary release
   (final: _prev: {
     zrok = final.stdenv.mkDerivation rec {
