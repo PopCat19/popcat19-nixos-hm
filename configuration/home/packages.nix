@@ -81,6 +81,9 @@ with pkgs;
   squashfsTools
   tree
 
+  # Generative AI
+  llama-cpp-rocm
+
   # Gaming
   lutris
   osu-lazer-bin
