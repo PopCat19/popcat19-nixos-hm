@@ -11,5 +11,9 @@
   services.ollama = {
     enable = true;
     package = pkgs.ollama-rocm;
+    acceleration = "rocm";
+    environmentVariables = {
+      OLLAMA_KV_CACHE_TYPE = "q8_0";
+    };
   };
 }
