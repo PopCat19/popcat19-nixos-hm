@@ -40,10 +40,8 @@
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
       "$mainMod+Ctrl, N, exec, systemctl --user restart noctalia-shell.service"
 
-      "$mainMod, P, exec, screenshot output"
-      "$mainMod+Ctrl, P, exec, screenshot region"
-      "$mainMod+Shift, P, exec, screenshot output --no-shader"
-      "$mainMod+Shift+Ctrl, P, exec, screenshot region --no-shader"
+      "$mainMod, P, exec, ~/.local/bin/screenshot region"
+      "$mainMod+Shift, P, exec, ~/.local/bin/screenshot monitor"
 
       ",XF86AudioPlay, exec, playerctl play-pause"
       ",XF86AudioPause, exec, playerctl play-pause"
