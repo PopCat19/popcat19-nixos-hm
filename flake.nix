@@ -94,6 +94,11 @@
       url = "github:ggml-org/llama.cpp/b8770";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    shimboot = {
+      url = "path:/home/popcat19/nixos-shimboot";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
