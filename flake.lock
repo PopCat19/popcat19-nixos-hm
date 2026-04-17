@@ -1380,8 +1380,8 @@
         "nixpkgs-systemd": "nixpkgs-systemd"
       },
       "locked": {
-        "lastModified": 1776408246,
-        "narHash": "sha256-W87fH04CD9tjMLgzJViifWETPCkJk9INGlep5Wim9FQ=",
+        "lastModified": 1776410858,
+        "narHash": "sha256-xHZZE0jm2KAin+a6PCk4Or1oT718zqC7lAIeZFpB48E=",
         "path": "/home/popcat19/nixos-shimboot",
         "type": "path"
       },
