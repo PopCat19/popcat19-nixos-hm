@@ -7,6 +7,11 @@ rec {
   username = "popcat19";
   profile = "shimboot";
 
+  host = {
+    inherit hostname;
+    inherit system;
+  };
+
   # Required by shimboot's localization module
   timezone = "America/New_York";
   locale = "en_US.UTF-8";
@@ -96,6 +101,10 @@ rec {
       syncthing = "${home}/syncthing-shared";
       videos = "${home}/Videos";
     };
+
+  env = {
+    NIXOS_CONFIG_DIR = "${directories.home}/nixos-shimboot-config";
+  };
 
   git = {
     userName = user.fullName;

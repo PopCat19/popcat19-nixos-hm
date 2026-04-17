@@ -7,9 +7,6 @@
 # - Includes desktop environment (inclusive for usability on low hardware)
 # - Configures for x86_64 ChromeOS devices
 { userConfig, inputs, ... }:
-let
-  stateVersion = import ../stateversion.nix;
-in
 {
   imports = [
     # Import shimboot chromeos module and pass userConfig via _module.args
