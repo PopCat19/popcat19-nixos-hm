@@ -25,7 +25,8 @@
 - `playwright.nix` — Configure Playwright browser testing environment for NixOS
 - `privacy.nix` — Configures privacy and security tools.
 - `qt-gtk-config.nix` — Configure XDG MIME defaults and GTK/Qt application integrations
-- `screenshot.nix` — Screenshot capture with optional shader bypass
+- `screenshot.fish` — Fish wrapper for hyprshot with window naming
+- `screenshot.nix` — Screenshot capture using hyprshot and fish wrapper
 - `services.nix` — Configure user-level services for media, storage, and clipboard
 - `starship.nix` — Configure Starship cross-shell prompt with Catppuccin-inspired styling
 - `stylix.nix` — Configure comprehensive theming using Stylix framework
