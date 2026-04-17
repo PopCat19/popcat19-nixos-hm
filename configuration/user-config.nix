@@ -26,6 +26,7 @@ rec {
       "nixos0"
       "surface0"
       "thinkpad0"
+      "dedede0"
     ];
     owner = username;
     defaultMachine = "nixos0";
