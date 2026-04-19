@@ -27,6 +27,7 @@
 - `qt-gtk-config.nix` — Configure XDG MIME defaults and GTK/Qt application integrations
 - `screenshot.fish` — Fish wrapper for hyprshot with window naming
 - `screenshot.nix` — Screenshot capture using hyprshot and fish wrapper
+- `shimboot.nix` — Pruned home modules for ChromeOS shimboot devices
 - `services.nix` — Configure user-level services for media, storage, and clipboard
 - `starship.nix` — Configure Starship cross-shell prompt with Catppuccin-inspired styling
 - `stylix.nix` — Configure comprehensive theming using Stylix framework
