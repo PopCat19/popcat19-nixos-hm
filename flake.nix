@@ -96,7 +96,7 @@
     };
 
     shimboot = {
-      url = "path:/home/popcat19/nixos-shimboot";
+      url = "github:PopCat19/nixos-shimboot/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
