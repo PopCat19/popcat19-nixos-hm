@@ -1,7 +1,7 @@
 # home.nix
 #
 # Purpose: Home Manager configuration for the dedede0 host (shimboot)
-# Pattern: explicit module imports matching nsc popcat19
+# Pattern: explicit module imports, adapted from nsc popcat19 for pnh structure
 { userConfig, ... }:
 let
   stateVersion = import ../../stateversion.nix;
