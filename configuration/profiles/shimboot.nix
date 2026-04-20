@@ -28,6 +28,15 @@
     ../system/modules/ssh.nix
     ../system/modules/syncthing.nix
     ../system/modules/stylix-lightdm.nix
+    ../system/modules/gnome-keyring.nix
+    ../system/modules/hyprland.nix
+    ../system/modules/noctalia.nix
+    ../system/packages.nix
+    ../system/modules/services.nix
+    ../system/modules/xdg.nix
+    ../system/modules/programs.nix
+    ../system/modules/environment.nix
+    ../system/modules/dconf.nix
   ];
 
   # Re-export userConfig for shimboot modules
@@ -39,7 +48,7 @@
     # Add LLM agents packages from numtide
     home.packages = [
       inputs.llm-agents.packages.${pkgs.system}.opencode
-      inputs.llm-agents.packages.${pkgs.system}.kilocode-cli
+      inputs.llm-agents.packages.${pkgs.system}.pi
     ];
   };
 }
