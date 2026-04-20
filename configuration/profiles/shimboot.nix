@@ -41,7 +41,5 @@
   # Re-export userConfig for shimboot modules
   _module.args.userConfig = userConfig;
 
-  home-manager.users.${userConfig.username} = {
-    imports = [ ../home/modules/shimboot.nix ];
-  };
+  # home.nix from host directory handles home-manager imports
 }
