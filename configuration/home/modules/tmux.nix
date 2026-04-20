@@ -9,5 +9,8 @@ _: {
   programs.tmux = {
     enable = true;
     mouse = true;
+    extraConfig = ''
+      set -g extended-keys on
+    '';
   };
 }
