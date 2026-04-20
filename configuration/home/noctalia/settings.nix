@@ -9,6 +9,7 @@
   pkgs,
   config,
   hostname ? null,
+  enableUWSM ? true,
   ...
 }:
 let
@@ -263,8 +264,8 @@ let
       useApp2Unit = false;
       sortByMostUsed = true;
       terminalCommand = "xterm -e";
-      customLaunchPrefixEnabled = true;
-      customLaunchPrefix = "uwsm app --";
+      customLaunchPrefixEnabled = enableUWSM;
+      customLaunchPrefix = if enableUWSM then "uwsm app --" else "";
       viewMode = "list";
       showCategories = true;
       iconMode = "tabler";
