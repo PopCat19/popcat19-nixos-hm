@@ -9,7 +9,6 @@
 # - Sets up LLM agents (opencode, kilocode)
 # - Adds Stylix theming support
 {
-  pkgs,
   userConfig,
   inputs,
   ...
@@ -27,14 +26,14 @@
     # Additional modules not in base
     ../system/modules/ssh.nix
     ../system/modules/syncthing.nix
-    ../system/modules/stylix-lightdm.nix
+    # ../system/modules/stylix-lightdm.nix # redundant
     ../system/modules/gnome-keyring.nix
-    ../system/modules/hyprland.nix
+    # ../system/modules/hyprland.nix # don't use uwsm for shimboot
     ../system/modules/noctalia.nix
     ../system/packages.nix
-    ../system/modules/services.nix
+    # ../system/modules/services.nix # shimboot managed
     ../system/modules/xdg.nix
-    ../system/modules/programs.nix
+    # ../system/modules/programs.nix # disable for now, shimboot incl. fish already
     ../system/modules/environment.nix
     ../system/modules/dconf.nix
   ];
@@ -44,11 +43,5 @@
 
   home-manager.users.${userConfig.username} = {
     imports = [ ../home/modules/shimboot.nix ];
-
-    # Add LLM agents packages from numtide
-    home.packages = [
-      inputs.llm-agents.packages.${pkgs.system}.opencode
-      inputs.llm-agents.packages.${pkgs.system}.pi
-    ];
   };
 }
