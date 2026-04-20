@@ -16,7 +16,19 @@
 let
   hostname = config.networking.hostName or userConfig.hostname;
   enableUWSM = hostname != "popcat19-dedede0";
-  inherit ((import ./settings.nix { inherit pkgs config hostname enableUWSM; })) settings;
+  inherit
+    (
+      (import ./settings.nix {
+        inherit
+          pkgs
+          config
+          hostname
+          enableUWSM
+          ;
+      })
+    )
+    settings
+    ;
 in
 {
   imports = [
