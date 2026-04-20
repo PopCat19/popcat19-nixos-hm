@@ -8,9 +8,6 @@
 # - Excludes heavy/resource-intensive apps (OBS, Ollama, generative tools, etc.)
 {
   pkgs,
-  inputs,
-  userConfig,
-  hostPlatform,
   ...
 }:
 {
