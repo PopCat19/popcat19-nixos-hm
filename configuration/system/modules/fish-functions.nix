@@ -10,39 +10,37 @@
 {
   environment.etc = {
     "fish/completions/proxify.fish".text =
-      builtins.readFile ../../base/system/fish_functions/completions/proxify.fish;
-    "fish/functions/cnup.fish".text = builtins.readFile ../../base/system/fish_functions/cnup.fish;
+      builtins.readFile ../../fish_functions/completions/proxify.fish;
+    "fish/functions/cnup.fish".text = builtins.readFile ../../fish_functions/cnup.fish;
     "fish/functions/dev-to-main.fish".text =
-      builtins.readFile ../../base/system/fish_functions/dev-to-main.fish;
+      builtins.readFile ../../fish_functions/dev-to-main.fish;
     "fish/functions/fix-fish-history.fish".text =
-      builtins.readFile ../../base/system/fish_functions/fix-fish-history.fish;
+      builtins.readFile ../../fish_functions/fix-fish-history.fish;
     "fish/functions/fish_greeting.fish".text =
-      builtins.readFile ../../base/system/fish_functions/fish-greeting.fish;
+      builtins.readFile ../../fish_functions/fish-greeting.fish;
     "fish/functions/list-fish-helpers.fish".text =
-      builtins.readFile ../../base/system/fish_functions/list-fish-helpers.fish;
-    "fish/functions/lsa.fish".text = builtins.readFile ../../base/system/fish_functions/lsa.fish;
+      builtins.readFile ../../fish_functions/list-fish-helpers.fish;
+    "fish/functions/lsa.fish".text = builtins.readFile ../../fish_functions/lsa.fish;
     "fish/functions/nix-shell-unfree.fish".text =
-      builtins.readFile ../../base/system/fish_functions/nix-shell-unfree.fish;
+      builtins.readFile ../../fish_functions/nix-shell-unfree.fish;
         "fish/functions/nixos-flake-update.fish".text =
-      builtins.readFile ../../base/system/fish_functions/nix-flake-update.fish;
+      builtins.readFile ../../fish_functions/nix-flake-update.fish;
     "fish/functions/nixos-rebuild-auto.fish".text =
-      builtins.readFile ../../base/system/fish_functions/nixos-rebuild-auto.fish;
+      builtins.readFile ../../fish_functions/nixos-rebuild-auto.fish;
     "fish/functions/nixos-rebuild-basic.fish".text =
-      builtins.readFile ../../base/system/fish_functions/nixos-rebuild-basic.fish;
-    "fish/functions/migrate-to-pnh.fish".text =
-      builtins.readFile ../../base/system/fish_functions/migrate-to-pnh.fish;
+      builtins.readFile ../../fish_functions/nixos-rebuild-basic.fish;
     "fish/functions/proxy_off.fish".text =
-      builtins.readFile ../../base/system/fish_functions/proxy-off.fish;
+      builtins.readFile ../../fish_functions/proxy-off.fish;
     "fish/functions/proxy_on.fish".text =
-      builtins.readFile ../../base/system/fish_functions/proxy-on.fish;
+      builtins.readFile ../../fish_functions/proxy-on.fish;
     "fish/functions/proxify.fish".text =
-      builtins.readFile ../../base/system/fish_functions/proxify.fish;
+      builtins.readFile ../../fish_functions/proxify.fish;
     "fish/functions/show-shortcuts.fish".text =
-      builtins.readFile ../../base/system/fish_functions/show-shortcuts.fish;
+      builtins.readFile ../../fish_functions/show-shortcuts.fish;
     "fish/functions/sillytavern.fish".text =
-      builtins.readFile ../../base/system/fish_functions/sillytavern.fish;
+      builtins.readFile ../../fish_functions/sillytavern.fish;
     "fish/functions/dev-session.fish".text =
-      builtins.readFile ../../base/system/fish_functions/dev-session.fish;
+      builtins.readFile ../../fish_functions/dev-session.fish;
   };
 
   programs.fish = {
