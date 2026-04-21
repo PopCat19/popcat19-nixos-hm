@@ -50,8 +50,10 @@ with pkgs;
   fish-lsp
   git-lfs
   glslang
+  gopls
   hyprlang
   hyprls
+  java-language-server
   jdk
   lazygit
   nil
@@ -61,11 +63,13 @@ with pkgs;
   nodejs_22
   prettierd
   python3
+  pyright
   ripgrep
   rustup
   shellcheck
   shfmt
   statix
+  typescript-language-server
   yamllint
   yarn-berry
 
