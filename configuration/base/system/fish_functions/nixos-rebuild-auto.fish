@@ -103,7 +103,7 @@ function nixos-rebuild-auto
 
     echo "[STEP] Running nixos-rebuild $action..."
 
-    if sudo -E nixos-rebuild $rebuild_args
+    if sudo nixos-rebuild $rebuild_args
         echo "[SUCCESS] Build succeeded"
 
         # Push phase
