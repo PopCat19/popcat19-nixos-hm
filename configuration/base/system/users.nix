@@ -1,10 +1,11 @@
 # users.nix
 #
-# Purpose: Minimal user configuration
+# Purpose: User and sudo configuration
 #
 # This module:
 # - Creates the main user account
 # - Sets up basic user groups
+# - Configures passwordless sudo for nixos-rebuild (LLM automation)
 { lib, userConfig, ... }:
 {
   users.users.${userConfig.username} = {
@@ -12,6 +13,28 @@
     extraGroups = lib.mkDefault [ "wheel" ];
   };
 
-  # Enable sudo for wheel group
-  security.sudo.enable = lib.mkDefault true;
+  security.sudo = {
+    enable = lib.mkDefault true;
+    extraRules = [
+      {
+        users = [ userConfig.username ];
+        commands = [
+          {
+            command = "/run/current-system/sw/bin/nixos-rebuild";
+            options = [
+              "NOPASSWD"
+              "SETENV"
+            ];
+          }
+          {
+            command = "/run/wrappers/bin/nixos-rebuild";
+            options = [
+              "NOPASSWD"
+              "SETENV"
+            ];
+          }
+        ];
+      }
+    ];
+  };
 }
