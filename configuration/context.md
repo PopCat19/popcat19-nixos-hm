@@ -1,5 +1,6 @@
 # Context
 
+- `fish_functions/` — Custom Fish shell functions and completions
 - `home-manager.nix` — Centralized Home Manager configuration
 - `nix-options.nix` — Centralized Nix configuration options
 - `stateversion.nix` — Single source of truth for NixOS and Home Manager state versions
