@@ -1,64 +1,76 @@
 # NixOS Configuration
 
-Personal NixOS configuration with Hyprland Wayland compositor and Rose Pine theming.
+Personal NixOS configuration with Hyprland Wayland compositor and PMD theming.
 
 ## Overview
 
-This is a personal dotfiles repository for a NixOS setup focused on:
+Personal dotfiles repository for a NixOS setup focused on:
 - Modern Wayland desktop with Hyprland compositor
-- Gaming-optimized environment with Steam, Proton, and gaming tools
-- Development-ready setup with VS Code, language servers, and containers
-- Consistent Rose Pine theming across all applications
+- Gaming-optimized environment with Steam, Proton, and AAGL
+- Development-ready setup with multiple editors and language support
+- Consistent theming via Stylix with PMD (Personal Material Design)
 - Modular design with multi-host support
 - Distributed builds between machines
 
 ## Architecture
 
-The configuration follows a modular structure under the `configuration/` directory:
-
 ```
 nixos-config/
-├── configuration/          # Main configuration directory
-│   ├── flake/             # Flake modules and overlays
-│   │   ├── modules/       # NixOS module definitions
-│   │   └── overlays/      # Custom package overlays
-│   ├── home/              # Home Manager configuration
-│   │   ├── home_modules/  # User-level modules
-│   │   ├── hypr_config/   # Hyprland settings
-│   │   ├── packages/      # Organized package lists
-│   │   └── fish_themes/   # Shell color schemes
-│   ├── system/            # System-level configuration
-│   │   └── system_modules/# System modules
-│   ├── wallpaper/         # Wallpaper assets
-│   └── user-config.nix    # Central user configuration
-├── hosts/                 # Host-specific configurations
-│   ├── nixos0/           # Desktop workstation
-│   ├── surface0/         # Mobile workstation
-│   └── thinkpad0/        # Portable laptop
-├── .github/workflows/    # GitHub Actions workflows
-└── .kilocode/rules/      # LLM workspace standards
+├── configuration/
+│   ├── base/                    # Minimal bootable configuration
+│   │   ├── configuration.nix
+│   │   └── system/
+│   ├── flake/modules/           # Flake-related modules
+│   ├── home/                    # Home-manager configuration
+│   │   ├── modules/
+│   │   ├── hyprland/
+│   │   ├── noctalia/
+│   │   ├── wallpaper/
+│   │   ├── packages.nix
+│   │   └── home.nix
+│   ├── hosts/                   # Host-specific configurations
+│   │   ├── nixos0/
+│   │   ├── surface0/
+│   │   └── thinkpad0/
+│   ├── profiles/                # Profile presets
+│   │   ├── default.nix          # Desktop workstation
+│   │   ├── laptop.nix           # Laptop profile
+│   │   ├── minimal.nix          # Minimal profile
+│   │   └── surface.nix          # Surface Pro profile
+│   ├── system/                  # System-level configuration
+│   │   ├── packages.nix         # System packages
+│   │   └── modules/
+│   ├── home-manager.nix
+│   ├── nix-options.nix
+│   ├── user-config.nix
+│   └── user.nix
+├── conventions/
+└── flake.nix
 ```
 
 ## Key Components
 
 ### Desktop Environment
 - Hyprland Wayland compositor with custom configuration
-- Rose Pine theming for GTK, Qt, and cursor themes
+- Stylix theming for GTK, Qt, and cursor themes
 - Fuzzel application launcher
-- Custom shader effects and animations
+- Custom GLSL shader effects
+- Noctalia shell (Wayland bar/launcher)
 
 ### Gaming Support
 - Steam with Proton compatibility
 - MangoHUD performance overlay with Rose Pine theme
 - GameMode optimization
-- Anime Game Launcher (AAGL) support
+- Anime Game Launcher (AAGL)
+- Jovian NixOS (Steam Deck OS support)
 
 ### Development Tools
-- Micro text editor with Rose Pine theme
+- Multiple editors: VSCodium, Zed, Micro
 - Fish shell with custom functions
 - Docker and Podman support
 - Multiple programming languages and tools
 - Git with custom configuration
+- LLM agents integration
 
 ### System Features
 - PipeWire audio server
@@ -67,14 +79,30 @@ nixos-config/
 - Multi-host support (nixos0, surface0, thinkpad0)
 - Surface Pro thermal management
 - ThinkPad power management
+- Agenix secrets management
 
 ### System Modules
 - Audio: PipeWire configuration
 - Display: Hyprland + SDDM setup
-- Virtualisation: Docker, libvirt, Waydroid
+- Virtualisation: Docker, libvirt, Waydroid, QEMU/KVM
 - Networking: Firewall and network management
 - Power Management: TLP and custom thermal controls
 - VPN: Mullvad VPN integration
+
+## Flake Inputs
+
+| Input | Purpose |
+|-------|---------|
+| nixpkgs | Core package repository |
+| home-manager | User-level configuration |
+| stylix | Theming framework |
+| jovian | Steam Deck OS support |
+| aagl | Anime game launchers |
+| agenix | Secrets management |
+| zen-browser | Zen browser package |
+| noctalia | Wayland bar/launcher |
+| pmd | Personal Material Design theme |
+| llm-agents | LLM agent utilities |
 
 ## Hosts
 
@@ -84,13 +112,13 @@ nixos-config/
 - Gaming and development machine
 - Distributed build server
 
-### surface0 (Mobile Workstation)
+### surface0 (Surface Pro Tablet)
 - Microsoft Surface Pro (Intel i5-8350U)
 - Touch/pen input support
 - Aggressive thermal management
 - WiFi stability fixes
 
-### thinkpad0 (Portable Laptop)
+### thinkpad0 (ThinkPad Laptop)
 - ThinkPad series laptop
 - External HDMI display support
 - TLP power management
@@ -119,6 +147,10 @@ nixos-config/
    sudo nixos-rebuild switch --flake .
    ```
 
+## Development
+
+See [`conventions/DEVELOPMENT.md`](conventions/DEVELOPMENT.md) for development conventions and coding standards.
+
 ## Note
 
-This repository is under active development and may have breaking changes at any time. It's intended as a personal dotfiles collection with multi-host support and distributed builds.
+Personal dotfiles collection with multi-host support and distributed builds. Breaking changes may occur at any time.

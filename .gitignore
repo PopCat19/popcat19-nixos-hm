@@ -1,24 +1,28 @@
-# Ignore build result symlinks
+# Build results
 result
+result-*
+.direnv/
 
-# Ignore backup files
+# Editor files
+.idea/
+.kilocode/
+.opencode/
+.roo/
+.vscode/
+*.swo
+*.swp
+
+# Backup files
 *.bak
 *.bak[0-9]
-configuration.nix.bak*
 *.backup
 *~
+configuration.nix.bak*
 
-# Ignore temporary files
+# Temporary files
 .DS_Store
 Thumbs.db
 
-# Ignore editor files
-.vscode/
-.idea/
-.roo/
-*.swp
-*.swo
-
-# Ignore nix build artifacts
-result-*
-.direnv/
+# Large directories
+node_modules
+.changelog-merge-state

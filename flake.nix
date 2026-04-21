@@ -1,135 +1,114 @@
+# flake.nix
+#
+# Purpose: Main flake entry point for NixOS multi-host configuration
+#
+# This module:
+# - Uses flake-parts for modular flake configuration
+# - Imports flake modules from ./flake-modules/
+# - Exposes NixOS configurations for all hosts
 {
-  description = "NixOS configuration with custom packages and overlays";
+  description = "NixOS multi-host configuration with profile presets";
 
-  # Flake inputs
   inputs = {
-    # Core Nixpkgs repository
-    nixpkgs.url = "github:nixos/nixpkgs/pull/476347/head";
-
-    # Nix User Repository
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # System extensions
-
-    # Jovian NixOS (Steam Deck OS)
-    jovian = {
-      url = "github:Jovian-Experiments/jovian-nixos";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Gaming-specific inputs
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Secrets management
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
-    # Application-specific inputs
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      # IMPORTANT: we're using "libgbm" and is only available in unstable so ensure
-      # to have it up-to-date or simply don't specify the nixpkgs input
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Home management
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Theming inputs
-    rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
-
-    # Noctalia Shell (Wayland bar/launcher)
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+    jovian = {
+      url = "github:Jovian-Experiments/jovian-nixos";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Stylix theming framework
-    stylix = {
-      url = "github:nix-community/stylix";
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Personal Material Design (PMD) theme system
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
+
+    niri.url = "github:sodiboo/niri-flake";
+
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     pmd = {
       url = "github:popcat19/project-minimalist-design/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Alejandra Nix formatter
-    alejandra = {
-      url = "github:kamadorueda/alejandra/4.0.0";
+    rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
+
+    stylix = {
+      url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Vicinae launcher
-    vicinae.url = "github:vicinaehq/vicinae";
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      # libgbm is only available in unstable
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    # LLM Agents
-    llm-agents = {
-      url = "github:numtide/llm-agents.nix";
+    apollo = {
+      url = "github:nil-andreas/apollo-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zrok = {
+      url = "github:openziti/zrok/v1.1.10";
+      flake = false;
+    };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    opentabletdriver = {
+      url = "github:OpenTabletDriver/OpenTabletDriver";
+      flake = false;
+    };
+
+    llama-cpp-src = {
+      url = "github:ggml-org/llama.cpp/b8770";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    shimboot = {
+      url = "github:PopCat19/nixos-shimboot/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs @ {
-    nixpkgs,
-    alejandra,
-    ...
-  }: let
-    # Import modules
-    modules = import ./configuration/flake/modules/modules.nix;
-    hosts = import ./configuration/flake/modules/hosts.nix;
+  outputs =
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
 
-    # Supported systems
-    supportedSystems = ["x86_64-linux"];
-
-    # Base user configuration
-    baseUserConfig = import ./configuration/user-config.nix {};
-  in {
-    # Packages output (no vicinae now that the overlay was removed)
-    packages = nixpkgs.lib.genAttrs supportedSystems (
-      system: {
-        # Export agenix for secret management
-        agenix = inputs.agenix.packages.${system}.default;
-      }
-    );
-
-    # Formatter for 'nix fmt'
-    formatter = nixpkgs.lib.genAttrs supportedSystems (
-      system:
-        alejandra.defaultPackage.${system}
-    );
-    # Host-specific NixOS configurations generated dynamically
-    # Keyed by derived hostname e.g. popcat19-nixos0, popcat19-surface0, popcat19-thinkpad0
-    nixosConfigurations = let
-      inherit (baseUserConfig.hosts) machines;
-    in
-      nixpkgs.lib.listToAttrs (map (m: let
-          perHostConfig = import ./configuration/user-config.nix {
-            inherit (baseUserConfig.user) username;
-            machine = m;
-            system = "x86_64-linux";
-          };
-          inherit (perHostConfig.host) hostname;
-        in {
-          name = hostname;
-          value = hosts.mkHostConfig hostname "x86_64-linux" ./hosts/${m}/configuration.nix ./hosts/${m}/home.nix {
-            inherit inputs nixpkgs modules;
-            userConfig = perHostConfig;
-          };
-        })
-        machines);
-  };
+      imports = [
+        ./flake-modules/nixos.nix
+        ./flake-modules/formatter.nix
+      ];
+    };
 }

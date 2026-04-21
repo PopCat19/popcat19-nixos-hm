@@ -1,0 +1,42 @@
+# Context
+
+- `audio-control.nix` — Configure audio control panel and volume management utilities
+- `broot.nix` — Configure Broot file manager with home-manager
+- `default.nix` — Import all home modules for Home Manager configuration
+- `environment.nix` — Configure user-specific environment variables and session settings
+- `fcitx5.nix` — Configure fcitx5 input method framework with Japanese support
+- `fonts.nix` — Placeholder for application-specific font configurations
+- `fuzzel-config.nix` — Configure Fuzzel application launcher with Rose Pine theme
+- `generative.nix` — Configure generative AI related packages
+- `git.nix` — Configure Git version control settings
+- `glance.nix` — Configures Glance self-hosted dashboard.
+- `helix.nix` — Configure Helix editor with home-manager and stylix theming
+- `home-files.nix` — Manage home directory file symlinks and configuration
+- `home.nix` — Configure home activation scripts for directory creation
+- `kde-apps.nix` — Configure KDE applications without desktop environment
+- `kitty.nix` — Configure Kitty terminal emulator settings
+- `lazygit.nix` — Configure LazyGit with home-manager
+- `mangohud.nix` — Configure MangoHUD gaming performance overlay with Rose Pine theming
+- `micro.nix` — Configures the Micro terminal text editor.
+- `niri.nix` — Configure Niri scrollable-tiling Wayland compositor
+- `obs.nix` — Configures OBS Studio with plugins for recording and streaming.
+- `ollama.nix` — Configures Ollama LLM service with ROCm acceleration.
+- `packages.nix` — Re-exports consolidated home packages
+- `playwright.nix` — Configure Playwright browser testing environment for NixOS
+- `privacy.nix` — Configures privacy and security tools.
+- `qt-gtk-config.nix` — Configure XDG MIME defaults and GTK/Qt application integrations
+- `screenshot.fish` — Fish wrapper for hyprshot with window naming
+- `screenshot.nix` — Screenshot capture using hyprshot and fish wrapper
+- `shimboot.nix` — Pruned home modules for ChromeOS shimboot devices
+- `services.nix` — Configure user-level services for media, storage, and clipboard
+- `starship.nix` — Configure Starship cross-shell prompt with Catppuccin-inspired styling
+- `stylix.nix` — Configure comprehensive theming using Stylix framework
+- `syncthing.nix` — Configure Syncthing directories and activation script
+- `systemd-services.nix` — Configure custom systemd user services
+- `tmux.nix` — Configure tmux terminal multiplexer
+- `vesktop.nix` — Configure Vesktop (Discord client with Vencord) with user preferences
+- `vscodium.nix` — Configure VSCodium editor with extensions and settings
+- `wallpaper-sync.nix` — Soft-clone wallpapers to user directory for Noctalia
+- `zathura.nix` — Configure Zathura PDF viewer with home-manager
+- `zed.nix` — Configure Zed code editor with PMD theming and AI integration
+- `zen-browser.nix` — Configure Zen Browser with extensions and PWA support
