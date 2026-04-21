@@ -29,6 +29,8 @@
       builtins.readFile ../../base/system/fish_functions/nixos-rebuild-auto.fish;
     "fish/functions/nixos-rebuild-basic.fish".text =
       builtins.readFile ../../base/system/fish_functions/nixos-rebuild-basic.fish;
+    "fish/functions/migrate-to-pnh.fish".text =
+      builtins.readFile ../../base/system/fish_functions/migrate-to-pnh.fish;
     "fish/functions/proxy_off.fish".text =
       builtins.readFile ../../base/system/fish_functions/proxy-off.fish;
     "fish/functions/proxy_on.fish".text =
