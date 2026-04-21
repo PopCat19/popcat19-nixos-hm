@@ -13,7 +13,7 @@ name: cachix-nixos
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 0 */2 * *'
   push:
     paths:
       - 'flake.lock'
