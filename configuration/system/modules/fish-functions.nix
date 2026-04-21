@@ -23,10 +23,10 @@
     "fish/functions/lsa.fish".text = builtins.readFile ../../base/system/fish_functions/lsa.fish;
     "fish/functions/nix-shell-unfree.fish".text =
       builtins.readFile ../../base/system/fish_functions/nix-shell-unfree.fish;
-    "fish/functions/nixos-commit-rebuild-push.fish".text =
-      builtins.readFile ../../base/system/fish_functions/nixos-commit-rebuild-push.fish;
-    "fish/functions/nix-flake-update.fish".text =
+        "fish/functions/nixos-flake-update.fish".text =
       builtins.readFile ../../base/system/fish_functions/nix-flake-update.fish;
+    "fish/functions/nixos-rebuild-auto.fish".text =
+      builtins.readFile ../../base/system/fish_functions/nixos-rebuild-auto.fish;
     "fish/functions/nixos-rebuild-basic.fish".text =
       builtins.readFile ../../base/system/fish_functions/nixos-rebuild-basic.fish;
     "fish/functions/proxy_off.fish".text =
@@ -70,7 +70,6 @@
       nconf = "$EDITOR $NIXOS_CONFIG_DIR/configuration.nix";
       ngit = "begin; cd $NIXOS_CONFIG_DIR; git $argv; cd -; end";
       nrb = "nixos-rebuild-basic";
-      nrbc = "nixos-commit-rebuild-push";
       nsp = "nix-shell -p";
       pkgs = "nix search nixpkgs";
       slp = "systemctl sleep";
