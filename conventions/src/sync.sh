@@ -249,6 +249,12 @@ cmd_sync() {
 	# Ensure cache directory exists
 	mkdir -p ".dev-conventions-sync-cache"
 
+	# Check if a rebase or merge is already in progress
+	if [[ -d ".git/rebase-merge" || -d ".git/rebase-apply" || -f ".git/MERGE_HEAD" ]]; then
+		log_error "A git operation (rebase/merge) is already in progress. Please resolve it first."
+		return 1
+	fi
+
 	# Parse arguments
 	while [[ $# -gt 0 ]]; do
 		case "$1" in
