@@ -25,7 +25,6 @@ in
     ../system/modules/gnome-keyring.nix
     ../system/modules/hardware.nix
     ../system/modules/hyprland.nix
-    ../system/modules/niri.nix
     ../system/modules/networking.nix
     ../system/modules/noctalia.nix
     ../system/packages.nix
