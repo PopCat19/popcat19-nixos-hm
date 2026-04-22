@@ -101,4 +101,4 @@ jobs:
 
           echo "## ✅ Flake Check Passed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          nix flake show --accept-flake-config >> $GITHUB_STEP_SUMMARY
+          nix flake show --accept-flake-config >> $GITHUB_STEP_SUMMARY || echo "⚠️ flake show crashed (non-fatal)" >> $GITHUB_STEP_SUMMARY
