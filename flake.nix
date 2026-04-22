@@ -44,7 +44,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    noctalia.url = "github:noctalia-dev/noctalia-shell";
+    noctalia.url = "github:noctalia-dev/noctalia-shell?ref=refs/tags/v4.7.6";
 
     niri.url = "github:sodiboo/niri-flake";
 
@@ -55,7 +55,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
+    rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor?ref=refs/tags/v0.3.2";
 
     stylix = {
       url = "github:nix-community/stylix";
