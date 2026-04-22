@@ -38,9 +38,5 @@
       recursive = true;
       executable = true;
     };
-    ".config/hypr/shaders" = {
-      source = ./shaders;
-      recursive = true;
-    };
   };
 }
