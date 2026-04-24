@@ -7,7 +7,7 @@
 # - Configures endpoint for pi-gateway
 # - Adds keybind for Hyprland
 
-{ config, lib, inputs, ... }:
+{ config, lib, inputs, hostPlatform, ... }:
 
 {
   # Enable lm-modal service
@@ -15,6 +15,7 @@
     enable = true;
     endpoint = "http://localhost:8088";
     model = null;  # Use pi-gateway default
+    package = inputs.lm-modal.packages.${hostPlatform}.default;
   };
 
   # Add Hyprland keybind
