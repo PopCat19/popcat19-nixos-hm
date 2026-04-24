@@ -39,8 +39,6 @@
                 nixpkgs.config.allowUnfree = true;
                 nixpkgs.overlays = import ./overlays.nix system;
               }
-              # External home-manager modules
-              inputs.lm-modal.homeManagerModules.default
             ];
             users.${userConfig.username} = import homeConfigPath;
             extraSpecialArgs = {
