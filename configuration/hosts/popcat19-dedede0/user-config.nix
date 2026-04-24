@@ -6,10 +6,12 @@ rec {
   hostname = "popcat19-dedede0";
   username = "popcat19";
   profile = "shimboot";
+  board = "dedede";  # Intel Jasper Lake board
 
   host = {
     inherit hostname;
     inherit system;
+    inherit board;  # Board identifier for hardware-specific configuration
   };
 
   # Required by shimboot's localization module
