@@ -63,6 +63,10 @@
       "float on, match:title ^(Save As)$"
       "float on, match:title ^(Confirm to replace files)$"
       "float on, match:title ^(File Operation Progress)$"
+
+      # lm-modal - Wayland LLM overlay
+      "float on, match:class ^(lm-modal)$"
+      "stayfocused, match:class ^(lm-modal)$"
     ];
   };
 }
