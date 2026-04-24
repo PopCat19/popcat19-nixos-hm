@@ -9,41 +9,16 @@
 
 { config, lib, inputs, ... }:
 
-let
-  cfg = config.services.lm-modal;
-in
 {
-  imports = [ inputs.lm-modal.homeManagerModules.default ];
-
-  options.services.lm-modal = with lib; {
-    enable = mkEnableOption "lm-modal Wayland LLM overlay";
-
-    endpoint = mkOption {
-      type = types.str;
-      default = "http://localhost:8088";
-      description = "OpenAI-compatible API endpoint";
-    };
-
-    model = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      description = "Model name (null uses endpoint default)";
-    };
-
-    keybind = mkOption {
-      type = types.str;
-      default = "SUPER, P";
-      description = "Hyprland keybind to launch lm-modal";
-    };
+  # Enable lm-modal service
+  services.lm-modal = {
+    enable = true;
+    endpoint = "http://localhost:8088";
+    model = null;  # Use pi-gateway default
   };
 
-  config = lib.mkIf cfg.enable {
-    services.lm-modal = {
-      inherit (cfg) enable endpoint model;
-    };
-
-    wayland.windowManager.hyprland.settings.bind = [
-      "${cfg.keybind}, exec, lm-modal"
-    ];
-  };
+  # Add Hyprland keybind
+  wayland.windowManager.hyprland.settings.bind = [
+    "SUPER, P, exec, lm-modal"
+  ];
 }
