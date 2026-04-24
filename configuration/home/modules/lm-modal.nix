@@ -15,7 +15,11 @@ let
 in
 {
   options.services.lm-modal = with lib; {
-    enable = mkEnableOption "lm-modal Wayland LLM overlay";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Whether to enable lm-modal Wayland LLM overlay";
+    };
 
     endpoint = mkOption {
       type = types.str;
