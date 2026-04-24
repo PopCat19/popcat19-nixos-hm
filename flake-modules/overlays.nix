@@ -10,7 +10,7 @@
 [
   # Hyprland from git
   (final: _prev: {
-    inherit (inputs.hyprland.packages.${final.system}) hyprland;
+    inherit (inputs.hyprland.packages.${final.stdenv.hostPlatform.system}) hyprland;
   })
 
   # OpenTabletDriver git latest overlay
@@ -27,7 +27,7 @@
 
   # llama.cpp ROCm from upstream flake
   (final: _prev: {
-    llama-cpp-rocm = inputs.llama-cpp-src.packages.${final.system}.rocm;
+    llama-cpp-rocm = inputs.llama-cpp-src.packages.${final.stdenv.hostPlatform.system}.rocm;
   })
 
   # Zrok v1.1.10 overlay - provides latest binary release

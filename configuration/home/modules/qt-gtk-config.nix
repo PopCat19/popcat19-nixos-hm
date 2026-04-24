@@ -6,8 +6,11 @@
 # - Sets default applications for common MIME types
 # - Configures GTK bookmarks and desktop entries
 # - Sets up Nemo file manager with custom actions
-{ userConfig, ... }:
+# - Explicitly sets GTK4 theme to silence deprecation warning
+{ userConfig, config, ... }:
 {
+  # Silence GTK4 theme deprecation warning (home.stateVersion < 26.05)
+  gtk.gtk4.theme = config.gtk.theme;
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
