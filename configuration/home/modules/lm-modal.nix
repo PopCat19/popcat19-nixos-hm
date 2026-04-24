@@ -53,7 +53,7 @@ in
 
     # Add Hyprland keybind
     wayland.windowManager.hyprland.settings.bind = [
-      "SUPER, P, exec, lm-modal"
+      "SUPER+SHIFT, P, exec, lm-modal"
     ];
   };
 }
