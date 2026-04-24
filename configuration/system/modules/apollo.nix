@@ -17,7 +17,7 @@
 let
   cfg = config.services.apollo;
 
-  apolloPackage = inputs.apollo.packages.${pkgs.system}.default;
+  apolloPackage = inputs.apollo.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   generatePorts = port: offsets: map (offset: port + offset) offsets;
   defaultPort = 47989;
