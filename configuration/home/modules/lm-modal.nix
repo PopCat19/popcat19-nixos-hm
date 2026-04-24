@@ -3,23 +3,53 @@
 # Purpose: Configure lm-modal Wayland LLM overlay
 #
 # This module:
-# - Enables lm-modal via Home Manager
-# - Configures endpoint for pi-gateway
+# - Installs the lm-modal binary from flake input
+# - Configures the API endpoint
 # - Adds keybind for Hyprland
 
 { config, lib, inputs, hostPlatform, ... }:
 
+let
+  cfg = config.services.lm-modal;
+  lm-modal-pkg = inputs.lm-modal.packages.${hostPlatform}.default;
+in
 {
-  # Enable lm-modal service
-  services.lm-modal = {
-    enable = true;
-    endpoint = "http://localhost:8088";
-    model = null;  # Use pi-gateway default
-    package = inputs.lm-modal.packages.${hostPlatform}.default;
+  options.services.lm-modal = with lib; {
+    enable = mkEnableOption "lm-modal Wayland LLM overlay";
+
+    endpoint = mkOption {
+      type = types.str;
+      default = "http://localhost:8088";
+      example = "http://localhost:11434/v1";
+      description = "OpenAI-compatible API endpoint";
+    };
+
+    model = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "llama3";
+      description = "Model name (null uses endpoint default)";
+    };
+
+    timeout = mkOption {
+      type = types.int;
+      default = 120;
+      description = "Request timeout in seconds";
+    };
   };
 
-  # Add Hyprland keybind
-  wayland.windowManager.hyprland.settings.bind = [
-    "SUPER, P, exec, lm-modal"
-  ];
+  config = lib.mkIf cfg.enable {
+    home.packages = [ lm-modal-pkg ];
+
+    xdg.configFile."lm-modal/config.toml".text = ''
+      endpoint = "${cfg.endpoint}"
+      ${lib.optionalString (cfg.model != null) "model = \"${cfg.model}\""}
+      timeout = ${toString cfg.timeout}
+    '';
+
+    # Add Hyprland keybind
+    wayland.windowManager.hyprland.settings.bind = [
+      "SUPER, P, exec, lm-modal"
+    ];
+  };
 }
