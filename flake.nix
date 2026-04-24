@@ -105,6 +105,11 @@
       url = "github:PopCat19/nixos-shimboot/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    lm-modal = {
+      url = "github:PopCat19/lm-modal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

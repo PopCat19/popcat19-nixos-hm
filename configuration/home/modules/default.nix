@@ -53,6 +53,7 @@
     ./git.nix
     ./home.nix
     ./wallpaper-sync.nix
+    ./lm-modal.nix
   ];
 
   # Use the centralized packages list from packages.nix

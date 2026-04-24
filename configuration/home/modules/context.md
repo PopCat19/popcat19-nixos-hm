@@ -16,6 +16,7 @@
 - `kde-apps.nix` — Configure KDE applications without desktop environment
 - `kitty.nix` — Configure Kitty terminal emulator settings
 - `lazygit.nix` — Configure LazyGit with home-manager
+- `lm-modal.nix` — Configure lm-modal Wayland LLM overlay
 - `mangohud.nix` — Configure MangoHUD gaming performance overlay with Rose Pine theming
 - `micro.nix` — Configures the Micro terminal text editor.
 - `niri.nix` — Configure Niri scrollable-tiling Wayland compositor
