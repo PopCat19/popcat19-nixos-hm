@@ -29,7 +29,6 @@ in
     ../system/modules/hardware.nix
     ../system/modules/hyprland.nix
     ../system/modules/networking.nix
-    ../system/modules/noctalia.nix
     ../system/packages.nix
     ../system/modules/services.nix
     ../system/modules/ssh.nix
@@ -47,7 +46,6 @@ in
     ../system/modules/dconf.nix
     ../system/modules/openrgb.nix
     ../system/modules/stylix-lightdm.nix
-    ../system/modules/apollo.nix
 
     # Centralized nix configuration
     ../nix-options.nix

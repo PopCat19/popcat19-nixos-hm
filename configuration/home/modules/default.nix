@@ -37,7 +37,6 @@
     ./vesktop.nix
     ./starship.nix
     ./micro.nix
-    ./nvim/nvim.nix
     ./helix.nix
     ./broot.nix
     ./lazygit.nix
