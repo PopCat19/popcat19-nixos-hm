@@ -104,10 +104,6 @@ rec {
       videos = "${home}/Videos";
     };
 
-  env = {
-    NIXOS_CONFIG_DIR = "${directories.home}/popcat19-nixos-hm";
-  };
-
   git = {
     userName = user.fullName;
     userEmail = user.email;
