@@ -66,7 +66,6 @@
 
       # lm-modal - Wayland LLM overlay
       "float on, match:class ^(lm-modal)$"
-      "stayfocused, match:class ^(lm-modal)$"
     ];
   };
 }
