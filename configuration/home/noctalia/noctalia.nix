@@ -16,12 +16,6 @@ let
   hostname = config.networking.hostName or userConfig.hostname;
   enableUWSM = hostname != "popcat19-dedede0";
 
-  hasBattery =
-    if hostname != null then
-      hostname == "popcat19-surface0" || hostname == "popcat19-thinkpad0"
-    else
-      false;
-
   settings = import ./settings.nix {
     inherit pkgs config;
     inherit hostname enableUWSM;
@@ -30,7 +24,8 @@ in
 {
   # Write settings to noctalia config
   xdg.configFile."noctalia/settings.json".source =
-    (pkgs.formats.json { }).generate "noctalia-settings" settings.settings;
+    (pkgs.formats.json { }).generate "noctalia-settings"
+      settings.settings;
 
   systemd.user.services.noctalia-shell = {
     Unit = {
