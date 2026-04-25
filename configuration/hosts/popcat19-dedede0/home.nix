@@ -39,7 +39,8 @@ in
     ../../home/modules/services.nix
     ../../home/modules/home-files.nix
     ../../home/modules/systemd-services.nix
-    ../../home/modules/kde-apps.nix
+    ../../home/modules/dolphin.nix
+    ../../home/modules/kde.nix
     ../../home/modules/qt-gtk-config.nix
     ../../home/modules/fcitx5.nix
     ../../home/modules/privacy.nix
