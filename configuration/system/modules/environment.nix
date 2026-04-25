@@ -20,6 +20,7 @@
     NIXOS_OZONE_WL = "1";
     TERMINAL = userConfig.defaultApps.terminal.command;
     VISUAL = userConfig.defaultApps.editor.command;
+    WEBKIT_DISABLE_COMPOSITING_MODE = "1";
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_DESKTOP_PORTAL = "1";
     XDG_ICON_THEME = "Papirus-Dark";

@@ -34,6 +34,7 @@ with pkgs;
 
   # Desktop
   brightnessctl
+  cliphist
   fuzzel
   hyprlock
   hyprshade
@@ -82,6 +83,7 @@ with pkgs;
   eza
   file
   parted
+  ranger
   squashfsTools
   tree
 
