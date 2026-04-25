@@ -37,6 +37,7 @@ in
 
   programs.noctalia-shell = {
     enable = true;
+    package = pkgs.noctalia-shell; # Use nixpkgs version
     systemd.enable = false;
     inherit settings;
   };
