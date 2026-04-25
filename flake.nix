@@ -77,6 +77,7 @@
       imports = [
         ./flake-modules/nixos.nix
         ./flake-modules/formatter.nix
+        ./flake-modules/cachix.nix
       ];
     };
 }
