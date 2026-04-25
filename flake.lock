@@ -986,11 +986,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1777079015,
-        "narHash": "sha256-0eGvF5drbPipFjEHk4/99W1zEf9B3jcNgA/P5nyl1N4=",
+        "lastModified": 1777084158,
+        "narHash": "sha256-fV9azxdTNwX4nsWNbpSrqsIiUh5/WkcDanssozrkG8s=",
         "owner": "PopCat19",
         "repo": "lm-modal",
-        "rev": "bca3d4490c2693b9f7f3b848200f17bcb9e987f7",
+        "rev": "04755803f2878f453776052a148f55fb78db3d83",
         "type": "github"
       },
       "original": {
