@@ -55,11 +55,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    zrok = {
-      url = "github:openziti/zrok/v1.1.10";
-      flake = false;
-    };
-
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
