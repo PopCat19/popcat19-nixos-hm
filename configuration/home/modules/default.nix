@@ -30,7 +30,8 @@
     ./services.nix
     ./home-files.nix
     ./systemd-services.nix
-    ./kde-apps.nix
+    ./dolphin.nix
+    ./kde.nix
     ./qt-gtk-config.nix
     ./fuzzel-config.nix
     ./kitty.nix
