@@ -1,24 +1,19 @@
 # cachix.nix
 #
-# Purpose: Configure binary caches for system builds
+# Purpose: Configure binary caches for PNH builds
 #
 # This module:
-# - Imports base caches from shimboot
-# - Merges with consumer-specific caches using mkMerge
-# - Configures Cachix substituters for binary cache access
-{ lib, inputs, ... }:
-let
-  base = import "${inputs.shimboot}/shimboot_config/cachix.nix" { };
-in
+# - Appends consumer-specific caches to base (from shimboot)
+# - Base caches: shimboot-systemd-nixos, numtide (see shimboot cachix.nix)
 {
-  nix.settings = lib.mkMerge [
-    { inherit (base) substituters; }
-    { trusted-public-keys = base.trustedPublicKeys; }
-    { substituters = [ "https://popcat19-shared.cachix.org" ]; }
-    {
-      trusted-public-keys = [
-        "popcat19-shared.cachix.org-1:qqle0Ek1MtOHDkqu2srjAnbjwl41fRUP8pLd9ZDsMEQ="
-      ];
-    }
-  ];
+  lib,
+  ...
+}:
+{
+  nix.settings = {
+    substituters = lib.mkAfter [ "https://popcat19-shared.cachix.org" ];
+    trusted-public-keys = lib.mkAfter [
+      "popcat19-shared.cachix.org-1:qqle0Ek1MtOHDkqu2srjAnbjwl41fRUP8pLd9ZDsMEQ="
+    ];
+  };
 }
