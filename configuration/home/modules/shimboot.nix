@@ -38,7 +38,8 @@
     ./services.nix
     ./home-files.nix
     ./systemd-services.nix
-    ./kde-apps.nix
+    ./dolphin.nix
+    ./kde.nix
     ./qt-gtk-config.nix
     ./fcitx5.nix
     ./privacy.nix
