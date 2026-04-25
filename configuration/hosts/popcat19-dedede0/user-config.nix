@@ -4,7 +4,7 @@
 rec {
   system = "x86_64-linux";
   hostname = "popcat19-dedede0";
-  username = "popcat19";
+  username = "nixos-user";
   profile = "shimboot";
   board = "dedede"; # Intel Jasper Lake board
 
