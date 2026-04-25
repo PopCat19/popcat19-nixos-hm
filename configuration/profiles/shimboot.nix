@@ -12,6 +12,7 @@
 # Note: Base config uses mkOverride 500 for common settings (EDITOR, dconf, etc.)
 # Profile can override with normal assignment (100) if needed.
 {
+  lib,
   userConfig,
   inputs,
   ...

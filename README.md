@@ -15,7 +15,7 @@ Personal dotfiles repository for a NixOS setup focused on:
 ## Architecture
 
 ```
-nixos-config/
+popcat19-nixos-hm/
 ├── configuration/
 │   ├── base/                    # Minimal bootable configuration
 │   │   ├── configuration.nix
@@ -129,7 +129,7 @@ nixos-config/
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd nixos-config
+   cd popcat19-nixos-hm
    ```
 
 2. Update flake inputs:

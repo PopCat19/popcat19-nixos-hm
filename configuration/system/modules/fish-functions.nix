@@ -70,7 +70,7 @@
     };
 
     shellInit = ''
-      set -Ux NIXOS_CONFIG_DIR $HOME/nixos-config
+      set -Ux NIXOS_CONFIG_DIR $HOME/popcat19-nixos-hm
       set -Ux NIXOS_FLAKE_HOSTNAME ${userConfig.hostname}
       set -Ux EDITOR ${userConfig.defaultApps.editor.command}
       set -g fish_greeting ""

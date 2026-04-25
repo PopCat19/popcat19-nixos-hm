@@ -138,7 +138,7 @@ test_check_nixos_environment_returns_code() {
 test_check_uncommitted_changes_in_git_repo() {
 	local test_name="check_uncommitted_changes works in git repo"
 
-	# This test runs in the nixos-config repo
+	# This test runs in the popcat19-nixos-hm repo
 	if git rev-parse --is-inside-work-tree &>/dev/null; then
 		# Function should not fail
 		check_uncommitted_changes 2>/dev/null
