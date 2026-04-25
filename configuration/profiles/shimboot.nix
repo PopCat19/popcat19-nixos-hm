@@ -32,7 +32,6 @@
     ../system/modules/ssh.nix
     ../system/modules/syncthing.nix
     ../system/modules/gnome-keyring.nix
-    ../system/modules/noctalia.nix
     ../system/packages.nix
     ../system/modules/xdg.nix
     ../system/modules/environment.nix

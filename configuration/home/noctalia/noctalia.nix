@@ -3,44 +3,34 @@
 # Purpose: Main module for Noctalia configuration
 #
 # This module:
-# - Imports Noctalia home manager module
 # - Applies user's personalized settings
 # - Configures systemd service for autostart
+# - Uses nixpkgs noctalia-shell package
 {
   pkgs,
   config,
-  inputs,
   userConfig,
   ...
 }:
 let
   hostname = config.networking.hostName or userConfig.hostname;
   enableUWSM = hostname != "popcat19-dedede0";
-  inherit
-    (
-      (import ./settings.nix {
-        inherit
-          pkgs
-          config
-          hostname
-          enableUWSM
-          ;
-      })
-    )
-    settings
-    ;
+
+  hasBattery =
+    if hostname != null then
+      hostname == "popcat19-surface0" || hostname == "popcat19-thinkpad0"
+    else
+      false;
+
+  settings = import ./settings.nix {
+    inherit pkgs config;
+    inherit hostname enableUWSM;
+  };
 in
 {
-  imports = [
-    inputs.noctalia.homeModules.default
-  ];
-
-  programs.noctalia-shell = {
-    enable = true;
-    package = pkgs.noctalia-shell; # Use nixpkgs version
-    systemd.enable = false;
-    inherit settings;
-  };
+  # Write settings to noctalia config
+  xdg.configFile."noctalia/settings.json".source =
+    (pkgs.formats.json { }).generate "noctalia-settings" settings.settings;
 
   systemd.user.services.noctalia-shell = {
     Unit = {
