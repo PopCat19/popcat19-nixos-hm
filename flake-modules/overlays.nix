@@ -3,16 +3,12 @@
 # Purpose: Define architecture-aware package overlays
 #
 # This module:
-# - Provides Hyprland, OpenTabletDriver, Friction, and Zrok overlays
+# - Provides OpenTabletDriver, Friction, and Zrok overlays
+# - Hyprland uses nixpkgs-unstable (no overlay needed)
 #
 # Architecture-aware overlays
 { inputs }:
 [
-  # Hyprland from git
-  (final: _prev: {
-    inherit (inputs.hyprland.packages.${final.stdenv.hostPlatform.system}) hyprland;
-  })
-
   # OpenTabletDriver git latest overlay
   (final: _prev: {
     opentabletdriver = final.callPackage ../overlays/opentabletdriver-git.nix {
@@ -23,11 +19,6 @@
   # Friction graphics overlay
   (final: _prev: {
     friction-graphics = final.callPackage ../overlays/friction-graphics.nix { };
-  })
-
-  # llama.cpp ROCm from upstream flake
-  (final: _prev: {
-    llama-cpp-rocm = inputs.llama-cpp-src.packages.${final.stdenv.hostPlatform.system}.rocm;
   })
 
   # Zrok v1.1.10 overlay - provides latest binary release
