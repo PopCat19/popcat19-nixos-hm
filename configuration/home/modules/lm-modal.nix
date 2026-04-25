@@ -7,7 +7,13 @@
 # - Configures the API endpoint
 # - Adds keybind for Hyprland
 
-{ config, lib, inputs, hostPlatform, ... }:
+{
+  config,
+  lib,
+  inputs,
+  hostPlatform,
+  ...
+}:
 
 let
   cfg = config.services.lm-modal;

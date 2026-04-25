@@ -5,6 +5,10 @@
 # This module:
 # - Sets system environment variables for Wayland and desktop environment
 # - Defines default applications and configuration paths
+#
+# Note for shimboot: Base config sets EDITOR/VISUAL with mkOverride 500.
+# This module's normal assignment (100) wins, so profile values take precedence.
+# Redundancy is intentional for non-shimboot profiles that need these vars.
 { userConfig, ... }:
 {
   environment.sessionVariables = {

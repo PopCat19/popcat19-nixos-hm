@@ -1,6 +1,7 @@
 # Context
 
 - `agenix.nix` — Configure agenix for secret management
+- `builders.nix` — Configure remote Nix builder hosts for distributed builds
 - `apollo.nix` — Configure Apollo game streaming server (Sunshine fork)
 - `audio.nix` — Configure PipeWire audio system with JACK and ALSA support
 - `boot.nix` — Manage bootloader configuration and kernel settings
