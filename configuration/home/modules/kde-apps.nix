@@ -70,8 +70,8 @@
        <bookmark href="file:///home/${config.home.username}/syncthing-shared">
         <title>Syncthing Shared</title>
        </bookmark>
-       <bookmark href="file:///home/${config.home.username}/nixos-config">
-        <title>nixos-config</title>
+       <bookmark href="file:///home/${config.home.username}/popcat19-nixos-hm">
+        <title>popcat19-nixos-hm</title>
        </bookmark>
        <bookmark href="trash://">
         <title>Trash</title>

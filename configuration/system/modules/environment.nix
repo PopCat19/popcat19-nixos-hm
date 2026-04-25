@@ -15,7 +15,7 @@
     BROWSER = userConfig.defaultApps.browser.command;
     EDITOR = userConfig.defaultApps.editor.command;
     FILECHOOSER = userConfig.defaultApps.fileManager.package;
-    NIXOS_CONFIG_DIR = "${userConfig.directories.home}/nixos-config";
+    NIXOS_CONFIG_DIR = "${userConfig.directories.home}/popcat19-nixos-hm";
     NIXOS_FLAKE_HOSTNAME = userConfig.hostname;
     NIXOS_OZONE_WL = "1";
     TERMINAL = userConfig.defaultApps.terminal.command;
