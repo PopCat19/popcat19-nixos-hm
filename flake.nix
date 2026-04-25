@@ -9,15 +9,6 @@
 {
   description = "NixOS multi-host configuration with profile presets";
 
-  nixConfig = {
-    extra-substituters = [
-      "https://hyprland.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-    ];
-  };
-
   inputs = {
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
@@ -34,17 +25,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    jovian = {
-      url = "github:Jovian-Experiments/jovian-nixos";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    noctalia.url = "github:noctalia-dev/noctalia-shell?ref=refs/tags/v4.7.6";
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
 
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
@@ -52,8 +38,6 @@
       url = "github:popcat19/project-minimalist-design/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor?ref=refs/tags/v0.3.2";
 
     stylix = {
       url = "github:nix-community/stylix";
