@@ -40,7 +40,7 @@
   # Re-export userConfig for shimboot modules
   _module.args.userConfig = userConfig;
 
-  # Override NIXOS_CONFIG_DIR for pnh repo (not nixos-config which is ns)
+  # Override NIXOS_CONFIG_DIR for pnh repo (not nixos-shimboot which is ns)
   environment.sessionVariables.NIXOS_CONFIG_DIR = lib.mkForce "${userConfig.directories.home}/popcat19-nixos-hm";
 
   # home.nix from host directory handles home-manager imports
