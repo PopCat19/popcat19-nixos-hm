@@ -9,8 +9,7 @@
 #
 # Import this module on hosts that should use remote builders.
 # Builder hosts (e.g., nixos0) do not need this module.
-{ ... }:
-{
+_: {
   nix.distributedBuilds = true;
   nix.extraOptions = ''
     builders-use-substitutes = true
