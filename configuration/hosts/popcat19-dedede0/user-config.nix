@@ -105,7 +105,7 @@ rec {
     };
 
   env = {
-    NIXOS_CONFIG_DIR = "${directories.home}/nixos-shimboot-config";
+    NIXOS_CONFIG_DIR = "${directories.home}/popcat19-nixos-hm";
   };
 
   git = {
