@@ -15,7 +15,7 @@ rec {
   # Gaming support (anime-game-launcher, honkers-railway-launcher)
   gaming = {
     enable = true;
-  enableROCm = true; # For AMD GPU gaming (btop-rocm, openrgb, etc.)
+    enableROCm = true; # For AMD GPU gaming (btop-rocm, openrgb, etc.)
   };
 
   user = {
