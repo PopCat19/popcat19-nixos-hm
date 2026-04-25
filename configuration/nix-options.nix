@@ -4,8 +4,8 @@
 #
 # This module:
 # - Defines Nix experimental features
-# - Configures binary caches and trusted keys
 # - Sets up garbage collection
+# - Configures trusted users
 #
 # Warning: Nix reads config from multiple sources. If the daemon
 # reports fewer experimental-features than defined here, check for
@@ -33,18 +33,6 @@
     trusted-users = [
       "root"
       "${userConfig.username}"
-    ];
-
-    substituters = [
-      "https://popcat19-shared.cachix.org"
-      "https://shimboot-systemd-nixos.cachix.org"
-      "https://hyprland.cachix.org"
-    ];
-
-    trusted-public-keys = [
-      "popcat19-shared.cachix.org-1:qqle0Ek1MtOHDkqu2srjAnbjwl41fRUP8pLd9ZDsMEQ="
-      "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
     ];
   };
 

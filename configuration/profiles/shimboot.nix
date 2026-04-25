@@ -35,6 +35,7 @@
     ../system/packages.nix
     ../system/modules/xdg.nix
     ../system/modules/environment.nix
+    ../system/modules/cachix.nix
   ];
 
   # Re-export userConfig for shimboot modules
