@@ -11,6 +11,9 @@ let
   stateVersion = import ../stateversion.nix;
 in
 {
+  # Re-export userConfig for imported modules
+  _module.args.userConfig = userConfig;
+
   imports = [
     # Base configuration (minimal bootable)
     ../base/configuration.nix

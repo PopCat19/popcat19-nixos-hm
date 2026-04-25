@@ -12,6 +12,12 @@ rec {
   username = "popcat19";
   profile = "default";
 
+  # Gaming support (anime-game-launcher, honkers-railway-launcher)
+  gaming = {
+    enable = true;
+  enableROCm = true; # For AMD GPU gaming (btop-rocm, openrgb, etc.)
+  };
+
   user = {
     fullName = "PopCat19";
     email = "atsuo11111@gmail.com";

@@ -87,18 +87,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland = {
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1&ref=refs/tags/v0.54.3";
-    };
-
     opentabletdriver = {
       url = "github:OpenTabletDriver/OpenTabletDriver";
       flake = false;
-    };
-
-    llama-cpp-src = {
-      url = "github:ggml-org/llama.cpp/b8770";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     shimboot = {
