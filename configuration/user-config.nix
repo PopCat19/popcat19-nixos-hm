@@ -190,4 +190,14 @@ rec {
       name = "Noto Color Emoji";
     };
   };
+
+  # Environment configuration
+  env =
+    let
+      repoName = "popcat19-nixos-hm";
+    in
+    {
+      inherit repoName;
+      NIXOS_CONFIG_DIR = "${directories.home}/${repoName}";
+    };
 }

@@ -63,7 +63,7 @@
       file://${userConfig.directories.music} Music
       file://${userConfig.directories.syncthing} Syncthing Shared
       file://${userConfig.directories.desktop} Desktop
-      file://${userConfig.directories.home}/popcat19-nixos-hm popcat19-nixos-hm
+      file://${userConfig.env.NIXOS_CONFIG_DIR} ${userConfig.env.repoName}
       trash:/// Trash
     '';
 

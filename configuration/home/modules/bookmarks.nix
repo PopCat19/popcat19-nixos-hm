@@ -20,7 +20,7 @@
     file://${userConfig.directories.videos} Videos
     file://${userConfig.directories.music} Music
     file://${userConfig.directories.desktop} Desktop
-    file://${userConfig.directories.home}/popcat19-nixos-hm popcat19-nixos-hm
+    file://${userConfig.env.NIXOS_CONFIG_DIR} ${userConfig.env.repoName}
     trash:/// Trash
   '';
 
@@ -50,8 +50,8 @@
      <bookmark href="file:///home/${config.home.username}/Videos">
       <title>Videos</title>
      </bookmark>
-     <bookmark href="file:///home/${config.home.username}/popcat19-nixos-hm">
-      <title>popcat19-nixos-hm</title>
+     <bookmark href="file://${userConfig.env.NIXOS_CONFIG_DIR}">
+      <title>${userConfig.env.repoName}</title>
      </bookmark>
      <bookmark href="trash:/">
       <title>Trash</title>
