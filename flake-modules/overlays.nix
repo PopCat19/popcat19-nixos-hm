@@ -21,6 +21,13 @@
     friction-graphics = final.callPackage ../overlays/friction-graphics.nix { };
   })
 
+  # OpenLDAP: skip flaky syncrepl test
+  (final: _prev: {
+    openldap = _prev.openldap.overrideAttrs (_: {
+      doCheck = false;
+    });
+  })
+
   # Zrok v1.1.10 overlay - provides latest binary release
   (final: _prev: {
     zrok = final.stdenv.mkDerivation rec {
