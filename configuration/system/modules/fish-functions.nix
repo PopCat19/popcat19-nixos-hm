@@ -5,7 +5,6 @@
 # This module:
 # - Loads custom Fish functions from fish directory
 # - Configures Fish shell environment and abbreviations
-# - Sets up NixOS-specific environment variables
 { userConfig, ... }:
 {
   environment.etc = {
@@ -70,9 +69,6 @@
     };
 
     shellInit = ''
-      set -Ux NIXOS_CONFIG_DIR $HOME/popcat19-nixos-hm
-      set -Ux NIXOS_FLAKE_HOSTNAME ${userConfig.hostname}
-      set -Ux EDITOR ${userConfig.defaultApps.editor.command}
       set -g fish_greeting ""
 
       fish_add_path $HOME/bin
