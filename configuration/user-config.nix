@@ -191,13 +191,9 @@ rec {
     };
   };
 
-  # Environment configuration
-  env =
-    let
-      repoName = "popcat19-nixos-hm";
-    in
-    {
-      inherit repoName;
-      NIXOS_CONFIG_DIR = "${directories.home}/${repoName}";
-    };
+  # Environment configuration (directories accessible via rec)
+  env = {
+    repoName = "popcat19-nixos-hm";
+    NIXOS_CONFIG_DIR = "${directories.home}/popcat19-nixos-hm";
+  };
 }

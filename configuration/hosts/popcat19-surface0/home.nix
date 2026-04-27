@@ -6,13 +6,13 @@
 # - Sets up home configuration from userConfig
 # - Imports central home configuration
 # - Applies host-specific monitor settings
-{ userConfig, ... }:
+{ lib, userConfig, ... }:
 let
   stateVersion = import ../../stateversion.nix;
 in
 {
   home.username = userConfig.username;
-  home.homeDirectory = userConfig.directories.home;
+  home.homeDirectory = lib.mkForce userConfig.directories.home;
   home.stateVersion = stateVersion.home;
 
   imports = [
