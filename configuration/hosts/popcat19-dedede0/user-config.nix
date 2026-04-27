@@ -137,4 +137,10 @@ rec {
       name = "Noto Color Emoji";
     };
   };
+
+  # Environment configuration
+  env = {
+    repoName = "popcat19-nixos-hm";
+    NIXOS_CONFIG_DIR = "/home/${username}/popcat19-nixos-hm";
+  };
 }
