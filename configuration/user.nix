@@ -7,6 +7,7 @@
 # - Imports home modules
 # - Sets up user packages
 {
+  lib,
   pkgs,
   inputs,
   userConfig,
@@ -14,7 +15,7 @@
 }:
 {
   home.username = userConfig.username;
-  home.homeDirectory = userConfig.directories.home;
+  home.homeDirectory = lib.mkForce userConfig.directories.home;
 
   imports = [
     ./home/modules

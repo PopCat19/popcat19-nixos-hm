@@ -2,13 +2,13 @@
 #
 # Purpose: Home Manager configuration for the dedede0 host (shimboot)
 # Pattern: explicit module imports, adapted from nsc popcat19 for pnh structure
-{ userConfig, ... }:
+{ lib, userConfig, ... }:
 let
   stateVersion = import ../../stateversion.nix;
 in
 {
   home.username = userConfig.username;
-  home.homeDirectory = userConfig.directories.home;
+  home.homeDirectory = lib.mkForce userConfig.directories.home;
   home.stateVersion = stateVersion.home;
 
   imports = [

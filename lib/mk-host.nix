@@ -12,8 +12,8 @@
 let
   overlays = import ../flake-modules/overlays.nix { inherit inputs; };
 
-  # Global user config defaults
-  globalUserConfig = import ../configuration/user-config.nix;
+  # Global user config defaults (call function with empty args to get defaults)
+  globalUserConfig = import ../configuration/user-config.nix { };
 
   # Gaming module only enabled for hosts with userConfig.gaming.enable = true
   mkGamingModule = userConfig: {
@@ -30,7 +30,8 @@ in
     _hostName: hostPath:
     let
       hostUserConfig = import (hostPath + "/user-config.nix");
-      userConfig = globalUserConfig // hostUserConfig;
+      # Deep merge: host values override global defaults, nested attrs are merged
+      userConfig = inputs.nixpkgs.lib.recursiveUpdate globalUserConfig hostUserConfig;
       inherit (userConfig) system;
     in
     inputs.nixpkgs.lib.nixosSystem {
