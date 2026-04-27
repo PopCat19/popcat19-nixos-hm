@@ -7,13 +7,9 @@
 # - Handles Home Manager integration
 # - Passes userConfig and inputs via specialArgs
 # - Conditionally enables gaming modules for gaming hosts
-# - Merges host-specific config with global defaults
 { inputs }:
 let
   overlays = import ../flake-modules/overlays.nix { inherit inputs; };
-
-  # Global user config defaults (call function with empty args to get defaults)
-  globalUserConfig = import ../configuration/user-config.nix { };
 
   # Gaming module only enabled for hosts with userConfig.gaming.enable = true
   mkGamingModule = userConfig: {
@@ -29,9 +25,7 @@ in
   mkHostConfiguration =
     _hostName: hostPath:
     let
-      hostUserConfig = import (hostPath + "/user-config.nix");
-      # Deep merge: host values override global defaults, nested attrs are merged
-      userConfig = inputs.nixpkgs.lib.recursiveUpdate globalUserConfig hostUserConfig;
+      userConfig = import (hostPath + "/user-config.nix");
       inherit (userConfig) system;
     in
     inputs.nixpkgs.lib.nixosSystem {
