@@ -116,7 +116,7 @@ function fish_greeting
             echo "list-fish-helpers"
         end
     else
-        set_color bryellow; echo "[WARN] No nixos-config detected."
+        set_color bryellow; echo "[WARN] No popcat19-nixos-hm detected."
         set_color normal; echo "Run: setup_nixos to initialize"
     end
 

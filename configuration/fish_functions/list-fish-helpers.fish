@@ -13,7 +13,7 @@ function list-fish-helpers
     echo "¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯"
 
     set_color green; echo "[INFO] Custom Functions:"; set_color normal
-    set -l func_dir $HOME/nixos-config/fish_functions
+    set -l func_dir $NIXOS_CONFIG_DIR/configuration/fish_functions
     if test -d $func_dir
         for f in $func_dir/*.fish
             set -l func_name (path basename --no-extension $f)
