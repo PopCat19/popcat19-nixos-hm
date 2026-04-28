@@ -12,19 +12,19 @@
 let
   cfg = config.services.searxng-local;
 
-  settingsYml = pkgs.formats.yaml { }.generate "searxng-settings.yml" {
-    use_default_settings = true;
-    server = {
-      secret_key = "pi-discord-orchestrator";
-      bind_address = "0.0.0.0";
-      port = 8080;
-      limiter = false;
-    };
-    search = {
-      safe_search = 0;
-      formats = [ "html" "json" ];
-    };
-  };
+  settingsYml = pkgs.writeText "searxng-settings.yml" ''
+    use_default_settings: true
+    server:
+      secret_key: "pi-discord-orchestrator"
+      bind_address: "0.0.0.0"
+      port: 8080
+      limiter: false
+    search:
+      safe_search: 0
+      formats:
+        - html
+        - json
+  '';
 
 in {
   options.services.searxng-local = with lib; {
