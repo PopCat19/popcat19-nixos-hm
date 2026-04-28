@@ -16,7 +16,10 @@
     ../../profiles/${userConfig.profile}.nix
     ../../system/modules/sunshine.nix
     ../../system/modules/agenix.nix
+    ../../system/modules/searxng.nix
   ];
+
+  services.searxng-local.enable = true;
 
   networking.hostName = userConfig.hostname;
 
