@@ -3,12 +3,13 @@
 # Purpose: Main module for Noctalia configuration
 #
 # This module:
+# - Uses programs.noctalia-shell for proper Stylix integration
 # - Applies user's personalized settings
-# - Configures systemd service for autostart
-# - Uses nixpkgs noctalia-shell package
+# - Configures systemd service for autostart with delay
 {
   pkgs,
   config,
+  inputs,
   userConfig,
   ...
 }:
@@ -22,11 +23,17 @@ let
   };
 in
 {
-  # Write settings to noctalia config
-  xdg.configFile."noctalia/settings.json".source =
-    (pkgs.formats.json { }).generate "noctalia-settings"
-      settings.settings;
+  imports = [ inputs.noctalia-shell.homeModules.default ];
 
+  programs.noctalia-shell = {
+    enable = true;
+    package = pkgs.noctalia-shell;
+
+    # Settings from settings.nix - Stylix will set colors separately
+    settings = settings.settings;
+  };
+
+  # Custom systemd service with startup delay (not using deprecated .systemd.enable)
   systemd.user.services.noctalia-shell = {
     Unit = {
       Description = "Noctalia Shell (with delay)";

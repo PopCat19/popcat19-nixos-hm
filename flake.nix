@@ -67,6 +67,11 @@
       url = "github:PopCat19/lm-modal";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    noctalia-shell = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
