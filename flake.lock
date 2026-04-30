@@ -479,19 +479,19 @@
         "type": "github"
       }
     },
-    "nixpkgs-stable": {
+    "nixpkgs-systemd": {
       "locked": {
-        "lastModified": 1767313136,
-        "narHash": "sha256-16KkgfdYqjaeRGBaYsNrhPRRENs0qzkQVUooNHtoy2w=",
+        "lastModified": 1759514779,
+        "narHash": "sha256-ifUlBNPpzssInhPfEJIkndSVpDKGe09a1Fk/TGPsI2M=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ac62194c3917d5f474c1a844b6fd6da2db95077d",
+        "rev": "d3736636ac39ed678e557977b65d620ca75142d0",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-25.05",
         "repo": "nixpkgs",
+        "rev": "d3736636ac39ed678e557977b65d620ca75142d0",
         "type": "github"
       }
     },
@@ -692,14 +692,14 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "nixpkgs-stable": "nixpkgs-stable"
+        "nixpkgs-systemd": "nixpkgs-systemd"
       },
       "locked": {
-        "lastModified": 1777434097,
-        "narHash": "sha256-IXishv8JTdAeMY2vV+hZpYHtRVF2xLJsVlrqZ150vLw=",
+        "lastModified": 1777109348,
+        "narHash": "sha256-LcLAkRyoekInmMMO3lm6LMuVC+yYsU2gs4QsMg15UqU=",
         "owner": "PopCat19",
         "repo": "nixos-shimboot",
-        "rev": "be3cde6c8211da762634e33085a50b45b2433284",
+        "rev": "37a4afbc41e9ff5c8a7e0e6bdaf31864e510aac3",
         "type": "github"
       },
       "original": {
