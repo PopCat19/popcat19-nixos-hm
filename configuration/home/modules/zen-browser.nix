@@ -6,17 +6,34 @@
 # - Imports Zen Browser Home Manager module
 # - Enables PWA support via firefoxpwa
 # - Configures browser policies and extensions
+# - Manages profiles.ini to use home-manager profile (for Stylix)
 
 {
+  config,
   pkgs,
   inputs,
   ...
 }:
 let
   forceInstall = "force_installed";
+  homeDir = config.home.homeDirectory;
 in
 {
   imports = [ inputs.zen-browser.homeModules.twilight ];
+
+  # Point Zen's profiles.ini to the home-manager managed profile
+  # This ensures Stylix theming works on all hosts automatically
+  home.file.".zen/profiles.ini".text = ''
+    [General]
+    StartWithLastProfile=1
+    Version=2
+
+    [Profile0]
+    Default=1
+    IsRelative=0
+    Name=default
+    Path=${homeDir}/.config/zen/default
+  '';
 
   programs.zen-browser = {
     enable = true;
