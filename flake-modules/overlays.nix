@@ -13,28 +13,51 @@
   # Patch systemdMinimal to skip udevadm verify (needed for shimboot kernels without sandbox support)
   # The "Protocol driver not attached" error occurs when udevadm verify tries to use
   # chase() syscalls that aren't available in older kernels
-  # This wrapper skips the verify command and passes through everything else
-  (final: prev: {
+  # This wrapper creates a single-output derivation and symlinks other content from original
+  (final: prev: let
+    original = prev.systemdMinimal;
+  in {
     systemdMinimal = prev.runCommand "systemd-minimal-shimboot" {
-      passthru = (prev.systemdMinimal.passthru or {}) // {
-        # Preserve the override function for systemdLibs and other derivatives
-        inherit (prev.systemdMinimal) override;
+      passthru = (original.passthru or {}) // {
+        inherit (original) override;
+        # Provide access to other outputs from original
+        inherit (original) dev man debug;
       };
-      inherit (prev.systemdMinimal) meta outputs;
+      meta = original.meta // {
+        outputsToInstall = [ "out" ];
+      };
     } ''
       mkdir -p $out/bin
-      udevadm_real=${prev.lib.getExe' prev.systemdMinimal "udevadm"}
-      cat > $out/bin/udevadm << EOF
+      
+      # Create wrapper for udevadm that skips 'verify' command
+      udevadm_real=${prev.lib.getExe' original "udevadm"}
+      cat > $out/bin/udevadm << 'WRAPPER_EOF'
 #!/bin/sh
-case "\$1" in
+case "$1" in
   verify)
     echo "Skipping udevadm verify (shimboot kernel workaround)" >&2
     exit 0
     ;;
 esac
-exec "$udevadm_real" "\$@"
-EOF
+exec "${original}/bin/udevadm" "$@"
+WRAPPER_EOF
       chmod +x $out/bin/udevadm
+      
+      # Symlink everything else from original systemdMinimal output
+      for p in ${original}/*; do
+        n=$(basename "$p")
+        if [ "$n" != bin ]; then
+          ln -s "$p" "$out/$n"
+        fi
+      done
+      
+      # Also symlink bin contents (except udevadm which we're wrapping)
+      for f in ${original}/bin/*; do
+        fname=$(basename "$f")
+        if [ "$fname" != udevadm ]; then
+          ln -s "$f" "$out/bin/$fname"
+        fi
+      done
     '';
 
     # Disable Nix functional tests that require sandbox support
