@@ -9,8 +9,8 @@
 
 function show-shortcuts
     set -l config_dir "$NIXOS_CONFIG_DIR"
-    set -l keybinds_file "$config_dir/configuration/home/hypr_config/modules/keybinds.nix"
-    set -l userprefs_file "$config_dir/configuration/home/hypr_config/userprefs.conf"
+    set -l keybinds_file "$config_dir/configuration/home/hyprland/modules/keybinds.nix"
+    set -l userprefs_file "$config_dir/configuration/home/hyprland/userprefs.conf"
 
     set -l filter ""
     set -l search ""
