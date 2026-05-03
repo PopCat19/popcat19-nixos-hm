@@ -1,156 +1,148 @@
-# NixOS Configuration
+# popcat19-nixos-hm
 
-Personal NixOS configuration with Hyprland Wayland compositor and PMD theming.
+Personal NixOS configuration — Hyprland + PMD theming, multi-host, profile-based.
 
-## Overview
+## Quick start
 
-Personal dotfiles repository for a NixOS setup focused on:
-- Modern Wayland desktop with Hyprland compositor
-- Gaming-optimized environment with Steam, Proton, and AAGL
-- Development-ready setup with multiple editors and language support
-- Consistent theming via Stylix with PMD (Personal Material Design)
-- Modular design with multi-host support
-- Distributed builds between machines
+```bash
+# Clone and build for current host
+git clone <repo-url> && cd popcat19-nixos-hm
+sudo nixos-rebuild switch --flake .
 
-## Architecture
+# Build for specific host
+sudo nixos-rebuild switch --flake .#popcat19-nixos0
+
+# Update inputs
+nix flake update
+```
+
+<details>
+<summary>Architecture</summary>
 
 ```
-popcat19-nixos-hm/
+.
 ├── configuration/
-│   ├── base/                    # Minimal bootable configuration
-│   │   ├── configuration.nix
-│   │   └── system/
-│   ├── flake/modules/           # Flake-related modules
+│   ├── base/                    # Minimal bootable skeleton
+│   ├── builders/                # Distributed build host configs
+│   ├── fish_functions/          # Custom Fish shell functions
 │   ├── home/                    # Home-manager configuration
-│   │   ├── modules/
-│   │   ├── hyprland/
-│   │   ├── noctalia/
-│   │   ├── wallpaper/
-│   │   ├── packages.nix
-│   │   └── home.nix
-│   ├── hosts/                   # Host-specific configurations
-│   │   ├── nixos0/
-│   │   ├── surface0/
-│   │   └── thinkpad0/
-│   ├── profiles/                # Profile presets
-│   │   ├── default.nix          # Desktop workstation
-│   │   ├── laptop.nix           # Laptop profile
-│   │   ├── minimal.nix          # Minimal profile
-│   │   └── surface.nix          # Surface Pro profile
-│   ├── system/                  # System-level configuration
-│   │   ├── packages.nix         # System packages
-│   │   └── modules/
-│   ├── home-manager.nix
-│   ├── nix-options.nix
-│   ├── user-config.nix
-│   └── user.nix
-├── conventions/
-└── flake.nix
+│   │   ├── hyprland/            # Hyprland compositor (shaders, scripts, modules)
+│   │   ├── modules/             # Per-app home module (~40 modules)
+│   │   ├── noctalia/            # Noctalia Wayland shell
+│   │   └── wallpaper/           # Wallpaper assets
+│   ├── hosts/                   # Per-machine configurations
+│   ├── profiles/                # Composable profile presets
+│   ├── secrets/                 # Agenix-encrypted secrets
+│   ├── system/modules/          # System-level NixOS modules (~30 modules)
+│   ├── home-manager.nix         # Centralized Home Manager config
+│   ├── nix-options.nix          # Nix daemon settings (features, GC, trusted users)
+│   ├── stateversion.nix         # Single source of truth for state versions
+│   ├── user-config.nix          # Shared user/host/theme/fonts config
+│   └── user.nix                 # User config for home-manager
+├── flake-modules/               # Flake-parts modules (nixos, hosts, overlays, cachix, formatter)
+├── lib/                         # Shared helper library (mkHost, mkHome, helpers)
+├── overlays/                    # Package overlays (OpenTabletDriver, Friction graphics)
+├── tools/                       # CLI utilities (profile manager, debug, cachix push)
+├── conventions/                 # Dev conventions (see conventions/DEVELOPMENT.md)
+├── .github/workflows/           # CI: flake check, cachix push, dev→main sync
+└── flake.nix                    # Flake entry point
 ```
 
-## Key Components
+</details>
 
-### Desktop Environment
-- Hyprland Wayland compositor with custom configuration
-- Stylix theming for GTK, Qt, and cursor themes
-- Fuzzel application launcher
-- Custom GLSL shader effects
-- Noctalia shell (Wayland bar/launcher)
+<details open>
+<summary>Hosts</summary>
 
-### Gaming Support
-- Steam with Proton compatibility
-- MangoHUD performance overlay with Rose Pine theme
-- GameMode optimization
-- Anime Game Launcher (AAGL)
-- Jovian NixOS (Steam Deck OS support)
+| Host | Machine | Profile | Notes |
+|------|---------|---------|-------|
+| `popcat19-nixos0` | Desktop (AMD Ryzen 5 5500) | `default` | Dual monitor, ROCm, gaming + dev, distributed build server |
+| `popcat19-surface0` | Surface Pro (i5-8350U) | `surface` | Touch/pen input, thermal management, WiFi fixes |
+| `popcat19-thinkpad0` | ThinkPad laptop | `laptop` | External HDMI, TLP power management, zRAM |
+| `popcat19-dedede0` | ChromeOS (shimboot) | `shimboot` | Pruned config, pinned systemd for ChromeOS compat |
 
-### Development Tools
-- Multiple editors: VSCodium, Zed, Micro
-- Fish shell with custom functions
-- Docker and Podman support
-- Multiple programming languages and tools
-- Git with custom configuration
-- LLM agents integration
+</details>
 
-### System Features
-- PipeWire audio server
-- Distributed builds between machines
-- Syncthing file synchronization
-- Multi-host support (nixos0, surface0, thinkpad0)
-- Surface Pro thermal management
-- ThinkPad power management
-- Agenix secrets management
+<details>
+<summary>Profiles</summary>
 
-### System Modules
-- Audio: PipeWire configuration
-- Display: Hyprland + SDDM setup
-- Virtualisation: Docker, libvirt, Waydroid, QEMU/KVM
-- Networking: Firewall and network management
-- Power Management: TLP and custom thermal controls
-- VPN: Mullvad VPN integration
+Profiles compose system modules into deployable presets. Each host points to one profile via its `user-config.nix`.
 
-## Flake Inputs
+- **`default`** — Full desktop: Hyprland, PipeWire, virtualization, VPN, gaming, Syncthing, OpenRGB
+- **`laptop`** — Desktop minus desktop-specifics; adds TLP
+- **`surface`** — Surface Pro: touch, thermal throttling, surface-control group
+- **`minimal`** — Headless/server: SSH, Docker, no display stack
+- **`shimboot`** — ChromeOS shimboot: pruned home modules, minimal services
+
+Manage profiles with `tools/profile-manager-tui.sh`.
+
+</details>
+
+<details>
+<summary>Flake inputs</summary>
 
 | Input | Purpose |
 |-------|---------|
-| nixpkgs | Core package repository |
-| home-manager | User-level configuration |
-| stylix | Theming framework |
-| jovian | Steam Deck OS support |
-| aagl | Anime game launchers |
-| agenix | Secrets management |
-| zen-browser | Zen browser package |
-| noctalia | Wayland bar/launcher |
-| pmd | Personal Material Design theme |
-| llm-agents | LLM agent utilities |
+| `nixpkgs` | Unstable channel |
+| `home-manager` | User-level dotfile management |
+| `flake-parts` | Modular flake structure |
+| `stylix` | System-wide theming (GTK, Qt, cursors) |
+| `pmd` | Personal Material Design theme |
+| `agenix` | Secret encryption |
+| `aagl` | Anime game launchers |
+| `zen-browser` | Zen browser package |
+| `noctalia-shell` | Wayland bar/launcher |
+| `llm-agents` | LLM agent tooling |
+| `lm-modal` | Wayland LLM overlay |
+| `opentabletdriver` | Drawing tablet driver (source) |
+| `shimboot` | ChromeOS NixOS bootstrapping |
 
-## Hosts
+</details>
 
-### nixos0 (Desktop Workstation)
-- AMD Ryzen 5 5500 with ROCm support
-- Dual monitor setup (DP-3 + HDMI-A-1)
-- Gaming and development machine
-- Distributed build server
+<details>
+<summary>Home-manager modules</summary>
 
-### surface0 (Surface Pro Tablet)
-- Microsoft Surface Pro (Intel i5-8350U)
-- Touch/pen input support
-- Aggressive thermal management
-- WiFi stability fixes
+~40 modules covering: editors (Zed, VSCodium, Helix, Micro), terminals (Kitty), shell prompts (Starship), git config, browsers (Zen, Vesktop), gaming (MangoHUD, OBS), AI tools (Ollama, Playwright), screenshots, fonts, theming, file sync, and privacy tools.
 
-### thinkpad0 (ThinkPad Laptop)
-- ThinkPad series laptop
-- External HDMI display support
-- TLP power management
-- ThinkPad ACPI integration
+See `configuration/home/modules/context.md` for the full inventory.
 
-## Getting Started
+</details>
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd popcat19-nixos-hm
-   ```
+<details>
+<summary>System modules</summary>
 
-2. Update flake inputs:
-   ```bash
-   nix flake update
-   ```
+~30 modules covering: boot, audio (PipeWire), display (Hyprland + SDDM), networking (firewall, NetworkManager), hardware (Bluetooth, I2C), virtualization (Docker, libvirt, KVM, Waydroid), VPN (Mullvad), secret management (agenix), power management, OpenRGB, Sunshine streaming, SearXNG, Syncthing, tablet input, fonts, and XDG portals.
 
-3. Build for specific host:
-   ```bash
-   sudo nixos-rebuild switch --flake .#popcat19-nixos0
-   ```
+See `configuration/system/modules/context.md` for the full inventory.
 
-4. Or for current host:
-   ```bash
-   sudo nixos-rebuild switch --flake .
-   ```
+</details>
 
-## Development
+<details>
+<summary>Tools</summary>
 
-See [`conventions/DEVELOPMENT.md`](conventions/DEVELOPMENT.md) for development conventions and coding standards.
+- **`profile-manager-tui.sh`** — Interactive terminal UI for profile operations
+- **`profile-manager.sh`** — Profile management CLI (create, set/get host profiles)
+- **`debug-nix-config.sh`** — Diagnose Nix daemon config mismatches
+- **`push-to-cachix.sh`** — Push derivations to personal Cachix cache
+- **`test-profile-manager.sh`** — Profile manager test runner
 
-## Note
+</details>
 
-Personal dotfiles collection with multi-host support and distributed builds. Breaking changes may occur at any time.
+<details>
+<summary>CI/CD</summary>
+
+| Workflow | Trigger | Action |
+|----------|---------|--------|
+| `flake-check.yml` | Push to `dev` | `nix flake check` on all hosts |
+| `cachix-nixos.yml` | Push to `dev` | Build + push to Cachix |
+| `sync-dev-main.yml` | Push to `main` | Sync back to `dev` (bidirectional) |
+
+</details>
+
+<details>
+<summary>Development</summary>
+
+See [`conventions/DEVELOPMENT.md`](conventions/DEVELOPMENT.md) for coding standards and repo conventions.
+
+</details>
+
+> ⚠️ Personal dotfiles — breaking changes may occur without notice.
