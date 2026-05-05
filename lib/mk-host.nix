@@ -9,7 +9,7 @@
 # - Conditionally enables gaming modules for gaming hosts
 { inputs }:
 let
-  overlays = import ../flake-modules/overlays.nix { inherit inputs; };
+  overlays = import ../flake-modules/overlays.nix { };
 
   # Gaming module only enabled for hosts with userConfig.gaming.enable = true
   mkGamingModule = userConfig: {
