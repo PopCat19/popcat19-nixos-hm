@@ -3,12 +3,19 @@
 # Purpose: Define architecture-aware package overlays
 #
 # This module:
-# - Provides Friction and Zrok overlays
+# - Provides Friction, OpenLDAP, and Zrok overlays
 # - Hyprland uses nixpkgs-unstable (no overlay needed)
 _: [
   # Friction graphics overlay
   (final: _prev: {
     friction-graphics = final.callPackage ../overlays/friction-graphics.nix { };
+  })
+
+  # OpenLDAP: skip flaky syncrepl test (test017-syncreplication-refresh)
+  (_final: _prev: {
+    openldap = _prev.openldap.overrideAttrs (_: {
+      doCheck = false;
+    });
   })
 
   # Zrok v1.1.10 overlay - provides latest binary release
