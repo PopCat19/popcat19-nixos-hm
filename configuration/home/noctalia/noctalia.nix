@@ -30,7 +30,7 @@ in
     package = pkgs.noctalia-shell;
 
     # Settings from settings.nix - Stylix will set colors separately
-    settings = settings.settings;
+    inherit (settings) settings;
   };
 
   # Custom systemd service with startup delay (not using deprecated .systemd.enable)
