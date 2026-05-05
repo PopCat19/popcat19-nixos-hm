@@ -5,18 +5,10 @@
 # This module:
 # - Provides Friction and Zrok overlays
 # - Hyprland uses nixpkgs-unstable (no overlay needed)
-{ inputs }:
-[
+_: [
   # Friction graphics overlay
   (final: _prev: {
     friction-graphics = final.callPackage ../overlays/friction-graphics.nix { };
-  })
-
-  # OpenLDAP: skip flaky syncrepl test
-  (final: _prev: {
-    openldap = _prev.openldap.overrideAttrs (_: {
-      doCheck = false;
-    });
   })
 
   # Zrok v1.1.10 overlay - provides latest binary release
