@@ -3,17 +3,10 @@
 # Purpose: Define architecture-aware package overlays
 #
 # This module:
-# - Provides OpenTabletDriver, Friction, and Zrok overlays
+# - Provides Friction and Zrok overlays
 # - Hyprland uses nixpkgs-unstable (no overlay needed)
 { inputs }:
 [
-  # OpenTabletDriver git latest overlay
-  (final: _prev: {
-    opentabletdriver = final.callPackage ../overlays/opentabletdriver-git.nix {
-      src = inputs.opentabletdriver;
-    };
-  })
-
   # Friction graphics overlay
   (final: _prev: {
     friction-graphics = final.callPackage ../overlays/friction-graphics.nix { };

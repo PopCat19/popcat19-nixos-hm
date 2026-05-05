@@ -53,11 +53,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    opentabletdriver = {
-      url = "github:OpenTabletDriver/OpenTabletDriver";
-      flake = false;
-    };
-
     shimboot = {
       url = "github:PopCat19/nixos-shimboot/dev";
       inputs.nixpkgs.follows = "nixpkgs";
