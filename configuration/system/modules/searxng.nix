@@ -8,7 +8,12 @@
 # - Declares the searxng/searxng Docker container
 # - Generates settings.yml declaratively
 # - Binds to localhost:9088 only (not exposed externally)
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   cfg = config.services.searxng-local;
 
@@ -26,7 +31,8 @@ let
         - json
   '';
 
-in {
+in
+{
   options.services.searxng-local = with lib; {
     enable = mkEnableOption "SearXNG local instance for pi-discord news injection";
     port = mkOption {
