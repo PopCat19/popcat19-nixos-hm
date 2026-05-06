@@ -30,6 +30,7 @@ with pkgs;
 
   # Communication
   keepassxc
+  (vesktop.override { withSystemVencord = true; })
 
   # Desktop
   brightnessctl
