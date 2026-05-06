@@ -5,9 +5,11 @@
 # This module:
 # - Enables Vesktop with custom settings
 # - Configures Vencord integration and plugins
-_: {
+{ pkgs, ... }:
+{
   programs.vesktop = {
     enable = true;
+    package = pkgs.vesktop.override { withSystemVencord = true; };
 
     settings = {
       appBadge = false;
