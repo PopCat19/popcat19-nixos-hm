@@ -87,7 +87,7 @@ with pkgs;
   tree
 
   # Gaming
-  (inputs.nix-gaming.packages.${hostPlatform}.osu-stable.override { useGameMode = false; })
+  inputs.nix-gaming.packages.${hostPlatform}.osu-stable
   lutris
   osu-lazer-bin
 
