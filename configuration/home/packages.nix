@@ -5,7 +5,7 @@
 # This module:
 # - Provides all user-space packages
 # - Includes x86_64-specific packages when applicable
-{ pkgs, ... }:
+{ pkgs, inputs, hostPlatform, ... }:
 let
   x86_64Packages = pkgs.lib.optionals pkgs.stdenv.isx86_64 [
     pkgs.btop-rocm
@@ -88,6 +88,7 @@ with pkgs;
   tree
 
   # Gaming
+  (inputs.nix-gaming.packages.${hostPlatform}.osu-stable.override { useGameMode = false; })
   lutris
   osu-lazer-bin
 

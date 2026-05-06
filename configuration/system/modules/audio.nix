@@ -14,6 +14,11 @@
 
   services.pipewire = {
     enable = true;
+    lowLatency = {
+      enable = true;
+      quantum = 64;
+      rate = 48000;
+    };
     alsa = {
       enable = true;
       support32Bit = true;
