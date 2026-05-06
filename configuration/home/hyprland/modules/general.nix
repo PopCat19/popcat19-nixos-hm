@@ -9,6 +9,13 @@
 # - Sets performance and debug settings
 {
   wayland.windowManager.hyprland.settings = {
+    input = {
+      tablet = {
+        transform = 0;
+        output = "current";
+      };
+    };
+
     general = {
       gaps_in = 4;
       gaps_out = 4;
