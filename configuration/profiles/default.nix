@@ -6,7 +6,7 @@
 # - Imports base system configuration
 # - Configures standard desktop environment
 # - Sets up home manager with default modules
-{ userConfig, inputs, ... }:
+{ userConfig, ... }:
 let
   stateVersion = import ../stateversion.nix;
 in
@@ -50,9 +50,6 @@ in
     # Centralized nix configuration
     ../nix-options.nix
     ../system/modules/cachix.nix
-
-    # nix-gaming pipewire low-latency
-    inputs.nix-gaming.nixosModules.pipewireLowLatency
   ];
 
   system.stateVersion = stateVersion.system;
