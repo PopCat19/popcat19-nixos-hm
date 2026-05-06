@@ -11,7 +11,13 @@
 { pkgs, ... }:
 {
   security.polkit.enable = true;
-  security.rtkit.enable = true;
+  security.rtkit = {
+    enable = true;
+    args = [
+      "--threads-per-user-max=500"
+      "--actions-per-burst-max=500"
+    ];
+  };
 
   # Disable coredumps to save disk space
   systemd.coredump.enable = false;
