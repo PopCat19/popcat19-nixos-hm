@@ -6,7 +6,7 @@
 # - Imports base system configuration
 # - Configures standard desktop environment
 # - Sets up home manager with default modules
-{ userConfig, ... }:
+{ inputs, userConfig, ... }:
 let
   stateVersion = import ../stateversion.nix;
 in
@@ -46,6 +46,7 @@ in
     ../system/modules/dconf.nix
     ../system/modules/openrgb.nix
     ../system/modules/stylix-lightdm.nix
+    inputs.nix-gaming.nixosModules.pipewireLowLatency
 
     # Centralized nix configuration
     ../nix-options.nix
