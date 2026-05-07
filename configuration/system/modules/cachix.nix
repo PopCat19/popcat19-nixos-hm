@@ -11,9 +11,13 @@
 }:
 {
   nix.settings = {
-    substituters = lib.mkAfter [ "https://popcat19-shared.cachix.org" ];
+    substituters = lib.mkAfter [
+      "https://popcat19-shared.cachix.org"
+      "https://nix-gaming.cachix.org"
+    ];
     trusted-public-keys = lib.mkAfter [
       "popcat19-shared.cachix.org-1:qqle0Ek1MtOHDkqu2srjAnbjwl41fRUP8pLd9ZDsMEQ="
+      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
     ];
   };
 }
