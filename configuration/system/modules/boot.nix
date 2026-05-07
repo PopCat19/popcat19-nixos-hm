@@ -6,13 +6,13 @@
 # - Configures systemd-boot as the bootloader
 # - Sets up EFI boot variables
 # - Enables NTFS filesystem support
-# - Configures zen kernel for performance
+# - Configures XanMod kernel for performance
 { pkgs, ... }:
 {
   boot = {
     blacklistedKernelModules = [ "snd_seq_dummy" ];
     kernelModules = [ "i2c-dev" ];
-    kernelPackages = pkgs.linuxPackages_zen;
+    kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot = {
