@@ -32,6 +32,8 @@
 
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    nix-gaming.url = "github:fufexan/nix-gaming";
+
     pmd = {
       url = "github:popcat19/project-minimalist-design/dev";
       inputs.nixpkgs.follows = "nixpkgs";
