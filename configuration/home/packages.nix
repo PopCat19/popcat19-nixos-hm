@@ -87,7 +87,6 @@ with pkgs;
   tree
 
   # Gaming
-  inputs.nix-gaming.packages.${hostPlatform}.osu-stable
   lutris
   osu-lazer-bin
 
