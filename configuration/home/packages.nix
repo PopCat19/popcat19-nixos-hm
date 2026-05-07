@@ -5,12 +5,13 @@
 # This module:
 # - Provides all user-space packages
 # - Includes x86_64-specific packages when applicable
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 let
   x86_64Packages = pkgs.lib.optionals pkgs.stdenv.isx86_64 [
     pkgs.btop-rocm
     pkgs.ddcui
     pkgs.openrgb-with-all-plugins
+    inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.osu-stable
   ];
 in
 with pkgs;
