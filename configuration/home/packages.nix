@@ -5,7 +5,7 @@
 # This module:
 # - Provides all user-space packages
 # - Includes x86_64-specific packages when applicable
-{ pkgs, inputs, hostPlatform, ... }:
+{ pkgs, ... }:
 let
   x86_64Packages = pkgs.lib.optionals pkgs.stdenv.isx86_64 [
     pkgs.btop-rocm
