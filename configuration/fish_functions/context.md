@@ -9,9 +9,10 @@
 - `list-fish-helpers.fish` — Display all available Fish functions and abbreviations
 - `lsa.fish` — Display git-tracked files as a tree structure
 - `nix-flake-update.fish` — Update NixOS flake inputs with compatibility checks
-- `nixos-commit-rebuild-push.fish` — Commits, rebuilds, and pushes NixOS configuration changes
-- `nixos-rebuild-basic.fish` — Simplify NixOS rebuild with kernel compatibility
+- `nixos-rebuild-auto.fish` — Non-interactive rebuild wrapper for LLM automation via nh os
+- `nixos-rebuild-basic.fish` — Unified NixOS rebuild with nh os and git commit/push support
 - `nix-shell-unfree.fish` — Enable Nix shell with unfree and insecure packages
+- `nixos-status.fish` — Display system status using nh os and nh clean commands
 - `proxify.fish` — Run commands detached from PTY with proxy settings
 - `proxy-off.fish` — Disable proxy environment variables
 - `proxy-on.fish` — Enable proxy variables with overwritable defaults
