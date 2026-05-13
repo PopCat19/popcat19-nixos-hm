@@ -132,7 +132,7 @@ function nixos-rebuild-basic
     if test "$auto_mode" = true
         echo "[STEP] Running nh os $action for $flake_target..."
         set -l result
-        if nh os $rebuild_args
+        if sudo nh os $rebuild_args --bypass-root-check
             echo "[SUCCESS] Build succeeded"
         else
             echo "[ERROR] Build failed" >&2
@@ -145,9 +145,9 @@ function nixos-rebuild-basic
         end
     else
         set_color blue; echo "[STEP] Running nh os rebuild..."; set_color normal
-        set_color cyan; echo "Command: nh os $action"; set_color normal
+        set_color cyan; echo "Command: sudo nh os $action"; set_color normal
 
-        if not nh os $rebuild_args
+        if not sudo nh os $rebuild_args --bypass-root-check
             set_color red; echo "[ERROR] Build failed"; set_color normal
 
             if test "$did_commit" = true; and test "$rollback_on_fail" = true
