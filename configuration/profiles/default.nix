@@ -50,6 +50,7 @@ in
 
     # Centralized nix configuration
     ../nix-options.nix
+    ../system/modules/nh.nix
     ../system/modules/cachix.nix
   ];
 

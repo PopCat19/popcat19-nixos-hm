@@ -5,7 +5,7 @@
 - `apollo.nix` — Configure Apollo game streaming server (Sunshine fork)
 - `audio.nix` — Configure PipeWire audio system with JACK and ALSA support
 - `boot.nix` — Manage bootloader configuration and kernel settings
-- `catch-22-rebuild.sh` — Rebuild NixOS through proxy to bypass sandbox restrictions
+- `catch-22-rebuild.sh` — Rebuild NixOS through proxy with nh os switch
 - `core-packages.nix` — Install essential system utilities and tools
 - `dconf.nix` — Enable dconf for GTK/Qt settings and desktop configuration
 - `display.nix` — Orchestrate display system configuration through separated modules
@@ -18,6 +18,7 @@
 - `hardware.nix` — Configure hardware support for Bluetooth and I2C
 - `hyprland.nix` — Configure Hyprland Wayland compositor with UWSM integration
 - `networking.nix` — Manage firewall, IP forwarding, and NetworkManager configuration
+- `nh.nix` — Configure nh (nix-community/nh) CLI helper with env vars and GC timer
 - `niri.nix` — Configure Niri scrollable-tiling Wayland compositor
 - `noctalia.nix` — Enable Noctalia shell globally for Wayland systems
 - `openrgb.nix` — Enable OpenRGB service for RGB lighting control

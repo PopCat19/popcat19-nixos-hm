@@ -4,7 +4,7 @@
 #
 # This module:
 # - Defines Nix experimental features
-# - Sets up garbage collection
+# - Disables nix.gc (delegated to programs.nh.clean)
 # - Configures trusted users
 #
 # Warning: Nix reads config from multiple sources. If the daemon
@@ -36,11 +36,9 @@
     ];
   };
 
-  nix.gc = {
-    automatic = true;
-    dates = "03:00";
-    options = "--delete-older-than 3d";
-  };
+  # GC delegated to programs.nh.clean (see modules/nh.nix).
+  # nix.gc and programs.nh.clean must not both be enabled.
+  nix.gc.automatic = false;
 
   nixpkgs.config.allowUnfree = true;
 }
