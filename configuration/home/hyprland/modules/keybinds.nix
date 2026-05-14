@@ -258,6 +258,13 @@
       ",XF86MonBrightnessDown, exec, brightnessctl s 10%-"
     ];
 
+    bindl = [
+      # === Laptop ===
+      # cat: Laptop
+      # desc: Lid close -> DPMS off
+      ", switch:on:Lid Switch, exec, hyprctl dispatch dpms off"
+    ];
+
     bindm = [
       # === Mouse Bindings ===
       # cat: Mouse
