@@ -107,6 +107,11 @@ rec {
     variant = "dark";
   };
 
+  # Pi Coding Agent
+  piAgent = {
+    enable = true;
+  };
+
   fonts = {
     monospace = {
       packageName = "fira-code";
