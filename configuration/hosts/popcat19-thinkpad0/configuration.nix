@@ -46,5 +46,6 @@
   environment.systemPackages = with pkgs; [
     bleachbit
     moonlight-qt
+    protonplus
   ];
 }

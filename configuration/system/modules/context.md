@@ -34,4 +34,3 @@
 - `virtualisation.nix` — Configure virtualization technologies including Docker and KVM
 - `vpn.nix` — Configure Mullvad VPN service for system-wide VPN
 - `xdg.nix` — Configure XDG desktop portals and MIME type handling
-- `zrythm.nix` — Configure real-time audio scheduling for Zrythm DAW
