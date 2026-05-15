@@ -111,6 +111,10 @@ fi
 {
   for fragment in "$MANIFEST_DIR"/*.md; do
     name="$(basename "$fragment")"
+
+    # Skip context.md
+    [[ "$name" == "context.md" ]] && continue
+
     content="$(cat "$fragment")"
 
     # Ensure trailing newline
