@@ -27,7 +27,6 @@ with pkgs;
   pavucontrol
   playerctl
   voicevox
-  zrythm
 
   # Communication
   keepassxc
