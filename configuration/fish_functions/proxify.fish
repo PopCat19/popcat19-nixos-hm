@@ -4,6 +4,7 @@
 #
 # This function:
 # - Accepts command via arguments or stdin
+# - Prompts to enable proxy if not already active
 # - Injects --proxy-server for Chromium/Electron apps
 # - Wraps non-Chromium apps with proxychains for socket-level proxying
 # - Detaches process via uwsm or standard backgrounding
@@ -26,8 +27,21 @@ function proxify
     end
 
     if not set -q all_proxy
-        set_color yellow; echo "[WARN] No proxy env. Run: proxy_on"; set_color normal
-    else
+        set_color yellow; echo -n "[WARN] No proxy env. Enable? [Y/n] "; set_color normal
+        read -l confirm
+        switch $confirm
+            case '' Y y Yes yes YES
+                proxy_on
+                if not set -q all_proxy
+                    set_color red; echo "[ERROR] proxy_on failed or proxy is still unset"; set_color normal
+                    return 1
+                end
+            case '*'
+                set_color yellow; echo "[SKIP] Running without proxy"; set_color normal
+        end
+    end
+
+    if set -q all_proxy
         set -l proxy_addr (string replace -r '^[^:]+://' '' "$all_proxy")
         set_color cyan; echo "[RUN] $cmd_args[1] -> $proxy_addr"; set_color normal
 
