@@ -7,15 +7,15 @@
 # - Replaces nix.gc with nh clean systemd timer
 # - Grants passwordless sudo for nh os subcommands
 # - Enables build-tree visualization and change diffs
-{ userConfig, ... }:
+{ lib, userConfig, ... }:
 {
   programs.nh = {
     enable = true;
-    flake = userConfig.env.NIXOS_CONFIG_DIR;
+    flake = lib.mkForce userConfig.env.NIXOS_CONFIG_DIR;
 
     clean = {
       enable = true;
-      extraArgs = "--keep-since 3d --keep 5";
+      extraArgs = lib.mkForce "--keep-since 3d --keep 5";
     };
   };
 
