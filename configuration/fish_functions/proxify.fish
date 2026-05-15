@@ -4,11 +4,13 @@
 #
 # This function:
 # - Accepts command via arguments or stdin
-# - Injects proxy flags for Chromium/Electron apps
+# - Injects --proxy-server for Chromium/Electron apps
+# - Wraps non-Chromium apps with proxychains for socket-level proxying
 # - Detaches process via uwsm or standard backgrounding
 # - Decouples application lifecycle from shell
 #
-# Rationale: Decouples application lifecycle from the shell using systemd scopes.
+# Rationale: Chromium apps accept --proxy-server natively; other apps need
+# proxychains LD_PRELOAD interception to route arbitrary sockets.
 
 function proxify
     set -l cmd_args
@@ -28,7 +30,22 @@ function proxify
     else
         set -l proxy_addr (string replace -r '^[^:]+://' '' "$all_proxy")
         set_color cyan; echo "[RUN] $cmd_args[1] -> $proxy_addr"; set_color normal
-        set cmd_args $cmd_args --proxy-server="socks5://$proxy_addr"
+
+        set -l cmd_name (basename "$cmd_args[1]")
+        set -l chromium_apps chrome chromium google-chrome brave edge opera vivaldi electron
+
+        if contains $cmd_name $chromium_apps
+            set cmd_args $cmd_args --proxy-server="socks5://$proxy_addr"
+        else if command -q proxychains4
+            set -l tmpconf (mktemp)
+            printf '%s\n' 'strict_chain' 'proxy_dns' '[ProxyList]' "socks5 $proxy_addr" > $tmpconf
+            begin
+                # Wait for proxychains to read config, then clean up
+                sleep 2
+                rm -f $tmpconf
+            end &
+            set cmd_args proxychains4 -q -f $tmpconf $cmd_args
+        end
     end
 
     if command -q uwsm
