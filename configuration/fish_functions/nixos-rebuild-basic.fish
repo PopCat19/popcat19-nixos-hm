@@ -96,7 +96,7 @@ function nixos-rebuild-basic
         if test "$auto_mode" = true
             echo "[STEP] Rolling back to previous NixOS generation..."
             if test "$use_nh" = true
-                sudo nh os rollback
+                sudo nh os rollback --bypass-root-check
             else
                 sudo nixos-rebuild switch --rollback
             end
@@ -112,7 +112,7 @@ function nixos-rebuild-basic
         else
             set_color blue; echo "[STEP] Rolling back to previous NixOS generation..."; set_color normal
             if test "$use_nh" = true
-                sudo nh os rollback
+                sudo nh os rollback --bypass-root-check
             else
                 sudo nixos-rebuild switch --rollback
             end
