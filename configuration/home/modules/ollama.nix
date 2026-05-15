@@ -6,7 +6,12 @@
 # - Enables Ollama service
 # - Uses ROCm on AMD GPU hosts, CPU-only on Intel
 
-{ pkgs, lib, userConfig, ... }:
+{
+  pkgs,
+  lib,
+  userConfig,
+  ...
+}:
 let
   rocm = userConfig.gaming.enableROCm or false;
 in
