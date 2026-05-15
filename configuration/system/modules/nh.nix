@@ -25,7 +25,10 @@
       commands = [
         {
           command = "/run/current-system/sw/bin/nh";
-          options = [ "SETENV" "NOPASSWD" ];
+          options = [
+            "SETENV"
+            "NOPASSWD"
+          ];
         }
       ];
     }

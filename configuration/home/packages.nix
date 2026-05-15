@@ -5,7 +5,12 @@
 # This module:
 # - Provides all user-space packages
 # - Includes x86_64-specific packages when applicable
-{ pkgs, inputs, userConfig, ... }:
+{
+  pkgs,
+  inputs,
+  userConfig,
+  ...
+}:
 let
   # ROCm-aware: nixos0 (AMD GPU) gets btop-rocm, thinkpad0 (Intel) gets btop
   btopPackage = if userConfig.gaming.enableROCm or false then pkgs.btop-rocm else pkgs.btop;
