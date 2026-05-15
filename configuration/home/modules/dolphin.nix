@@ -11,9 +11,9 @@
   home.file = {
     "bin/dolphin".text = ''
       #!/bin/sh
-      export XDG_CONFIG_DIRS="${pkgs.kdePackages.kservice}/etc/xdg:$XDG_CONFIG_DIRS"
+      export XDG_CONFIG_DIRS="${pkgs.libsForQt5.kservice}/etc/xdg:$XDG_CONFIG_DIRS"
       unset KDE_SESSION_VERSION
-      ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental
+      ${pkgs.libsForQt5.kservice}/bin/kbuildsycoca6 --noincremental
       exec ${pkgs.kdePackages.dolphin}/bin/dolphin "$@"
     '';
   };
