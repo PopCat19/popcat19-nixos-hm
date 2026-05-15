@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
+
 # test-profile-manager.sh
 #
-# Purpose: Test runner wrapper for profile manager tests
+# Purpose: Profile manager test runner
 #
-# This script:
-# - Runs the new modular test suite
-# - Provides backward compatibility with existing CI
-# - Falls back to basic CLI tests if module tests fail
+# This module:
+# - Executes automated tests for profile-manager.sh
+# - Verifies profile creation, deletion, and assignment logic
+# - Ensures stability of profile management operations
+# - Provides both CLI integration and module unit tests
 #
 # Usage:
 #   ./tools/test-profile-manager.sh           # Run all tests

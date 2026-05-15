@@ -1,6 +1,11 @@
+<!-- BEGIN fragment: 01-header.md -->
+
 # popcat19-nixos-hm
 
 Personal NixOS configuration — Hyprland + PMD theming, multi-host, profile-based.
+
+<!-- END fragment: 01-header.md -->
+<!-- BEGIN fragment: 02-quickstart.md -->
 
 ## Quick start
 
@@ -16,6 +21,8 @@ sudo nixos-rebuild switch --flake .#popcat19-nixos0
 nix flake update
 ```
 
+<!-- END fragment: 02-quickstart.md -->
+<!-- BEGIN fragment: 03-architecture.md -->
 <details>
 <summary>Architecture</summary>
 
@@ -49,8 +56,9 @@ nix flake update
 ```
 
 </details>
-
-<details open>
+<!-- END fragment: 03-architecture.md -->
+<!-- BEGIN fragment: 04-hosts.md -->
+<details>
 <summary>Hosts</summary>
 
 | Host | Machine | Profile | Notes |
@@ -61,7 +69,8 @@ nix flake update
 | `popcat19-dedede0` | ChromeOS (shimboot) | `shimboot` | Pruned config, pinned systemd for ChromeOS compat |
 
 </details>
-
+<!-- END fragment: 04-hosts.md -->
+<!-- BEGIN fragment: 05-profiles.md -->
 <details>
 <summary>Profiles</summary>
 
@@ -76,7 +85,8 @@ Profiles compose system modules into deployable presets. Each host points to one
 Manage profiles with `tools/profile-manager-tui.sh`.
 
 </details>
-
+<!-- END fragment: 05-profiles.md -->
+<!-- BEGIN fragment: 06-flake-inputs.md -->
 <details>
 <summary>Flake inputs</summary>
 
@@ -97,7 +107,8 @@ Manage profiles with `tools/profile-manager-tui.sh`.
 | `shimboot` | ChromeOS NixOS bootstrapping |
 
 </details>
-
+<!-- END fragment: 06-flake-inputs.md -->
+<!-- BEGIN fragment: 07-home-manager-modules.md -->
 <details>
 <summary>Home-manager modules</summary>
 
@@ -106,7 +117,8 @@ Manage profiles with `tools/profile-manager-tui.sh`.
 See `configuration/home/modules/context.md` for the full inventory.
 
 </details>
-
+<!-- END fragment: 07-home-manager-modules.md -->
+<!-- BEGIN fragment: 08-system-modules.md -->
 <details>
 <summary>System modules</summary>
 
@@ -115,7 +127,8 @@ See `configuration/home/modules/context.md` for the full inventory.
 See `configuration/system/modules/context.md` for the full inventory.
 
 </details>
-
+<!-- END fragment: 08-system-modules.md -->
+<!-- BEGIN fragment: 09-tools.md -->
 <details>
 <summary>Tools</summary>
 
@@ -126,7 +139,8 @@ See `configuration/system/modules/context.md` for the full inventory.
 - **`test-profile-manager.sh`** — Profile manager test runner
 
 </details>
-
+<!-- END fragment: 09-tools.md -->
+<!-- BEGIN fragment: 10-ci-cd.md -->
 <details>
 <summary>CI/CD</summary>
 
@@ -137,12 +151,19 @@ See `configuration/system/modules/context.md` for the full inventory.
 | `sync-dev-main.yml` | Push to `main` | Sync back to `dev` (bidirectional) |
 
 </details>
-
+<!-- END fragment: 10-ci-cd.md -->
+<!-- BEGIN fragment: 11-development.md -->
 <details>
 <summary>Development</summary>
 
 See [`conventions/DEVELOPMENT.md`](conventions/DEVELOPMENT.md) for coding standards and repo conventions.
 
 </details>
+<!-- END fragment: 11-development.md -->
+<!-- BEGIN fragment: 12-footer.md -->
 
 > ⚠️ Personal dotfiles — breaking changes may occur without notice.
+
+<!-- END fragment: 12-footer.md -->
+
+<!-- generated: 20260515-f4aad71 -->

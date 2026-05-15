@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
+
 # profile-manager-tui.sh
 #
-# Purpose: Terminal UI for profile management
+# Purpose: Interactive terminal UI for profile operations
 #
-# This script:
-# - Provides interactive menu for profile operations
-# - Wraps profile-manager.sh commands
-# - Offers user-friendly navigation
+# This module:
+# - Provides menu-driven interface for managing host profiles
+# - Wraps profile-manager.sh functionality for easier use
+# - Supports creating, setting, and getting host profile assignments
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

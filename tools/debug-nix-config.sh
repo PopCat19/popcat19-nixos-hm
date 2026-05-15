@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
+
 # debug-nix-config.sh
 #
-# Purpose: Diagnose Nix daemon config mismatches
+# Purpose: Diagnose Nix daemon configuration mismatches
 #
 # This module:
 # - Checks all nix.conf sources for conflicts
 # - Compares daemon-reported config vs system config
 # - Detects root-level overrides that shadow /etc/nix/nix.conf
+# - Verifies daemon restart triggers and service status
 
 set -euo pipefail
 

@@ -1,0 +1,5 @@
+- **`profile-manager-tui.sh`** — Interactive terminal UI for profile operations
+- **`profile-manager.sh`** — Profile management CLI (create, set/get host profiles)
+- **`debug-nix-config.sh`** — Diagnose Nix daemon config mismatches
+- **`push-to-cachix.sh`** — Push derivations to personal Cachix cache
+- **`test-profile-manager.sh`** — Profile manager test runner

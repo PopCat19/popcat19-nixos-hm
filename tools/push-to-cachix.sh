@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
+
 # push-to-cachix.sh
 #
-# Purpose: Push Nix derivations to personal Cachix cache
+# Purpose: Push build derivations to personal Cachix cache
 #
 # This module:
-# - Pushes NixOS system derivations to personal Cachix cache
-# - Supports selective host pushing
-# - Provides dry-run mode for testing
+# - Identifies relevant Nix store paths for the current configuration
+# - Authenticates with Cachix using available credentials
+# - Uploads binaries to accelerate fleet-wide builds
+# - Supports selective host pushing and dry-run mode
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
