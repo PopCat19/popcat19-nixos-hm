@@ -19,6 +19,7 @@
 #   --no-push       Skip push even with commit message
 #   --rollback      Rollback to previous NixOS generation (skips rebuild)
 #   --no-rollback   Keep changes on failure
+#   --no-sandbox    Force-disable Nix sandbox (for shimboot, old kernels, etc.)
 #
 # Exit codes (auto mode):
 #   0 - Success
@@ -44,6 +45,7 @@ function nixos-rebuild-basic
     set -l no_push false
     set -l rollback_on_fail false
     set -l do_system_rollback false
+    set -l force_no_sandbox false
     set -l did_commit false
 
     set -l i 1
@@ -64,6 +66,8 @@ function nixos-rebuild-basic
                 set do_system_rollback true
             case "--no-rollback"
                 set rollback_on_fail false
+            case "--no-sandbox"
+                set force_no_sandbox true
             case "*"
                 if test -z "$commit_message"
                     set commit_message $argv[$i]
@@ -167,9 +171,16 @@ function nixos-rebuild-basic
         set -a rebuild_args --flake .
     end
 
-    # Kernel < 5.6 lacks sandbox support
+    # Kernel < 5.6 lacks sandbox support; --no-sandbox forces it unconditionally
     set -l kver (uname -r)
-    if string match -qr '^([0-4]\.|5\.[0-5][^0-9])' "$kver"
+    if test "$force_no_sandbox" = true
+        if test "$auto_mode" = true
+            echo "[WARN] Sandbox disabled (--no-sandbox)"
+        else
+            set_color yellow; echo "[WARN] Sandbox disabled (--no-sandbox)"; set_color normal
+        end
+        set -a rebuild_args -- --option sandbox false
+    else if string match -qr '^([0-4]\.|5\.[0-5][^0-9])' "$kver"
         if test "$auto_mode" = true
             echo "[WARN] Kernel $kver (< 5.6) detected. Disabling sandbox."
         else
