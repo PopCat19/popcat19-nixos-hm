@@ -26,13 +26,6 @@
               "SETENV"
             ];
           }
-          {
-            command = "/run/wrappers/bin/nixos-rebuild";
-            options = [
-              "NOPASSWD"
-              "SETENV"
-            ];
-          }
         ];
       }
     ];

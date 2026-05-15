@@ -24,10 +24,6 @@
       users = [ userConfig.username ];
       commands = [
         {
-          command = "${userConfig.env.NIXOS_CONFIG_DIR}/result/sw/bin/nh";
-          options = [ "SETENV" "NOPASSWD" ];
-        }
-        {
           command = "/run/current-system/sw/bin/nh";
           options = [ "SETENV" "NOPASSWD" ];
         }
