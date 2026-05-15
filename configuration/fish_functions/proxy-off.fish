@@ -2,7 +2,7 @@
 #
 # Purpose: Disable proxy environment variables
 #
-# This function:
+# This module:
 # - Unsets http_proxy, https_proxy, all_proxy, no_proxy
 # - Clears systemd user environment if available
 # - Confirms proxy disabled status

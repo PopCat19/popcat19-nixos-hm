@@ -2,7 +2,7 @@
 #
 # Purpose: Update Nix flake inputs with compatibility checks
 #
-# This function:
+# This module:
 # - Checks kernel version for sandbox compatibility
 # - Creates backup of flake.lock before updating
 # - Updates flake inputs and shows changes

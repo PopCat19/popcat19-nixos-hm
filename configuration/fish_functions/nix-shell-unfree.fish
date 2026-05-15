@@ -2,7 +2,7 @@
 #
 # Purpose: Enable Nix shell with unfree and insecure packages
 #
-# This function:
+# This module:
 # - Sets environment variables for unfree/insecure packages
 # - Runs nix-shell with packages if provided
 # - Shows informational message when used interactively
