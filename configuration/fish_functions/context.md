@@ -13,7 +13,7 @@
 - `nixos-rebuild-basic.fish` — Unified NixOS rebuild with nh os and git commit/push support
 - `nix-shell-unfree.fish` — Enable Nix shell with unfree and insecure packages
 - `nixos-status.fish` — Display system status using nh os and nh clean commands
-- `proxify.fish` — Run commands through proxy: Chromium apps get --proxy-server flag, others use proxychains
+- `proxify.fish` — Run commands through proxy, with prompt to auto-enable if off
 - `proxy-off.fish` — Disable proxy environment variables
 - `proxy-on.fish` — Enable proxy variables with overwritable defaults
 - `show-shortcuts.fish` — Displays Hyprland keybindings with descriptions and categories
