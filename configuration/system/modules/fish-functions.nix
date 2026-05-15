@@ -23,7 +23,7 @@
     "fish/functions/lsa.fish".text = builtins.readFile ../../fish_functions/lsa.fish;
     "fish/functions/nix-shell-unfree.fish".text =
       builtins.readFile ../../fish_functions/nix-shell-unfree.fish;
-    "fish/functions/nixos-flake-update.fish".text =
+    "fish/functions/nix-flake-update.fish".text =
       builtins.readFile ../../fish_functions/nix-flake-update.fish;
     "fish/functions/nixos-rebuild-auto.fish".text =
       builtins.readFile ../../fish_functions/nixos-rebuild-auto.fish;
