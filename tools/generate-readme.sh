@@ -31,6 +31,9 @@ validate_manifest() {
   for fragment in "$MANIFEST_DIR"/*.md; do
     name="$(basename "$fragment")"
 
+    # Skip context.md
+    [[ "$name" == "context.md" ]] && continue
+
     # Must match NN-name.md pattern
     if [[ ! "$name" =~ ^([0-9]{2})-.+\.md$ ]]; then
       echo "ERROR: $name does not match NN-name.md pattern" >&2
