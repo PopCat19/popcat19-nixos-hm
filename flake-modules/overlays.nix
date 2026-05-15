@@ -5,7 +5,7 @@
 # This module:
 # - Provides Friction, OpenLDAP, and Zrok overlays
 # - Hyprland uses nixpkgs-unstable (no overlay needed)
-{ inputs }:
+_system:
 [
   # Friction graphics overlay
   (final: _prev: {
