@@ -2,7 +2,7 @@
 #
 # Purpose: Displays Hyprland keybindings with descriptions and categories
 #
-# This function:
+# This module:
 # - Parses keybinds.nix and userprefs.conf for shortcut definitions
 # - Filters and searches shortcuts by category or description
 # - Supports fuzzy search with fzf integration

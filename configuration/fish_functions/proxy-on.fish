@@ -2,7 +2,7 @@
 #
 # Purpose: Enable proxy variables with overwritable defaults
 #
-# This function:
+# This module:
 # - Sets http_proxy, https_proxy, all_proxy, no_proxy
 # - Accepts optional HOST, HTTP_PORT, SOCKS_PORT arguments
 # - Integrates with systemd user environment

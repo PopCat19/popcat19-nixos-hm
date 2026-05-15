@@ -2,7 +2,7 @@
 #
 # Purpose: Run commands detached from PTY with proxy settings
 #
-# This function:
+# This module:
 # - Accepts command via arguments or stdin
 # - Prompts to enable proxy if not already active
 # - Injects --proxy-server for Chromium/Electron apps

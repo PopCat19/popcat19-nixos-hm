@@ -2,7 +2,7 @@
 #
 # Purpose: Provide GNU time functionality in fish
 #
-# This function:
+# This module:
 # - Runs GNU time when called
 # - Used as alternative to fish's builtin time
 function gtime
