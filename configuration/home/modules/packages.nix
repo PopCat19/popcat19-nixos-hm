@@ -11,4 +11,11 @@
   hostPlatform,
   ...
 }:
-import ../packages.nix { inherit pkgs inputs userConfig hostPlatform; }
+import ../packages.nix {
+  inherit
+    pkgs
+    inputs
+    userConfig
+    hostPlatform
+    ;
+}
