@@ -17,7 +17,7 @@
 #   --auto          Non-interactive mode (no prompts, clear exit codes)
 #   --push          Push after success (implies commit message required)
 #   --no-push       Skip push even with commit message
-#   --rollback      Rollback commit on failure (default in auto mode)
+#   --rollback      Rollback to previous NixOS generation (skips rebuild)
 #   --no-rollback   Keep changes on failure
 #
 # Exit codes (auto mode):
@@ -42,7 +42,8 @@ function nixos-rebuild-basic
     set -l auto_mode false
     set -l push_on_success false
     set -l no_push false
-    set -l rollback_on_fail false  # Default: no rollback in interactive mode
+    set -l rollback_on_fail false
+    set -l do_system_rollback false
     set -l did_commit false
 
     set -l i 1
@@ -60,7 +61,7 @@ function nixos-rebuild-basic
             case "--no-push"
                 set no_push true
             case "--rollback"
-                set rollback_on_fail true
+                set do_system_rollback true
             case "--no-rollback"
                 set rollback_on_fail false
             case "*"
@@ -78,6 +79,49 @@ function nixos-rebuild-basic
         echo "[ERROR] Commit message required with --push flag" >&2
         cd $original_dir
         return 2
+    end
+
+    # Detect build tool (nh preferred, nixos-rebuild fallback)
+    set -l use_nh false
+    if command -q nh
+        set use_nh true
+    end
+
+    # System rollback: switch to previous generation, skip rebuild
+    if test "$do_system_rollback" = true
+        if test "$auto_mode" = true
+            echo "[STEP] Rolling back to previous NixOS generation..."
+            if test "$use_nh" = true
+                sudo nh os rollback
+            else
+                sudo nixos-rebuild switch --rollback
+            end
+            if test $status -eq 0
+                echo "[SUCCESS] Rolled back to previous generation"
+                cd $original_dir
+                return 0
+            else
+                echo "[ERROR] Rollback failed" >&2
+                cd $original_dir
+                return 1
+            end
+        else
+            set_color blue; echo "[STEP] Rolling back to previous NixOS generation..."; set_color normal
+            if test "$use_nh" = true
+                sudo nh os rollback
+            else
+                sudo nixos-rebuild switch --rollback
+            end
+            if test $status -eq 0
+                set_color green; echo "[SUCCESS] Rolled back to previous generation"; set_color normal
+                cd $original_dir
+                return 0
+            else
+                set_color red; echo "[ERROR] Rollback failed"; set_color normal
+                cd $original_dir
+                return 1
+            end
+        end
     end
 
     set -l pre_commit_hash (git rev-parse HEAD)
@@ -112,8 +156,16 @@ function nixos-rebuild-basic
         end
     end
 
-    # Build nixos-rebuild arguments
-    set -l rebuild_args $action .
+    # Build arguments
+    set -l rebuild_cmd
+    set -l rebuild_args $action
+    if test "$use_nh" = true
+        set rebuild_cmd sudo nh os
+        set -a rebuild_args . --bypass-root-check
+    else
+        set rebuild_cmd sudo nixos-rebuild
+        set -a rebuild_args --flake .
+    end
 
     # Kernel < 5.6 lacks sandbox support
     set -l kver (uname -r)
@@ -130,9 +182,9 @@ function nixos-rebuild-basic
     set -l flake_target (hostname)
 
     if test "$auto_mode" = true
-        echo "[STEP] Running nh os $action for $flake_target..."
+        echo "[STEP] Running $rebuild_cmd $action for $flake_target..."
         set -l result
-        if sudo nh os $rebuild_args --bypass-root-check
+        if $rebuild_cmd $rebuild_args
             echo "[SUCCESS] Build succeeded"
         else
             echo "[ERROR] Build failed" >&2
@@ -144,10 +196,10 @@ function nixos-rebuild-basic
             return 1
         end
     else
-        set_color blue; echo "[STEP] Running nh os rebuild..."; set_color normal
-        set_color cyan; echo "Command: sudo nh os $action"; set_color normal
+        set_color blue; echo "[STEP] Running $rebuild_cmd..."; set_color normal
+        set_color cyan; echo "Command: $rebuild_cmd $action"; set_color normal
 
-        if not sudo nh os $rebuild_args --bypass-root-check
+        if not $rebuild_cmd $rebuild_args
             set_color red; echo "[ERROR] Build failed"; set_color normal
 
             if test "$did_commit" = true; and test "$rollback_on_fail" = true
