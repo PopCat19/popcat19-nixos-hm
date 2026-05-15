@@ -5,10 +5,12 @@
 # This module:
 # - Provides all user-space packages
 # - Includes x86_64-specific packages when applicable
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, userConfig, ... }:
 let
+  # ROCm-aware: nixos0 (AMD GPU) gets btop-rocm, thinkpad0 (Intel) gets btop
+  btopPackage = if userConfig.gaming.enableROCm or false then pkgs.btop-rocm else pkgs.btop;
   x86_64Packages = pkgs.lib.optionals pkgs.stdenv.isx86_64 [
-    pkgs.btop-rocm
+    btopPackage
     pkgs.ddcui
     pkgs.openrgb-with-all-plugins
     inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.osu-stable
@@ -107,6 +109,7 @@ with pkgs;
   appstream
   coreutils-full
   ddcutil
+  distrobox
   i2c-tools
   jq
   nixos-generators

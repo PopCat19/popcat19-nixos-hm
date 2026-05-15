@@ -1,17 +1,20 @@
 # ollama.nix
 #
-# Purpose: Configures Ollama LLM service with ROCm acceleration.
+# Purpose: Configures Ollama LLM service.
 #
 # This module:
 # - Enables Ollama service
-# - Adds ROCm-enabled package for AMD GPU support
+# - Uses ROCm on AMD GPU hosts, CPU-only on Intel
 
-{ pkgs, ... }:
+{ pkgs, lib, userConfig, ... }:
+let
+  rocm = userConfig.gaming.enableROCm or false;
+in
 {
   services.ollama = {
     enable = true;
-    package = pkgs.ollama-rocm;
-    acceleration = "rocm";
+    package = if rocm then pkgs.ollama-rocm else pkgs.ollama;
+    acceleration = lib.mkIf rocm "rocm";
     environmentVariables = {
       OLLAMA_KV_CACHE_TYPE = "q8_0";
     };

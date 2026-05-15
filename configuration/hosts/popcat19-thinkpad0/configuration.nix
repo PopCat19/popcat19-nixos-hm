@@ -17,6 +17,9 @@
     ../../profiles/${userConfig.profile}.nix
     ./modules/hardware.nix
     ./modules/zram.nix
+    ../../system/modules/agenix.nix
+    ../../system/modules/builders.nix
+    ../../system/modules/searxng.nix
     ../../system/modules/sunshine.nix
   ];
 
@@ -43,9 +46,12 @@
 
   services.displayManager.autoLogin.enable = lib.mkForce false;
 
+  services.searxng-local.enable = true;
+
   environment.systemPackages = with pkgs; [
     bleachbit
     moonlight-qt
+    opentabletdriver
     protonplus
   ];
 }
