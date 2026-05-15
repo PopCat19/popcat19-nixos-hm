@@ -26,6 +26,18 @@
               "SETENV"
             ];
           }
+          {
+            command = "/run/current-system/sw/bin/systemctl set-environment *";
+            options = [ "NOPASSWD" "SETENV" ];
+          }
+          {
+            command = "/run/current-system/sw/bin/systemctl unset-environment *";
+            options = [ "NOPASSWD" "SETENV" ];
+          }
+          {
+            command = "/run/current-system/sw/bin/systemctl restart nix-daemon";
+            options = [ "NOPASSWD" ];
+          }
         ];
       }
     ];
