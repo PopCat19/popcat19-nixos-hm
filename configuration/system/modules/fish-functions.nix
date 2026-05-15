@@ -29,9 +29,6 @@
       builtins.readFile ../../fish_functions/nixos-rebuild-auto.fish;
     "fish/functions/nixos-rebuild-basic.fish".text =
       builtins.readFile ../../fish_functions/nixos-rebuild-basic.fish;
-    "fish/functions/proxy_off.fish".text = builtins.readFile ../../fish_functions/proxy-off.fish;
-    "fish/functions/proxy_on.fish".text = builtins.readFile ../../fish_functions/proxy-on.fish;
-    "fish/functions/proxify.fish".text = builtins.readFile ../../fish_functions/proxify.fish;
     "fish/functions/show-shortcuts.fish".text =
       builtins.readFile ../../fish_functions/show-shortcuts.fish;
     "fish/functions/sillytavern.fish".text = builtins.readFile ../../fish_functions/sillytavern.fish;
