@@ -7,6 +7,7 @@
 # - Defines system-level secrets
 {
   pkgs,
+  lib,
   userConfig,
   inputs,
   ...
@@ -23,7 +24,7 @@
       "/etc/ssh/ssh_host_rsa_key"
     ];
 
-    secrets = {
+    secrets = lib.mkIf (userConfig.zrok.enable or false) {
       zrok-share-token = {
         file = ../../secrets/zrok-share-token.age;
         owner = userConfig.username;

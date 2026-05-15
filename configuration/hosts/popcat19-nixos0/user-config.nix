@@ -18,6 +18,11 @@ rec {
     enableROCm = true; # For AMD GPU gaming (btop-rocm, openrgb, etc.)
   };
 
+  # Zrok hosting configuration
+  zrok = {
+    enable = true;
+  };
+
   user = {
     fullName = "PopCat19";
     email = "atsuo11111@gmail.com";
