@@ -20,6 +20,7 @@
     ../../system/modules/agenix.nix
     ../../system/modules/builders.nix
     ../../system/modules/searxng.nix
+    ../../system/modules/perplexica.nix
     ../../system/modules/sunshine.nix
   ];
 
@@ -47,6 +48,7 @@
   services.displayManager.autoLogin.enable = lib.mkForce false;
 
   services.searxng-local.enable = true;
+  services.perplexica.enable = true;
 
   environment.systemPackages = with pkgs; [
     bleachbit

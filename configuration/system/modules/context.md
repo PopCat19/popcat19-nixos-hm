@@ -22,6 +22,7 @@
 - `niri.nix` — Configure Niri scrollable-tiling Wayland compositor
 - `noctalia.nix` — Enable Noctalia shell globally for Wayland systems
 - `openrgb.nix` — Enable OpenRGB service for RGB lighting control
+- `perplexica.nix` — Deploy Perplexica AI answer engine via OCI container alongside SearXNG
 - `power-management.nix` — Provide basic power management for desktop systems
 - `programs.nix` — Configure system-level programs and gaming support
 - `services.nix` — Configure system-level services and daemons

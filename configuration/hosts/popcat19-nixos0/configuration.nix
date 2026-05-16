@@ -17,9 +17,11 @@
     ../../system/modules/sunshine.nix
     ../../system/modules/agenix.nix
     ../../system/modules/searxng.nix
+    ../../system/modules/perplexica.nix
   ];
 
   services.searxng-local.enable = true;
+  services.perplexica.enable = true;
 
   networking.hostName = userConfig.hostname;
 
