@@ -6,7 +6,7 @@
 # - Enables Docker and Docker Compose v2 for containerization
 # - Configures KVM virtualization support
 # - Sets up Docker daemon to start on boot
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   environment.systemPackages = with pkgs; [
     qemu_kvm
@@ -40,6 +40,10 @@
       swtpm.enable = false;
     };
   };
+
+  # Strip TPM-backed LoadCredentialEncrypted from upstream unit to avoid
+  # CREDENTIALS failures when TPM state changes (e.g. after kernel updates)
+  systemd.services.libvirtd.serviceConfig.LoadCredentialEncrypted = lib.mkForce [ ];
 
   virtualisation.spiceUSBRedirection.enable = true;
   virtualisation.waydroid.enable = false;
