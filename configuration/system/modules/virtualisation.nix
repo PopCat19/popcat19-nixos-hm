@@ -31,11 +31,13 @@
     enableOnBoot = true;
   };
 
+  virtualisation.oci-containers.backend = "docker";
+
   virtualisation.libvirtd = {
     enable = true;
     qemu = {
       package = pkgs.qemu_kvm;
-      swtpm.enable = true;
+      swtpm.enable = false;
     };
   };
 
