@@ -43,7 +43,7 @@
 
   # Strip TPM-backed LoadCredentialEncrypted from upstream unit to avoid
   # CREDENTIALS failures when TPM state changes (e.g. after kernel updates)
-  systemd.services.libvirtd.serviceConfig.LoadCredentialEncrypted = lib.mkForce [ ];
+  systemd.services.libvirtd.serviceConfig.LoadCredentialEncrypted = lib.mkForce [ "" ];
 
   virtualisation.spiceUSBRedirection.enable = true;
   virtualisation.waydroid.enable = false;
