@@ -25,6 +25,16 @@ _system: [
     });
   })
 
+  # ROCm: limit hipblaslt to user's GPU arch only (Radeon RX 7700 XT / 7800 XT = gfx1101)
+  # Building for all 10 archs simultaneously exhausts 32 GB RAM during Tensile kernel generation
+  (final: prev: {
+    rocmPackages = prev.rocmPackages.overrideScope (rfinal: rprev: {
+      hipblaslt = rprev.hipblaslt.override {
+        gpuTargets = [ "gfx1101" ];
+      };
+    });
+  })
+
   # Zrok v1.1.10 overlay - provides latest binary release
   (final: _prev: {
     zrok = final.stdenv.mkDerivation rec {
