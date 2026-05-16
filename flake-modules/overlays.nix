@@ -33,6 +33,12 @@ _system: [
         hipblaslt = rprev.hipblaslt.override {
           gpuTargets = [ "gfx1101" ];
         };
+        rocblas = rprev.rocblas.override {
+          gpuTargets = [ "gfx1101" ];
+        };
+        rocsparse = rprev.rocsparse.override {
+          gpuTargets = [ "gfx1101" ];
+        };
       }
     );
   })
