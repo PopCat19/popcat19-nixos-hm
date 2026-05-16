@@ -23,6 +23,20 @@
 
   networking.hostName = userConfig.hostname;
 
+  # Windows 11 dual boot (on /dev/sdb)
+  # Requires one-time manual copy of Windows bootloader:
+  #   sudo mkdir -p /boot/EFI/Microsoft/Boot
+  #   sudo mount /dev/sdb1 /mnt
+  #   sudo cp /mnt/EFI/Microsoft/Boot/bootmgfw.efi /boot/EFI/Microsoft/Boot/
+  #   sudo umount /mnt
+  boot.loader.systemd-boot.extraEntries = {
+    "windows.conf" = ''
+      title Windows 11
+      efi /EFI/Microsoft/Boot/bootmgfw.efi
+      sort-key o_windows
+    '';
+  };
+
   environment.systemPackages = with pkgs; [
     alsa-utils
     bleachbit
