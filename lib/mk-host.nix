@@ -43,6 +43,7 @@ in
             useGlobalPkgs = false;
             useUserPackages = true;
             sharedModules = [
+              inputs.nixcord.homeModules.nixcord
               {
                 nixpkgs.config.allowUnfree = true;
                 nixpkgs.overlays = overlays;

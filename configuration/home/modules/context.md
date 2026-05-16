@@ -35,7 +35,7 @@
 - `syncthing.nix` — Configure Syncthing directories and activation script
 - `systemd-services.nix` — Configure custom systemd user services
 - `tmux.nix` — Configure tmux terminal multiplexer
-- `vesktop.nix` — Configure Vesktop (Discord client with Vencord) with user preferences
+- `nixcord.nix` — Configure Vesktop via nixcord with typed Vencord plugin settings
 - `vscodium.nix` — Configure VSCodium editor with extensions and settings
 - `wallpaper-sync.nix` — Soft-clone wallpapers to user directory for Noctalia
 - `zathura.nix` — Configure Zathura PDF viewer with home-manager

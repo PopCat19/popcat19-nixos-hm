@@ -32,7 +32,7 @@ in
     ../../home/modules/starship.nix
 
     # Communication
-    ../../home/modules/vesktop.nix
+    ../../home/modules/nixcord.nix
 
     # System utilities
     ../../home/modules/environment.nix

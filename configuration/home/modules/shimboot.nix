@@ -31,7 +31,7 @@
     ./starship.nix
 
     # Communication
-    ./vesktop.nix
+    ./nixcord.nix
 
     # System utilities
     ./environment.nix

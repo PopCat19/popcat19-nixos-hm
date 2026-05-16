@@ -34,6 +34,11 @@
 
     nix-gaming.url = "github:fufexan/nix-gaming";
 
+    nixcord = {
+      url = "github:FlameFlag/nixcord";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     pmd = {
       url = "github:popcat19/project-minimalist-design/dev";
       inputs.nixpkgs.follows = "nixpkgs";

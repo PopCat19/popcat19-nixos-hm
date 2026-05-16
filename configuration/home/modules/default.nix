@@ -35,7 +35,7 @@
     ./qt-gtk-config.nix
     ./fuzzel-config.nix
     ./kitty.nix
-    ./vesktop.nix
+    ./nixcord.nix
     ./starship.nix
     ./micro.nix
     ./helix.nix
