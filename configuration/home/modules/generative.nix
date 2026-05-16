@@ -4,5 +4,5 @@
 #
 # This module:
 # - Provides placeholder for AI/ML tools
-# - Defers ollama service to ollama.nix module
+# - Defers LLM services to module-specific files
 _: { }

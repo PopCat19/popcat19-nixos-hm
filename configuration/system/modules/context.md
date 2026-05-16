@@ -22,7 +22,6 @@
 - `niri.nix` — Configure Niri scrollable-tiling Wayland compositor
 - `noctalia.nix` — Enable Noctalia shell globally for Wayland systems
 - `openrgb.nix` — Enable OpenRGB service for RGB lighting control
-- `excalidraw.nix` — Deploy Excalidraw collaborative whiteboard via OCI container on port 8082
 - `penpot.nix` — Deploy Penpot design tool via multi-container OCI stack on port 8080
 - `perplexica.nix` — Deploy Perplexica AI answer engine via OCI container alongside SearXNG
 

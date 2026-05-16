@@ -23,6 +23,9 @@ configuration.nix.bak*
 .DS_Store
 Thumbs.db
 
+# Core dumps
+core.*
+
 # Large directories
 node_modules
 .changelog-merge-state

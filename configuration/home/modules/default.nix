@@ -25,7 +25,7 @@
     ./screenshot.nix
     ./zen-browser.nix
     ./generative.nix
-    ./ollama.nix
+    ./llama-cpp.nix
     ./environment.nix
     ./services.nix
     ./home-files.nix
