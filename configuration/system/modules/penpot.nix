@@ -6,7 +6,12 @@
 # - Deploys Penpot frontend, backend, exporter, postgres, and valkey containers
 # - Creates a dedicated Docker network for inter-container communication
 # - Binds frontend to localhost:8080 in reserved self-host port range
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.penpot;
@@ -70,7 +75,10 @@ in
       penpot-postgres = {
         image = "postgres:15";
         autoStart = true;
-        extraOptions = [ "--network=${networkName}" "--stop-signal=SIGINT" ];
+        extraOptions = [
+          "--network=${networkName}"
+          "--stop-signal=SIGINT"
+        ];
         volumes = [ "/var/lib/penpot/postgres:/var/lib/postgresql/data" ];
         environment = {
           POSTGRES_DB = "penpot";
@@ -90,7 +98,10 @@ in
         autoStart = true;
         extraOptions = [ "--network=${networkName}" ];
         volumes = [ "/var/lib/penpot/assets:/opt/data/assets" ];
-        dependsOn = [ "penpot-postgres" "penpot-valkey" ];
+        dependsOn = [
+          "penpot-postgres"
+          "penpot-valkey"
+        ];
         environment = {
           PENPOT_FLAGS = lib.concatStringsSep " " (
             [ "disable-onboarding" ]
@@ -125,11 +136,13 @@ in
         extraOptions = [ "--network=${networkName}" ];
         ports = [ "127.0.0.1:${toString cfg.port}:8080" ];
         volumes = [ "/var/lib/penpot/assets:/opt/data/assets" ];
-        dependsOn = [ "penpot-backend" "penpot-exporter" ];
+        dependsOn = [
+          "penpot-backend"
+          "penpot-exporter"
+        ];
         environment = {
           PENPOT_FLAGS = lib.concatStringsSep " " (
-            [ "disable-onboarding" ]
-            ++ lib.optional (!cfg.enableRegistration) "disable-registration"
+            [ "disable-onboarding" ] ++ lib.optional (!cfg.enableRegistration) "disable-registration"
           );
           PENPOT_BACKEND_URI = "http://penpot-backend:6060";
           PENPOT_EXPORTER_URI = "http://penpot-exporter:6061";

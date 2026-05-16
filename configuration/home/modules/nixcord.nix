@@ -185,7 +185,6 @@ _: {
         };
         webKeybinds.enable = true;
         whoReacted.enable = true;
-        petpet.enable = true;
         youtubeAdblock.enable = true;
       };
     };
@@ -198,38 +197,39 @@ _: {
         useNative = "not-focused";
       };
       plugins = {
-      "AI Noise Suppression".enable = true;
-      BadgeAPI.enable = true;
-      BetterNotesBox = {
-        enable = true;
-        hide = false;
-        noSpellCheck = false;
+        "AI Noise Suppression".enable = true;
+        BadgeAPI.enable = true;
+        BetterNotesBox = {
+          enable = true;
+          hide = false;
+          noSpellCheck = false;
+        };
+        ChatInputButtonAPI.enable = true;
+        CommandsAPI.enable = true;
+        ContextMenuAPI.enable = true;
+        MessageAccessoriesAPI.enable = true;
+        MessageEventsAPI.enable = true;
+        Experiments = {
+          enable = true;
+          enableIsStaff = false;
+          forceStagingBanner = false;
+        };
+        FakeNitro.useHyperLinks = true;
+        MoreCommands.enable = true;
+        PetPet.enable = true;
+        NoTrack = {
+          enable = true;
+          disableAnalytics = true;
+        };
+        NoticesAPI.enable = true;
+        ServerListAPI.enable = true;
+        Settings = {
+          enable = true;
+          settingsLocation = "aboveActivity";
+        };
+        SupportHelper.enable = true;
+        UserSettingsAPI.enable = true;
       };
-      ChatInputButtonAPI.enable = true;
-      CommandsAPI.enable = true;
-      ContextMenuAPI.enable = true;
-      MessageAccessoriesAPI.enable = true;
-      MessageEventsAPI.enable = true;
-      Experiments = {
-        enable = true;
-        enableIsStaff = false;
-        forceStagingBanner = false;
-      };
-      FakeNitro.useHyperLinks = true;
-      MoreCommands.enable = true;
-      NoTrack = {
-        enable = true;
-        disableAnalytics = true;
-      };
-      NoticesAPI.enable = true;
-      ServerListAPI.enable = true;
-      Settings = {
-        enable = true;
-        settingsLocation = "aboveActivity";
-      };
-      SupportHelper.enable = true;
-      UserSettingsAPI.enable = true;
     };
   };
-};
 }

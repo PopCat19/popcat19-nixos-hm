@@ -6,7 +6,7 @@
 # - Declares the itzcrazykns1337/perplexica:slim-latest container
 # - Uses host networking to reach local SearXNG instance
 # - Persists data to /var/lib/perplexica
-{ pkgs, config, lib, ... }:
+{ config, lib, ... }:
 
 let
   cfg = config.services.perplexica;
@@ -41,7 +41,8 @@ in
       extraOptions = [ "--network host" ];
       environment = {
         SEARXNG_API_URL = cfg.searxngUrl;
-      } // cfg.environment;
+      }
+      // cfg.environment;
       volumes = [
         "${cfg.dataDir}:/home/perplexica/data"
       ];
