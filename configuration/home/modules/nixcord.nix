@@ -5,10 +5,7 @@
 # This module:
 # - Manages Vesktop Discord client with system Vencord
 # - Configures all Vencord plugins with typed settings
-{
-  pkgs,
-  ...
-}: {
+_: {
   programs.nixcord = {
     enable = true;
     vesktop.enable = true;
