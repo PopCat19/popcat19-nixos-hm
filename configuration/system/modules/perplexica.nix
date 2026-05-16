@@ -38,7 +38,7 @@ in
 
     virtualisation.oci-containers.containers.perplexica = {
       image = "itzcrazykns1337/perplexica:slim-latest";
-      extraOptions = [ "--network host" ];
+      extraOptions = [ "--network=host" ];
       environment = {
         SEARXNG_API_URL = cfg.searxngUrl;
       }
