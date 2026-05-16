@@ -100,7 +100,7 @@ jobs:
         with:
           name: popcat19-shared
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-          skipPush: true
+          extraPullNames: vicinae,shimboot-systemd-nixos
 
       - name: Check cache hit
         id: cache-check
@@ -123,7 +123,6 @@ jobs:
           fi
 
       - name: Build host
-        id: build
         if: steps.cache-check.outputs.hit == 'false'
         run: |
           host="${{ matrix.host }}"
@@ -132,8 +131,7 @@ jobs:
           for i in {1..3}; do
             echo "[Attempt $i/3] Building $host..."
             if nix build --impure --accept-flake-config \
-              ".#nixosConfigurations.${host}.config.system.build.toplevel" \
-              --print-out-paths | tee /tmp/store-path; then
+              ".#nixosConfigurations.${host}.config.system.build.toplevel"; then
               success=true
               break
             fi
@@ -145,19 +143,3 @@ jobs:
             echo "::error::Build failed for $host after 3 attempts"
             exit 1
           fi
-
-      - name: Push to Cachix
-        if: steps.cache-check.outputs.hit == 'false'
-        env:
-          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
-        run: |
-          host="${{ matrix.host }}"
-          store_path=$(cat /tmp/store-path)
-
-          echo "📦 Pushing $host to popcat19-shared..."
-          cachix push popcat19-shared "$store_path"
-
-          echo "📦 Pushing runtime closure..."
-          nix path-info --recursive "$store_path" | cachix push popcat19-shared
-
-          echo "✅ Successfully pushed $host"
