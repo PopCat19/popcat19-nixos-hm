@@ -21,6 +21,8 @@
     ../../system/modules/builders.nix
     ../../system/modules/searxng.nix
     ../../system/modules/perplexica.nix
+    ../../system/modules/excalidraw.nix
+    ../../system/modules/penpot.nix
     ../../system/modules/sunshine.nix
   ];
 
@@ -49,6 +51,8 @@
 
   services.searxng-local.enable = true;
   services.perplexica.enable = true;
+  services.excalidraw.enable = true;
+  services.penpot.enable = true;
 
   environment.systemPackages = with pkgs; [
     bleachbit
