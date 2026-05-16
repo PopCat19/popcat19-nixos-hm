@@ -93,6 +93,16 @@ in
         extraOptions = [ "--network=${networkName}" ];
       };
 
+      penpot-mcp = {
+        image = "penpotapp/mcp:latest";
+        autoStart = true;
+        extraOptions = [ "--network=${networkName}" ];
+        environment = {
+          PENPOT_REDIS_URI = "redis://penpot-valkey/0";
+          PENPOT_SECRET_KEY = cfg.secretKey;
+        };
+      };
+
       penpot-backend = {
         image = "penpotapp/backend:latest";
         autoStart = true;
