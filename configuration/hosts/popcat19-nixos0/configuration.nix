@@ -12,12 +12,14 @@
   ...
 }:
 let
+  sillytavernPassword = builtins.getEnv "SILLYTAVERN_PASSWORD";
+
   sillytavernConfig = pkgs.writeText "sillytavern-config.yaml" ''
     dataRoot: ./data
     basicAuthMode: true
     basicAuthUser:
       username: popcat19
-      password: __PASSWORD_REMOVED__
+      password: ${sillytavernPassword}
     enableCorsProxy: true
   '';
 in
