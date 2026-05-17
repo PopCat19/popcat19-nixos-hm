@@ -5,7 +5,7 @@
 # This function:
 # - Creates a tmux session with 4 windows
 # - Sets up split panes with btop and journalctl
-# - Shows SillyTavern container status and zrok tunnel status
+# - Shows SillyTavern service status and zrok tunnel status
 # - Attaches to session or creates new one
 
 function dev-session
@@ -27,9 +27,9 @@ function dev-session
     tmux send-keys -t $session_name:monitor.0 'btop' Enter
     tmux send-keys -t $session_name:monitor.1 'journalctl -f' Enter
 
-    # Window 2: SillyTavern (container logs)
+    # Window 2: SillyTavern (service logs)
     tmux new-window -t $session_name -n sillytavern
-    tmux send-keys -t $session_name:sillytavern 'sillytavern logs' Enter
+    tmux send-keys -t $session_name:sillytavern 'journalctl -u sillytavern -n 30 -f' Enter
 
     # Window 3: Zrok tunnel (systemd service logs)
     tmux new-window -t $session_name -n zrok
