@@ -2,7 +2,7 @@
 {
   systemd.services.zrok-share-openwebui = {
     description = "zrok share: openwebui (o6sxldv1hn9o)";
-    after = [ "network-online.target" "docker-open-webui.service" ];
+    after = [ "network-online.target" "open-webui.service" ];
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {

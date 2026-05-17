@@ -42,6 +42,12 @@ in
   services.open-webui = {
     enable = true;
     port = 3000;
+    environment = {
+      OPENAI_API_BASE_URL = "http://localhost:8088/v1";
+      RAG_EMBEDDING_ENGINE = "openai";
+      RAG_OPENAI_API_BASE = "http://localhost:8088/v1";
+      RAG_TOP_K = "20";
+    };
   };
 
   services.sillytavern = {
