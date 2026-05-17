@@ -3,9 +3,7 @@
 # Purpose: Launch tmux development session with predefined layout
 #
 # This function:
-# - Creates a tmux session with 4 windows
-# - Sets up split panes with btop and journalctl
-# - Shows SillyTavern service status and zrok tunnel status
+# - Creates a tmux session with system monitor and shell
 # - Attaches to session or creates new one
 
 function dev-session
@@ -27,21 +25,13 @@ function dev-session
     tmux send-keys -t $session_name:monitor.0 'btop' Enter
     tmux send-keys -t $session_name:monitor.1 'journalctl -f' Enter
 
-    # Window 2: SillyTavern (service logs)
-    tmux new-window -t $session_name -n sillytavern
-    tmux send-keys -t $session_name:sillytavern 'journalctl -u sillytavern -n 30 -f' Enter
-
-    # Window 3: Zrok tunnel (systemd service logs)
-    tmux new-window -t $session_name -n zrok
-    tmux send-keys -t $session_name:zrok 'journalctl -u zrok-share-sillytavern -u zrok-share-searxng -u zrok-share-openwebui -n 20 -f' Enter
-
-    # Window 4: Default shell
+    # Window 2: Default shell
     tmux new-window -t $session_name -n shell
 
     tmux select-window -t $session_name:monitor
 
-    set_color green; echo "[SUCCESS] Session '$session_name' created with 4 windows"; set_color normal
-    set_color cyan; echo "[INFO] Windows: monitor, sillytavern, zrok, shell"; set_color normal
+    set_color green; echo "[SUCCESS] Session '$session_name' created with 2 windows"; set_color normal
+    set_color cyan; echo "[INFO] Windows: monitor, shell"; set_color normal
 
     if test -z "$TMUX"
         tmux attach -t $session_name
