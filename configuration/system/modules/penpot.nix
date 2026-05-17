@@ -137,8 +137,7 @@ in
         environment = {
           PENPOT_PUBLIC_URI = cfg.publicUri;
           PENPOT_REDIS_URI = "redis://penpot-valkey/0";
-          PENPOT_BROWSER_POOL_MAX = "5";
-          PENPOT_BROWSER_POOL_MIN = "0";
+          PENPOT_SECRET_KEY = cfg.secretKey;
         };
       };
 
