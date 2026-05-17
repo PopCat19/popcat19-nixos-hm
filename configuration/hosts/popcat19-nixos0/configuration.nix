@@ -21,6 +21,7 @@ let
       username: popcat19
       password: ${sillytavernPassword}
     enableCorsProxy: true
+    whitelistMode: false
   '';
 in
 {
