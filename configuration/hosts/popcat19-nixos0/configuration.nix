@@ -11,6 +11,18 @@
   lib,
   ...
 }:
+let
+  sillytavernConfig = pkgs.writeText "sillytavern-config.yaml" ''
+    dataRoot: ./data
+    basicAuthMode: true
+    basicAuthUser:
+      username: popcat19
+      password: __PASSWORD_REMOVED__
+    enableCorsProxy: true
+    whitelistDockerHosts: true
+    enableForwardedWhitelist: true
+  '';
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -30,17 +42,28 @@
     enable = true;
     port = 8000;
     listen = true;
-    configFile = "${pkgs.writeText "sillytavern-config.yaml" ''
-      dataRoot: ./data
-      basicAuthMode: true
-      basicAuthUser:
-        username: popcat19
-        password: REDACTED
-      enableCorsProxy: true
-      whitelistDockerHosts: true
-      enableForwardedWhitelist: true
-    ''}";
   };
+
+  # Override upstream tmpfiles symlink (L+) with writable copy (C)
+  # The upstream module links config into the Nix store (read-only), causing EROFS
+  systemd.tmpfiles.settings.sillytavern."/var/lib/SillyTavern/config.yaml" = lib.mkForce {
+    "C" = {
+      mode = "0600";
+      argument = "${sillytavernConfig}";
+      user = "sillytavern";
+      group = "sillytavern";
+    };
+  };
+
+  # Replace upstream's read-only symlink with a writable copy on first boot
+  systemd.services.sillytavern.preStart = ''
+    if [ -L /var/lib/SillyTavern/config.yaml ]; then
+      rm -f /var/lib/SillyTavern/config.yaml
+      cp -f ${sillytavernConfig} /var/lib/SillyTavern/config.yaml
+      chown sillytavern:sillytavern /var/lib/SillyTavern/config.yaml
+      chmod 600 /var/lib/SillyTavern/config.yaml
+    fi
+  '';
 
   systemd.services.zrok-share-sillytavern = {
     description = "Zrok reserved share tunnel for SillyTavern";
