@@ -9,7 +9,7 @@
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
-      ExecStart = "${pkgs.zrok}/bin/zrok share reserved 5f5icptoebhm";
+      ExecStart = "${pkgs.zrok}/bin/zrok share reserved 5f5icptoebhm --headless";
       Restart = "on-failure";
       RestartSec = "10";
       User = "popcat19";
