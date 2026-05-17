@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   systemd.services.zrok-share-searxng = {
     description = "zrok share: searxng (7gqoj8ce5mm0)";
     after = [ "network-online.target" ];

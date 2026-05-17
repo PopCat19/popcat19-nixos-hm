@@ -8,7 +8,6 @@
 # - Stores models in ~/.local/share/llama-cpp/models
 {
   pkgs,
-  lib,
   userConfig,
   ...
 }:

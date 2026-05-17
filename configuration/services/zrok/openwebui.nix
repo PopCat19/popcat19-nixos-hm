@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   systemd.services.zrok-share-openwebui = {
     description = "zrok share: openwebui (o6sxldv1hn9o)";
     after = [ "network-online.target" ];

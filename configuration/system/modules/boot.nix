@@ -11,7 +11,10 @@
 {
   boot = {
     blacklistedKernelModules = [ "snd_seq_dummy" ];
-    kernelModules = [ "i2c-dev" "ntsync" ];
+    kernelModules = [
+      "i2c-dev"
+      "ntsync"
+    ];
     kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
     loader = {
       efi.canTouchEfiVariables = true;

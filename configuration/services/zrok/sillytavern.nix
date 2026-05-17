@@ -1,7 +1,11 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   systemd.services.zrok-share-sillytavern = {
     description = "zrok share: sillytavern (5f5icptoebhm)";
-    after = [ "network-online.target" "sillytavern.service" ];
+    after = [
+      "network-online.target"
+      "sillytavern.service"
+    ];
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
