@@ -19,11 +19,14 @@
     ../../system/modules/searxng.nix
     ../../system/modules/perplexica.nix
     ../../system/modules/penpot.nix
+    ../../system/modules/sillytavern.nix
   ];
 
   services.searxng-local.enable = true;
   services.perplexica.enable = true;
   services.penpot.enable = true;
+  services.sillytavern.enable = true;
+  services.sillytavern.zrok.enable = true;
 
   networking.hostName = userConfig.hostname;
 
