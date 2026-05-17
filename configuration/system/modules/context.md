@@ -10,6 +10,7 @@
 - `dconf.nix` — Enable dconf for GTK/Qt settings and desktop configuration
 - `display.nix` — Orchestrate display system configuration through separated modules
 - `environment.nix` — Configure system-level environment variables
+- `firecrawl.nix` — Declare Firecrawl web scraping API via OCI containers
 - `fish-functions.nix` — Configure Fish shell with custom functions and abbreviations
 - `fish.nix` — Configure Fish shell as the default system shell
 - `fonts.nix` — Configure system fonts using centralized userConfig
@@ -22,8 +23,6 @@
 - `niri.nix` — Configure Niri scrollable-tiling Wayland compositor
 - `noctalia.nix` — Enable Noctalia shell globally for Wayland systems
 - `openrgb.nix` — Enable OpenRGB service for RGB lighting control
-- `perplexica.nix` — Deploy Perplexica AI answer engine via OCI container alongside SearXNG
-
 ## Reserved port range
 
 Self-hosted web services use ports 3000 and 8080-8099 (localhost only):

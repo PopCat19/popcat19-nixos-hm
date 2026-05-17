@@ -31,12 +31,12 @@ in
     ../../system/modules/sunshine.nix
     ../../system/modules/agenix.nix
     ../../system/modules/searxng.nix
-    ../../system/modules/perplexica.nix
+    ../../system/modules/firecrawl.nix
     ../../services/zrok
   ];
 
   services.searxng-local.enable = true;
-  services.perplexica.enable = true;
+  services.firecrawl.enable = true;
   services.open-webui = {
     enable = true;
     port = 3000;
