@@ -32,6 +32,7 @@ in
     ../../system/modules/searxng.nix
     ../../system/modules/perplexica.nix
     ../../system/modules/penpot.nix
+    ../../services/zrok
   ];
 
   services.searxng-local.enable = true;
@@ -64,20 +65,6 @@ in
       chmod 600 /var/lib/SillyTavern/config.yaml
     fi
   '';
-
-  systemd.services.zrok-share-sillytavern = {
-    description = "Zrok reserved share tunnel for SillyTavern";
-    after = [ "network-online.target" "sillytavern.service" ];
-    wants = [ "network-online.target" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.zrok}/bin/zrok share reserved 5f5icptoebhm";
-      Restart = "on-failure";
-      RestartSec = "10";
-      User = "popcat19";
-      Group = "users";
-    };
-  };
 
   networking.hostName = userConfig.hostname;
 

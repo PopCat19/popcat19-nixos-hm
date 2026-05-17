@@ -33,7 +33,7 @@ function dev-session
 
     # Window 3: Zrok tunnel (systemd service logs)
     tmux new-window -t $session_name -n zrok
-    tmux send-keys -t $session_name:zrok 'journalctl -u zrok-share-sillytavern -n 30 -f' Enter
+    tmux send-keys -t $session_name:zrok 'journalctl -u zrok-share-sillytavern -u zrok-share-searxng -u zrok-share-openwebui -n 20 -f' Enter
 
     # Window 4: Default shell
     tmux new-window -t $session_name -n shell
