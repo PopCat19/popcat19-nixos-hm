@@ -51,6 +51,7 @@
   services.searxng-local.enable = true;
   services.perplexica.enable = true;
   services.penpot.enable = true;
+  services.open-webui.enable = true;
 
   environment.systemPackages = with pkgs; [
     bleachbit

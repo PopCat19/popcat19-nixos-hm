@@ -4,7 +4,7 @@
 #
 # This module:
 # - Installs llama-cpp, with ROCm support on AMD GPU hosts
-# - Runs llama-server as a user service on port 8088
+# - Runs llama-server as a user service on port 8088, bound to 0.0.0.0
 # - Stores models in ~/.local/share/llama-cpp/models
 {
   pkgs,
@@ -25,7 +25,7 @@ in
     };
     Service = {
       Type = "simple";
-      ExecStart = "${llamaPkg}/bin/llama-server --host 127.0.0.1 --port 8088";
+      ExecStart = "${llamaPkg}/bin/llama-server --host 0.0.0.0 --port 8088";
       Restart = "on-failure";
       RestartSec = "5";
     };

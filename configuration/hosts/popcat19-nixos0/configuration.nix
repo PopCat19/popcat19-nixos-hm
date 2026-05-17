@@ -19,8 +19,6 @@ let
       username: popcat19
       password: __PASSWORD_REMOVED__
     enableCorsProxy: true
-    whitelistDockerHosts: true
-    enableForwardedWhitelist: true
   '';
 in
 {
@@ -38,6 +36,10 @@ in
   services.searxng-local.enable = true;
   services.perplexica.enable = true;
   services.penpot.enable = true;
+  services.open-webui = {
+    enable = true;
+    port = 3000;
+  };
 
   services.sillytavern = {
     enable = true;

@@ -20,6 +20,7 @@
   networking.hostName = userConfig.hostname;
 
   services.iptsd.enable = false;
+  services.open-webui.enable = true;
 
   environment.systemPackages = with pkgs; [
     acpi
