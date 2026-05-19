@@ -354,6 +354,7 @@ in
          ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
         if [ "$(cat /var/lib/sing-box/mullvad-state)" = on ]; then
           ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
+          ${pkgs.mullvad-vpn}/bin/mullvad connect 2>/dev/null || true
         fi
         rm -f /var/lib/sing-box/mullvad-state
       fi
@@ -372,6 +373,7 @@ in
            ! ${config.systemd.package}/bin/systemctl is-active --quiet sing-box 2>/dev/null; then
           if [ "$(cat /var/lib/sing-box/mullvad-state)" = on ]; then
             ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
+            ${pkgs.mullvad-vpn}/bin/mullvad connect 2>/dev/null || true
           fi
           rm -f /var/lib/sing-box/mullvad-state
         fi
