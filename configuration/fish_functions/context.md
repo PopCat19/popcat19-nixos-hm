@@ -13,8 +13,6 @@
 - `nixos-rebuild-basic.fish` — Unified NixOS rebuild with commit/push support
 - `nix-shell-unfree.fish` — Enable Nix shell with unfree and insecure packages
 - `nixos-status.fish` — Display NixOS system status and health information
-- `proxify.fish` — Run commands detached from PTY with proxy settings
-- `proxy-off.fish` — Disable proxy environment variables
-- `proxy-on.fish` — Enable proxy variables with overwritable defaults
+- `proxify.fish` — Fish completions for proxify command (sing-box TUN app launcher)
 - `show-shortcuts.fish` — Displays Hyprland keybindings with descriptions and categories
 - `sillytavern.fish` — Launch SillyTavern with automatic updates

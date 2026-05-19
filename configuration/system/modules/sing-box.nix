@@ -162,10 +162,11 @@ in
     };
     mullvadCompat = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = ''
         Disable Mullvad VPN when sing-box starts (phone already has VPN).
         Re-enables Mullvad auto-connect when sing-box stops (only if autoTrigger is set).
+        Requires services.vpn.nix (mullvad-vpn) to be enabled.
       '';
     };
   };
@@ -337,7 +338,8 @@ in
     # When sing-box stops on non-TetherFuseNet, re-enable Mullvad.
 
     systemd.services.sing-box.preStart = lib.mkIf cfg.mullvadCompat ''
-      if ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
+      if command -v ${pkgs.mullvad-vpn}/bin/mullvad >/dev/null && \
+         ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
         # Save Mullvad auto-connect state (persistent: survives reboot)
         if ${pkgs.mullvad-vpn}/bin/mullvad auto-connect get | grep -q on; then
           echo on > /var/lib/sing-box/mullvad-state
@@ -351,6 +353,7 @@ in
 
     systemd.services.sing-box.postStop = lib.mkIf (cfg.mullvadCompat && cfg.autoTrigger != null) ''
       if [ -f /var/lib/sing-box/mullvad-state ] && \
+         command -v ${pkgs.mullvad-vpn}/bin/mullvad >/dev/null && \
          ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
         if [ "$(cat /var/lib/sing-box/mullvad-state)" = on ]; then
           ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
@@ -370,6 +373,7 @@ in
       serviceConfig.Type = "oneshot";
       script = ''
         if [ -f /var/lib/sing-box/mullvad-state ] && \
+           command -v ${pkgs.mullvad-vpn}/bin/mullvad >/dev/null && \
            ! ${config.systemd.package}/bin/systemctl is-active --quiet sing-box 2>/dev/null; then
           if [ "$(cat /var/lib/sing-box/mullvad-state)" = on ]; then
             ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
