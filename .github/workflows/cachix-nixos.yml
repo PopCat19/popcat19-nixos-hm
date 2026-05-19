@@ -1,0 +1,145 @@
+# cachix-nixos.yml
+#
+# Purpose: Build and push NixOS system derivations to Cachix
+#
+# This module:
+# - Triggers on push to main/dev branches
+# - Triggers on flake.lock changes
+# - Triggers via cron (daily)
+# - Builds all NixOS host configurations
+# - Pushes to popcat19-shared Cachix cache
+
+name: cachix-nixos
+
+on:
+  schedule:
+    - cron: '0 0 */2 * *'
+  push:
+    paths:
+      - 'flake.lock'
+    branches:
+      - main
+      - dev
+      - dev-*
+  pull_request:
+    paths:
+      - 'flake.lock'
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+    inputs:
+      hosts:
+        description: 'Hosts to build (comma-separated, empty for all)'
+        required: false
+        default: ''
+        type: string
+
+env:
+  NIXPKGS_ALLOW_UNFREE: 1
+
+permissions:
+  contents: read
+
+jobs:
+  discover-hosts:
+    runs-on: ubuntu-latest
+    outputs:
+      hosts: ${{ steps.hosts.outputs.hosts }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Discover hosts
+        id: hosts
+        run: |
+          if [ -n "${{ github.event.inputs.hosts }}" ]; then
+            # Convert comma-separated input to JSON array
+            hosts=$(echo "${{ github.event.inputs.hosts }}" | jq -Rc 'split(",")')
+            echo "hosts=$hosts" >> $GITHUB_OUTPUT
+          else
+            hosts=$(nix eval --json .#nixosConfigurations --apply 'configs: builtins.attrNames configs')
+            echo "hosts=$hosts" >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    needs: discover-hosts
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host: ${{ fromJson(needs.discover-hosts.outputs.hosts) }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reclaim disk space
+        uses: wimpysworld/nothing-but-nix@main
+        with:
+          hatchet-protocol: 'cleave'
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+            auto-optimise-store = true
+            substituters = https://cache.nixos.org https://popcat19-shared.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= popcat19-shared.cachix.org-1:qqle0Ek1MtOHDkqu2srjAnbjwl41fRUP8pLd9ZDsMEQ=
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: popcat19-shared
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          extraPullNames: vicinae,shimboot-systemd-nixos
+
+      - name: Check cache hit
+        id: cache-check
+        run: |
+          host="${{ matrix.host }}"
+          path=$(nix eval --raw ".#nixosConfigurations.${host}.config.system.build.toplevel.outPath" 2>/dev/null || echo "")
+
+          if [ -z "$path" ]; then
+            echo "Could not resolve path for $host"
+            echo "hit=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if nix path-info --store https://popcat19-shared.cachix.org "$path" &>/dev/null; then
+            echo "✅ Cache hit for $host"
+            echo "hit=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Cache miss for $host"
+            echo "hit=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build host
+        if: steps.cache-check.outputs.hit == 'false'
+        run: |
+          host="${{ matrix.host }}"
+          success=false
+
+          for i in {1..3}; do
+            echo "[Attempt $i/3] Building $host..."
+            if nix build --impure --accept-flake-config \
+              ".#nixosConfigurations.${host}.config.system.build.toplevel"; then
+              success=true
+              break
+            fi
+            echo "[Attempt $i/3] Failed. Retrying in 10s..."
+            sleep 10
+          done
+
+          if [ "$success" = "false" ]; then
+            echo "::error::Build failed for $host after 3 attempts"
+            exit 1
+          fi
