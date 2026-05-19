@@ -29,6 +29,7 @@ Self-hosted web services use ports 3000 and 8080-8099 (localhost only):
 - `power-management.nix` — Provide basic power management for desktop systems
 - `programs.nix` — Configure system-level programs and gaming support
 - `services.nix` — Configure system-level services and daemons
+- `sing-box.nix` — Togglable sing-box TUN proxy with fish toggle functions
 - `ssh.nix` — Enable and configure OpenSSH server for remote system access
 - `stylix-lightdm.nix` — Configure LightDM theming using Stylix framework
 - `sunshine.nix` — Configure Sunshine game streaming server
