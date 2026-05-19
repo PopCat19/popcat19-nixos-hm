@@ -51,6 +51,7 @@
 
   environment.systemPackages = with pkgs; [
     bleachbit
+    cachix
     moonlight-qt
     opentabletdriver
     protonplus
