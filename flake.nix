@@ -9,6 +9,30 @@
 {
   description = "NixOS multi-host configuration with profile presets";
 
+  nixConfig = {
+    extra-experimental-features = [
+      "flakes"
+      "nix-command"
+      "fetch-tree"
+      "impure-derivations"
+      "ca-derivations"
+      "pipe-operators"
+    ];
+    accept-flake-config = true;
+    extra-substituters = [
+      "https://shimboot-systemd-nixos.cachix.org"
+      "https://numtide.cachix.org"
+      "https://popcat19-shared.cachix.org"
+      "https://nix-gaming.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
+      "numtide.cachix.org-1:2ps1kLBUWnLAnBIRTV6l6hEQuv59S++4Nux7496Z6tw="
+      "popcat19-shared.cachix.org-1:qqle0Ek1MtOHDkqu2srjAnbjwl41fRUP8pLd9ZDsMEQ="
+      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+    ];
+  };
+
   inputs = {
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
@@ -92,7 +116,6 @@
         ./flake-modules/nixos.nix
         ./flake-modules/nix-on-droid.nix
         ./flake-modules/formatter.nix
-        ./flake-modules/cachix.nix
       ];
     };
 }

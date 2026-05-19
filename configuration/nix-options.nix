@@ -15,15 +15,6 @@
 { userConfig, ... }:
 {
   nix.settings = {
-    experimental-features = [
-      "nix-command"
-      "flakes"
-      "fetch-tree"
-      "impure-derivations"
-      "ca-derivations"
-      "pipe-operators"
-    ];
-    accept-flake-config = true;
     auto-optimise-store = true;
     max-jobs = "auto";
     cores = 0;
