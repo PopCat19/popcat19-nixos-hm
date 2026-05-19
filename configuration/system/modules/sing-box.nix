@@ -160,6 +160,14 @@ in
         - null: disable auto-trigger
       '';
     };
+    mullvadCompat = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Disable Mullvad VPN when sing-box starts (phone already has VPN).
+        Re-enables Mullvad auto-connect when sing-box stops (only if autoTrigger is set).
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -323,6 +331,23 @@ in
     systemd.tmpfiles.rules = [
       "d /var/cache/sing-box 0755 sing-box sing-box -"
     ];
+
+    # ── Mullvad integration ──────────────────────────────────────
+    # When sing-box starts, disable Mullvad (phone already has VPN).
+    # When sing-box stops on non-TetherFuseNet, re-enable Mullvad.
+
+    systemd.services.sing-box.preStart = lib.mkIf cfg.mullvadCompat ''
+      if ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
+        ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set off
+        ${pkgs.mullvad-vpn}/bin/mullvad disconnect 2>/dev/null || true
+      fi
+    '';
+
+    systemd.services.sing-box.postStop = lib.mkIf (cfg.mullvadCompat && cfg.autoTrigger != null) ''
+      if ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
+        ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
+      fi
+    '';
 
     # ── NetworkManager auto-trigger ──────────────────────────────
 
