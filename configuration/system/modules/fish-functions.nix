@@ -7,8 +7,6 @@
 # - Configures Fish shell environment and abbreviations
 { pkgs, ... }:
 {
-  environment.systemPackages = with pkgs; [ proxychains-ng ];
-
   environment.etc = {
     "fish/completions/proxify.fish".text =
       builtins.readFile ../../fish_functions/completions/proxify.fish;

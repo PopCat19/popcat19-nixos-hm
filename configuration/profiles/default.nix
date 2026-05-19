@@ -55,6 +55,9 @@ in
 
   system.stateVersion = stateVersion.system;
 
+  # Enable sing-box TUN proxy (togglable via singbox_on / singbox_off)
+  services.sing-box.enable = true;
+
   home-manager.users.${userConfig.username} = {
     imports = [ ../home/modules ];
   };

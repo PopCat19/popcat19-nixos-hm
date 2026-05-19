@@ -15,7 +15,7 @@
 {
   imports = [
     ./fish-functions.nix
-    ./proxy.nix
+    ./sing-box.nix
   ];
 
   environment.systemPackages = with pkgs; [
