@@ -42,7 +42,7 @@ in
         ports.dns
         ports.syncthing
       ];
-      checkReversePath = "loose";
+      checkReversePath = false;
       enable = true;
       trustedInterfaces = [ "lo" ];
     };

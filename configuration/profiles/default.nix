@@ -41,7 +41,6 @@ in
     ../system/modules/environment.nix
     ../system/modules/power-management.nix
     ../system/modules/vpn.nix
-    ../system/modules/tailscale.nix
     ../system/modules/syncthing.nix
     ../system/modules/dconf.nix
     ../system/modules/openrgb.nix
