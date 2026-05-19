@@ -75,6 +75,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
   };
 
   outputs =
@@ -84,6 +90,7 @@
 
       imports = [
         ./flake-modules/nixos.nix
+        ./flake-modules/nix-on-droid.nix
         ./flake-modules/formatter.nix
         ./flake-modules/cachix.nix
       ];

@@ -14,7 +14,7 @@ let
   };
   hostsDir = ../configuration/hosts;
   hostEntries = builtins.readDir hostsDir;
-  hostDirs = lib.filterAttrs (_: type: type == "directory") hostEntries;
+  hostDirs = lib.filterAttrs (name: type: type == "directory" && name != "nix-on-droid") hostEntries;
   hostPaths = lib.mapAttrs (name: _: hostsDir + "/${name}") hostDirs;
 in
 {
