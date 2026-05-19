@@ -5,7 +5,7 @@
 # This module:
 # - Loads custom Fish functions from fish directory
 # - Configures Fish shell environment and abbreviations
-{ pkgs, ... }:
+{ ... }:
 {
   environment.etc = {
     "fish/completions/proxify.fish".text =

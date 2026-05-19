@@ -28,11 +28,9 @@
 let
   cfg = config.services.sing-box;
 
-  mkFishFunction =
-    path: text:
-    {
-      "fish/functions/${path}".text = text;
-    };
+  mkFishFunction = path: text: {
+    "fish/functions/${path}".text = text;
+  };
 
   # Fish toggle functions
   singboxOnBody = ''
@@ -151,7 +149,12 @@ in
       description = "Whether to start sing-box TUN automatically on boot";
     };
     autoTrigger = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum [ "ip" "ssid" ]);
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "ip"
+          "ssid"
+        ]
+      );
       default = "ip";
       description = ''
         Auto-start/stop sing-box based on network connection.
@@ -253,7 +256,10 @@ in
           # Auto-pick: tests both, uses first responder (both stay alive concurrently)
           type = "urltest";
           tag = "proxy";
-          outbounds = [ "proxy-http" "proxy-socks" ];
+          outbounds = [
+            "proxy-http"
+            "proxy-socks"
+          ];
           url = "http://www.gstatic.com/generate_204";
           interval = "10m";
         }
@@ -365,73 +371,88 @@ in
 
     # Recovery: if sing-box crashed/rebooted with Mullvad disabled,
     # restore Mullvad auto-connect on next boot.
-    systemd.services.sing-box-mullvad-recover = lib.mkIf (cfg.mullvadCompat && cfg.autoTrigger != null) {
-      description = "Restore Mullvad state after unclean sing-box shutdown";
-      after = [ "mullvad-daemon.service" ];
-      requires = [ "mullvad-daemon.service" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig.Type = "oneshot";
-      script = ''
-        if [ -f /var/lib/sing-box/mullvad-state ] && \
-           command -v ${pkgs.mullvad-vpn}/bin/mullvad >/dev/null && \
-           ! ${config.systemd.package}/bin/systemctl is-active --quiet sing-box 2>/dev/null; then
-          if [ "$(cat /var/lib/sing-box/mullvad-state)" = on ]; then
-            ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
-            ${pkgs.mullvad-vpn}/bin/mullvad connect 2>/dev/null || true
-          fi
-          rm -f /var/lib/sing-box/mullvad-state
-        fi
-      '';
-    };
+    systemd.services.sing-box-mullvad-recover =
+      lib.mkIf (cfg.mullvadCompat && cfg.autoTrigger != null)
+        {
+          description = "Restore Mullvad state after unclean sing-box shutdown";
+          after = [ "mullvad-daemon.service" ];
+          requires = [ "mullvad-daemon.service" ];
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig.Type = "oneshot";
+          script = ''
+            if [ -f /var/lib/sing-box/mullvad-state ] && \
+               command -v ${pkgs.mullvad-vpn}/bin/mullvad >/dev/null && \
+               ! ${config.systemd.package}/bin/systemctl is-active --quiet sing-box 2>/dev/null; then
+              if [ "$(cat /var/lib/sing-box/mullvad-state)" = on ]; then
+                ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
+                ${pkgs.mullvad-vpn}/bin/mullvad connect 2>/dev/null || true
+              fi
+              rm -f /var/lib/sing-box/mullvad-state
+            fi
+          '';
+        };
 
     # ── NetworkManager auto-trigger ──────────────────────────────
 
-    environment.etc = mkFishFunction "singbox_on.fish" singboxOnBody
+    environment.etc =
+      mkFishFunction "singbox_on.fish" singboxOnBody
       // mkFishFunction "singbox_off.fish" singboxOffBody
       // mkFishFunction "proxify.fish" proxifyBody
-      // (let
-        triggerScript = pkgs.writeShellScript "nm-singbox-trigger" ''
-          set -euo pipefail
-          IFACE="$1"
-          ACTION="$2"
+      // (
+        let
+          triggerScript = pkgs.writeShellScript "nm-singbox-trigger" ''
+            set -euo pipefail
+            IFACE="$1"
+            ACTION="$2"
 
-          [ -d "/sys/class/net/$IFACE/wireless" ] || exit 0
+            [ -d "/sys/class/net/$IFACE/wireless" ] || exit 0
 
-          if [ "$ACTION" = "up" ]; then
-          ${if cfg.autoTrigger == "ip" then ''
-            if ip -4 addr show "$IFACE" | grep -q 'inet 192\.168\.49\.'; then
-              ${config.systemd.package}/bin/systemctl start sing-box 2>/dev/null || true
+            if [ "$ACTION" = "up" ]; then
+            ${
+              if cfg.autoTrigger == "ip" then
+                ''
+                  if ip -4 addr show "$IFACE" | grep -q 'inet 192\.168\.49\.'; then
+                    ${config.systemd.package}/bin/systemctl start sing-box 2>/dev/null || true
+                  fi
+                ''
+              else
+                ''
+                  SSID="$(${pkgs.iw}/bin/iwgetid -r "$IFACE" 2>/dev/null || true)"
+                  case "$SSID" in
+                    DIRECT-*) ${config.systemd.package}/bin/systemctl start sing-box 2>/dev/null || true ;;
+                  esac
+                ''
+            }
+            elif [ "$ACTION" = "down" ]; then
+              FOUND=0
+              for i in /sys/class/net/*/wireless; do
+                IF="$(basename "$(dirname "$i")")"
+                [ "$IF" = "$IFACE" ] && continue
+            ${
+              if cfg.autoTrigger == "ip" then
+                ''
+                  if ip -4 addr show "$IF" 2>/dev/null | grep -q 'inet 192\.168\.49\.'; then
+                    FOUND=1; break
+                  fi
+                ''
+              else
+                ''
+                  S="$(${pkgs.iw}/bin/iwgetid -r "$IF" 2>/dev/null || true)"
+                  case "$S" in DIRECT-*) FOUND=1; break ;; esac
+                ''
+            }
+              done
+              [ "$FOUND" = 0 ] && ${config.systemd.package}/bin/systemctl stop sing-box 2>/dev/null || true
             fi
-          '' else ''
-            SSID="$(${pkgs.iw}/bin/iwgetid -r "$IFACE" 2>/dev/null || true)"
-            case "$SSID" in
-              DIRECT-*) ${config.systemd.package}/bin/systemctl start sing-box 2>/dev/null || true ;;
-            esac
-          ''}
-          elif [ "$ACTION" = "down" ]; then
-            FOUND=0
-            for i in /sys/class/net/*/wireless; do
-              IF="$(basename "$(dirname "$i")")"
-              [ "$IF" = "$IFACE" ] && continue
-          ${if cfg.autoTrigger == "ip" then ''
-              if ip -4 addr show "$IF" 2>/dev/null | grep -q 'inet 192\.168\.49\.'; then
-                FOUND=1; break
-              fi
-          '' else ''
-              S="$(${pkgs.iw}/bin/iwgetid -r "$IF" 2>/dev/null || true)"
-              case "$S" in DIRECT-*) FOUND=1; break ;; esac
-          ''}
-            done
-            [ "$FOUND" = 0 ] && ${config.systemd.package}/bin/systemctl stop sing-box 2>/dev/null || true
-          fi
-        '';
-      in
+          '';
+        in
         lib.optionalAttrs (cfg.autoTrigger != null) {
           "NetworkManager/dispatcher.d/90-singbox" = {
             source = triggerScript;
             mode = "0755";
           };
-        });
+        }
+      );
 
     # ── Firewall ──────────────────────────────────────────────────
 

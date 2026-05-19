@@ -7,10 +7,9 @@
 # - Passes userConfig and inputs via specialArgs
 { inputs, ... }:
 let
-  inherit (inputs.nixpkgs) lib;
   userConfig = import ../configuration/hosts/nix-on-droid/user-config.nix;
   pkgs = import inputs.nixpkgs {
-    system = userConfig.system;
+    inherit (userConfig) system;
     config.allowUnfree = true;
   };
 in

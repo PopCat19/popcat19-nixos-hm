@@ -60,16 +60,26 @@ in
     virtualisation.oci-containers.containers = {
       firecrawl-redis = {
         image = "redis:alpine";
-        cmd = [ "redis-server" "--bind" "0.0.0.0" ];
+        cmd = [
+          "redis-server"
+          "--bind"
+          "0.0.0.0"
+        ];
         autoStart = true;
-        extraOptions = [ "--network" network ];
+        extraOptions = [
+          "--network"
+          network
+        ];
       };
 
       firecrawl-rabbitmq = {
         image = "rabbitmq:3-management";
         cmd = [ "rabbitmq-server" ];
         autoStart = true;
-        extraOptions = [ "--network" network ];
+        extraOptions = [
+          "--network"
+          network
+        ];
       };
 
       firecrawl-nuq-postgres = {
@@ -80,7 +90,10 @@ in
           POSTGRES_DB = "postgres";
         };
         autoStart = true;
-        extraOptions = [ "--network" network ];
+        extraOptions = [
+          "--network"
+          network
+        ];
       };
 
       firecrawl-playwright-service = {
@@ -89,7 +102,10 @@ in
           PORT = "3000";
         };
         autoStart = true;
-        extraOptions = [ "--network" network ];
+        extraOptions = [
+          "--network"
+          network
+        ];
       };
 
       firecrawl-api = {
@@ -112,7 +128,8 @@ in
           BULL_AUTH_KEY = "CHANGEME";
           TEST_API_KEY = "fc-owui-key";
           SEARXNG_ENDPOINT = "http://host.docker.internal:9088";
-        } // cfg.environment;
+        }
+        // cfg.environment;
         dependsOn = [
           "firecrawl-redis"
           "firecrawl-rabbitmq"
