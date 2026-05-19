@@ -338,16 +338,45 @@ in
 
     systemd.services.sing-box.preStart = lib.mkIf cfg.mullvadCompat ''
       if ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
+        # Save Mullvad auto-connect state (persistent: survives reboot)
+        if ${pkgs.mullvad-vpn}/bin/mullvad auto-connect get | grep -q on; then
+          echo on > /var/lib/sing-box/mullvad-state
+        else
+          echo off > /var/lib/sing-box/mullvad-state
+        fi
         ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set off
         ${pkgs.mullvad-vpn}/bin/mullvad disconnect 2>/dev/null || true
       fi
     '';
 
     systemd.services.sing-box.postStop = lib.mkIf (cfg.mullvadCompat && cfg.autoTrigger != null) ''
-      if ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
-        ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
+      if [ -f /var/lib/sing-box/mullvad-state ] && \
+         ${pkgs.mullvad-vpn}/bin/mullvad status >/dev/null 2>&1; then
+        if [ "$(cat /var/lib/sing-box/mullvad-state)" = on ]; then
+          ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
+        fi
+        rm -f /var/lib/sing-box/mullvad-state
       fi
     '';
+
+    # Recovery: if sing-box crashed/rebooted with Mullvad disabled,
+    # restore Mullvad auto-connect on next boot.
+    systemd.services.sing-box-mullvad-recover = lib.mkIf (cfg.mullvadCompat && cfg.autoTrigger != null) {
+      description = "Restore Mullvad state after unclean sing-box shutdown";
+      after = [ "mullvad-daemon.service" ];
+      requires = [ "mullvad-daemon.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig.Type = "oneshot";
+      script = ''
+        if [ -f /var/lib/sing-box/mullvad-state ] && \
+           ! ${config.systemd.package}/bin/systemctl is-active --quiet sing-box 2>/dev/null; then
+          if [ "$(cat /var/lib/sing-box/mullvad-state)" = on ]; then
+            ${pkgs.mullvad-vpn}/bin/mullvad auto-connect set on
+          fi
+          rm -f /var/lib/sing-box/mullvad-state
+        fi
+      '';
+    };
 
     # ── NetworkManager auto-trigger ──────────────────────────────
 
