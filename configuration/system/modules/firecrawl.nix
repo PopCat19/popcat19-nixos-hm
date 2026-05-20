@@ -89,6 +89,13 @@ in
           POSTGRES_PASSWORD = "postgres";
           POSTGRES_DB = "postgres";
         };
+        cmd = [
+          "postgres"
+          "-c"
+          "cron.log_run=off"
+          "-c"
+          "cron.log_statement=off"
+        ];
         autoStart = true;
         extraOptions = [
           "--network"

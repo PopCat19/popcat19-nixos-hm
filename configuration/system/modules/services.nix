@@ -32,6 +32,8 @@
     Compress=yes
     ForwardToSyslog=no
     ForwardToWall=no
+    RateLimitIntervalSec=10s
+    RateLimitBurst=2000
   '';
   services.libinput.enable = true;
   services.udisks2.enable = true;
