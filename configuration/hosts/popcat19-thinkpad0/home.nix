@@ -20,5 +20,4 @@ in
   ];
 
   home.file.".config/hypr/monitors.conf".source = ./hyprland/monitors.conf;
-  home.file.".config/hypr/userprefs.conf".source = lib.mkForce ./hyprland/userprefs.conf;
 }
