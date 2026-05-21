@@ -61,10 +61,10 @@ _: {
       nrb = "nixos-rebuild-basic";
       nsp = "nix-shell -p";
       pkgs = "nix search nixpkgs";
-      scrc = "scrcpy --new-display=1920x1080 --audio-source=playback";
-      scrch = "scrcpy --new-display=1920x1080 --audio-source=playback --video-bit-rate=20M";
-      scrcx = "scrcpy --new-display=1920x1080 --no-audio";
-      scrcxh = "scrcpy --new-display=1920x1080 --no-audio --video-bit-rate=20M";
+      scrc = "scrcpy --new-display=1920x1080 --audio-source=playback --keyboard=sdk --mouse=sdk";
+      scrch = "scrcpy --new-display=1920x1080 --audio-source=playback --video-bit-rate=20M --keyboard=sdk --mouse=sdk";
+      scrcx = "scrcpy --new-display=1920x1080 --no-audio --keyboard=sdk --mouse=sdk";
+      scrcxh = "scrcpy --new-display=1920x1080 --no-audio --video-bit-rate=20M --keyboard=sdk --mouse=sdk";
       slp = "systemctl sleep";
     };
 
