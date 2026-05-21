@@ -107,10 +107,10 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    unduck-xng = {
-      url = "path:/home/popcat19/unduck-xng";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #unduck-xng = {
+    #  url = "path:/home/popcat19/unduck-xng";
+    #  inputs.nixpkgs.follows = "nixpkgs";
+    #};
 
   };
 
