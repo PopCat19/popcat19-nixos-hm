@@ -61,6 +61,7 @@ _: {
       nrb = "nixos-rebuild-basic";
       nsp = "nix-shell -p";
       pkgs = "nix search nixpkgs";
+      scrc = "scrcpy --new-display=1920x1080 --audio-source=playback";
       slp = "systemctl sleep";
     };
 
