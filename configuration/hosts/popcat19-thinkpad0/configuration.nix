@@ -28,6 +28,7 @@
   services.logind.settings.Login = {
     HandleLidSwitch = "ignore";
     HandleLidSwitchExternalPower = "ignore";
+    HandlePowerKey = "sleep";
   };
 
   environment.etc."systemd/system-sleep/hyprlock.sh" = {
