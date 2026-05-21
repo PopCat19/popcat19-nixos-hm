@@ -63,6 +63,11 @@ in
     };
   };
 
+  # Silence console.debug() spam — SillyTavern dumps full system prompts
+  # on every chat request via console.debug, generating ~36K log lines/hour
+  systemd.services.sillytavern.environment.NODE_OPTIONS =
+    "--require ${pkgs.writeText "st-no-debug.cjs" "console.debug = () => {};"}";
+
   # Replace upstream's read-only symlink with a writable copy on first boot
   systemd.services.sillytavern.preStart = ''
     if [ -L /var/lib/SillyTavern/config.yaml ]; then
