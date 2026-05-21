@@ -62,6 +62,7 @@ _: {
       nsp = "nix-shell -p";
       pkgs = "nix search nixpkgs";
       scrc = "scrcpy --new-display=1920x1080 --audio-source=playback";
+      scrcx = "scrcpy --new-display=1920x1080 --no-audio";
       slp = "systemctl sleep";
     };
 
