@@ -37,15 +37,6 @@ in
 
   services.searxng-local.enable = true;
   services.firecrawl.enable = true;
-  services.open-webui = {
-    enable = true;
-    port = 3000;
-    environment = {
-      WEBUI_SEARCH_ENGINE = "searxng";
-      SEARXNG_QUERY_URL = "http://127.0.0.1:9088/search?format=json";
-    };
-  };
-
   services.sillytavern = {
     enable = true;
     port = 8000;
