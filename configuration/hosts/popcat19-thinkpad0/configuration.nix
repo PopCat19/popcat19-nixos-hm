@@ -48,8 +48,6 @@
   services.displayManager.autoLogin.enable = lib.mkForce false;
 
   services.searxng-local.enable = true;
-  services.open-webui.enable = true;
-
   environment.systemPackages = with pkgs; [
     bleachbit
     cachix
