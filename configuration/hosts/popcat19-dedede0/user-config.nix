@@ -41,7 +41,7 @@ base // {
   directories =
     let h = home;
     in {
-      inherit (h) home;
+      home = h;
       desktop = "${h}/Desktop";
       documents = "${h}/Documents";
       downloads = "${h}/Downloads";
