@@ -27,7 +27,6 @@ in
     # Development
     ../../home/modules/git.nix
     ../../home/modules/lazygit.nix
-    ../../home/modules/bookmarks.nix
     ../../home/modules/broot.nix
     ../../home/modules/starship.nix
 

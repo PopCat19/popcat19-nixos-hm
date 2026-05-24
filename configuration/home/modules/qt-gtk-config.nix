@@ -4,7 +4,7 @@
 #
 # This module:
 # - Sets default applications for common MIME types
-# - Configures GTK bookmarks and desktop entries
+# - Configures GTK bookmarks and Dolphin places
 # - Sets up Nemo file manager with custom actions
 # - Explicitly sets GTK4 theme to silence deprecation warning
 { userConfig, config, ... }:
@@ -65,6 +65,40 @@
       file://${userConfig.directories.desktop} Desktop
       file://${userConfig.env.NIXOS_CONFIG_DIR} ${userConfig.env.repoName}
       trash:/// Trash
+    '';
+
+    ".local/share/user-places.xbel".text = ''
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE xbel PUBLIC "+//IDN pyxml.sourceforge.net//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://pyxml.sourceforge.net/topics/dtds/xbel-1.0.dtd">
+      <xbel version="1.0">
+       <bookmark href="file:///home/${config.home.username}">
+        <title>Home</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Desktop">
+        <title>Desktop</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Documents">
+        <title>Documents</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Downloads">
+        <title>Downloads</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Pictures">
+        <title>Pictures</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Music">
+        <title>Music</title>
+       </bookmark>
+       <bookmark href="file:///home/${config.home.username}/Videos">
+        <title>Videos</title>
+       </bookmark>
+       <bookmark href="file://${userConfig.env.NIXOS_CONFIG_DIR}">
+        <title>${userConfig.env.repoName}</title>
+       </bookmark>
+       <bookmark href="trash:/">
+        <title>Trash</title>
+       </bookmark>
+      </xbel>
     '';
 
     ".config/nemo/nemo.conf".text = ''

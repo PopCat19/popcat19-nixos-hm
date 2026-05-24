@@ -31,6 +31,12 @@
         group = "users";
         mode = "400";
       };
+      sillytavern-password = {
+        file = ../../secrets/sillytavern-password.age;
+        owner = "sillytavern";
+        group = "sillytavern";
+        mode = "400";
+      };
     };
   };
 }

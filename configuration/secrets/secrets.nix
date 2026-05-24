@@ -10,4 +10,5 @@ let
 in
 {
   "zrok-share-token.age".publicKeys = [ popcat19 ];
+  "sillytavern-password.age".publicKeys = [ popcat19 ];
 }

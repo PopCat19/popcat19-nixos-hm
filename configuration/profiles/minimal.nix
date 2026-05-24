@@ -23,7 +23,7 @@ in
     # Additional essential modules
     ../system/modules/hardware.nix
     ../system/modules/networking.nix
-    ../system/modules/packages.nix
+    ../system/packages.nix
     ../system/modules/services.nix
     ../system/modules/ssh.nix
   ];

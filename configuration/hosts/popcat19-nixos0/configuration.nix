@@ -6,23 +6,24 @@
 # - Imports hardware configuration and profile preset
 # - Applies host-specific packages and settings
 {
+  config,
   pkgs,
   userConfig,
   lib,
   ...
 }:
 let
-  sillytavernPassword = builtins.getEnv "SILLYTAVERN_PASSWORD";
-
-  sillytavernConfig = pkgs.writeText "sillytavern-config.yaml" ''
+  # Template written at build time; password injected at runtime from agenix
+  sillytavernConfigTemplate = pkgs.writeText "sillytavern-config-template.yaml" ''
     dataRoot: ./data
     basicAuthMode: true
     basicAuthUser:
       username: popcat19
-      password: ${sillytavernPassword}
+      password: __PASSWORD_PLACEHOLDER__
     enableCorsProxy: true
     whitelistMode: false
   '';
+  cfg = config.services.sillytavern;
 in
 {
   imports = [
@@ -43,30 +44,34 @@ in
     listen = true;
   };
 
-  # Override upstream tmpfiles symlink (L+) with writable copy (C)
-  # The upstream module links config into the Nix store (read-only), causing EROFS
-  systemd.tmpfiles.settings.sillytavern."/var/lib/SillyTavern/config.yaml" = lib.mkForce {
-    "C" = {
-      mode = "0600";
-      argument = "${sillytavernConfig}";
-      user = "sillytavern";
-      group = "sillytavern";
-    };
-  };
+  # Remove the upstream tmpfiles entry for config.yaml — preStart handles it
+  systemd.tmpfiles.settings.sillytavern."/var/lib/SillyTavern/config.yaml" = lib.mkForce { };
+
+  # Fix: upstream generates --listen=1 which yargs parses as false for boolean flags.
+  # Also add --basicAuthMode so auth is explicitly enabled regardless of config state.
+  systemd.services.sillytavern.serviceConfig.ExecStart = lib.mkForce (
+    "${lib.getExe pkgs.sillytavern} --port=${toString cfg.port} --listen --basicAuthMode"
+  );
 
   # Silence console.debug() spam — SillyTavern dumps full system prompts
   # on every chat request via console.debug, generating ~36K log lines/hour
   systemd.services.sillytavern.environment.NODE_OPTIONS =
     "--require ${pkgs.writeText "st-no-debug.cjs" "console.debug = () => {};"}";
 
-  # Replace upstream's read-only symlink with a writable copy on first boot
+  # Generate config.yaml at runtime. Replaces the upstream read-only symlink.
+  # Password uses agenix secret if available, else falls back to template default.
   systemd.services.sillytavern.preStart = ''
-    if [ -L /var/lib/SillyTavern/config.yaml ]; then
-      rm -f /var/lib/SillyTavern/config.yaml
-      cp -f ${sillytavernConfig} /var/lib/SillyTavern/config.yaml
-      chown sillytavern:sillytavern /var/lib/SillyTavern/config.yaml
-      chmod 600 /var/lib/SillyTavern/config.yaml
+    SECRET="${lib.optionalString (config.age.secrets ? sillytavern-password) config.age.secrets.sillytavern-password.path}"
+    if [ -n "$SECRET" ] && [ -f "$SECRET" ]; then
+      PASSWORD=$(cat "$SECRET")
+    else
+      PASSWORD=REDACTED
     fi
+    sed "s/__PASSWORD_PLACEHOLDER__/$PASSWORD/g" \
+      ${sillytavernConfigTemplate} \
+      > /var/lib/SillyTavern/config.yaml
+    chown sillytavern:sillytavern /var/lib/SillyTavern/config.yaml
+    chmod 600 /var/lib/SillyTavern/config.yaml
   '';
 
   networking.hostName = userConfig.hostname;

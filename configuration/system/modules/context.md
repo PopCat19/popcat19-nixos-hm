@@ -2,7 +2,6 @@
 
 - `agenix.nix` — Configure agenix for secret management
 - `builders.nix` — Configure remote Nix builder hosts for distributed builds
-- `apollo.nix` — Configure Apollo game streaming server (Sunshine fork)
 - `audio.nix` — Configure PipeWire audio system with JACK and ALSA support
 - `boot.nix` — Manage bootloader configuration and kernel settings
 - `catch-22-rebuild.sh` — Rebuild NixOS through proxy with nh os switch
@@ -20,12 +19,7 @@
 - `hyprland.nix` — Configure Hyprland Wayland compositor with UWSM integration
 - `networking.nix` — Manage firewall, IP forwarding, and NetworkManager configuration
 - `nh.nix` — Configure nh (nix-community/nh) CLI helper with env vars and GC timer
-- `niri.nix` — Configure Niri scrollable-tiling Wayland compositor
-- `noctalia.nix` — Enable Noctalia shell globally for Wayland systems
 - `openrgb.nix` — Enable OpenRGB service for RGB lighting control
-## Reserved port range
-
-Self-hosted web services use ports 3000 and 8080-8099 (localhost only):
 - `power-management.nix` — Provide basic power management for desktop systems
 - `programs.nix` — Configure system-level programs and gaming support
 - `services.nix` — Configure system-level services and daemons

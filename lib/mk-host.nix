@@ -36,7 +36,6 @@ in
         (hostPath + "/configuration.nix")
         inputs.home-manager.nixosModules.home-manager
         inputs.agenix.nixosModules.default
-        #inputs.unduck-xng.nixosModules.default
         (mkGamingModule userConfig)
         { nixpkgs.overlays = overlays; }
         {
