@@ -4,7 +4,8 @@
 let
   base = import ../../user-config.nix;
 in
-base // {
+base
+// {
   system = "x86_64-linux";
   hostname = "popcat19-surface0";
   profile = "surface";

@@ -70,8 +70,10 @@ rec {
   };
 
   directories =
-    let home = "/home/${username}";
-    in {
+    let
+      home = "/home/${username}";
+    in
+    {
       inherit home;
       desktop = "${home}/Desktop";
       documents = "${home}/Documents";

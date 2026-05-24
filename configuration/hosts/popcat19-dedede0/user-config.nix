@@ -5,7 +5,8 @@ let
   base = import ../../user-config.nix;
   home = "/home/nixos-user";
 in
-base // {
+base
+// {
   system = "x86_64-linux";
   hostname = "popcat19-dedede0";
   username = "nixos-user";
@@ -39,8 +40,10 @@ base // {
   };
 
   directories =
-    let h = home;
-    in {
+    let
+      h = home;
+    in
+    {
       home = h;
       desktop = "${h}/Desktop";
       documents = "${h}/Documents";

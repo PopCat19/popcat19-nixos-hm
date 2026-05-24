@@ -49,9 +49,8 @@ in
 
   # Fix: upstream generates --listen=1 which yargs parses as false for boolean flags.
   # Also add --basicAuthMode so auth is explicitly enabled regardless of config state.
-  systemd.services.sillytavern.serviceConfig.ExecStart = lib.mkForce (
-    "${lib.getExe pkgs.sillytavern} --port=${toString cfg.port} --listen --basicAuthMode"
-  );
+  systemd.services.sillytavern.serviceConfig.ExecStart =
+    lib.mkForce "${lib.getExe pkgs.sillytavern} --port=${toString cfg.port} --listen --basicAuthMode";
 
   # Silence console.debug() spam — SillyTavern dumps full system prompts
   # on every chat request via console.debug, generating ~36K log lines/hour
@@ -61,7 +60,11 @@ in
   # Generate config.yaml at runtime. Replaces the upstream read-only symlink.
   # Password uses agenix secret if available, else falls back to template default.
   systemd.services.sillytavern.preStart = ''
-    SECRET="${lib.optionalString (config.age.secrets ? sillytavern-password) config.age.secrets.sillytavern-password.path}"
+    SECRET="${
+      lib.optionalString (
+        config.age.secrets ? sillytavern-password
+      ) config.age.secrets.sillytavern-password.path
+    }"
     if [ -n "$SECRET" ] && [ -f "$SECRET" ]; then
       PASSWORD=$(cat "$SECRET")
     else
