@@ -15,36 +15,36 @@ in
   i18n.inputMethod = {
     enable = true;
     type = "fcitx5";
-    fcitx5.addons = with pkgs; [
-      fcitx5-gtk
-      fcitx5-mozc
-      fcitx5-rose-pine
-      libsForQt5.fcitx5-qt
-    ];
+    fcitx5 = {
+      addons = with pkgs; [
+        fcitx5-gtk
+        fcitx5-mozc
+        fcitx5-rose-pine
+        libsForQt5.fcitx5-qt
+      ];
+      # Persist mozc in the default input method group across logins.
+      # Without this, fcitx5 starts fresh each session and mozc must be
+      # re-added via the GUI.
+      settings.inputMethod = {
+        GroupOrder."0" = "Default";
+        "Groups/0" = {
+          Name = "Default";
+          "Default Layout" = "us";
+          DefaultIM = "mozc";
+        };
+        "Groups/0/Items/0" = {
+          Name = "keyboard-us";
+          Layout = null;
+        };
+        "Groups/0/Items/1" = {
+          Name = "mozc";
+          Layout = null;
+        };
+      };
+    };
   };
 
   home.file = {
-    # Persist mozc in the default input method group across logins.
-    # Without this, fcitx5 starts fresh each session and mozc must be
-    # re-added via the GUI.
-    ".config/fcitx5/profile".text = ''
-      [Groups/0]
-      Name=Default
-      Default Layout=us
-      DefaultIM=mozc
-
-      [Groups/0/Items/0]
-      Name=keyboard-us
-      Layout=
-
-      [Groups/0/Items/1]
-      Name=mozc
-      Layout=
-
-      [GroupOrder]
-      0=Default
-    '';
-
     ".config/fcitx5/conf/classicui.conf".text = ''
       Vertical Candidate List=False
       PerScreenDPI=True
