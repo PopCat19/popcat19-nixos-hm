@@ -33,7 +33,6 @@ with pkgs;
   openutau
   pavucontrol
   playerctl
-  voicevox
 
   # Communication
   keepassxc
