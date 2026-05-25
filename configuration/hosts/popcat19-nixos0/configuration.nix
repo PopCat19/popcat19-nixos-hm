@@ -96,6 +96,7 @@ in
   environment.systemPackages = with pkgs; [
     alsa-utils
     bleachbit
+    cachix
     moonlight-qt
     opentabletdriver
     pavucontrol

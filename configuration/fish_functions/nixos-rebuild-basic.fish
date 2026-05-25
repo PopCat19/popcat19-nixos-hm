@@ -1,10 +1,11 @@
 # nixos-rebuild-basic.fish
 #
-# Purpose: Unified NixOS rebuild with commit/push support
+# Purpose: Unified NixOS rebuild with commit/push and cachix support
 #
 # This module:
 # - Detects nh availability and falls back to nixos-rebuild
 # - Performs git commit/push workflow around rebuild
+# - Auto-pushes system closure to configured cachix caches after successful build
 # - Supports system generation rollback and dry-run builds
 # - Automatically disables sandbox on legacy kernels
 
@@ -28,6 +29,7 @@ function nixos-rebuild-basic
     set -l do_system_rollback false
     set -l force_no_sandbox false
     set -l did_commit false
+    set -l no_cachix false
     set -l extra_args
 
     set -l i 1
@@ -50,6 +52,8 @@ function nixos-rebuild-basic
                 set rollback_on_fail false
             case "--no-sandbox" "no-sandbox"
                 set force_no_sandbox true
+            case "--no-cachix" "no-cachix"
+                set no_cachix true
             case "--*"
                 # Capture all other double-dash flags (like --offline)
                 set -a extra_args $argv[$i]
@@ -231,6 +235,11 @@ function nixos-rebuild-basic
         set_color green; echo "[SUCCESS] Build succeeded"; set_color normal
     end
 
+    # Cachix push phase (auto if configured, opt-out with --no-cachix)
+    if test "$no_cachix" = false
+        _cachix_push_if_configured
+    end
+
     # Push phase
     if test "$no_push" = true
         cd $original_dir
@@ -323,4 +332,52 @@ function nixos-rebuild-basic
 
     cd $original_dir
     return 0
+end
+
+# _cachix_push_if_configured
+#
+# Purpose: Push the current system closure to configured cachix caches
+#
+# This helper:
+# - Checks for cachix binary and configured caches in ~/.config/cachix/cachix.dhall
+# - Verifies network connectivity before pushing
+# - Pushes /run/current-system closure to each configured cache
+function _cachix_push_if_configured
+    if not command -q cachix
+        return 0
+    end
+
+    set -l config "$HOME/.config/cachix/cachix.dhall"
+    if not test -f "$config"
+        return 0
+    end
+
+    # Extract cache names from binaryCaches entries in dhall config
+    set -l caches
+    for line in (cat "$config")
+        set -l match (string match -rg 'name\s*=\s*"([^"]+)"' -- "$line")
+        if test -n "$match"
+            set -a caches $match
+        end
+    end
+
+    if test -z "$caches"
+        return 0
+    end
+
+    # Quick online check before pushing
+    if not curl -fsS --max-time 2 https://cachix.org >/dev/null 2>&1
+        echo "[WARN] Offline, skipping cachix push"
+        return 0
+    end
+
+    for cache in $caches
+        echo "[STEP] Pushing closure to cachix ($cache)..."
+        if nix path-info --recursive /run/current-system 2>/dev/null | \
+            cachix --config "$config" push "$cache" 2>&1
+            echo "[SUCCESS] Pushed to $cache"
+        else
+            echo "[WARN] Cachix push to $cache failed (run 'cachix use $cache' first)"
+        end
+    end
 end
