@@ -20,6 +20,7 @@
     ];
     accept-flake-config = true;
     extra-substituters = [
+      "https://cache.numtide.com"
       "https://shimboot-systemd-nixos.cachix.org"
       "https://numtide.cachix.org"
       "https://popcat19-shared.cachix.org"
@@ -27,6 +28,7 @@
       "https://nix-on-droid.cachix.org"
     ];
     extra-trusted-public-keys = [
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "shimboot-systemd-nixos.cachix.org-1:vCWmEtJq7hA2UOLN0s3njnGs9/EuX06kD7qOJMo2kAA="
       "numtide.cachix.org-1:2ps1kLBUWnLAnBIRTV6l6hEQuv59S++4Nux7496Z6tw="
       "popcat19-shared.cachix.org-1:qqle0Ek1MtOHDkqu2srjAnbjwl41fRUP8pLd9ZDsMEQ="
