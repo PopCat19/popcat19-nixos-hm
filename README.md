@@ -40,9 +40,9 @@ nix flake update
 ├── flake-modules/               # Flake-parts modules (nixos, overlays, formatter)
 ├── lib/                         # Shared helper library (mkHost, mkHome, helpers)
 ├── overlays/                    # Package overlays (OpenTabletDriver, Friction graphics)
-├── tools/                       # CLI utilities (profile manager, debug, cachix push)
+├── tools/                       # CLI utilities (profile manager, debug)
 ├── conventions/                 # Dev conventions (see conventions/DEVELOPMENT.md)
-├── .github/workflows/           # CI: flake check, cachix push, dev→main sync
+├── .github/workflows/           # CI: flake check, dev→main sync
 └── flake.nix                    # Flake entry point
 ```
 
@@ -131,7 +131,6 @@ See `configuration/system/modules/context.md` for the full inventory.
 | Workflow | Trigger | Action |
 |----------|---------|--------|
 | `flake-check.yml` | Push to `dev` | `nix flake check` on all hosts |
-| `cachix-nixos.yml` | Push to `dev` | Build + push to Cachix |
 | `sync-dev-main.yml` | Push to `main` | Sync back to `dev` (bidirectional) |
 
 </details>

@@ -19,7 +19,6 @@
       "pipe-operators"
     ];
     accept-flake-config = true;
-    post-build-hook = ./tools/cachix-push-hook.sh;
     extra-substituters = [
       "https://cache.numtide.com"
       "https://shimboot-systemd-nixos.cachix.org"

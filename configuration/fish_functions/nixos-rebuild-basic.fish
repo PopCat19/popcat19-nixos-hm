@@ -379,8 +379,15 @@ function _cachix_push_if_configured
 
     for cache in $caches
         echo "[STEP] Pushing closure to cachix ($cache)..."
-        if cachix push "$cache" /run/current-system 2>&1
+        cachix push "$cache" /run/current-system 2>&1 &
+        set -l pid $last_pid
+        wait $pid
+        set -l rc $status
+        if test $rc -eq 0
             echo "[SUCCESS] Pushed to $cache"
+        else if test $rc -gt 128
+            echo "[WARN] Cachix push interrupted"
+            return 130
         else
             echo "[WARN] Cachix push to $cache failed"
         end
