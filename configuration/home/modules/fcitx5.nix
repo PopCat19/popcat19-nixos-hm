@@ -24,6 +24,27 @@ in
   };
 
   home.file = {
+    # Persist mozc in the default input method group across logins.
+    # Without this, fcitx5 starts fresh each session and mozc must be
+    # re-added via the GUI.
+    ".config/fcitx5/profile".text = ''
+      [Groups/0]
+      Name=Default
+      Default Layout=us
+      DefaultIM=mozc
+
+      [Groups/0/Items/0]
+      Name=keyboard-us
+      Layout=
+
+      [Groups/0/Items/1]
+      Name=mozc
+      Layout=
+
+      [GroupOrder]
+      0=Default
+    '';
+
     ".config/fcitx5/conf/classicui.conf".text = ''
       Vertical Candidate List=False
       PerScreenDPI=True
