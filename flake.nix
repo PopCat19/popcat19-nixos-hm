@@ -93,11 +93,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    lm-modal = {
-      url = "github:PopCat19/lm-modal";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     noctalia-shell = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
