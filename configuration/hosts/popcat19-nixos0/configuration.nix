@@ -77,6 +77,8 @@ in
     chmod 600 /var/lib/SillyTavern/config.yaml
   '';
 
+  hardware.enableRedistributableFirmware = true;
+
   networking.hostName = userConfig.hostname;
 
   # Windows 11 dual boot (on /dev/sdb)

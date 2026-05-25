@@ -4,8 +4,11 @@
 #
 # This module:
 # - Provides Friction, OpenLDAP, and Zrok overlays
+# - CachyOS kernel overlay
 # - Hyprland uses nixpkgs-unstable (no overlay needed)
-_system: [
+{ inputs }: [
+  # CachyOS kernel overlay
+  inputs.nix-cachyos-kernel.overlays.default,
   # Friction graphics overlay
   (final: _prev: {
     friction-graphics = final.callPackage ../overlays/friction-graphics.nix { };

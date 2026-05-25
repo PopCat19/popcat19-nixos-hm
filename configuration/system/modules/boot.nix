@@ -15,7 +15,9 @@
       "i2c-dev"
       "ntsync"
     ];
-    kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
+    # CachyOS kernel with BORE scheduler (v3 optimized)
+    # Replaces xanmod — MT7922 Bluetooth fix landed in 7.0.10
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot = {
