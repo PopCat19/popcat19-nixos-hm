@@ -355,7 +355,7 @@ function _cachix_push_if_configured
     # Extract cache names from binaryCaches entries in dhall config
     set -l caches
     for line in (cat "$config")
-        set -l match (string match -rg 'name\s*=\s*"([^"]+)"' -- "$line")
+        set -l match (string match -rg '\\bname\\s*=\\s*"([^"]+)"' -- "$line")
         if test -n "$match"
             set -a caches $match
         end
