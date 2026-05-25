@@ -15,7 +15,6 @@
 - `home.nix` — Configure home activation scripts for directory creation
 - `kitty.nix` — Configure Kitty terminal emulator settings
 - `lazygit.nix` — Configure LazyGit with home-manager
-- `llama-cpp.nix` — Configures llama.cpp inference server with ROCm support, runs on port 8088.
 - `lm-modal.nix` — Configure lm-modal Wayland LLM overlay
 - `mangohud.nix` — Configure MangoHUD gaming performance overlay with Rose Pine theming
 - `micro.nix` — Configures the Micro terminal text editor.
