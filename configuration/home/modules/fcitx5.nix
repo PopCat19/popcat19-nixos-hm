@@ -6,7 +6,7 @@
 # - Enables fcitx5 with Mozc for Japanese input
 # - Configures Rose Pine theme for UI consistency
 # - Links theme files to user directory
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   font = "Rounded Mplus 1c Medium 11";
   themeSource = "${pkgs.fcitx5-rose-pine}/share/fcitx5/themes";
@@ -47,7 +47,7 @@ in
             "Vertical Candidate List" = "False";
             PerScreenDPI = "True";
             WheelForPaging = "True";
-            Font = "${font}";
+            Font = lib.mkForce "${font}";
             MenuFont = "${font}";
             TrayFont = "${font}";
             TrayOutlineColor = "#000000";
