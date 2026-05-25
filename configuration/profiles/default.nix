@@ -63,6 +63,7 @@ in
 
   home-manager.users.${userConfig.username} = {
     imports = [ ../home/modules ];
-    backupFileExtension = "bak";
   };
+
+  home-manager.backupFileExtension = "bak";
 }
