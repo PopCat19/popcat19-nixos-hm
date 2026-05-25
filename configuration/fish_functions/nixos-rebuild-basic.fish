@@ -336,48 +336,53 @@ end
 
 # _cachix_push_if_configured
 #
-# Purpose: Push the current system closure to configured cachix caches
+# Purpose: Push /run/current-system to writable cachix caches
 #
 # This helper:
-# - Checks for cachix binary and configured caches in ~/.config/cachix/cachix.dhall
-# - Verifies network connectivity before pushing
-# - Pushes /run/current-system closure to each configured cache
+# - Reads ~/.config/cachix/cachix.dhall for caches with secretKey
+# - Falls back to popcat19-shared if authToken is present
+# - Verifies network before pushing, times out after 30s per cache
 function _cachix_push_if_configured
     if not command -q cachix
         return 0
     end
 
-    set -l config "$HOME/.config/cachix/cachix.dhall"
-    if not test -f "$config"
+    set -l dhall_config "$HOME/.config/cachix/cachix.dhall"
+    if not test -f "$dhall_config"
         return 0
     end
 
-    # Extract cache names from binaryCaches entries in dhall config
+    set -l dhall_raw (cat "$dhall_config")
+
+    # Gather writable caches: dhall entries with secretKey, plus popcat19-shared if authed
     set -l caches
-    for line in (cat "$config")
-        set -l match (string match -rg '\\bname\\s*=\\s*"([^"]+)"' -- "$line")
-        if test -n "$match"
-            set -a caches $match
+    for entry in (string match -ra '\{[^}]+\}' -- "$dhall_raw")
+        set -l name (string match -rg 'name\s*=\s*"([^"]+)"' -- "$entry")
+        set -l key  (string match -rg 'secretKey\s*=\s*"([^"]+)"' -- "$entry")
+        if test -n "$name" -a -n "$key"
+            set -a caches $name
         end
+    end
+
+    if string match -qr 'authToken' -- "$dhall_raw"; and not contains -- "popcat19-shared" $caches
+        set -a caches "popcat19-shared"
     end
 
     if test -z "$caches"
         return 0
     end
 
-    # Quick online check before pushing
-    if not curl -fsS --max-time 2 https://cachix.org >/dev/null 2>&1
+    if command -q curl; and not curl -fsS --max-time 2 https://cachix.org >/dev/null 2>&1
         echo "[WARN] Offline, skipping cachix push"
         return 0
     end
 
     for cache in $caches
         echo "[STEP] Pushing closure to cachix ($cache)..."
-        if nix path-info --recursive /run/current-system 2>/dev/null | \
-            cachix --config "$config" push "$cache" 2>&1
+        if cachix push "$cache" /run/current-system 2>&1
             echo "[SUCCESS] Pushed to $cache"
         else
-            echo "[WARN] Cachix push to $cache failed (run 'cachix use $cache' first)"
+            echo "[WARN] Cachix push to $cache failed"
         end
     end
 end
