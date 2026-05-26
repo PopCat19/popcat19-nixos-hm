@@ -411,15 +411,29 @@ in
             ${
               if cfg.autoTrigger == "ip" then
                 ''
+                  _restart_singbox() {
+                    if ${config.systemd.package}/bin/systemctl is-active --quiet sing-box 2>/dev/null; then
+                      ${config.systemd.package}/bin/systemctl try-restart sing-box 2>/dev/null || true
+                    else
+                      ${config.systemd.package}/bin/systemctl start sing-box 2>/dev/null || true
+                    fi
+                  }
                   if ip -4 addr show "$IFACE" | grep -q 'inet 192\.168\.49\.'; then
-                    ${config.systemd.package}/bin/systemctl start sing-box 2>/dev/null || true
+                    _restart_singbox
                   fi
                 ''
               else
                 ''
+                  _restart_singbox() {
+                    if ${config.systemd.package}/bin/systemctl is-active --quiet sing-box 2>/dev/null; then
+                      ${config.systemd.package}/bin/systemctl try-restart sing-box 2>/dev/null || true
+                    else
+                      ${config.systemd.package}/bin/systemctl start sing-box 2>/dev/null || true
+                    fi
+                  }
                   SSID="$(${pkgs.iw}/bin/iwgetid -r "$IFACE" 2>/dev/null || true)"
                   case "$SSID" in
-                    DIRECT-*) ${config.systemd.package}/bin/systemctl start sing-box 2>/dev/null || true ;;
+                    DIRECT-*) _restart_singbox ;;
                   esac
                 ''
             }
