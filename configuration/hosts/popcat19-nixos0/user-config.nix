@@ -15,6 +15,12 @@ base
     enableROCm = true;
   };
 
+  agents = {
+    enable = true;
+    opencode = true;
+    pi = true;
+  };
+
   zrok = {
     enable = true;
   };

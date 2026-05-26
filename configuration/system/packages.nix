@@ -24,14 +24,6 @@ let
     ]
   );
 
-  # LLM agent packages
-  llmPackages =
-    (pkgs.lib.optionals (userConfig.gaming.enable or false) [
-      inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
-    ])
-    ++ (pkgs.lib.optionals (userConfig.gaming.enable or (userConfig.piAgent.enable or false)) [
-      inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi
-    ]);
 in
 {
   environment.systemPackages =
@@ -61,6 +53,5 @@ in
       usbutils
       util-linux
     ]
-    ++ x86_64Packages
-    ++ llmPackages;
+    ++ x86_64Packages;
 }

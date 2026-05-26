@@ -6,7 +6,7 @@
 # - Imports shimboot chromeos base configuration (includes boot, fs, hw, users, nix settings, display-manager, services, audio, networking, hyprland, fish, fonts, power-management, xdg-portals)
 # - Configures Hyprland with Noctalia shell via home-manager
 # - Includes Zen Browser and user environment
-# - Sets up LLM agents (opencode, kilocode)
+# - Sets up LLM agents (opencode, pi)
 # - Adds Stylix theming support
 #
 # Note: Base config uses mkOverride 500 for common settings (EDITOR, dconf, etc.)

@@ -115,6 +115,12 @@ rec {
     };
   };
 
+  agents = {
+    enable = false;
+    opencode = false;
+    pi = false;
+  };
+
   env = {
     repoName = "popcat19-nixos-hm";
     NIXOS_CONFIG_DIR = "/home/${username}/popcat19-nixos-hm";

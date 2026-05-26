@@ -10,7 +10,8 @@ base
   hostname = "popcat19-thinkpad0";
   profile = "laptop";
 
-  piAgent = {
+  agents = {
     enable = true;
+    pi = true;
   };
 }

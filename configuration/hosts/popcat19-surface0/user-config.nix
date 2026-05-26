@@ -13,4 +13,6 @@ base
   user = base.user // {
     extraGroups = base.user.extraGroups ++ [ "surface-control" ];
   };
+
+  agents = base.agents;
 }

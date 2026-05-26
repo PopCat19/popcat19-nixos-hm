@@ -54,6 +54,8 @@ base
       videos = "${h}/Videos";
     };
 
+  agents = base.agents;
+
   env = {
     repoName = "popcat19-nixos-hm";
     NIXOS_CONFIG_DIR = "${home}/popcat19-nixos-hm";
