@@ -17,6 +17,7 @@ let
     nix.settings = inputs.aagl.nixConfig;
     programs = {
       anime-game-launcher.enable = userConfig.gaming.enable or false;
+      anime-games-launcher.enable = userConfig.gaming.enable or false;
       honkers-railway-launcher.enable = userConfig.gaming.enable or false;
     };
   };
