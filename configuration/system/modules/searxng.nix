@@ -43,6 +43,31 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # When Mullvad VPN connects/disconnects, the host's /etc/resolv.conf changes.
+    # The container inherits DNS config at start time, so we must restart it
+    # to pick up the current nameservers.  Without this, a stale nameserver
+    # (e.g., 100.64.0.3 from Mullvad, or 192.168.50.1 from the local router)
+    # can be unreachable → DNS timeouts > SearXNG's 3s per-engine timeout →
+    # all engines appear dead.
+    systemd.paths.searxng-dns-watch = {
+      wantedBy = [ "multi-user.target" ];
+      pathConfig = {
+        PathChanged = "/etc/resolv.conf";
+      };
+    };
+    systemd.services.searxng-dns-watch = {
+      description = "Restart SearXNG container when resolv.conf changes (VPN connect/disconnect)";
+      after = [ "docker-searxng.service" ];
+      requires = [ "docker-searxng.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = false;
+        # Delay to let DNS proxy settle, then restart the container so it
+        # picks up the current nameservers from the host's resolv.conf.
+        ExecStart = "${pkgs.bash}/bin/bash -c 'sleep 2; ${pkgs.systemd}/bin/systemctl try-restart docker-searxng.service'";
+      };
+    };
+
     virtualisation.oci-containers.containers.searxng = {
       image = "searxng/searxng:latest";
       ports = [ "127.0.0.1:${toString cfg.port}:8080" ];
