@@ -8,5 +8,5 @@
 { ... }:
 {
   # Currently no home-level agent configuration is managed here.
-  # Agent state (e.g. ~/.pi/extensions, ~/.opencode/) is user-managed.
+  # Agent state (e.g. ~/.kilocode/, ~/.pi/extensions, ~/.opencode/) is user-managed.
 }
