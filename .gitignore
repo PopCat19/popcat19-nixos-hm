@@ -29,3 +29,7 @@ core.*
 # Large directories
 node_modules
 .changelog-merge-state
+
+# Command Code agent local data (taste, session logs)
+.commandcode/
+/pi-session-*.html
