@@ -58,13 +58,21 @@ in
     systemd.services.searxng-dns-watch = {
       description = "Restart SearXNG container when resolv.conf changes (VPN connect/disconnect)";
       after = [ "docker-searxng.service" ];
-      requires = [ "docker-searxng.service" ];
+      wants = [ "docker-searxng.service" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = false;
-        # Delay to let DNS proxy settle, then restart the container so it
-        # picks up the current nameservers from the host's resolv.conf.
-        ExecStart = "${pkgs.bash}/bin/bash -c 'sleep 2; ${pkgs.systemd}/bin/systemctl try-restart docker-searxng.service'";
+        # Wrap in a single argv slot so systemd's whitespace-split can't mangle
+        # the inline shell command.  Delay to let the DNS proxy settle, then
+        # restart the container so it picks up the current nameservers.
+        ExecStart =
+          let
+            script = pkgs.writeShellScript "searxng-restart-on-dns-change" ''
+              sleep 2
+              ${pkgs.systemd}/bin/systemctl try-restart docker-searxng.service
+            '';
+          in
+          "${script}";
       };
     };
 
