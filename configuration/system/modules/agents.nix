@@ -3,7 +3,7 @@
 # Purpose: Consolidated LLM agent packages and configuration
 #
 # This module:
-# - Installs agent binaries from llm-agents.nix (kilocode-cli, opencode, pi, etc.)
+# - Installs agent binaries from llm-agents.nix (kilocode-cli, opencode, pi, reasonix, etc.)
 # - Controlled via userConfig.agents options
 {
   pkgs,
@@ -18,7 +18,8 @@ let
   agentList =
     (pkgs.lib.optional (userConfig.agents.kilocode-cli or false) agentsPkgs.kilocode-cli)
     ++ (pkgs.lib.optional (userConfig.agents.opencode or false) agentsPkgs.opencode)
-    ++ (pkgs.lib.optional (userConfig.agents.pi or false) agentsPkgs.pi);
+    ++ (pkgs.lib.optional (userConfig.agents.pi or false) agentsPkgs.pi)
+    ++ (pkgs.lib.optional (userConfig.agents.reasonix or false) agentsPkgs.reasonix);
 in
 {
   environment.systemPackages = agentList;

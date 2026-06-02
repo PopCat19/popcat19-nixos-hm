@@ -20,6 +20,7 @@ base
     kilocode-cli = true;
     opencode = true;
     pi = true;
+    reasonix = true;
   };
 
   zrok = {

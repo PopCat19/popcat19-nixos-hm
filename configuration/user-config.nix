@@ -120,6 +120,7 @@ rec {
     kilocode-cli = false;
     opencode = false;
     pi = false;
+    reasonix = false;
   };
 
   env = {
