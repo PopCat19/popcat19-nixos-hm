@@ -991,11 +991,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780303889,
-        "narHash": "sha256-eQ8UgK3qePyNOxYlKHrhC6ZnvDNUdEQMHdI1Nkb89AE=",
+        "lastModified": 1780430018,
+        "narHash": "sha256-cIVll5zzsr0UZ25uCGX2do2FpCFILMfo4fYZsj7qwx8=",
         "owner": "popcat19",
         "repo": "project-minimalist-design",
-        "rev": "3eb544adddbdbd56f4cb6e548b2a56ddc7bd6751",
+        "rev": "5851c91e68189880de1477b04a84e5f6e3ea55d9",
         "type": "github"
       },
       "original": {
