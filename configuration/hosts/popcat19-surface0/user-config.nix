@@ -14,5 +14,5 @@ base
     extraGroups = base.user.extraGroups ++ [ "surface-control" ];
   };
 
-  agents = base.agents;
+  inherit (base) agents;
 }

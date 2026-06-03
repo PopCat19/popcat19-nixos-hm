@@ -8,7 +8,6 @@
 # - Conditionally includes gaming/ROCm packages
 {
   pkgs,
-  inputs,
   userConfig,
   ...
 }:

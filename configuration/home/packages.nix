@@ -50,10 +50,12 @@ with pkgs;
   black
   bun
   clang-tools
+  dbus.dev
   deadnix
   biome
   fd
   fish-lsp
+  gcc
   git-lfs
   glslang
   gopls
@@ -68,6 +70,7 @@ with pkgs;
   nixfmt-tree
   nodejs_22
   prettierd
+  pkg-config
   python3
   pyright
   ripgrep

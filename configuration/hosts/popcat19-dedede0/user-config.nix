@@ -54,7 +54,7 @@ base
       videos = "${h}/Videos";
     };
 
-  agents = base.agents;
+  inherit (base) agents;
 
   env = {
     repoName = "popcat19-nixos-hm";
