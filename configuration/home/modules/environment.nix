@@ -34,6 +34,7 @@ in
   };
 
   home.sessionPath = [
+    "$HOME/.cargo/bin"
     "$HOME/.local/bin"
     "$HOME/.npm-global/bin"
     "$HOME/bin"
