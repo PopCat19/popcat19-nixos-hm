@@ -78,15 +78,15 @@ _: {
       fish_add_path $HOME/bin
       fish_add_path $HOME/.npm-global/bin
 
+      if not contains /etc/fish/functions $fish_function_path
+          set -g fish_function_path /etc/fish/functions $fish_function_path
+      end
+
       if status is-interactive
           starship init fish | source
           if command -q forge
               forge-init
           end
-      end
-
-      if not contains /etc/fish/functions $fish_function_path
-          set -g fish_function_path /etc/fish/functions $fish_function_path
       end
     '';
   };
