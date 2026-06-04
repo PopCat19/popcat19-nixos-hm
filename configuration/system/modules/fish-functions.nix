@@ -30,6 +30,10 @@ _: {
       builtins.readFile ../../fish_functions/show-shortcuts.fish;
     "fish/functions/sillytavern.fish".text = builtins.readFile ../../fish_functions/sillytavern.fish;
     "fish/functions/dev-session.fish".text = builtins.readFile ../../fish_functions/dev-session.fish;
+    "fish/functions/forge-accept-line.fish".text =
+      builtins.readFile ../../fish_functions/forge-accept-line.fish;
+    "fish/functions/forge-tab.fish".text = builtins.readFile ../../fish_functions/forge-tab.fish;
+    "fish/functions/forge-init.fish".text = builtins.readFile ../../fish_functions/forge-init.fish;
   };
 
   programs.fish = {
@@ -76,6 +80,9 @@ _: {
 
       if status is-interactive
           starship init fish | source
+          if command -q forge
+              forge-init
+          end
       end
 
       if not contains /etc/fish/functions $fish_function_path
