@@ -117,6 +117,7 @@ rec {
 
   agents = {
     enable = false;
+    forgecode = false;
     kilocode-cli = false;
     opencode = false;
     pi = false;

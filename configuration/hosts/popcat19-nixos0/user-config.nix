@@ -17,6 +17,7 @@ base
 
   agents = {
     enable = true;
+    forgecode = true;
     kilocode-cli = true;
     opencode = true;
     pi = true;
