@@ -85,6 +85,9 @@ _: {
       if status is-interactive
           starship init fish | source
           if command -q forge
+              if not set -q FORGE_TERM
+                  set -gx FORGE_TERM true
+              end
               forge-init
           end
       end
