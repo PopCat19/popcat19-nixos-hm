@@ -19,6 +19,7 @@ base
     enable = true;
     forgecode = true;
     kilocode-cli = true;
+    omp = true;
     opencode = true;
     pi = true;
     reasonix = true;
