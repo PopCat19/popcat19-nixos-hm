@@ -32,6 +32,13 @@ in
     });
   })
 
+  # Highlight: shellscript patch already upstream in 4.20
+  (_final: prev: {
+    highlight = prev.highlight.overrideAttrs (_: {
+      patches = [ ];
+    });
+  })
+
   # ROCm: limit hipblaslt to user's GPU arch only (Radeon RX 7700 XT / 7800 XT = gfx1101)
   # Building for all 10 archs simultaneously exhausts 32 GB RAM during Tensile kernel generation
   (_final: prev: {

@@ -1,10 +1,9 @@
 # zen-browser.nix
 #
-# Purpose: Configure Zen Browser with extensions and PWA support
+# Purpose: Configure Zen Browser with extensions
 #
 # This module:
 # - Imports Zen Browser Home Manager module
-# - Enables PWA support via firefoxpwa
 # - Configures browser policies and extensions
 # - Manages profiles.ini to use home-manager profile (for Stylix)
 
@@ -37,7 +36,6 @@ in
 
   programs.zen-browser = {
     enable = true;
-    nativeMessagingHosts = [ pkgs.firefoxpwa ];
 
     policies = {
       AutofillAddressEnabled = false;
