@@ -5,7 +5,7 @@
 - `dev-to-main.fish` — Merges dev branch changes into main branch
 - `fish-greeting.fish` — Displays customized shell greeting with system information
 - `forge-accept-line.fish` — Intercept Enter key to dispatch `:sentinel` commands to ForgeCode
-- `forge-init.fish` — Initialize ForgeCode Fish integration (globals, key bindings)
+- `forge-init.fish` — Initialize ForgeCode Fish integration (globals, key bindings, FORGE_TERM context tracking)
 - `forge-rprompt.fish` — Display ForgeCode agent/conversation status in fish right prompt
 - `forge-tab.fish` — Intercept Tab key for ForgeCode command completion and `@file` tagging
 - `fix-fish-history.fish` — Repair corrupted Fish shell history file

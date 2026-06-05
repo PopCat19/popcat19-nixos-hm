@@ -510,8 +510,35 @@ function forge-accept-line-exec-prompt
         set agent "forge"
     end
 
+    # Pass terminal context (FORGE_TERM) as env vars so the agent knows
+    # what commands you ran and what failed — matches Zsh plugin convention.
+    set -l term_env
+    if test "$_forge_term_enabled" = "true" -a (count $_forge_term_commands) -gt 0
+        set -l sep \x1f
+        set -l cmds (string join "$sep" $_forge_term_commands)
+        set -l codes (string join "$sep" $_forge_term_exit_codes)
+        set -l stamps (string join "$sep" $_forge_term_timestamps)
+        set term_env _FORGE_TERM_COMMANDS="$cmds" _FORGE_TERM_EXIT_CODES="$codes" _FORGE_TERM_TIMESTAMPS="$stamps"
+    end
+
+    set -l extra_env
+    if test -n "$_forge_session_model"
+        set -a extra_env FORGE_SESSION__MODEL_ID="$_forge_session_model"
+    end
+    if test -n "$_forge_session_provider"
+        set -a extra_env FORGE_SESSION__PROVIDER_ID="$_forge_session_provider"
+    end
+    if test -n "$_forge_session_reasoning_effort"
+        set -a extra_env FORGE_REASONING__EFFORT="$_forge_session_reasoning_effort"
+    end
+
     set -l cmd forge --agent "$agent" --prompt "$text" --cid "$_forge_conversation_id"
-    $cmd </dev/tty >/dev/tty
+    # Run with env vars if present
+    if test (count $term_env) -gt 0 -o (count $extra_env) -gt 0
+        env $term_env $extra_env $cmd </dev/tty >/dev/tty
+    else
+        $cmd </dev/tty >/dev/tty
+    end
 end
 
 # --- Execute a custom command ---
