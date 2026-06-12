@@ -36,9 +36,9 @@ let
       mOnTertiary = withHashtag.base00;
       mError = withHashtag.base08;
       mOnError = withHashtag.base00;
-      mSurface = withHashtag.base01;
+      mSurface = withHashtag.base00;
       mOnSurface = withHashtag.base05;
-      mSurfaceVariant = withHashtag.base00;
+      mSurfaceVariant = withHashtag.base01;
       mOnSurfaceVariant = withHashtag.base04;
       mOutline = withHashtag.base03;
       mShadow = withHashtag.base00;
