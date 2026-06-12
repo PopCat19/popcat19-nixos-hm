@@ -7,7 +7,12 @@
 # - Configures GTK bookmarks and Dolphin places
 # - Sets up Nemo file manager with custom actions
 # - Explicitly sets GTK4 theme to silence deprecation warning
-{ userConfig, config, lib, ... }:
+{
+  userConfig,
+  config,
+  lib,
+  ...
+}:
 {
   # Silence GTK4 theme deprecation warning (home.stateVersion < 26.05)
   gtk.gtk4.theme = lib.mkDefault config.gtk.theme;

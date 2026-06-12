@@ -27,10 +27,8 @@ in
     environment.etc = {
       "fish/functions/forge-accept-line.fish".text =
         builtins.readFile ../../fish_functions/forge-accept-line.fish;
-      "fish/functions/forge-init.fish".text =
-        builtins.readFile ../../fish_functions/forge-init.fish;
-      "fish/functions/forge-tab.fish".text =
-        builtins.readFile ../../fish_functions/forge-tab.fish;
+      "fish/functions/forge-init.fish".text = builtins.readFile ../../fish_functions/forge-init.fish;
+      "fish/functions/forge-tab.fish".text = builtins.readFile ../../fish_functions/forge-tab.fish;
       "fish/functions/forge-rprompt.fish".text =
         builtins.readFile ../../fish_functions/forge-rprompt.fish;
     };
