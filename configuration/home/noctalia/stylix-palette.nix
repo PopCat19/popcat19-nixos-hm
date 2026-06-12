@@ -33,6 +33,37 @@ let
       mShadow = withHashtag.base00;
       mHover = withHashtag.base0C;
       mOnHover = withHashtag.base00;
+
+      terminal = {
+        background = withHashtag.base00;
+        foreground = withHashtag.base05;
+        cursor = withHashtag.base05;
+        cursorText = withHashtag.base00;
+        selectionBg = withHashtag.base05;
+        selectionFg = withHashtag.base00;
+
+        normal = {
+          black = withHashtag.base00;
+          red = withHashtag.base08;
+          green = withHashtag.base0B;
+          yellow = withHashtag.base0A;
+          blue = withHashtag.base0D;
+          magenta = withHashtag.base0E;
+          cyan = withHashtag.base0C;
+          white = withHashtag.base05;
+        };
+
+        bright = {
+          black = withHashtag.base03;
+          red = withHashtag.base08;
+          green = withHashtag.base0B;
+          yellow = withHashtag.base0A;
+          blue = withHashtag.base0D;
+          magenta = withHashtag.base0E;
+          cyan = withHashtag.base0C;
+          white = withHashtag.base07;
+        };
+      };
     };
   };
 in

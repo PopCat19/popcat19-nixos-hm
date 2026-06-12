@@ -54,8 +54,6 @@ let
 
     theme = {
       mode = "dark";
-      source = "builtin";
-      builtin = "Rosé Pine";
 
       templates = {
         enable_builtin_templates = false;
