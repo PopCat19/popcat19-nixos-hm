@@ -39,5 +39,4 @@
 - `scrcx.fish` — scrcpy without audio
 - `scrcxh.fish` — scrcpy without audio, high bitrate
 - `show-shortcuts.fish` — Displays Hyprland keybindings with descriptions and categories
-- `sillytavern.fish` — Launch SillyTavern with automatic updates
 - `slp.fish` — Suspend system (systemctl sleep)

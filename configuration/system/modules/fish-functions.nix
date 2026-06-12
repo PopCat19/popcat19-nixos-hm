@@ -53,7 +53,6 @@ _: {
     "fish/functions/scrcxh.fish".text = builtins.readFile ../../fish_functions/scrcxh.fish;
     "fish/functions/show-shortcuts.fish".text =
       builtins.readFile ../../fish_functions/show-shortcuts.fish;
-    "fish/functions/sillytavern.fish".text = builtins.readFile ../../fish_functions/sillytavern.fish;
     "fish/functions/slp.fish".text = builtins.readFile ../../fish_functions/slp.fish;
   };
 

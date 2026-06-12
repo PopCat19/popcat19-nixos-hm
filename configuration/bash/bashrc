@@ -294,20 +294,6 @@ nix-shell-unfree() {
     fi
 }
 
-# ── sillytavern ────────────────────────────────────────────────────
-sillytavern() {
-    case "${1:-}" in
-        restart) systemctl restart sillytavern; journalctl -u sillytavern -n 30 -f ;;
-        logs)    journalctl -u sillytavern -n 60 -f ;;
-        status)  systemctl status sillytavern --no-pager ;;
-        stop)    systemctl stop sillytavern ;;
-        start)   systemctl start sillytavern ;;
-        data)    echo "SillyTavern data: /var/lib/SillyTavern/"; ls -la /var/lib/SillyTavern/ ;;
-        "")      sillytavern status ;;
-        *)       echo "Usage: sillytavern [restart|logs|status|stop|start|data]"; return 1 ;;
-    esac
-}
-
 # ── nixos-rebuild-basic ────────────────────────────────────────────
 nixos-rebuild-basic() {
     if [[ -z "${NIXOS_CONFIG_DIR:-}" ]] || [[ ! -d "$NIXOS_CONFIG_DIR" ]]; then
