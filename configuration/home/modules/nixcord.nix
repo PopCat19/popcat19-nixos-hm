@@ -44,7 +44,7 @@ _: {
       notifyAboutUpdates = true;
 
       plugins = {
-        BlurNSFW = {
+        blurNsfw = {
           enable = true;
           blurAmount = 10;
         };
@@ -119,7 +119,7 @@ _: {
         };
         noTypingAnimation.enable = true;
         pictureInPicture.enable = true;
-        PinDMs = {
+        pinDms = {
           enable = true;
           canCollapseDmSection = false;
           dmSectionCollapsed = false;
@@ -129,7 +129,7 @@ _: {
         readAllNotificationsButton.enable = true;
         reverseImageSearch.enable = true;
         revealAllSpoilers.enable = true;
-        ReviewDB = {
+        reviewDb = {
           enable = true;
           hideBlockedUsers = true;
           notifyReviews = true;
@@ -163,7 +163,7 @@ _: {
           showAvatars = true;
           showRoleColors = true;
         };
-        USRBG = {
+        usrbg = {
           enable = true;
           nitroFirst = true;
           voiceBackground = true;
