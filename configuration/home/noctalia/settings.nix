@@ -4,24 +4,24 @@
 #
 # This module:
 # - Exports settings attribute set for Noctalia shell configuration
-# - Migrated from v4 (Quickshell/JSON) to v5 (native C++/TOML) schema
-# - Battery widget auto-hides on desktop hosts (no conditional needed)
+# - v5 native C++/TOML schema
 # - Theme colors set via builtin palette; Stylix target needs upstream v5 update
 {
   config,
   ...
 }:
 let
+  wallpaperDir = "${config.home.homeDirectory}/popcat19-nixos-hm/configuration/home/wallpaper";
   settings = {
     shell = {
       ui_scale = 1.0;
       corner_radius_scale = 1.0;
       font_family = "Rounded Mplus 1c Medium";
-      clipboard_enabled = true;
+      clipboard_enabled = false;
       clipboard_auto_paste = "off";
       clipboard_history_max_entries = 100;
       middle_click_opens_widget_settings = true;
-      settings_show_advanced = false;
+      settings_show_advanced = true;
       avatar_path = "${config.home.homeDirectory}/.face";
       lang = "";
 
@@ -37,10 +37,11 @@ let
 
       panel = {
         transparency_mode = "solid";
-        borders = true;
+        borders = false;
         shadow = false;
         launcher_placement = "centered";
-        control_center_placement = "attached";
+        control_center_placement = "floating";
+        open_near_click_control_center = true;
         wallpaper_placement = "attached";
         clipboard_placement = "centered";
         session_placement = "attached";
@@ -55,6 +56,11 @@ let
       mode = "dark";
       source = "builtin";
       builtin = "Rosé Pine";
+
+      templates = {
+        enable_builtin_templates = false;
+        enable_community_templates = false;
+      };
     };
 
     wallpaper = {
@@ -64,12 +70,20 @@ let
       transition = [ "fade" ];
       transition_duration = 1500;
       edge_smoothness = 0.05;
-      directory = "${config.home.homeDirectory}/Pictures/Wallpapers";
+      directory = wallpaperDir;
 
       automation = {
         enabled = false;
         order = "random";
         interval_minutes = 5;
+      };
+
+      default = {
+        path = "${wallpaperDir}/wallpaper0.png";
+      };
+
+      last = {
+        path = "${wallpaperDir}/wallpaper0.png";
       };
     };
 
@@ -79,13 +93,15 @@ let
 
     bar.main = {
       position = "top";
-      thickness = 34;
+      thickness = 32;
       background_opacity = 1.0;
-      radius = 12;
+      radius = 16;
+      margin_edge = 6;
+      margin_ends = 6;
       margin_h = 5;
       margin_v = 5;
-      padding = 14;
-      widget_spacing = 6;
+      padding = 12;
+      widget_spacing = 12;
       scale = 1.0;
       shadow = false;
       auto_hide = false;
@@ -99,18 +115,18 @@ let
         "cpu-temp"
         "ram"
         "disk"
+        "media"
       ];
       center = [ ];
       end = [
-        "media"
+        "cat"
         "tray"
-        "notifications"
         "network"
         "bluetooth"
         "volume"
         "battery"
         "clock"
-        "session"
+        "notifications"
       ];
     };
 
@@ -121,6 +137,8 @@ let
         labels_only_when_occupied = true;
         hide_when_empty = false;
         pill_scale = 0.6;
+        scale = 1.2;
+        minimal = true;
       };
 
       cpu = {
@@ -177,7 +195,7 @@ let
       };
 
       network = {
-        show_label = true;
+        show_label = false;
       };
 
       bluetooth = {
@@ -191,7 +209,15 @@ let
       };
 
       notifications = {
-        hide_when_no_unread = true;
+        hide_when_no_unread = false;
+      };
+
+      cat = {
+        type = "noctalia/bongocat:cat";
+        color = "primary";
+        scale = 1.4;
+        tappy_mode = true;
+        audio_spectrum = true;
       };
     };
 
@@ -209,10 +235,10 @@ let
     };
 
     osd = {
-      position = "top_right";
+      position = "top_center";
       orientation = "horizontal";
       scale = 1.0;
-      background_opacity = 0.97;
+      background_opacity = 1.0;
       offset_x = 20;
       offset_y = 8;
 
@@ -231,11 +257,8 @@ let
       };
     };
 
-    lockscreen = {
-      enabled = true;
-      blurred_desktop = false;
-      blur_intensity = 0.5;
-      tint_intensity = 0.3;
+    plugins = {
+      enabled = [ "noctalia/bongocat" ];
     };
 
     system.monitor = {
