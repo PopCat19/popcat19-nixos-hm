@@ -30,7 +30,7 @@ let
 in
 {
   flake.nixosConfigurations = autoHosts // {
-    popcat19-klipper0 = rpi-lib.nixosSystem {
+    popcat19-klipper0 = rpi-lib.nixosInstaller {
       # specialArgs pass inputs + userConfig eagerly to all modules,
       # avoiding _module.args infinite recursion on imports
       specialArgs = {
