@@ -77,6 +77,9 @@ in
     chmod 600 /var/lib/SillyTavern/config.yaml
   '';
 
+  # Cross-compile aarch64 closures for the Klipper Pi 4B
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   hardware.enableRedistributableFirmware = true;
 
   networking.hostName = userConfig.hostname;

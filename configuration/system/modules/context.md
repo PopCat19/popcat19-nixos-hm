@@ -17,6 +17,7 @@
 - `forgecode.nix` — Centralized ForgeCode configuration (binary, fish integration, auto-update disable)
 - `gnome-keyring.nix` — Enable GNOME Keyring as the Secret Service provider
 - `greeter.nix` — Configure SDDM display manager for Wayland login sessions
+- `klipper/` — Klipper 3D printer service stack (printer.nix: Klipper + Moonraker + Mainsail)
 - `hardware.nix` — Configure hardware support for Bluetooth and I2C
 - `hyprland.nix` — Configure Hyprland Wayland compositor with UWSM integration
 - `networking.nix` — Manage firewall, IP forwarding, and NetworkManager configuration

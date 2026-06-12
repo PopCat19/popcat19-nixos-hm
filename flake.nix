@@ -7,7 +7,7 @@
 # - Imports flake modules from ./flake-modules/
 # - Exposes NixOS configurations for all hosts
 {
-  description = "NixOS multi-host configuration with profile presets";
+  description = "NixOS multi-host configuration with profile presets and Klipper 3D printer support";
 
   nixConfig = {
     extra-experimental-features = [
@@ -27,6 +27,7 @@
       "https://popcat19-shared.cachix.org"
       "https://nix-gaming.cachix.org"
       "https://nix-on-droid.cachix.org"
+      "https://nixos-raspberrypi.cachix.org"
     ];
     extra-trusted-public-keys = [
       "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
@@ -36,6 +37,7 @@
       "popcat19-shared.cachix.org-1:qqle0Ek1MtOHDkqu2srjAnbjwl41fRUP8pLd9ZDsMEQ="
       "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
       "nix-on-droid.cachix.org-1:jZuycLl0bOJAkMBNrCj4JnAjA31Os3R72xMRx1oCHFE="
+      "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
     ];
   };
 
@@ -95,6 +97,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-raspberrypi = {
+      url = "github:nvmd/nixos-raspberrypi/main";
+    };
+
     noctalia-shell = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -111,7 +117,10 @@
   outputs =
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
 
       imports = [
         ./flake-modules/nixos.nix
