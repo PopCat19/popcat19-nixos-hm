@@ -15,6 +15,7 @@ _: {
     "fish/functions/dev-to-main.fish".text = builtins.readFile ../../fish_functions/dev-to-main.fish;
     "fish/functions/devs.fish".text = builtins.readFile ../../fish_functions/devs.fish;
     "fish/functions/dtm.fish".text = builtins.readFile ../../fish_functions/dtm.fish;
+    "fish/functions/find.fish".text = builtins.readFile ../../fish_functions/find.fish;
     "fish/functions/fix-fish-history.fish".text =
       builtins.readFile ../../fish_functions/fix-fish-history.fish;
     "fish/functions/fixhist.fish".text = builtins.readFile ../../fish_functions/fixhist.fish;
@@ -27,6 +28,7 @@ _: {
     "fish/functions/forge-init.fish".text = builtins.readFile ../../fish_functions/forge-init.fish;
     "fish/functions/forge-tab.fish".text = builtins.readFile ../../fish_functions/forge-tab.fish;
     "fish/functions/gac.fish".text = builtins.readFile ../../fish_functions/gac.fish;
+    "fish/functions/grep.fish".text = builtins.readFile ../../fish_functions/grep.fish;
     "fish/functions/greset.fish".text = builtins.readFile ../../fish_functions/greset.fish;
     "fish/functions/hconf.fish".text = builtins.readFile ../../fish_functions/hconf.fish;
     "fish/functions/list-fish-helpers.fish".text =
@@ -45,7 +47,6 @@ _: {
     "fish/functions/nrb.fish".text = builtins.readFile ../../fish_functions/nrb.fish;
     "fish/functions/nsp.fish".text = builtins.readFile ../../fish_functions/nsp.fish;
     "fish/functions/pkgs.fish".text = builtins.readFile ../../fish_functions/pkgs.fish;
-    "fish/functions/rg-remind.fish".text = builtins.readFile ../../fish_functions/rg-remind.fish;
     "fish/functions/scrc.fish".text = builtins.readFile ../../fish_functions/scrc.fish;
     "fish/functions/scrch.fish".text = builtins.readFile ../../fish_functions/scrch.fish;
     "fish/functions/scrcx.fish".text = builtins.readFile ../../fish_functions/scrcx.fish;
