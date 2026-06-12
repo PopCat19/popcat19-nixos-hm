@@ -37,6 +37,8 @@ function nixos-rebuild-basic
         switch $argv[$i]
             case "--dry-run" "dry-run"
                 set action "build"
+            case "--boot" "boot"
+                set action "boot"
             case "--test" "test"
                 set action "test"
             case "--auto" "auto"
