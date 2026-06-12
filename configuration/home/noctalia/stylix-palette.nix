@@ -15,6 +15,17 @@
 let
   inherit (config.lib.stylix.colors) withHashtag;
 
+  # Mapping follows PMD base16 slot semantics (doc/base16-implementation.txt):
+  #   base00 (4x)     = Background (darkest, behind everything)
+  #   base01 (8x)     = Surface (solid card/panel backgrounds)
+  #   base02 (80×8%)  = Surface hint (interactive backgrounds, hover)
+  #   base03 (80×48%) = Muted (borders, separators)
+  #   base04 (64x)    = Subtext (secondary metadata)
+  #   base05 (80x)    = Body Text (primary foreground)
+  #   base08 (88x)    = Danger (error/destructive)
+  #   base0C (80x+140)= Support (tertiary accent)
+  #   base0D (80x+30) = Functions (primary accent)
+  #   base0E (64x−30) = Keywords (secondary accent)
   palette = {
     dark = {
       mPrimary = withHashtag.base0D;
@@ -25,14 +36,14 @@ let
       mOnTertiary = withHashtag.base00;
       mError = withHashtag.base08;
       mOnError = withHashtag.base00;
-      mSurface = withHashtag.base00;
+      mSurface = withHashtag.base01;
       mOnSurface = withHashtag.base05;
-      mSurfaceVariant = withHashtag.base01;
+      mSurfaceVariant = withHashtag.base00;
       mOnSurfaceVariant = withHashtag.base04;
       mOutline = withHashtag.base03;
       mShadow = withHashtag.base00;
-      mHover = withHashtag.base0C;
-      mOnHover = withHashtag.base00;
+      mHover = withHashtag.base02;
+      mOnHover = withHashtag.base05;
 
       terminal = {
         background = withHashtag.base00;
