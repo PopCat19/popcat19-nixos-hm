@@ -60,10 +60,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-cachyos-kernel = {
-      url = "github:xddxdd/nix-cachyos-kernel/release";
-    };
-
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     nix-gaming.url = "github:fufexan/nix-gaming";

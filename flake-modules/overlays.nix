@@ -3,16 +3,10 @@
 # Purpose: Define architecture-aware package overlays
 #
 # This module:
-# - CachyOS kernel overlay
 # - Friction, OpenLDAP, Nix, ROCm, Zrok overlays
 # - Hyprland uses nixpkgs-unstable (no overlay needed)
 { inputs }:
-let
-  cachyosOverlay = inputs.nix-cachyos-kernel.overlays.default;
-in
 [
-  cachyosOverlay
-
   # Friction graphics overlay
   (final: _prev: {
     friction-graphics = final.callPackage ../overlays/friction-graphics.nix { };

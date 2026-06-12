@@ -51,7 +51,6 @@
       enable = true;
       # 256/48000 = ~5.3ms. 64 (1.3ms) was too aggressive and caused buffer
       # negotiation failures with the Razer Kraken V4 Pro + EasyEffects chain.
-      quantum = 256;
       rate = 48000;
     };
     extraConfig.pipewire."91-hdmi-audio" = {
