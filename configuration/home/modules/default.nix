@@ -18,6 +18,7 @@
     ../hyprland/hyprland.nix
     ./stylix.nix
     ./fonts.nix
+    ./bash.nix
     ../noctalia/noctalia.nix
     ./zed.nix
     ./zathura.nix

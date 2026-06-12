@@ -45,6 +45,7 @@ _: {
     "fish/functions/nrb.fish".text = builtins.readFile ../../fish_functions/nrb.fish;
     "fish/functions/nsp.fish".text = builtins.readFile ../../fish_functions/nsp.fish;
     "fish/functions/pkgs.fish".text = builtins.readFile ../../fish_functions/pkgs.fish;
+    "fish/functions/rg-remind.fish".text = builtins.readFile ../../fish_functions/rg-remind.fish;
     "fish/functions/scrc.fish".text = builtins.readFile ../../fish_functions/scrc.fish;
     "fish/functions/scrch.fish".text = builtins.readFile ../../fish_functions/scrch.fish;
     "fish/functions/scrcx.fish".text = builtins.readFile ../../fish_functions/scrcx.fish;

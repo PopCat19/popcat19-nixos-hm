@@ -1,6 +1,7 @@
 # Context
 
 - `audio-control.nix` — Configure audio control panel and volume management utilities
+- `bash.nix` — Bash shell wrappers that remind about ripgrep when rg is installed
 - `broot.nix` — Configure Broot file manager with home-manager
 - `default.nix` — Import all home modules for Home Manager configuration
 - `environment.nix` — Configure user-specific environment variables and session settings

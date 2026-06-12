@@ -32,6 +32,7 @@
 - `nsp.fish` — Shortcut for nix-shell -p
 - `pkgs.fish` — Search nixpkgs (nix search nixpkgs)
 - `proxify.fish` — Fish completions for proxify command (sing-box TUN app launcher)
+- `rg-remind.fish` — Remind to use ripgrep instead of grep/find -name when rg is installed
 - `scrc.fish` — scrcpy with audio playback
 - `scrch.fish` — scrcpy with audio playback, high bitrate
 - `scrcx.fish` — scrcpy without audio
