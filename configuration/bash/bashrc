@@ -1,0 +1,700 @@
+# bashrc
+#
+# Purpose: Bash equivalents of fish functions, abbreviations, and starship
+#
+# Fish-specific functions excluded: fish-greeting, fix-fish-history,
+# forge-accept-line, forge-init, forge-rprompt, forge-tab, gtime,
+# list-fish-helpers.
+
+# ── Color helpers ──────────────────────────────────────────────────
+RED='\033[31m'; GREEN='\033[32m'; YELLOW='\033[33m'; BLUE='\033[34m'
+CYAN='\033[36m'; WHITE='\033[37m'; BRGREEN='\033[92m'; BRCYAN='\033[96m'
+BRBLACK='\033[90m'; NC='\033[0m'
+
+# ── Simple wrappers ───────────────────────────────────────────────
+cdh() { cd "$NIXOS_CONFIG_DIR"; }
+devs() { dev-session "$@"; }
+dtm() { dev-to-main "$@"; }
+fixhist() { fix-fish-history "$@"; }
+flconf() { ${EDITOR:-micro} "$NIXOS_CONFIG_DIR/flake.nix"; }
+flup() { nix-flake-update "$@"; }
+gac() { git add . && git commit -m "$*"; }
+greset() { git reset --hard && git clean -fd; }
+hconf() { ${EDITOR:-micro} "$NIXOS_CONFIG_DIR/home.nix"; }
+nconf() { ${EDITOR:-micro} "$NIXOS_CONFIG_DIR/configuration.nix"; }
+nrb() { nixos-rebuild-basic "$@"; }
+nsp() { nix-shell -p "$@"; }
+pkgs() { nix search nixpkgs "$@"; }
+scrc() { scrcpy --new-display=1920x1080 --audio-source=playback "$@"; }
+scrch() { scrcpy --new-display=1920x1080 --audio-source=playback --video-bit-rate=20M "$@"; }
+scrcx() { scrcpy --new-display=1920x1080 --no-audio "$@"; }
+scrcxh() { scrcpy --new-display=1920x1080 --no-audio --video-bit-rate=20M "$@"; }
+slp() { systemctl sleep "$@"; }
+ngit() { ( cd "$NIXOS_CONFIG_DIR" && git "$@" ); }
+
+# ── rg reminder wrappers ──────────────────────────────────────────
+grep() {
+    if command -v rg &>/dev/null; then
+        echo -e "💡 rg is faster — try: rg $*" >&2
+    fi
+    command grep --color=auto "$@"
+}
+
+find() {
+    if command -v rg &>/dev/null; then
+        for arg in "$@"; do
+            if [[ "$arg" == -name || "$arg" == -iname ]]; then
+                echo -e "💡 rg --files -g '<glob>' is faster than find -name" >&2
+                break
+            fi
+        done
+    fi
+    command find "$@"
+}
+
+# ── cnup ───────────────────────────────────────────────────────────
+cnup() {
+    local no_flake=false no_check=false
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --no-flake) no_flake=true ;;
+            --no-check) no_check=true ;;
+        esac
+        shift
+    done
+
+    if [[ -d .git ]]; then
+        git add --intent-to-add . 2>/dev/null || true
+    fi
+
+    local use_nix_shell=false
+    for cmd in statix deadnix treefmt; do
+        if ! command -v "$cmd" &>/dev/null; then
+            use_nix_shell=true; break
+        fi
+    done
+
+    local sandbox_args="" nixshell_sandbox_args=""
+    local kver; kver=$(uname -r)
+    if [[ "$kver" =~ ^([0-4]\.|5\.[0-5][^0-9]) ]]; then
+        echo -e "${YELLOW}[WARN] Kernel $kver (< 5.6) detected. Disabling sandbox.${NC}"
+        sandbox_args="--option sandbox false"
+        nixshell_sandbox_args="--no-sandbox"
+    else
+        echo -e "${GREEN}[INFO] Kernel $kver detected. Using default sandbox.${NC}"
+    fi
+
+    local check_cmd=""
+    if ! $no_flake && ! $no_check; then
+        check_cmd="&& nix flake check --impure --accept-flake-config $sandbox_args"
+    fi
+
+    if $use_nix_shell; then
+        nix-shell $nixshell_sandbox_args -p statix deadnix nixfmt-tree --run "statix fix . && deadnix -e . && treefmt .$check_cmd"
+    else
+        eval "statix fix . && deadnix -e . && treefmt .$check_cmd"
+    fi
+}
+
+# ── dev-session ────────────────────────────────────────────────────
+dev-session() {
+    local session_name="dev"
+
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+        echo -e "${YELLOW}[INFO] Session '$session_name' already exists${NC}"
+        echo -e "${CYAN}[INFO] Attaching to existing session...${NC}"
+        tmux attach -t "$session_name"
+        return 0
+    fi
+
+    echo -e "${BLUE}[STEP] Creating tmux session: $session_name${NC}"
+
+    tmux new-session -d -s "$session_name" -n monitor
+    tmux split-window -v -p 20 -t "$session_name":monitor
+    tmux send-keys -t "$session_name":monitor.0 'btop' Enter
+    tmux send-keys -t "$session_name":monitor.1 'journalctl -f' Enter
+    tmux new-window -t "$session_name" -n shell
+    tmux select-window -t "$session_name":monitor
+
+    echo -e "${GREEN}[SUCCESS] Session '$session_name' created with 2 windows${NC}"
+    echo -e "${CYAN}[INFO] Windows: monitor, shell${NC}"
+
+    if [[ -z "$TMUX" ]]; then
+        tmux attach -t "$session_name"
+    else
+        echo -e "${YELLOW}[INFO] Already in tmux. Switch with: tmux switch-client -t $session_name${NC}"
+    fi
+}
+
+# ── dev-to-main ────────────────────────────────────────────────────
+dev-to-main() {
+    local original_dir; original_dir=$(pwd)
+    cd "$NIXOS_CONFIG_DIR" || return 1
+
+    local current_branch; current_branch=$(git branch --show-current)
+    if [[ "$current_branch" != "dev" ]]; then
+        echo -e "${RED}[ERROR] Not on dev branch. Currently on: $current_branch${NC}"
+        echo -e "${CYAN}[INFO] Switch to dev branch first: git checkout dev${NC}"
+        cd "$original_dir" || true
+        return 1
+    fi
+
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo -e "${RED}[ERROR] You have uncommitted changes on dev branch${NC}"
+        echo -e "${CYAN}[INFO] Commit or stash your changes first${NC}"
+        git status --short
+        cd "$original_dir" || true
+        return 1
+    fi
+
+    echo -e "${BLUE}[STEP] Fetching latest changes...${NC}"
+    git fetch origin
+
+    local dev_behind; dev_behind=$(git rev-list --count HEAD..origin/dev 2>/dev/null || echo 0)
+    if [[ "$dev_behind" -gt 0 ]]; then
+        echo -e "${RED}[ERROR] Your dev branch is $dev_behind commits behind origin/dev${NC}"
+        echo -e "${CYAN}[INFO] Pull latest changes first: git pull origin dev${NC}"
+        cd "$original_dir" || true
+        return 1
+    fi
+
+    local dev_ahead; dev_ahead=$(git rev-list --count origin/dev..HEAD 2>/dev/null || echo 0)
+    if [[ "$dev_ahead" -gt 0 ]]; then
+        echo -e "${RED}[ERROR] You have $dev_ahead unpushed commits on dev${NC}"
+        echo -e "${CYAN}[INFO] Push your dev changes first: git push origin dev${NC}"
+        cd "$original_dir" || true
+        return 1
+    fi
+
+    echo -e "${BLUE}[STEP] Switching to main branch...${NC}"
+    git checkout main
+
+    local main_behind; main_behind=$(git rev-list --count HEAD..origin/main 2>/dev/null || echo 0)
+    if [[ "$main_behind" -gt 0 ]]; then
+        echo -e "${BLUE}[STEP] Pulling latest main changes...${NC}"
+        git pull origin main
+    fi
+
+    echo -e "${BLUE}[STEP] Checking for potential merge conflicts...${NC}"
+    if ! git merge --no-commit --no-ff dev &>/dev/null; then
+        git merge --abort 2>/dev/null
+        echo -e "${RED}[ERROR] Merge conflicts detected between dev and main${NC}"
+        echo -e "${CYAN}[INFO] Resolve conflicts manually or use a different merge strategy${NC}"
+        git checkout dev
+        cd "$original_dir" || true
+        return 1
+    fi
+    git merge --abort 2>/dev/null
+
+    echo -e "${GREEN}[SUCCESS] No conflicts detected. Merging dev into main...${NC}"
+    git merge dev --no-ff -m "Merge dev into main"
+
+    echo -e "${BLUE}[STEP] Pushing to main...${NC}"
+    git push origin main
+
+    echo -e "${BLUE}[STEP] Switching back to dev branch...${NC}"
+    git checkout dev
+
+    echo -e "${GREEN}[SUCCESS] Successfully merged dev into main and pushed to remote${NC}"
+    cd "$original_dir" || true
+}
+
+# ── lsa ────────────────────────────────────────────────────────────
+lsa() {
+    if ! command -v tree &>/dev/null; then
+        echo -e "${RED}[ERROR] tree command not found${NC}"
+        echo -e "${CYAN}[INFO] Install tree: nix-shell -p tree${NC}"
+        return 1
+    fi
+
+    if [[ "$(pwd)" =~ ^"$HOME"(/|$) ]]; then
+        echo -e "${YELLOW}[INFO] In home directory, skipping git repository check${NC}"
+        return 0
+    fi
+
+    local git_root; git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -z "$git_root" ]]; then
+        echo -e "${RED}[ERROR] Not in a git repository${NC}"
+        echo -e "${CYAN}[INFO] Run this function from within a git repository (except home)${NC}"
+        return 1
+    fi
+
+    ( cd "$git_root" && git ls-files | tree --fromfile )
+}
+
+# ── nix-flake-update ───────────────────────────────────────────────
+nix-flake-update() {
+    echo -e "${BLUE}[STEP] Updating Nix flake inputs...${NC}"
+
+    local update_args=""
+    if [[ "$(uname -r)" =~ ^([0-4]\.|5\.[0-5][^0-9]) ]]; then
+        echo -e "${YELLOW}[WARN] Legacy kernel detected. Disabling sandbox.${NC}"
+        update_args="--option sandbox false"
+    fi
+
+    [[ -f flake.lock ]] && cp flake.lock flake.lock.bak
+    local old_hash; old_hash=$(sha256sum flake.lock 2>/dev/null | cut -d' ' -f1)
+
+    if [[ -n "$update_args" ]]; then
+        echo -e "${CYAN}Command: nix flake update $update_args${NC}"
+        nix flake update $update_args
+    else
+        echo -e "${CYAN}Command: nix flake update${NC}"
+        nix flake update
+    fi
+
+    if [[ $? -eq 0 ]]; then
+        echo -e "${GREEN}[SUCCESS] Flake update complete${NC}"
+        local new_hash; new_hash=$(sha256sum flake.lock | cut -d' ' -f1)
+
+        if [[ "$old_hash" == "$new_hash" ]]; then
+            echo -e "${GREEN}[INFO] Lockfile already up to date${NC}"
+            rm -f flake.lock.bak
+        else
+            echo -e "${GREEN}[INFO] Changes detected in flake.lock:${NC}"
+            echo "---------------------------------------------------"
+            if command -v diff &>/dev/null; then
+                diff -u3 --color=always flake.lock.bak flake.lock 2>/dev/null || true
+            fi
+            echo "---------------------------------------------------"
+
+            if [[ -d .git ]]; then
+                local timestamp; timestamp=$(date -u +"%Y-%m-%d")
+                git add flake.lock
+                git commit -m "chore(flake): update inputs $timestamp"
+                echo -e "${GREEN}[INFO] Changes committed to git${NC}"
+            fi
+
+            rm -f flake.lock.bak
+            echo -e "${CYAN}[INFO] Next steps:${NC}"
+            echo "   • Test build: nrb dry-run"
+            echo "   • Apply:      nrb"
+        fi
+    else
+        echo -e "${RED}[ERROR] Update failed. Reverting flake.lock...${NC}"
+        [[ -f flake.lock.bak ]] && mv flake.lock.bak flake.lock
+        return 1
+    fi
+}
+
+# ── nixos-rebuild-auto ─────────────────────────────────────────────
+nixos-rebuild-auto() {
+    nixos-rebuild-basic --auto "$@"
+}
+
+# ── nix-shell-unfree ───────────────────────────────────────────────
+nix-shell-unfree() {
+    export NIXPKGS_ALLOW_UNFREE=1
+    export NIXPKGS_ALLOW_INSECURE=1
+    if [[ $# -gt 0 ]]; then
+        nix-shell "$@"
+    else
+        echo "NIXPKGS_ALLOW_UNFREE and NIXPKGS_ALLOW_INSECURE are now set for this session."
+        echo "You can now run nix-shell with packages that require these flags."
+    fi
+}
+
+# ── sillytavern ────────────────────────────────────────────────────
+sillytavern() {
+    case "${1:-}" in
+        restart) systemctl restart sillytavern; journalctl -u sillytavern -n 30 -f ;;
+        logs)    journalctl -u sillytavern -n 60 -f ;;
+        status)  systemctl status sillytavern --no-pager ;;
+        stop)    systemctl stop sillytavern ;;
+        start)   systemctl start sillytavern ;;
+        data)    echo "SillyTavern data: /var/lib/SillyTavern/"; ls -la /var/lib/SillyTavern/ ;;
+        "")      sillytavern status ;;
+        *)       echo "Usage: sillytavern [restart|logs|status|stop|start|data]"; return 1 ;;
+    esac
+}
+
+# ── nixos-rebuild-basic ────────────────────────────────────────────
+nixos-rebuild-basic() {
+    if [[ -z "${NIXOS_CONFIG_DIR:-}" ]] || [[ ! -d "$NIXOS_CONFIG_DIR" ]]; then
+        echo -e "${RED}[ERROR] NIXOS_CONFIG_DIR is not set or invalid.${NC}" >&2
+        return 1
+    fi
+
+    local original_dir; original_dir=$(pwd)
+    cd "$NIXOS_CONFIG_DIR" || return 1
+
+    local commit_message="" action="switch" auto_mode=false push_on_success=false
+    local no_push=false rollback_on_fail=false do_system_rollback=false
+    local force_no_sandbox=false did_commit=false no_cachix=false
+    local extra_args=()
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --dry-run|dry-run) action="build" ;;
+            --boot|boot)       action="boot" ;;
+            --test|test)       action="test" ;;
+            --auto|auto)       auto_mode=true; rollback_on_fail=true ;;
+            --push|push)       push_on_success=true ;;
+            --no-push|no-push) no_push=true ;;
+            --rollback|rollback) do_system_rollback=true ;;
+            --no-rollback|no-rollback) rollback_on_fail=false ;;
+            --no-sandbox|no-sandbox) force_no_sandbox=true ;;
+            --no-cachix|no-cachix) no_cachix=true ;;
+            --*) extra_args+=("$1") ;;
+            *)
+                if [[ -z "$commit_message" ]]; then commit_message="$1"
+                else commit_message="$commit_message $1"; fi ;;
+        esac
+        shift
+    done
+
+    if $auto_mode && $push_on_success && [[ -z "$commit_message" ]]; then
+        echo "[ERROR] Commit message required with --push flag" >&2
+        cd "$original_dir" || true
+        return 2
+    fi
+
+    local use_nh=false
+    command -v nh &>/dev/null && use_nh=true
+
+    local proxy_env=()
+    if [[ -n "${all_proxy:-}" ]]; then
+        proxy_env=(
+            "http_proxy=$http_proxy" "https_proxy=$https_proxy" "all_proxy=$all_proxy"
+            "HTTP_PROXY=$http_proxy" "HTTPS_PROXY=$https_proxy" "ALL_PROXY=$all_proxy"
+        )
+    fi
+
+    if $do_system_rollback; then
+        if $auto_mode; then
+            echo "[STEP] Rolling back to previous NixOS generation..."
+        else
+            echo -e "${BLUE}[STEP] Rolling back to previous NixOS generation...${NC}"
+        fi
+        if $use_nh; then
+            sudo env "${proxy_env[@]}" nh os rollback --bypass-root-check
+        else
+            sudo env "${proxy_env[@]}" nixos-rebuild switch --rollback
+        fi
+        if [[ $? -eq 0 ]]; then
+            $auto_mode && echo "[SUCCESS] Rolled back to previous generation" || echo -e "${GREEN}[SUCCESS] Rolled back to previous generation${NC}"
+            cd "$original_dir" || true
+            return 0
+        else
+            $auto_mode && echo "[ERROR] Rollback failed" >&2 || echo -e "${RED}[ERROR] Rollback failed${NC}" >&2
+            cd "$original_dir" || true
+            return 1
+        fi
+    fi
+
+    local pre_commit_hash; pre_commit_hash=$(git rev-parse HEAD)
+
+    if [[ -n "$commit_message" ]]; then
+        git add .
+        if git diff --cached --quiet; then
+            $auto_mode && echo "[INFO] Nothing to commit" || echo -e "${GREEN}[INFO] Nothing to commit; proceeding with rebuild${NC}"
+        else
+            if git commit -m "$commit_message"; then
+                did_commit=true
+                $auto_mode && echo "[INFO] Committed: $commit_message" || echo -e "${GREEN}[INFO] Committed: $commit_message${NC}"
+            else
+                if $auto_mode; then
+                    echo "[ERROR] Commit failed" >&2
+                    cd "$original_dir" || true
+                    return 2
+                else
+                    echo -e "${YELLOW}[WARN] Commit failed; proceeding with rebuild${NC}"
+                fi
+            fi
+        fi
+    fi
+
+    local flake_target; flake_target=$(hostname)
+    local rebuild_cmd rebuild_args=("$action")
+
+    if $use_nh; then
+        rebuild_cmd=(sudo env "${proxy_env[@]}" nh os)
+        rebuild_args+=("$NIXOS_CONFIG_DIR" --hostname "$flake_target" --bypass-root-check)
+        [[ ${#extra_args[@]} -gt 0 ]] && rebuild_args+=(-- "${extra_args[@]}")
+    else
+        rebuild_cmd=(sudo env "${proxy_env[@]}" nixos-rebuild)
+        rebuild_args+=(--flake "$NIXOS_CONFIG_DIR#$flake_target" "${extra_args[@]}")
+    fi
+
+    local kver; kver=$(uname -r)
+    if $force_no_sandbox || [[ "$kver" =~ ^([0-4]\.|5\.[0-5][^0-9]) ]]; then
+        $auto_mode && echo "[WARN] Sandbox disabled (Kernel < 5.6 or --no-sandbox)" || echo -e "${YELLOW}[WARN] Sandbox disabled (Kernel < 5.6 or --no-sandbox)${NC}"
+        if $use_nh; then
+            rebuild_args+=(-- --option sandbox false)
+        else
+            rebuild_args+=(--option sandbox false)
+        fi
+    fi
+
+    if $auto_mode; then
+        echo "[STEP] Running ${rebuild_cmd[*]} ${rebuild_args[*]}..."
+        if "${rebuild_cmd[@]}" "${rebuild_args[@]}"; then
+            echo "[SUCCESS] Build succeeded"
+        else
+            echo "[ERROR] Build failed" >&2
+            if $rollback_on_fail && $did_commit; then
+                echo "[STEP] Rolling back to: $pre_commit_hash"
+                git reset --hard "$pre_commit_hash"
+            fi
+            cd "$original_dir" || true
+            return 1
+        fi
+    else
+        echo -e "${BLUE}[STEP] Running rebuild...${NC}"
+        echo -e "${CYAN}Command: ${rebuild_cmd[*]} ${rebuild_args[*]}${NC}"
+        if ! "${rebuild_cmd[@]}" "${rebuild_args[@]}"; then
+            echo -e "${RED}[ERROR] Build failed${NC}"
+            if $did_commit && $rollback_on_fail; then
+                git reset --hard "$pre_commit_hash"
+                echo -e "${BLUE}[STEP] Rolled back to: $pre_commit_hash${NC}"
+            elif $did_commit; then
+                echo -e "${YELLOW}[WARN] Changes kept. Rollback with: git reset --hard $pre_commit_hash${NC}"
+            fi
+            cd "$original_dir" || true
+            return 1
+        fi
+        echo -e "${GREEN}[SUCCESS] Build succeeded${NC}"
+    fi
+
+    if ! $no_cachix && command -v cachix &>/dev/null; then
+        _cachix_push_if_configured
+    fi
+
+    if $no_push; then
+        cd "$original_dir" || true
+        return 0
+    fi
+
+    local should_push=false
+    [[ -n "$commit_message" ]] && should_push=true
+    $push_on_success && should_push=true
+    ! $did_commit && should_push=false
+
+    if $should_push; then
+        local branch; branch=$(git branch --show-current)
+        if $auto_mode; then
+            echo "[STEP] Pushing to remote..."
+            if git push 2>/dev/null; then
+                echo "[SUCCESS] Pushed to origin/$branch"
+            else
+                echo "[STEP] Normal push failed, trying rebase..."
+                git fetch origin
+                if git pull --rebase origin "$branch" 2>/dev/null && git push 2>/dev/null; then
+                    echo "[SUCCESS] Rebased and pushed to origin/$branch"
+                else
+                    echo "[ERROR] Push failed after rebase" >&2
+                    cd "$original_dir" || true
+                    return 3
+                fi
+            fi
+        else
+            if git push 2>/dev/null; then
+                echo -e "${GREEN}[SUCCESS] Changes pushed to remote${NC}"
+            else
+                echo -e "${YELLOW}[WARN] Normal push failed - likely due to diverged history${NC}"
+                echo -e "${CYAN}[INFO] This can happen after rollbacks or when remote is ahead${NC}"
+                echo -e "${BLUE}[STEP] Fetching latest remote changes...${NC}"
+                git fetch origin
+                read -r -p "Try rebase to integrate remote changes? [y/N]: " rebase_choice
+                local pushed=false
+                if [[ "$rebase_choice" == "y" || "$rebase_choice" == "Y" ]]; then
+                    echo -e "${BLUE}[STEP] Rebasing local commits onto remote $branch...${NC}"
+                    if git pull --rebase origin "$branch"; then
+                        echo -e "${GREEN}[SUCCESS] Rebase successful, trying push...${NC}"
+                        if git push 2>/dev/null; then
+                            echo -e "${GREEN}[SUCCESS] Changes pushed to remote${NC}"
+                            pushed=true
+                        fi
+                    else
+                        echo -e "${RED}[ERROR] Rebase failed (likely merge conflicts)${NC}"
+                    fi
+                fi
+                if ! $pushed; then
+                    echo -e "${RED}[ERROR] Push failed. Force push required.${NC}"
+                    read -r -p "Proceed with force push? [y/N]: " force_choice
+                    if [[ "$force_choice" == "y" || "$force_choice" == "Y" ]]; then
+                        git push --force-with-lease
+                        echo -e "${GREEN}[SUCCESS] Changes force-pushed to remote${NC}"
+                    else
+                        echo -e "${YELLOW}[WARN] Changes not pushed. Push manually with: git push --force-with-lease${NC}"
+                    fi
+                fi
+            fi
+        fi
+    fi
+
+    cd "$original_dir" || true
+    return 0
+}
+
+_cachix_push_if_configured() {
+    command -v cachix &>/dev/null || return 0
+    local dhall_config="$HOME/.config/cachix/cachix.dhall"
+    [[ -f "$dhall_config" ]] || return 0
+
+    local dhall_raw; dhall_raw=$(cat "$dhall_config")
+    local caches=()
+    while IFS= read -r entry; do
+        local name; name=$(echo "$entry" | grep -oP 'name\s*=\s*"([^"]+)"' | sed 's/name\s*=\s*"//;s/"//')
+        local key;  key=$(echo "$entry" | grep -oP 'secretKey\s*=\s*"([^"]+)"' | sed 's/secretKey\s*=\s*"//;s/"//')
+        [[ -n "$name" && -n "$key" ]] && caches+=("$name")
+    done < <(echo "$dhall_raw" | grep -oP '\{[^}]+\}')
+
+    if echo "$dhall_raw" | grep -q 'authToken'; then
+        local found=false
+        for c in "${caches[@]}"; do [[ "$c" == "popcat19-shared" ]] && found=true; done
+        ! $found && caches+=("popcat19-shared")
+    fi
+
+    [[ ${#caches[@]} -eq 0 ]] && return 0
+
+    if command -v curl &>/dev/null && ! curl -fsS --max-time 2 https://cachix.org >/dev/null 2>&1; then
+        echo "[WARN] Offline, skipping cachix push"
+        return 0
+    fi
+
+    for cache in "${caches[@]}"; do
+        echo "[STEP] Pushing closure to cachix ($cache)..."
+        cachix push "$cache" /run/current-system 2>&1 &
+        local pid=$!
+        wait $pid
+        local rc=$?
+        if [[ $rc -eq 0 ]]; then
+            echo "[SUCCESS] Pushed to $cache"
+        elif [[ $rc -gt 128 ]]; then
+            echo "[WARN] Cachix push interrupted"
+            return 130
+        else
+            echo "[WARN] Cachix push to $cache failed"
+        fi
+    done
+}
+
+# ── nixos-status ───────────────────────────────────────────────────
+nixos-status() {
+    local show_generations=true show_store=true clean_mode=false
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --gen)   show_store=false ;;
+            --store) show_generations=false ;;
+            --clean) clean_mode=true ;;
+            --help|-h)
+                echo "Usage: nixos-status [OPTIONS]"
+                echo ""
+                echo "Options:"
+                echo "  --gen     Show generation history only"
+                echo "  --store   Show nix store statistics only"
+                echo "  --clean   Clean old generations and optimize store"
+                echo "  --help    Show this help message"
+                return 0 ;;
+        esac
+        shift
+    done
+
+    if $clean_mode; then
+        echo -e "${BLUE}╔══════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${BLUE}║                    NixOS Store Cleanup                        ║${NC}"
+        echo -e "${BLUE}╚══════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${CYAN}[STEP] Running nh clean...${NC}"
+        nh clean all --keep-since 3d --keep 5
+        echo -e "${GREEN}[SUCCESS] Cleanup complete!${NC}"
+        return 0
+    fi
+
+    echo -e "${BLUE}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║                    NixOS System Status                        ║${NC}"
+    echo -e "${BLUE}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+
+    echo -e "${GREEN}┌── System Information ─────────────────────────────────────────${NC}"
+    echo -e "${WHITE}│ OS: ${CYAN}$(nixos-version)${NC}"
+    echo -e "${WHITE}│ Kernel: ${CYAN}$(uname -r)${NC}"
+    echo -e "${WHITE}│ Hostname: ${CYAN}$(hostname)${NC}"
+    echo -e "${WHITE}│ Uptime: ${CYAN}$(uptime | sed 's/.*up //; s/,.*//')${NC}"
+    echo -e "${GREEN}└──────────────────────────────────────────────────────────────${NC}"
+    echo ""
+
+    if $show_generations; then
+        echo -e "${GREEN}┌── Current Generation ────────────────────────────────────────${NC}"
+        local current_gen; current_gen=$(readlink /nix/var/nix/profiles/system)
+        local gen_number; gen_number=$(basename "$current_gen" | sed 's/system-//')
+        local gen_info; gen_info=$(nh os list-generations 2>/dev/null | grep -E "^$gen_number\s" || true)
+        if [[ -n "$gen_info" ]]; then
+            local gen_time; gen_time=$(echo "$gen_info" | awk '{print $2 " " $3}')
+            echo -e "${WHITE}│ Generation: ${CYAN}$gen_number${NC} (built $gen_time)"
+        else
+            echo -e "${WHITE}│ Generation: ${CYAN}$gen_number${NC}"
+        fi
+        local boot_entries; boot_entries=$(ls /boot/loader/entries/ 2>/dev/null | wc -l)
+        [[ $boot_entries -gt 0 ]] && echo -e "${WHITE}│ Boot entries: ${CYAN}$boot_entries${NC}"
+        echo -e "${GREEN}└──────────────────────────────────────────────────────────────${NC}"
+        echo ""
+
+        echo -e "${GREEN}┌── Recent Generations ────────────────────────────────────────${NC}"
+        nh os list-generations 2>/dev/null | head -10 | while read -r gen_line; do
+            local parts; read -r gen_num gen_date gen_time gen_kernel _ <<< "$gen_line"
+            if [[ "/nix/var/nix/profiles/system-$gen_num" == "$current_gen" ]]; then
+                echo -e "${CYAN}│ ★ $gen_num  $gen_date $gen_time  (kernel: $gen_kernel)${NC}"
+            else
+                echo -e "${WHITE}│   $gen_num  $gen_date $gen_time  (kernel: $gen_kernel)${NC}"
+            fi
+        done
+        echo -e "${GREEN}└──────────────────────────────────────────────────────────────${NC}"
+        echo ""
+    fi
+
+    if $show_store; then
+        echo -e "${GREEN}┌── Nix Store ─────────────────────────────────────────────────${NC}"
+        local store_size; store_size=$(du -sh /nix/store 2>/dev/null | cut -f1)
+        echo -e "${WHITE}│ Store size: ${CYAN}$store_size${NC}"
+        local path_count; path_count=$(ls /nix/store 2>/dev/null | wc -l)
+        echo -e "${WHITE}│ Total paths: ${CYAN}$path_count${NC}"
+        local gc_bytes; gc_bytes=$(nix-store --gc --print-dead 2>/dev/null | tail -1 | sed 's/bytes //' || true)
+        if [[ -n "$gc_bytes" ]]; then
+            local gc_mb=$(( gc_bytes / 1048576 ))
+            echo -e "${WHITE}│ Reclaimable: ${YELLOW}~$gc_mb MB${NC} (run 'nixos-status --clean')"
+        fi
+        echo -e "${GREEN}└──────────────────────────────────────────────────────────────${NC}"
+        echo ""
+    fi
+
+    if [[ -d "$HOME/.local/share/home-manager" ]]; then
+        echo -e "${GREEN}┌── Home Manager ──────────────────────────────────────────────${NC}"
+        local hm_generations; hm_generations=$(ls -1 "$HOME/.local/share/home-manager/generations" 2>/dev/null | wc -l)
+        echo -e "${WHITE}│ Generations: ${CYAN}$hm_generations${NC}"
+        local hm_current; hm_current=$(readlink "$HOME/.local/state/home-manager/gcroots/current-home" 2>/dev/null || true)
+        if [[ -n "$hm_current" ]]; then
+            local hm_gen_name; hm_gen_name=$(basename "$hm_current")
+            echo -e "${WHITE}│ Current: ${CYAN}$hm_gen_name${NC}"
+        fi
+        echo -e "${GREEN}└──────────────────────────────────────────────────────────────${NC}"
+        echo ""
+    fi
+
+    local flake_path="${NIXOS_CONFIG_DIR:-}"
+    local flake_target; flake_target=$(hostname)
+    echo -e "${YELLOW}💡 Quick Commands:${NC}"
+    echo -e "${WHITE}   nh os switch $flake_path --hostname $flake_target  # Rebuild system${NC}"
+    echo -e "${WHITE}   nh clean all                                          # Clean old generations${NC}"
+    echo -e "${WHITE}   nh os list-generations                                # Full generation list${NC}"
+}
+
+# ── Aliases (from fish abbreviations) ──────────────────────────────
+alias ..='cd ..'
+alias ...='cd ../..'
+alias .3='cd ../../..'
+alias .4='cd ../../../..'
+alias .5='cd ../../../../..'
+alias l='eza -lh --icons=auto'
+alias ld='eza -lhD --icons=auto'
+alias ll='eza -lha --icons=auto --sort=name --group-directories-first'
+alias ls='eza -1 --icons=auto'
+alias lt='eza --tree --icons=auto'
+alias mkdir='mkdir -p'
+
+# ── Starship prompt ────────────────────────────────────────────────
+if command -v starship &>/dev/null; then
+    eval "$(starship init bash)"
+fi
