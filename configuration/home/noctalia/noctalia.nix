@@ -1,56 +1,27 @@
 # noctalia.nix
 #
-# Purpose: Main module for Noctalia configuration
+# Purpose: Main module for Noctalia v5 configuration
 #
 # This module:
-# - Uses programs.noctalia-shell for proper Stylix integration
-# - Applies user's personalized settings
-# - Configures systemd service for autostart with delay
+# - Uses programs.noctalia (v5 renamed from programs.noctalia-shell)
+# - Applies user's personalized settings from settings.nix
+# - Uses built-in systemd service (no custom delay needed)
+# - Stylix color integration pending upstream v5 target update
 {
-  pkgs,
   config,
   inputs,
-  userConfig,
   ...
 }:
 let
-  hostname = config.networking.hostName or userConfig.hostname;
-  enableUWSM = hostname != "popcat19-dedede0";
-
-  settings = import ./settings.nix {
-    inherit pkgs config;
-    inherit hostname enableUWSM;
-  };
+  settings = import ./settings.nix { inherit config; };
 in
 {
   imports = [ inputs.noctalia-shell.homeModules.default ];
 
-  programs.noctalia-shell = {
+  programs.noctalia = {
     enable = true;
-    package = pkgs.noctalia-shell;
+    systemd.enable = true;
 
-    # Settings from settings.nix - Stylix will set colors separately
     inherit (settings) settings;
-  };
-
-  # Custom systemd service with startup delay (not using deprecated .systemd.enable)
-  systemd.user.services.noctalia-shell = {
-    Unit = {
-      Description = "Noctalia Shell (with delay)";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-
-    Service = {
-      ExecStart = "${pkgs.noctalia-shell}/bin/noctalia-shell";
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
-      Restart = "on-failure";
-      RestartSec = "5s";
-      Type = "simple";
-    };
-
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
   };
 }

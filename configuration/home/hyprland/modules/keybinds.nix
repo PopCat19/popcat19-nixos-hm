@@ -59,7 +59,7 @@
       # desc: Restart panel
       "Ctrl+Alt, W, exec, systemctl --user restart hyprpanel.service"
       # desc: Restart shell
-      "$mainMod+Ctrl, N, exec, systemctl --user restart noctalia-shell.service"
+      "$mainMod+Ctrl, N, exec, systemctl --user restart noctalia.service"
 
       # === Screenshots ===
       # cat: Screenshots
