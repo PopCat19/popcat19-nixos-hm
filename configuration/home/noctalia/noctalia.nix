@@ -7,6 +7,13 @@
 # - Applies user's personalized settings from settings.nix
 # - Bridges Stylix base16 colors into customPalettes via stylix-palette.nix
 # - Uses built-in systemd service (no custom delay needed)
+#
+# TODO(v5-stylix): When Stylix adds native Noctalia v5 support:
+#   1. Delete stylix-palette.nix (manual bridge becomes redundant)
+#   2. Enable stylix.targets.noctalia.enable (or whatever the option is)
+#   3. Remove lib.recursiveUpdate override below that injects customPalettes
+#      into settings.theme — Stylix will set it directly
+#   4. Remove the customPalettes attr from programs.noctalia.settings
 {
   config,
   lib,
