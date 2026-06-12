@@ -1,6 +1,7 @@
 # Context
 
 - `agenix.nix` — Configure agenix for secret management
+- `agents.nix` — Install LLM agent binaries from llm-agents.nix (kilocode-cli, omp, opencode, pi, reasonix)
 - `builders.nix` — Configure remote Nix builder hosts for distributed builds
 - `audio.nix` — Configure PipeWire audio system with JACK and ALSA support
 - `boot.nix` — Manage bootloader configuration and kernel settings
@@ -13,6 +14,7 @@
 - `fish-functions.nix` — Configure Fish shell with custom functions and abbreviations
 - `fish.nix` — Configure Fish shell as the default system shell
 - `fonts.nix` — Configure system fonts using centralized userConfig
+- `forgecode.nix` — Centralized ForgeCode configuration (binary, fish integration, auto-update disable)
 - `gnome-keyring.nix` — Enable GNOME Keyring as the Secret Service provider
 - `greeter.nix` — Configure SDDM display manager for Wayland login sessions
 - `hardware.nix` — Configure hardware support for Bluetooth and I2C

@@ -23,10 +23,6 @@ _: {
       builtins.readFile ../../fish_functions/fish-greeting.fish;
     "fish/functions/flconf.fish".text = builtins.readFile ../../fish_functions/flconf.fish;
     "fish/functions/flup.fish".text = builtins.readFile ../../fish_functions/flup.fish;
-    "fish/functions/forge-accept-line.fish".text =
-      builtins.readFile ../../fish_functions/forge-accept-line.fish;
-    "fish/functions/forge-init.fish".text = builtins.readFile ../../fish_functions/forge-init.fish;
-    "fish/functions/forge-tab.fish".text = builtins.readFile ../../fish_functions/forge-tab.fish;
     "fish/functions/gac.fish".text = builtins.readFile ../../fish_functions/gac.fish;
     "fish/functions/grep.fish".text = builtins.readFile ../../fish_functions/grep.fish;
     "fish/functions/greset.fish".text = builtins.readFile ../../fish_functions/greset.fish;
@@ -85,12 +81,6 @@ _: {
 
       if status is-interactive
           starship init fish | source
-          if command -q forge
-              if not set -q FORGE_TERM
-                  set -gx FORGE_TERM true
-              end
-              forge-init
-          end
       end
     '';
   };

@@ -46,6 +46,7 @@ in
     ../system/modules/openrgb.nix
     ../system/modules/stylix-lightdm.nix
     ../system/modules/agents.nix
+    ../system/modules/forgecode.nix
     inputs.nix-gaming.nixosModules.pipewireLowLatency
 
     # Centralized nix configuration
