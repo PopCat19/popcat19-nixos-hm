@@ -7,17 +7,21 @@
 # - Configures Nix language support extensions
 # - Sets editor preferences and keybindings
 { pkgs, ... }:
+let
+  inherit (pkgs.stdenv.hostPlatform) isx86_64;
+in
 {
   programs.vscodium = {
     enable = true;
 
     profiles.default = {
-      extensions = with pkgs.vscode-extensions; [
-        jnoortheen.nix-ide
-        redhat.vscode-xml
-        redhat.vscode-yaml
-        rust-lang.rust-analyzer
-      ];
+      extensions =
+        (with pkgs.vscode-extensions; [
+          jnoortheen.nix-ide
+          redhat.vscode-yaml
+          rust-lang.rust-analyzer
+        ])
+        ++ pkgs.lib.optionals isx86_64 [ pkgs.vscode-extensions.redhat.vscode-xml ];
 
       userSettings = {
         "editor.minimap.enabled" = true;

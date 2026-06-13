@@ -7,17 +7,23 @@
 # - Sets environment variables for browser path and host requirement bypass
 {
   pkgs,
+  lib,
   ...
 }:
+let
+  inherit (pkgs.stdenv.hostPlatform) isx86_64;
+in
 {
-  home.packages = [
-    pkgs.playwright-driver.browsers
-    pkgs.playwright-mcp
-  ];
+  config = lib.mkIf isx86_64 {
+    home.packages = [
+      pkgs.playwright-driver.browsers
+      pkgs.playwright-mcp
+    ];
 
-  home.sessionVariables = {
-    PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
-    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
-    PLAYWRIGHT_HOST_PLATFORM_OVERRIDE = "ubuntu-24.04";
+    home.sessionVariables = {
+      PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+      PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+      PLAYWRIGHT_HOST_PLATFORM_OVERRIDE = "ubuntu-24.04";
+    };
   };
 }

@@ -12,12 +12,19 @@
   ...
 }:
 let
-  # ROCm-aware: nixos0 (AMD GPU) gets btop-rocm, thinkpad0 (Intel) gets btop
-  btopPackage = if userConfig.gaming.enableROCm or false then pkgs.btop-rocm else pkgs.btop;
-  x86_64Packages = pkgs.lib.optionals pkgs.stdenv.isx86_64 [
-    btopPackage
+  inherit (pkgs.stdenv.hostPlatform) isx86_64;
+
+  # ROCm-aware: x86_64 AMD GPU hosts get btop-rocm; everything else gets btop
+  btopPackage =
+    if isx86_64 && (userConfig.gaming.enableROCm or false) then pkgs.btop-rocm else pkgs.btop;
+
+  x86_64Packages = pkgs.lib.optionals isx86_64 [
+    pkgs.appimage-run
     pkgs.ddcui
+    pkgs.lutris
     pkgs.openrgb-with-all-plugins
+    pkgs.osu-lazer-bin
+    pkgs.pureref
     inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.osu-stable
   ];
 in
@@ -96,13 +103,12 @@ with pkgs;
   tree
 
   # Gaming
-  lutris
-  osu-lazer-bin
+  # lutris, osu-lazer-bin, and osu-stable are x86_64-only
 
   # Graphics
   friction-graphics
   kdePackages.gwenview
-  pureref
+  # pureref is x86_64-only
 
   # Networking
   localsend
@@ -112,7 +118,6 @@ with pkgs;
   zrok
 
   # System
-  appimage-run
   appstream
   coreutils-full
   ddcutil
@@ -128,6 +133,7 @@ with pkgs;
   zenity
 
   # Terminal
+  btopPackage
   fastfetch
   gum
   kitty

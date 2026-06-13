@@ -6,6 +6,9 @@
 # - Installs MangoHUD and related gaming tools
 # - Configures performance monitoring overlay settings
 { pkgs, userConfig, ... }:
+let
+  inherit (pkgs.stdenv.hostPlatform) isx86_64;
+in
 {
   home.file.".config/MangoHud/MangoHud.conf" = {
     text = ''
@@ -63,11 +66,13 @@
     '';
   };
 
-  home.packages = with pkgs; [
-    goverlay
-    gpu-viewer
-    mangohud
-    obs-studio-plugins.obs-vkcapture
-    vkbasalt
-  ];
+  home.packages =
+    with pkgs;
+    [
+      gpu-viewer
+      mangohud
+      obs-studio-plugins.obs-vkcapture
+      vkbasalt
+    ]
+    ++ lib.optional isx86_64 pkgs.goverlay;
 }

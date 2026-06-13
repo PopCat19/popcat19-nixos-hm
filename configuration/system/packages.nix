@@ -12,16 +12,17 @@
   ...
 }:
 let
+  inherit (pkgs.stdenv.hostPlatform) isx86_64;
+
   # x86_64 packages only included on x86_64 hosts
-  x86_64Packages = pkgs.lib.optionals pkgs.stdenv.isx86_64 (
-    [
-      pkgs.freerdp
-    ]
-    # ROCm packages only for gaming hosts with AMD GPU support
-    ++ pkgs.lib.optionals (userConfig.gaming.enableROCm or false) [
-      pkgs.rocmPackages.rpp
-    ]
-  );
+  x86_64Packages = pkgs.lib.optionals isx86_64 [
+    pkgs.freerdp
+  ];
+
+  # ROCm packages only for x86_64 gaming hosts with AMD GPU support
+  rocmPackages = pkgs.lib.optionals (isx86_64 && (userConfig.gaming.enableROCm or false)) [
+    pkgs.rocmPackages.rpp
+  ];
 
 in
 {
@@ -52,5 +53,6 @@ in
       usbutils
       util-linux
     ]
-    ++ x86_64Packages;
+    ++ x86_64Packages
+    ++ rocmPackages;
 }

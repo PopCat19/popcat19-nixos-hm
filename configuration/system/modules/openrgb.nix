@@ -6,20 +6,26 @@
 # - Enables OpenRGB systemd service for system-wide RGB control
 # - Configures automatic SMBus/I2C module loading
 # - Provides OpenRGB with all plugins
-{ pkgs, ... }:
+# - x86_64 only: SMBus/I2C RGB controllers are PC hardware
+{ pkgs, lib, ... }:
+let
+  inherit (pkgs.stdenv.hostPlatform) isx86_64;
+in
 {
-  boot.kernelModules = [
-    "i2c-dev"
-    "i2c-i801"
-    "i2c-piix4"
-  ];
+  config = lib.mkIf isx86_64 {
+    boot.kernelModules = [
+      "i2c-dev"
+      "i2c-i801"
+      "i2c-piix4"
+    ];
 
-  environment.systemPackages = with pkgs; [
-    openrgb-with-all-plugins
-  ];
+    environment.systemPackages = with pkgs; [
+      openrgb-with-all-plugins
+    ];
 
-  services.hardware.openrgb = {
-    enable = true;
-    motherboard = "amd";
+    services.hardware.openrgb = {
+      enable = true;
+      motherboard = "amd";
+    };
   };
 }

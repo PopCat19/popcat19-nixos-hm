@@ -9,9 +9,7 @@
 # - Conditionally enables gaming modules for gaming hosts
 { inputs }:
 let
-  overlays = import ../flake-modules/overlays.nix { inherit inputs; };
-
-  # Gaming module only enabled for hosts with userConfig.gaming.enable = true
+  # Gaming module only enabled for x86_64 hosts with userConfig.gaming.enable = true
   mkGamingModule = userConfig: {
     imports = [ inputs.aagl.nixosModules.default ];
     nix.settings = inputs.aagl.nixConfig;
@@ -28,6 +26,7 @@ in
     let
       userConfig = import (hostPath + "/user-config.nix");
       inherit (userConfig) system;
+      overlays = import ../flake-modules/overlays.nix { inherit inputs system; };
     in
     inputs.nixpkgs.lib.nixosSystem {
       specialArgs = {
@@ -37,7 +36,6 @@ in
         (hostPath + "/configuration.nix")
         inputs.home-manager.nixosModules.home-manager
         inputs.agenix.nixosModules.default
-        (mkGamingModule userConfig)
         { nixpkgs.overlays = overlays; }
         {
           home-manager = {
@@ -57,6 +55,9 @@ in
             };
           };
         }
-      ];
+      ]
+      ++ inputs.nixpkgs.lib.optional (system == "x86_64-linux" && (userConfig.gaming.enable or false)) (
+        mkGamingModule userConfig
+      );
     };
 }
