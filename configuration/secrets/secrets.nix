@@ -13,4 +13,5 @@ in
   "sillytavern-password.age".publicKeys = [ popcat19 ];
   "klipper-wifi-psk.age".publicKeys = [ popcat19 ];
   "klipper-hashed-password.age".publicKeys = [ popcat19 ];
+  "klipper-ap-psk.age".publicKeys = [ popcat19 ];
 }

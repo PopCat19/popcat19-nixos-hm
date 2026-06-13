@@ -4,7 +4,8 @@
 #
 # This module:
 # - Imports Klipper, Moonraker, and Mainsail service modules only when enabled
-# - Generates the WiFi NetworkManager profile from an agenix secret
+# - Seeds the client WiFi NetworkManager profile on first boot from an agenix secret
+# - Seeds the fallback AP profile and enables auto/manual AP switching
 # - Points the primary user's password at an agenix hashed-password secret
 {
   config,
@@ -21,6 +22,7 @@ in
     ./printer.nix
     ./moonraker.nix
     ./mainsail.nix
+    ./ap-fallback.nix
   ];
 
   config = lib.mkIf (cfg.enable or false) (
@@ -33,20 +35,29 @@ in
       (lib.mkIf (config.age.secrets ? klipper-wifi-psk) {
         system.activationScripts.klipper-wifi-profile = {
           text = ''
+            profile=/etc/NetworkManager/system-connections/Beave_Net_IoT.nmconnection
+            if [ -e "$profile" ]; then
+              exit 0
+            fi
+
             mkdir -p /etc/NetworkManager/system-connections
             chmod 0755 /etc/NetworkManager/system-connections
             psk=$(cat ${config.age.secrets.klipper-wifi-psk.path})
-            cat > /etc/NetworkManager/system-connections/Beave_Net_IoT.nmconnection <<EOF
+            cat > "$profile" <<EOF
             [connection]
             id=Beave_Net_IoT
             uuid=0278899c-f325-4669-ad07-06abc09f893d
             type=wifi
+            interface-name=wlan0
+            autoconnect=true
+            autoconnect-priority=100
 
             [wifi]
             mode=infrastructure
             ssid=${cfg.wifi.ssid or ""}
 
             [wifi-security]
+            auth-alg=open
             key-mgmt=wpa-psk
             psk=$psk
 
@@ -56,10 +67,9 @@ in
             [ipv6]
             addr-gen-mode=default
             method=auto
-
-            [proxy]
             EOF
-            chmod 0600 /etc/NetworkManager/system-connections/Beave_Net_IoT.nmconnection
+            chmod 0600 "$profile"
+            ${config.systemd.package}/bin/systemctl try-restart NetworkManager || true
           '';
         };
       })

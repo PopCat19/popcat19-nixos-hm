@@ -56,6 +56,12 @@
           group = "root";
           mode = "400";
         };
+        klipper-ap-psk = {
+          file = ../../secrets/klipper-ap-psk.age;
+          owner = "root";
+          group = "root";
+          mode = "400";
+        };
       })
     ];
   };
