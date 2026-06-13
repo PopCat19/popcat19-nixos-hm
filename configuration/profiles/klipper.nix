@@ -3,7 +3,7 @@
 # Purpose: Configuration preset for the Klipper Pi 4B — headless 3D printer appliance
 #
 # This profile:
-# - Imports nixos-raspberrypi Pi 4 base (U-Boot, vendor kernel, firmware, udev groups, config.txt)
+# - Imports Pi 4 base (U-Boot, vendor kernel, firmware, udev groups, config.txt)
 # - Enables Klipper + Moonraker + Mainsail on port 80
 # - Configures mutable printer.cfg with syncthing group sharing
 # - Enables SPI for ADXL345 input shaper calibration
@@ -12,6 +12,10 @@
 #
 # Note: Uses nixos-raspberrypi's own nixpkgs (25.11) via nixosSystem,
 # not the flake's unstable nixpkgs. This ensures tested kernel+firmware compat.
+#
+# Note: users.nix is NOT imported. User + group + sudo are all inline here
+# to avoid security.sudo.extraRules conflicts with NOPASSWD wheel group rules.
+
 {
   lib,
   pkgs,
@@ -46,25 +50,50 @@ let
 in
 {
   imports = [
-    # Portable modules from the flake
     ../base/system/localization.nix
-
-    # Klipper ecosystem
     ../system/modules/klipper/printer.nix
   ];
 
-  # users.nix is deliberately NOT imported — it defines security.sudo.extraRules
-  # which conflicts with the wheel-group NOPASSWD rules below.
-  # User creation is handled inline in this profile instead.
-
+  # ------------------------------------------------------------------
+  # User & group — inline (not from users.nix)
+  # ------------------------------------------------------------------
   users.groups.${userConfig.username} = { };
 
   users.users.${userConfig.username} = {
+    isNormalUser = true;
+    group = userConfig.username;
+    initialPassword = "popcat19";
+    extraGroups = [
+      "wheel"
+      "klipper"
+      "moonraker"
+    ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0"
+    ];
+  };
+
+  # ------------------------------------------------------------------
+  # sudo — wheel group gets full NOPASSWD
+  # ------------------------------------------------------------------
+  security.sudo.enable = true;
+  security.sudo.extraRules = [
+    {
+      groups = [ "wheel" ];
+      commands = [
+        {
+          command = "ALL";
+          options = [
+            "NOPASSWD"
+            "SETENV"
+          ];
+        }
+      ];
+    }
+  ];
 
   # ------------------------------------------------------------------
   # SPI — needed for ADXL345 input shaper calibration
-  # nixos-raspberrypi config.txt module provides this; just enable the
-  # dtparam that's commented out by default in configtxt.nix
   # ------------------------------------------------------------------
   hardware.raspberry-pi.config.all.base-dt-params.spi = {
     enable = true;
@@ -73,24 +102,19 @@ in
 
   # ------------------------------------------------------------------
   # WiFi — NetworkManager with preconfigured connection
-  # PSK ends up in /nix/store via the writeText above. Same tradeoff
-  # as every NixOS headless Pi setup — the Pi is on home LAN and
-  # SSH keys gate actual access, so cleartext PSK in store is fine.
   # ------------------------------------------------------------------
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "wpa_supplicant";
 
-  # Pre-provision the NM connection file so the Pi connects on first boot
   environment.etc."NetworkManager/system-connections/Beave_Net_IoT.nmconnection" = {
     source = nmConnection;
     mode = "0600";
   };
 
-  # Enable non-free firmware (required for Broadcom WiFi on Pi)
   hardware.enableRedistributableFirmware = true;
 
   # ------------------------------------------------------------------
-  # SSH — OpenSSH server, key auth with popcat19's ed25519 key
+  # SSH — OpenSSH server
   # ------------------------------------------------------------------
   services.openssh = {
     enable = true;
@@ -98,33 +122,6 @@ in
       PasswordAuthentication = true;
       PermitRootLogin = "yes";
     };
-  };
-
-  # users.nix is deliberately NOT imported — it defines security.sudo.extraRules
-  # which conflicts with the wheel-group NOPASSWD rules above.
-  # User creation is handled inline here instead.
-
-  users.groups.${userConfig.username} = { };
-
-  # sudoers.d/wheel — NOPASSWD for wheel group
-  security.sudo.extraRules = [{
-    groups = [ "wheel" ];
-    commands = [{ command = "ALL"; options = [ "NOPASSWD" "SETENV" ]; }];
-  }];
-
-  # Rebuild marker: v3 — force etc derivation change
-  environment.etc."klipper-build-marker".text = "v3";
-
-  # The extraGroups on the user MUST include wheel for sudo.
-  # users.nix sets mkDefault ["wheel"], this augments it.
-  users.users.${userConfig.username} = {
-    isNormalUser = true;
-    group = userConfig.username;
-    initialPassword = "popcat19";
-    extraGroups = lib.mkForce [ "wheel" "klipper" "moonraker" ];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0"
-    ];
   };
 
   # ------------------------------------------------------------------
@@ -159,9 +156,6 @@ in
     options = "--delete-older-than 7d";
   };
 
-  # Rebuild nonce: v1
-  environment.variables.KLIPPER_BUILD_ID = "1";
-
   nixpkgs.config.allowUnfree = true;
 
   # ------------------------------------------------------------------
@@ -175,11 +169,8 @@ in
   '';
 
   # ------------------------------------------------------------------
-  # System
+  # Filesystem stub — for evaluation; sd-image module provides real one
   # ------------------------------------------------------------------
-
-  # Minimal filesystem definition for evaluation — the actual SD image
-  # is built via nixos-raspberrypi's sd-image module at deploy time.
   fileSystems."/" = {
     device = "/dev/disk/by-label/NIXOS_SD";
     fsType = "ext4";
