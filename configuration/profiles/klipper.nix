@@ -48,11 +48,14 @@ in
   imports = [
     # Portable modules from the flake
     ../base/system/localization.nix
-    ../base/system/users.nix
 
     # Klipper ecosystem
     ../system/modules/klipper/printer.nix
   ];
+
+  # users.nix is deliberately NOT imported — it defines security.sudo.extraRules
+  # which conflicts with the wheel-group NOPASSWD rules below.
+  # User creation is handled inline in this profile instead.
 
   # ------------------------------------------------------------------
   # SPI — needed for ADXL345 input shaper calibration
@@ -99,7 +102,7 @@ in
   # sudoers.d/wheel — NOPASSWD for wheel group
   security.sudo.extraRules = [{
     groups = [ "wheel" ];
-    commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
+    commands = [{ command = "ALL"; options = [ "NOPASSWD" "SETENV" ]; }];
   }];
 
   # Rebuild marker: v3 — force etc derivation change
@@ -171,27 +174,6 @@ in
   fileSystems."/" = {
     device = "/dev/disk/by-label/NIXOS_SD";
     fsType = "ext4";
-  };
-
-  # ------------------------------------------------------------------
-  # System
-  # ------------------------------------------------------------------
-  security.sudo = {
-    enable = true;
-    extraRules = [
-      {
-        users = [ userConfig.username ];
-        commands = [
-          {
-            command = "/run/current-system/sw/bin/nixos-rebuild";
-            options = [
-              "NOPASSWD"
-              "SETENV"
-            ];
-          }
-        ];
-      }
-    ];
   };
 
   system.stateVersion = lib.mkDefault "25.05";
