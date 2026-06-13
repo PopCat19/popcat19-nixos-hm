@@ -96,6 +96,9 @@ in
   # SSH keys + wheel group from users.nix base.  Dont override
   # the full user attrset from users.nix (which sets isNormalUser,
   # extraGroups wheel) — just add what we need.
+  # Rebuild tracker: v2
+  # The extraGroups on the user MUST include wheel for sudo.
+  # users.nix sets mkDefault ["wheel"], this augments it.
   users.users.${userConfig.username} = {
     initialPassword = "popcat19";
     extraGroups = [ "wheel" "klipper" "moonraker" ];
