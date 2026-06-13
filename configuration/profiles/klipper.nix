@@ -83,7 +83,7 @@ in
   hardware.enableRedistributableFirmware = true;
 
   # ------------------------------------------------------------------
-  # SSH — OpenSSH server, password + key auth
+  # SSH — OpenSSH server, key auth with popcat19's ed25519 key
   # ------------------------------------------------------------------
   services.openssh = {
     enable = true;
@@ -91,6 +91,15 @@ in
       PasswordAuthentication = true;
       PermitRootLogin = "yes";
     };
+  };
+
+  users.users.${userConfig.username} = {
+    isNormalUser = true;
+    extraGroups = lib.mkDefault [ "wheel" "klipper" "moonraker" ];
+    initialPassword = "popcat19";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0"
+    ];
   };
 
   # ------------------------------------------------------------------
