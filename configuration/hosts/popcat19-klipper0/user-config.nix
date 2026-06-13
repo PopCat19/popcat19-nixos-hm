@@ -1,6 +1,7 @@
 # user-config.nix
 #
 # Purpose: Host-specific configuration for the Klipper Pi 4B
+# v2 — rebuild marker
 let
   base = import ../../user-config.nix;
   home = "/home/popcat19";
