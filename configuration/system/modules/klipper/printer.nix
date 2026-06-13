@@ -146,6 +146,7 @@ in
 
   systemd.tmpfiles.rules = [
     "d ${printerCfgDir} 2775 klipper klipper -"
+    "f /var/log/klipper.log 0644 klipper klipper -"
     "d /home/popcat19/printer_data 0775 popcat19 klipper -"
     "d /home/popcat19/printer_data/gcodes 0775 popcat19 klipper -"
     "d /home/popcat19/printer_data/logs 0775 popcat19 klipper -"

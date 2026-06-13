@@ -5,7 +5,7 @@
 # This module:
 # - Creates the main user account
 # - Sets up basic user groups
-# - Configures passwordless sudo for nixos-rebuild (LLM automation)
+# - Configures passwordless sudo for nixos-rebuild, nix-env, and systemd-run (LLM automation + remote deploy)
 { lib, userConfig, ... }:
 {
   users.users.${userConfig.username} = {
@@ -43,6 +43,20 @@
           {
             command = "/run/current-system/sw/bin/systemctl restart nix-daemon";
             options = [ "NOPASSWD" ];
+          }
+          {
+            command = "/run/current-system/sw/bin/nix-env";
+            options = [
+              "NOPASSWD"
+              "SETENV"
+            ];
+          }
+          {
+            command = "/run/current-system/sw/bin/systemd-run";
+            options = [
+              "NOPASSWD"
+              "SETENV"
+            ];
           }
         ];
       }
