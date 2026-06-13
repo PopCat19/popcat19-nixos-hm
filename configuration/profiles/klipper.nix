@@ -4,22 +4,19 @@
 #
 # This profile:
 # - Imports Pi 4 base (U-Boot, vendor kernel, firmware, udev groups, config.txt)
+# - Imports users.nix for user/sudo base (augmented below)
 # - Enables Klipper + Moonraker + Mainsail on port 80
-# - Configures mutable printer.cfg with syncthing group sharing
+# - Configures mutable printer.cfg
 # - Enables SPI for ADXL345 input shaper calibration
 # - Sets up WiFi via NetworkManager with credentials from userConfig
-# - Minimal services: SSH, journald, dbus, nix GC
 #
-# Note: Uses nixos-raspberrypi's own nixpkgs (25.11) via nixosSystem,
-# not the flake's unstable nixpkgs. This ensures tested kernel+firmware compat.
-#
-# Note: users.nix is NOT imported. User + group + sudo are all inline here
-# to avoid security.sudo.extraRules conflicts with NOPASSWD wheel group rules.
+# Note: Uses nixos-raspberrypi's own nixpkgs (25.11) via nixosSystem.
 
 {
   lib,
   pkgs,
   userConfig,
+  config,
   ...
 }:
 let
@@ -51,19 +48,17 @@ in
 {
   imports = [
     ../base/system/localization.nix
+    ../base/system/users.nix
     ../system/modules/klipper/printer.nix
   ];
 
   # ------------------------------------------------------------------
-  # User & group — inline (not from users.nix)
+  # User — users.nix provides isNormalUser + group + mkDefault wheel.
+  # mkForce ensures this definition wins, adding klipper+moonraker.
   # ------------------------------------------------------------------
-  users.groups.${userConfig.username} = { };
-
   users.users.${userConfig.username} = {
-    isNormalUser = true;
-    group = userConfig.username;
     initialPassword = "popcat19";
-    extraGroups = [
+    extraGroups = lib.mkForce [
       "wheel"
       "klipper"
       "moonraker"
@@ -74,9 +69,9 @@ in
   };
 
   # ------------------------------------------------------------------
-  # sudo — wheel group gets full NOPASSWD
+  # sudo — wheel group gets full NOPASSWD (concatenates with users.nix
+  # rules — NixOS lists merge across modules)
   # ------------------------------------------------------------------
-  security.sudo.enable = true;
   security.sudo.extraRules = [
     {
       groups = [ "wheel" ];
