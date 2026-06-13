@@ -9,9 +9,7 @@
 # - Enables Mainsail web UI on port 80 via nginx
 # - Adds popcat19 and klipper users to shared klipper group
 # - Configures syncthing folder for printer.cfg sync
-{
-  ...
-}:
+_:
 let
   printerCfgDir = "/var/lib/klipper";
   printerCfgFile = "${printerCfgDir}/printer.cfg";
