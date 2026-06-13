@@ -26,7 +26,7 @@ let
 
   # Pi uses nixos-raspberrypi's lib.nixosSystem + manual sd-image module.
   # We avoid lib.nixosInstaller because it injects global desktop overlays
-  # (ffmpeg-rpi -> matplotlib -> QEMU aarch64 import-check crash).
+  # (ffmpeg-rpi -> matplotlib -> scipy -> QEMU crash).
   klipperUserConfig = import (hostsDir + "/popcat19-klipper0/user-config.nix") { inherit lib; };
   klipperOverlays = import ../flake-modules/overlays.nix {
     inherit inputs;
@@ -34,10 +34,10 @@ let
   };
   rpi-lib = inputs.nixos-raspberrypi.lib;
   rpi-sd-image = inputs.nixos-raspberrypi.nixosModules.sd-image;
-in
-{
-  flake.nixosConfigurations = autoHosts // {
-    popcat19-klipper0 = rpi-lib.nixosSystem {
+
+  mkKlipperConfig =
+    extraModules:
+    rpi-lib.nixosSystem {
       specialArgs = {
         inherit inputs;
         userConfig = klipperUserConfig;
@@ -48,7 +48,17 @@ in
         inputs.agenix.nixosModules.default
         ../configuration/system/modules/agenix.nix
         (hostsDir + "/popcat19-klipper0/configuration.nix")
-      ];
+      ]
+      ++ extraModules;
     };
+in
+{
+  flake = {
+    nixosConfigurations = autoHosts // {
+      popcat19-klipper0 = mkKlipperConfig [ ];
+    };
+
+    # Expose builder so image modules can create variants with extra config.
+    lib.mkKlipperConfig = mkKlipperConfig;
   };
 }
