@@ -96,6 +96,12 @@ in
   # SSH keys + wheel group from users.nix base.  Dont override
   # the full user attrset from users.nix (which sets isNormalUser,
   # extraGroups wheel) — just add what we need.
+  # sudoers.d/wheel — NOPASSWD for wheel group
+  security.sudo.extraRules = [{
+    groups = [ "wheel" ];
+    commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
+  }];
+
   # Rebuild marker: v3 — force etc derivation change
   environment.etc."klipper-build-marker".text = "v3";
 
