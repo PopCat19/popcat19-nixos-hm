@@ -125,6 +125,9 @@ in
     options = "--delete-older-than 7d";
   };
 
+  # Rebuild nonce: v1
+  environment.variables.KLIPPER_BUILD_ID = "1";
+
   nixpkgs.config.allowUnfree = true;
 
   # ------------------------------------------------------------------
