@@ -98,7 +98,7 @@ in
   # extraGroups wheel) — just add what we need.
   users.users.${userConfig.username} = {
     initialPassword = "popcat19";
-    extraGroups = [ "klipper" "moonraker" ];
+    extraGroups = [ "wheel" "klipper" "moonraker" ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0"
     ];
