@@ -210,10 +210,6 @@ onboard() {
 # ---------- Main ----------
 main() {
   local img_bytes dev_bytes dev_human img_human model tran write_path out
-  local has_flags=false
-
-  # Check for any user-supplied flags
-  [[ $# -gt 0 ]] && has_flags=true
 
   # Parse positional + flags
   while (($#)); do
@@ -233,13 +229,18 @@ main() {
 
   collect_system_pknames
 
-  # Onboarding when run with no args
-  if ! $has_flags; then
-    onboard
+  # Onboarding when no image type or image path given via flags
+  if [[ -z "$ARG_IMAGE" ]]; then
+    if [[ -z "$ARG_TYPE" ]]; then
+      onboard
+    fi
   fi
 
-  # If type still unset (shouldn't happen after onboarding, but safety)
-  [[ -z "$ARG_TYPE" ]] && { err "No image type specified."; exit 2; }
+  # If type still unset and no image path, fail
+  if [[ -z "$ARG_TYPE" && -z "$ARG_IMAGE" ]]; then
+    err "No image type specified."
+    exit 2
+  fi
 
   # Resolve image
   if [[ -n "$ARG_IMAGE" ]]; then
