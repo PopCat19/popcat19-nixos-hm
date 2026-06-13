@@ -1,22 +1,42 @@
 # popcat19-nixos-hm
 
-Personal NixOS configuration — Hyprland + PMD theming, multi-host, profile-based.
+NixOS + Home Manager multi-host configuration — Hyprland, PMD theming, profile presets, Klipper 3D printer appliance, one-shot installer images.
 
 ## Quick start
 
+### From an existing NixOS install
+
 ```bash
-# Clone and build for current host
-git clone <repo-url> && cd popcat19-nixos-hm
+git clone https://github.com/PopCat19/popcat19-nixos-hm
+cd popcat19-nixos-hm
 sudo nixos-rebuild switch --flake .
-
-# Build for specific host
-sudo nixos-rebuild switch --flake .#popcat19-nixos0
-
-# Update inputs
-nix flake update
 ```
 
-<details>
+### From the one-shot installer image
+
+Build and write the minimal installer to a USB stick, then boot from it:
+
+```bash
+nix build .#installer-zst
+zstd -d result/popcat19-installer.img.zst -o installer.img
+sudo dd if=installer.img of=/dev/sdX bs=4M status=progress conv=fsync
+```
+
+Login as `popcat19` / `popcat19`, then switch to any host:
+
+```bash
+cd ~/popcat19-nixos-hm
+sudo nixos-rebuild switch --flake .#popcat19-nixos0
+```
+
+### Pi SD card image
+
+```bash
+nix build .#sd-popcat19-klipper0
+sudo dd if=$(readlink result) of=/dev/sdX bs=4M status=progress conv=fsync
+```
+
+<details open>
 <summary>Architecture</summary>
 
 ```
@@ -33,11 +53,13 @@ nix flake update
 │   ├── hosts/                   # Per-machine configurations
 │   ├── profiles/                # Composable profile presets
 │   ├── secrets/                 # Agenix-encrypted secrets
-│   ├── system/modules/          # System-level NixOS modules (~30 modules)
+│   ├── services/                # Service configuration bundles (zrok, sillytavern)
+│   ├── shared/                  # Shared user-config kernel (identity, theme, fonts, features)
+│   ├── system/modules/          # System-level NixOS modules (~35 modules)
+│   │   └── klipper/             # Klipper 3D printer stack (printer, moonraker, mainsail, AP fallback)
 │   ├── nix-options.nix          # Nix daemon settings (features, GC, trusted users)
-│   ├── stateversion.nix         # Single source of truth for state versions
-│   └── user-config.nix          # Shared user/host/theme/fonts config
-├── flake-modules/               # Flake-parts modules (nixos, overlays, formatter)
+│   └── stateversion.nix         # Single source of truth for state versions
+├── flake-modules/               # Flake-parts modules (nixos, images, overlays, formatter, nix-on-droid)
 ├── lib/                         # Shared helper library (mkHost, mkHome, helpers)
 ├── overlays/                    # Package overlays (OpenTabletDriver, Friction graphics)
 ├── tools/                       # CLI utilities (profile manager, debug)
@@ -51,12 +73,14 @@ nix flake update
 <details open>
 <summary>Hosts</summary>
 
-| Host | Machine | Profile | Notes |
-|------|---------|---------|-------|
-| `popcat19-nixos0` | Desktop (AMD Ryzen 5 5500) | `default` | Dual monitor, ROCm, gaming + dev, distributed build server |
-| `popcat19-surface0` | Surface Pro (i5-8350U) | `surface` | Touch/pen input, thermal management, WiFi fixes |
-| `popcat19-thinkpad0` | ThinkPad laptop | `laptop` | External HDMI, TLP power management, zRAM |
-| `popcat19-dedede0` | ChromeOS (shimboot) | `shimboot` | Pruned config, pinned systemd for ChromeOS compat |
+| Host | Machine | Arch | Profile | Notes |
+|------|---------|------|---------|-------|
+| `popcat19-nixos0` | Desktop (AMD Ryzen 5 5500) | x86_64 | `default` | Dual monitor, ROCm, gaming + dev, distributed build server |
+| `popcat19-surface0` | Surface Pro (i5-8350U) | x86_64 | `surface` | Touch/pen input, thermal management, WiFi fixes |
+| `popcat19-thinkpad0` | ThinkPad laptop | x86_64 | `laptop` | External HDMI, TLP power management, zRAM |
+| `popcat19-dedede0` | ChromeOS (shimboot) | x86_64 | `shimboot` | Pruned config, pinned systemd for ChromeOS compat |
+| `popcat19-klipper0` | Raspberry Pi 4B | aarch64 | `klipper` | Headless printer appliance, setup AP fallback |
+| `popcat19-aarch640` | Generic aarch64 stub | aarch64 | `minimal` | Template for new aarch64 hosts |
 
 </details>
 
@@ -66,12 +90,28 @@ nix flake update
 Profiles compose system modules into deployable presets. Each host points to one profile via its `user-config.nix`.
 
 - **`default`** — Full desktop: Hyprland, PipeWire, virtualization, VPN, gaming, Syncthing, OpenRGB
-- **`laptop`** — Desktop minus desktop-specifics; adds TLP
-- **`surface`** — Surface Pro: touch, thermal throttling, surface-control group
+- **`laptop`** — Desktop minus desktop-specifics; adds TLP, zRAM
+- **`surface`** — Surface Pro: touch, thermal management, surface-control group
 - **`minimal`** — Headless/server: SSH, Docker, no display stack
 - **`shimboot`** — ChromeOS shimboot: pruned home modules, minimal services
+- **`klipper`** — Pi 4B printer appliance: Klipper, Moonraker, Mainsail, WiFi, AP fallback
 
 Manage profiles with `tools/profile-manager-tui.sh`.
+
+</details>
+
+<details>
+<summary>Images</summary>
+
+The flake produces one-shot installer and device images with the flake source pre-cloned at `~/popcat19-nixos-hm`.
+
+| Package | System | Description |
+|---------|--------|-------------|
+| `installer-raw` | x86_64-linux | Minimal raw-EFI disk image (user, fish, SSH, sing-box, git) |
+| `installer-zst` | x86_64-linux | Same, zstd-compressed |
+| `sd-popcat19-klipper0` | aarch64-linux | Pi 4B SD card image (full Klipper closure, zstd-compressed) |
+
+The installer includes sing-box TUN proxy (togglable via `singbox_on` / `singbox_off`), so you can rebuild behind a proxy from first boot.
 
 </details>
 
@@ -86,13 +126,32 @@ Manage profiles with `tools/profile-manager-tui.sh`.
 | `stylix` | System-wide theming (GTK, Qt, cursors) |
 | `pmd` | Personal Material Design theme |
 | `agenix` | Secret encryption |
-| `aagl` | Anime game launchers |
+| `aagl` | Anime game launchers (x86_64 only) |
 | `zen-browser` | Zen browser package |
+| `nixcord` | Vesktop Discord client with Vencord |
+| `nix-gaming` | Low-latency PipeWire module |
 | `noctalia-shell` | Wayland bar/launcher |
 | `llm-agents` | LLM agent tooling |
-| `lm-modal` | Wayland LLM overlay |
-| `opentabletdriver` | Drawing tablet driver (source) |
+| `nix-on-droid` | Android Nix environment |
+| `nixos-raspberrypi` | Pi 4B hardware support (U-Boot, kernel, firmware) |
 | `shimboot` | ChromeOS NixOS bootstrapping |
+
+</details>
+
+<details>
+<summary>Klipper Pi features</summary>
+
+The `popcat19-klipper0` host runs a headless 3D printer appliance:
+
+- **Klipper** + **Moonraker** + **Mainsail** — full web-controlled printer stack
+- **WiFi client** — seeded once from agenix secret, then mutable at runtime
+- **Fallback AP** — if home WiFi is unreachable, the Pi broadcasts its own `Klipper-Setup`
+  access point after 60s (password from agenix, `192.168.50.1/24`)
+- Toggle manually: `klipper_ap_on` / `klipper_ap_off`
+- SPI enabled for ADXL345 input shaper calibration
+- Journald capped at 200 MB / 7 day retention for SD card longevity
+
+See `configuration/system/modules/klipper/context.md` for module details.
 
 </details>
 
@@ -108,7 +167,7 @@ See `configuration/home/modules/context.md` for the full inventory.
 <details>
 <summary>System modules</summary>
 
-~30 modules covering: boot, audio (PipeWire), display (Hyprland + SDDM), networking (firewall, NetworkManager), hardware (Bluetooth, I2C), virtualization (Docker, libvirt, KVM, Waydroid), VPN (Mullvad), secret management (agenix), power management, OpenRGB, Sunshine streaming, SearXNG, Syncthing, tablet input, fonts, and XDG portals.
+~35 modules covering: boot, audio (PipeWire), display (Hyprland + SDDM), networking (firewall, NetworkManager), hardware (Bluetooth, I2C), virtualization (Docker, libvirt, KVM, Waydroid), VPN (Mullvad), sing-box TUN proxy, secret management (agenix), power management, OpenRGB, Sunshine streaming, SearXNG, Syncthing, tablet input, fonts, and XDG portals.
 
 See `configuration/system/modules/context.md` for the full inventory.
 
