@@ -15,7 +15,6 @@
 {
   imports = [
     ./system/boot.nix
-    ./system/users.nix
     ./system/localization.nix
     ../nix-options.nix
   ];

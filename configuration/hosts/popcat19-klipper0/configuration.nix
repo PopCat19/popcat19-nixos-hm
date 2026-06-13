@@ -4,11 +4,13 @@
 #
 # This module:
 # - Imports Pi 4 hardware base (U-Boot, vendor kernel, firmware) from nixos-raspberrypi
-# - Imports the klipper profile (Klipper + Moonraker + Mainsail + services)
-#
-# inputs, userConfig, and nixos-raspberrypi are passed via specialArgs
-# from flake-modules/nixos.nix to avoid _module.args infinite recursion.
-{ inputs, userConfig, ... }:
+# - Imports the klipper profile (Klipper + Moonraker + Mainsail + base services)
+# - Defines host-specific filesystem, hostname, and SSH authorized keys
+{
+  inputs,
+  userConfig,
+  ...
+}:
 {
   imports = [
     # Pi 4 hardware: U-Boot, vendor kernel, firmware, config.txt, udev
@@ -18,4 +20,17 @@
   ];
 
   networking.hostName = userConfig.hostname;
+
+  # Filesystem stub — sd-image module provides the real one at build time
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/NIXOS_SD";
+    fsType = "ext4";
+  };
+
+  # SSH access for the primary user
+  users.users.${userConfig.username} = {
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0"
+    ];
+  };
 }

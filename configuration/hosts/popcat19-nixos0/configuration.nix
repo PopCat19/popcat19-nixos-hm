@@ -30,7 +30,6 @@ in
     ./hardware-configuration.nix
     ../../profiles/${userConfig.profile}.nix
     ../../system/modules/sunshine.nix
-    ../../system/modules/agenix.nix
     ../../system/modules/searxng.nix
     ../../system/modules/firecrawl.nix
     ../../services/zrok

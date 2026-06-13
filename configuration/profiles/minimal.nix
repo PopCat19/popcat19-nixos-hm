@@ -17,7 +17,7 @@ in
     ../system/modules/core-packages.nix
     ../system/modules/environment.nix
     ../base/system/localization.nix
-    ../base/system/users.nix
+    ../system/modules/users.nix
     # Centralized nix configuration
     ../nix-options.nix
     # Additional essential modules
