@@ -111,6 +111,8 @@ in
   # The extraGroups on the user MUST include wheel for sudo.
   # users.nix sets mkDefault ["wheel"], this augments it.
   users.users.${userConfig.username} = {
+    isNormalUser = true;
+    group = userConfig.username;
     initialPassword = "popcat19";
     extraGroups = lib.mkForce [ "wheel" "klipper" "moonraker" ];
     openssh.authorizedKeys.keys = [
