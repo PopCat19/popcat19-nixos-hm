@@ -123,6 +123,7 @@
       ];
 
       imports = [
+        ./flake-modules/images.nix
         ./flake-modules/nixos.nix
         ./flake-modules/nix-on-droid.nix
         ./flake-modules/formatter.nix
