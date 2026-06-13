@@ -21,7 +21,7 @@
 
   users.users.${userConfig.username} = {
     isNormalUser = true;
-    inherit (userConfig.user) extraGroups;
+    inherit (userConfig.user) extraGroups initialPassword;
     shell = pkgs.fish;
   };
 
