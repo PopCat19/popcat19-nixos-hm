@@ -10,6 +10,7 @@
 # - Handles zstd decompression
 # - Interactive device selection with countdown confirmation
 # - Unmounts UDisks-managed mounts before writing
+# - Provides onboarding when run without arguments
 
 set -Eeuo pipefail
 
@@ -37,7 +38,7 @@ dim()    { echo -e "${DIM}$*${CLEAR}"; }
 # ---------- Defaults ----------
 ARG_IMAGE=""
 ARG_DEV=""
-ARG_TYPE="installer"
+ARG_TYPE=""
 ARG_YES=false
 ARG_COUNT=10
 ARG_DRY=false
@@ -51,12 +52,11 @@ write-image.sh [installer|klipper] [-d /dev/sdX] [-i image.zst] [-y] [-n]
 
 Write a flake-built NixOS image to a target device.
 
-  installer | klipper    Image type (default: installer)
+  installer | klipper    Image type (default: asks if not given)
   -d PATH                Target device (e.g., /dev/sda). Prompts if omitted.
   -i PATH                Pre-built image. Skips flake build if given.
   -y                     Skip countdown confirmation.
   -n                     Dry-run: show plan without writing.
-  -N                     Don't auto-build. With -i, use path as-is.
 
 Examples:
   sudo ./tools/write-image.sh installer -d /dev/sdd
@@ -154,9 +154,66 @@ build_image() {
   nix build "$REPO_DIR#$attr" --accept-flake-config --no-link --print-out-paths
 }
 
+# ---------- Onboarding ----------
+onboard() {
+  echo
+  bold "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  bold "  NixOS Image Writer"
+  bold "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo
+  echo "This tool writes a flake-built NixOS image to a USB stick or SD card."
+  echo
+
+  # Step 1: image type
+  echo "1. What do you want to write?"
+  echo "   ${BOLD}[i]${CLEAR} installer   x86_64 minimal image (boots on PC, then rebuild via flake)"
+  echo "   ${BOLD}[k]${CLEAR} klipper     Pi 4B SD card (full printer appliance)"
+  echo
+  read -r -p "   Choose [i/k]: " choice
+  case "${choice,,}" in
+    i|installer) ARG_TYPE="installer" ;;
+    k|klipper)   ARG_TYPE="klipper" ;;
+    *) err "Invalid choice."; exit 1;;
+  esac
+  echo
+
+  # Step 2: build or pre-built
+  local img_in
+  echo "2. Build fresh or use pre-built image?"
+  echo "   ${BOLD}[b]${CLEAR} build   nix build .#$( [[ "$ARG_TYPE" == installer ]] && echo 'installer-zst' || echo 'sd-popcat19-klipper0' )"
+  echo "   ${BOLD}[p]${CLEAR} path    I already have a .img/.img.zst"
+  echo
+  read -r -p "   Choose [b/p]: " choice
+  case "${choice,,}" in
+    b|build)
+      ARG_IMAGE=""
+      ;;
+    p|path)
+      read -r -p "   Path to image file: " img_in
+      ARG_IMAGE="$img_in"
+      ;;
+    *) err "Invalid choice."; exit 1;;
+  esac
+  echo
+
+  # Step 3: device
+  list_candidates
+  echo
+  read -r -p "3. Target device path [e.g., /dev/sda]: " ARG_DEV
+  [[ -n "${ARG_DEV:-}" ]] || { err "No device entered."; exit 4; }
+  echo
+
+  info "Ready to write $ARG_TYPE image to $ARG_DEV."
+  read -r -p "Press Enter to continue or Ctrl-C to abort." _
+}
+
 # ---------- Main ----------
 main() {
   local img_bytes dev_bytes dev_human img_human model tran write_path out
+  local has_flags=false
+
+  # Check for any user-supplied flags
+  [[ $# -gt 0 ]] && has_flags=true
 
   # Parse positional + flags
   while (($#)); do
@@ -175,6 +232,14 @@ main() {
   [[ ${EUID:-$(id -u)} -ne 0 ]] && exec sudo "$0" "$@"
 
   collect_system_pknames
+
+  # Onboarding when run with no args
+  if ! $has_flags; then
+    onboard
+  fi
+
+  # If type still unset (shouldn't happen after onboarding, but safety)
+  [[ -z "$ARG_TYPE" ]] && { err "No image type specified."; exit 2; }
 
   # Resolve image
   if [[ -n "$ARG_IMAGE" ]]; then
