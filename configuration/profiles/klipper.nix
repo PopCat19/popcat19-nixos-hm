@@ -57,6 +57,10 @@ in
   # which conflicts with the wheel-group NOPASSWD rules below.
   # User creation is handled inline in this profile instead.
 
+  users.groups.${userConfig.username} = { };
+
+  users.users.${userConfig.username} = {
+
   # ------------------------------------------------------------------
   # SPI — needed for ADXL345 input shaper calibration
   # nixos-raspberrypi config.txt module provides this; just enable the
@@ -96,9 +100,12 @@ in
     };
   };
 
-  # SSH keys + wheel group from users.nix base.  Dont override
-  # the full user attrset from users.nix (which sets isNormalUser,
-  # extraGroups wheel) — just add what we need.
+  # users.nix is deliberately NOT imported — it defines security.sudo.extraRules
+  # which conflicts with the wheel-group NOPASSWD rules above.
+  # User creation is handled inline here instead.
+
+  users.groups.${userConfig.username} = { };
+
   # sudoers.d/wheel — NOPASSWD for wheel group
   security.sudo.extraRules = [{
     groups = [ "wheel" ];
