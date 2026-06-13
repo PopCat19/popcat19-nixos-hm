@@ -93,10 +93,12 @@ in
     };
   };
 
+  # SSH keys + wheel group from users.nix base.  Dont override
+  # the full user attrset from users.nix (which sets isNormalUser,
+  # extraGroups wheel) — just add what we need.
   users.users.${userConfig.username} = {
-    isNormalUser = true;
-    extraGroups = lib.mkDefault [ "wheel" "klipper" "moonraker" ];
     initialPassword = "popcat19";
+    extraGroups = [ "klipper" "moonraker" ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0"
     ];

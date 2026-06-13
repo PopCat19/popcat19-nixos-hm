@@ -9,17 +9,14 @@
 # - Enables Mainsail web UI on port 80 via nginx
 # - Adds popcat19 and klipper users to shared klipper group
 # - Configures syncthing folder for printer.cfg sync
-{
-  userConfig,
-  ...
-}:
+{ lib, pkgs, config, ... }:
 let
   printerCfgDir = "/var/lib/klipper";
   printerCfgFile = "${printerCfgDir}/printer.cfg";
 in
 {
   # ------------------------------------------------------------------
-  # Users and groups — klipper service user + shared group for syncthing
+  # Users and groups — klipper + moonraker service users
   # ------------------------------------------------------------------
   users.users = {
     klipper = {
@@ -33,12 +30,6 @@ in
       group = "moonraker";
       home = "/home/moonraker";
       createHome = true;
-    };
-    ${userConfig.username} = {
-      extraGroups = [
-        "klipper"
-        "moonraker"
-      ];
     };
   };
 
