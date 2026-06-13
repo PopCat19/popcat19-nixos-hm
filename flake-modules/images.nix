@@ -14,7 +14,6 @@
 }:
 let
   inherit (inputs.nixpkgs) lib;
-  hostsDir = ../configuration/hosts;
   repoName = "popcat19-nixos-hm";
 
   flakeSource = inputs.self;
