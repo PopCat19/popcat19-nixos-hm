@@ -28,6 +28,11 @@
     value = "on";
   };
 
+  # Use generational bootloader — supports nixos-rebuild switch without
+  # corrupting firmware partition (unlike U-Boot, which rewrites on every switch).
+  # nixos-raspberrypi recommends this for new installations (github:nvmd/nixos-raspberrypi#60).
+  boot.loader.raspberry-pi.bootloader = "kernel";
+
   # WiFi — NetworkManager (PSK is injected from agenix by the klipper module)
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "wpa_supplicant";
