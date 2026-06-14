@@ -52,7 +52,6 @@
   # Packages — git, system utilities
   environment.sessionVariables = {
     NIXOS_CONFIG_DIR = "/home/popcat19/popcat19-nixos-hm";
-    NIXOS_FLAKE_HOSTNAME = "klipper";
   };
 
   environment.systemPackages = with pkgs; [

@@ -6,7 +6,7 @@ import ../../shared {
   inherit lib;
   host = {
     system = "aarch64-linux";
-    hostname = "klipper";
+    hostname = "popcat19-klipper0";
     profile = "klipper";
 
     user = {
