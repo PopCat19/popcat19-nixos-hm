@@ -23,6 +23,11 @@ let
     "surface0"
     "thinkpad0"
   ];
+
+  piDevices = [
+    "nixos0"
+    "klipper"
+  ];
 in
 {
   networking.firewall = {
@@ -80,6 +85,15 @@ in
           label = "Syncthing Shared";
           path = syncthingPaths.shared;
           rescanIntervalS = 300;
+          type = "sendreceive";
+        };
+        pi-klipper = {
+          devices = piDevices;
+          id = "pi-klipper";
+          ignorePerms = true;
+          label = "Pi Klipper";
+          path = "${"${syncthingPaths.shared}"}/pi-klipper";
+          rescanIntervalS = 30;
           type = "sendreceive";
         };
       };

@@ -19,6 +19,7 @@
     ../base/system/localization.nix
     ../system/modules/users.nix
     ../system/modules/fish-functions.nix
+    ../system/modules/syncthing.nix
     ../system/modules/klipper
   ];
 

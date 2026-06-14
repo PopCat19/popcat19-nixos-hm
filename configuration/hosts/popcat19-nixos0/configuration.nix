@@ -82,6 +82,11 @@ in
 
   hardware.enableRedistributableFirmware = true;
 
+  # Fix Renesas xHCI "HC couldn't access mem fast enough" warning spam.
+  # Disabling USB autosuspend prevents the controller from entering low-power
+  # states where it can't respond to DMA requests in time.
+  boot.kernelParams = [ "usbcore.autosuspend=-1" ];
+
   networking.hostName = userConfig.hostname;
 
   # Windows 11 dual boot (on /dev/sdb)
