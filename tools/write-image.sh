@@ -155,7 +155,7 @@ build_image() {
 	local type="$1" attr
 	case "$type" in
 	installer) attr="installer-zst" ;;
-	klipper) attr="sd-popcat19-klipper0" ;;
+	klipper) attr="packages.aarch64-linux.sd-popcat19-klipper0" ;;
 	*)
 		err "Unknown type: $type"
 		return 1
@@ -289,6 +289,16 @@ main() {
 	else
 		out="$(build_image "$ARG_TYPE")"
 		write_path="$out"
+	fi
+
+	# Resolve image: if path is a nix build output directory, find the .img.zst inside
+	if [[ -d "$write_path" ]]; then
+		img=$(echo "$write_path"/sd-image/*.img.zst "$write_path"/*.img.zst "$write_path"/*.img 2>/dev/null | head -n1)
+		[[ -n "$img" ]] || {
+			err "No image found in $write_path"
+			exit 3
+		}
+		write_path="$img"
 	fi
 
 	[[ -f "$write_path" ]] || {

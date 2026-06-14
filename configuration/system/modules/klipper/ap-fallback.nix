@@ -4,7 +4,7 @@
 #
 # This module:
 # - Declares a NetworkManager AP profile for initial setup / recovery
-# - Provides an agenix-backed WPA2 PSK (not stored in the Nix store)
+# - Uses the PSK from userConfig.klipper.ap.psk (SD card IS the trust boundary)
 # - Runs a systemd timer that brings up the AP if the client WiFi never connects
 # - Installs fish functions klipper_ap_on / klipper_ap_off for manual toggling
 {
@@ -21,6 +21,7 @@ let
 
   apSsid = ap.ssid or "Klipper-Setup";
   apSubnet = ap.subnet or "192.168.50.1/24";
+  apPsk = ap.psk or "klipper-setup";
 
   clientProfile = "Beave_Net_IoT";
   apProfile = "Klipper-Setup";
@@ -60,7 +61,7 @@ let
   '';
 in
 {
-  config = lib.mkIf (cfg.enable or false && apEnabled && config.age.secrets ? klipper-ap-psk) (
+  config = lib.mkIf (cfg.enable or false && apEnabled) (
     lib.mkMerge [
       {
         networking.networkmanager.ensureProfiles = {
@@ -81,7 +82,7 @@ in
             wifi-security = {
               auth-alg = "open";
               key-mgmt = "wpa-psk";
-              psk-flags = 1;
+              psk = apPsk;
             };
             ipv4 = {
               method = "manual";
@@ -89,16 +90,6 @@ in
             };
             ipv6.method = "disabled";
           };
-
-          secrets.entries = [
-            {
-              matchId = apProfile;
-              matchType = "wifi";
-              matchSetting = "802-11-wireless-security";
-              key = "psk";
-              file = config.age.secrets.klipper-ap-psk.path;
-            }
-          ];
         };
 
         systemd.services.klipper-ap-fallback = {
