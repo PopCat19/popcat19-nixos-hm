@@ -18,6 +18,7 @@
   imports = [
     ../base/system/localization.nix
     ../system/modules/users.nix
+    ../system/modules/fish-functions.nix
     ../system/modules/klipper
   ];
 
@@ -43,10 +44,17 @@
   };
 
   # Packages — git, system utilities
+  environment.sessionVariables = {
+    NIXOS_CONFIG_DIR = "/home/popcat19/popcat19-nixos-hm";
+    NIXOS_FLAKE_HOSTNAME = "klipper";
+  };
+
   environment.systemPackages = with pkgs; [
     curl
+    eza
     git
     micro
+    starship
     vim
     wget
   ];
