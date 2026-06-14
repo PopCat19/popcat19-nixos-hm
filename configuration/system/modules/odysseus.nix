@@ -11,7 +11,6 @@
   inputs,
   userConfig,
   lib,
-  config,
   ...
 }:
 let

@@ -26,7 +26,7 @@ let
 
   piDevices = [
     "nixos0"
-    "klipper"
+    # "klipper"  # TODO: add once Pi 4B is syncthing-enabled and device ID known
   ];
 in
 {
