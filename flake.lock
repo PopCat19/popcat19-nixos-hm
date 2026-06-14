@@ -404,6 +404,24 @@
         "type": "github"
       }
     },
+    "flake-utils_2": {
+      "inputs": {
+        "systems": "systems_4"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "fromYaml": {
       "flake": false,
       "locked": {
@@ -562,6 +580,27 @@
       "original": {
         "owner": "numtide",
         "repo": "llm-agents.nix",
+        "type": "github"
+      }
+    },
+    "nix-darwin": {
+      "inputs": {
+        "nixpkgs": [
+          "odysseus",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1781242433,
+        "narHash": "sha256-bchLZZ3sRn740zyvD2icZSnNoTaanN0nw7l6fjVXO+E=",
+        "owner": "LnL7",
+        "repo": "nix-darwin",
+        "rev": "aabb2037edfc0f210723b72cd5f528aab5dd3f0b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LnL7",
+        "repo": "nix-darwin",
         "type": "github"
       }
     },
@@ -934,9 +973,49 @@
         "type": "github"
       }
     },
-    "pmd": {
+    "odysseus": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "nix-darwin": "nix-darwin",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "odysseus-src": "odysseus-src"
+      },
+      "locked": {
+        "lastModified": 1781414275,
+        "narHash": "sha256-uxgQxVn5wH8yPT12gk5fno0YfLDKCKnBiyVREy7CwQQ=",
+        "owner": "PopCat19",
+        "repo": "nix-odysseus",
+        "rev": "c69ed694cac1d0588e44b514c8f3a1c35d6660f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "PopCat19",
+        "repo": "nix-odysseus",
+        "type": "github"
+      }
+    },
+    "odysseus-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1781212890,
+        "narHash": "sha256-hhJwfPj5t7SsTsIBc5uXqnCvCt6aQK265nV4BBhhXso=",
+        "owner": "pewdiepie-archdaemon",
+        "repo": "odysseus",
+        "rev": "9d7a3d66c07dc0bb5cf0a894022b4b6b4eada454",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pewdiepie-archdaemon",
+        "ref": "dev",
+        "repo": "odysseus",
+        "type": "github"
+      }
+    },
+    "pmd": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -969,6 +1048,7 @@
         "nixos-raspberrypi": "nixos-raspberrypi",
         "nixpkgs": "nixpkgs_3",
         "noctalia-shell": "noctalia-shell",
+        "odysseus": "odysseus",
         "pmd": "pmd",
         "shimboot": "shimboot",
         "stylix": "stylix",
@@ -1048,7 +1128,7 @@
           "nixpkgs"
         ],
         "nur": "nur",
-        "systems": "systems_4",
+        "systems": "systems_5",
         "tinted-kitty": "tinted-kitty",
         "tinted-schemes": "tinted-schemes",
         "tinted-tmux": "tinted-tmux",
@@ -1114,6 +1194,21 @@
       }
     },
     "systems_4": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_5": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

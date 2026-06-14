@@ -31,5 +31,10 @@ import ../../shared {
     sillytavern = {
       enable = true;
     };
+
+    odysseus = {
+      enable = true;
+      openFirewall = true;
+    };
   };
 }

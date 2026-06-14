@@ -5,6 +5,11 @@
   sillytavern = {
     enable = false;
   };
+  odysseus = {
+    enable = false;
+    environmentFile = null;
+    openFirewall = false;
+  };
   klipper = {
     enable = false;
     wifi = {

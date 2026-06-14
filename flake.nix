@@ -106,6 +106,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    odysseus = {
+      url = "github:PopCat19/nix-odysseus";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-on-droid = {
       url = "github:nix-community/nix-on-droid";
       inputs.nixpkgs.follows = "nixpkgs";

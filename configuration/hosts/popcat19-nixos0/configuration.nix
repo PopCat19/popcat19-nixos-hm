@@ -32,6 +32,7 @@ in
     ../../system/modules/sunshine.nix
     ../../system/modules/searxng.nix
     ../../system/modules/firecrawl.nix
+    ../../system/modules/odysseus.nix
     ../../services/zrok
   ];
 
