@@ -22,46 +22,54 @@ in
     ./printer.nix
     ./moonraker.nix
     ./mainsail.nix
-    ./ap-fallback.nix
   ];
 
   config = lib.mkIf (cfg.enable or false) {
     system.activationScripts.klipper-wifi-profile = {
       text = ''
-                profile=/etc/NetworkManager/system-connections/Beave_Net_IoT.nmconnection
-                if [ -e "$profile" ]; then
-                  exit 0
-                fi
+        profile=/etc/NetworkManager/system-connections/${wifiCfg.ssid or "Beave_Net_IoT"}.nmconnection
+        if [ -e "$profile" ]; then
+          exit 0
+        fi
 
-                mkdir -p /etc/NetworkManager/system-connections
-                chmod 0755 /etc/NetworkManager/system-connections
-                cat > "$profile" <<EOF
-        [connection]
-        id=Beave_Net_IoT
-        uuid=0278899c-f325-4669-ad07-06abc09f893d
-        type=wifi
-        interface-name=wlan0
-        autoconnect=true
-        autoconnect-priority=100
+        psk_file="${config.age.secrets.klipper-wifi-psk.path}"
+        if [ ! -f "$psk_file" ]; then
+          echo "klipper-wifi-profile: PSK secret not found at $psk_file, skipping" >&2
+          exit 0
+        fi
+        psk=$(cat "$psk_file")
 
-        [wifi]
-        mode=infrastructure
-        ssid=${wifiCfg.ssid or ""}
+        mkdir -p /etc/NetworkManager/system-connections
+        chmod 0755 /etc/NetworkManager/system-connections
 
-        [wifi-security]
-        auth-alg=open
-        key-mgmt=wpa-psk
-        psk=${wifiCfg.psk or ""}
+        cat > "$profile" << NM_PROFILE
+[connection]
+id=${wifiCfg.ssid or "Beave_Net_IoT"}
+uuid=0278899c-f325-4669-ad07-06abc09f893d
+type=wifi
+interface-name=wlan0
+autoconnect=true
+autoconnect-priority=100
 
-        [ipv4]
-        method=auto
+[wifi]
+mode=infrastructure
+ssid=${wifiCfg.ssid or "Beave_Net_IoT"}
 
-        [ipv6]
-        addr-gen-mode=default
-        method=auto
-        EOF
-                chmod 0600 "$profile"
-                ${config.systemd.package}/bin/systemctl try-restart NetworkManager || true
+[wifi-security]
+auth-alg=open
+key-mgmt=wpa-psk
+psk=''${psk}
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=default
+method=auto
+NM_PROFILE
+
+        chmod 0600 "$profile"
+        ${config.systemd.package}/bin/systemctl try-restart NetworkManager || true
       '';
     };
   };
