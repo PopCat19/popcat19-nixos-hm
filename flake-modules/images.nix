@@ -233,6 +233,17 @@ in
             cp -a "${flakeSource}/." "$dest/"
             chown -R 1000:100 "$dest"
             chmod -R u+rwX "$dest"
+
+            # Seed the user SSH key so agenix can decrypt secrets at first boot.
+            # The key is read from the flake source at build time (not the store).
+            ssh_dir=./files/home/popcat19/.ssh
+            mkdir -p "$ssh_dir"
+            cp ${builtins.path { path = /home/popcat19/.ssh/id_ed25519.pub; name = "id_ed25519.pub"; }} "$ssh_dir/id_ed25519.pub"
+            cp ${builtins.path { path = /home/popcat19/.ssh/id_ed25519; name = "id_ed25519"; }} "$ssh_dir/id_ed25519"
+            chown -R 1000:100 "$ssh_dir"
+            chmod 700 "$ssh_dir"
+            chmod 600 "$ssh_dir/id_ed25519"
+            chmod 644 "$ssh_dir/id_ed25519.pub"
           '';
         }
       ]).config.system.build.sdImage;
