@@ -16,7 +16,6 @@
       "dbus-update-activation-environment --systemd --all"
       "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
 
-      "openrgb -p orang-full"
       "${userConfig.defaultApps.terminal.command}"
     ];
   };

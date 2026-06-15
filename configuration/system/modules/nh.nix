@@ -5,8 +5,8 @@
 # This module:
 # - Installs nh package and sets NH_FLAKE env var
 # - Replaces nix.gc with nh clean systemd timer
-# - Grants passwordless sudo for nh os subcommands
 # - Enables build-tree visualization and change diffs
+# - (nh NOPASSWD sudo rule is in users.nix to avoid %wheel override)
 { lib, userConfig, ... }:
 {
   programs.nh = {
@@ -18,19 +18,4 @@
       extraArgs = lib.mkForce "--keep-since 3d --keep 5";
     };
   };
-
-  security.sudo.extraRules = [
-    {
-      users = [ userConfig.username ];
-      commands = [
-        {
-          command = "/run/current-system/sw/bin/nh";
-          options = [
-            "SETENV"
-            "NOPASSWD"
-          ];
-        }
-      ];
-    }
-  ];
 }

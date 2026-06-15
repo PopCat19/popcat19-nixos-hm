@@ -53,6 +53,7 @@
     ./audio-control.nix
     ./git.nix
     ./home.nix
+    ./openrgb-leds.nix
     ./wallpaper-sync.nix
   ];
 

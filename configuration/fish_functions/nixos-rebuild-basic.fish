@@ -380,18 +380,10 @@ function _cachix_push_if_configured
     end
 
     for cache in $caches
-        echo "[STEP] Pushing closure to cachix ($cache)..."
-        cachix push "$cache" /run/current-system 2>&1 &
+        echo "[STEP] Launching cachix push ($cache) in background..."
+        setsid fish -c "cachix push '$cache' /run/current-system >/dev/null 2>&1" &
         set -l pid $last_pid
-        wait $pid
-        set -l rc $status
-        if test $rc -eq 0
-            echo "[SUCCESS] Pushed to $cache"
-        else if test $rc -gt 128
-            echo "[WARN] Cachix push interrupted"
-            return 130
-        else
-            echo "[WARN] Cachix push to $cache failed"
-        end
+        disown $pid
+        echo "[INFO] Cachix push to $cache running (pid $pid) — will complete in background"
     end
 end
