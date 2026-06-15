@@ -53,6 +53,7 @@ in
   wifiSsid ? "Beave_Net_IoT",
   wifiPsk ? "",
   sshAuthorizedKeys ? [ ],
+  fanGpio ? 14,
 }:
 let
   inherit (lib) concatStringsSep escapeShellArg;
@@ -346,6 +347,10 @@ let
     LABEL=ALPINE_DATA  /home  ext4  defaults,noatime  0  2
   '';
 
+  usercfg = writeText "usercfg.txt" ''
+    dtoverlay=gpio-fan,gpiopin=${toString fanGpio},temp=55000
+  '';
+
   firstBootSetup = writeShellScript "first-boot-setup" ''
     set -euo pipefail
 
@@ -577,26 +582,35 @@ let
 
     rc-service networkmanager start
 
-    # Boot-time AP fallback: bring up AP after 60s if client WiFi isn't connected.
-    # Runs every boot, not just first boot.
-    cat > /etc/local.d/klipper-ap-boot.start << APBOOT
-    #!/bin/sh
-    CLIENT="${wifiSsid}"
-    AP="Klipper-Setup"
-
-    for i in \$(seq 1 12); do
-      sleep 5
-      if nmcli -t -f NAME connection show --active 2>/dev/null | grep -qx "\$CLIENT"; then
-        exit 0
-      fi
-      if nmcli -t -f NAME connection show --active 2>/dev/null | grep -qx "\$AP"; then
-        exit 0
-      fi
-    done
-
-    nmcli connection up "\$AP" || true
+    cat > /etc/init.d/klipper-ap-boot << APBOOT
+    #!/sbin/openrc-run
+    name=klipper-ap-boot
+    description="Bring up AP fallback if client WiFi unavailable"
+    depend() {
+      need networkmanager
+    }
+    start() {
+      ebegin "Checking client WiFi"
+      CLIENT="${wifiSsid}"
+      AP="Klipper-Setup"
+      for i in \$(seq 1 12); do
+        sleep 5
+        if nmcli -t -f NAME connection show --active 2>/dev/null | grep -qx "\$CLIENT"; then
+          eend 0
+          return 0
+        fi
+        if nmcli -t -f NAME connection show --active 2>/dev/null | grep -qx "\$AP"; then
+          eend 0
+          return 0
+        fi
+      done
+      eend 1 "Client WiFi not connected after 60s, bringing up AP"
+      nmcli connection up "\$AP" || true
+    }
     APBOOT
-    chmod +x /etc/local.d/klipper-ap-boot.start
+    chmod +x /etc/init.d/klipper-ap-boot
+    rc-update add klipper-ap-boot default
+    rc-service klipper-ap-boot start
 
     rc-service syncthing start
     rc-service caddy start
@@ -711,6 +725,7 @@ let
         tar xf ${alpineTarball} -C "$out"
 
         cp ${apkovl} "$out/headless.apkovl.tar.gz"
+        cp ${usercfg} "$out/usercfg.txt"
 
         ${gnused}/bin/sed -i 's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' "$out/cmdline.txt" 2>/dev/null || true
 
@@ -794,6 +809,7 @@ let
         mkdir -p "$BOOT_CONTENT"
         tar xf ${alpineTarball} -C "$BOOT_CONTENT"
         cp ${apkovl} "$BOOT_CONTENT/headless.apkovl.tar.gz"
+        cp ${usercfg} "$BOOT_CONTENT/usercfg.txt"
         ${gnused}/bin/sed -i \
           's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' \
           "$BOOT_CONTENT/cmdline.txt" 2>/dev/null || true
