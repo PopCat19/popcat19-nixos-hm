@@ -31,10 +31,21 @@ sudo nixos-rebuild switch --flake .#popcat19-nixos0
 
 ### Pi SD card image
 
+Two options — NixOS or Alpine diskless:
+
 ```bash
+# NixOS printer appliance (full closure baked in)
 nix build .#sd-popcat19-klipper0
-sudo dd if=$(readlink result) of=/dev/sdX bs=4M status=progress conv=fsync
+
+# Alpine diskless (immutable read-only root, no DB corruption on power loss)
+nix build .#alpine-klipper-img
+
+# Write with helper
+sudo ./tools/write-image.sh klipper -d /dev/sdX          # NixOS
+sudo ./tools/write-image.sh alpine-klipper -d /dev/sdX  # Alpine
 ```
+
+> ⚠️ The NixOS sd-image requires `--impure` for SSH key seeding. Alpine images are pure.
 
 <details open>
 <summary>Architecture</summary>
@@ -110,6 +121,12 @@ The flake produces one-shot installer and device images with the flake source pr
 | `installer-raw` | x86_64-linux | Minimal raw-EFI disk image (user, fish, SSH, sing-box, git) |
 | `installer-zst` | x86_64-linux | Same, zstd-compressed |
 | `sd-popcat19-klipper0` | aarch64-linux | Pi 4B SD card image (full Klipper closure, zstd-compressed) |
+| `alpine-klipper-apkovl` | x86_64-linux | Alpine diskless apkovl tarball for Klipper Pi 4B |
+| `alpine-klipper-img` | x86_64-linux | Alpine diskless dd-able SD image for Klipper Pi 4B (FAT32+ext4, MBR) |
+
+The alpine-klipper images are pure Nix derivations (no --impure, no mounts, no sudo).
+Flash alpine-klipper-img directly: `sudo dd if=result of=/dev/mmcblk0 bs=4M status=progress conv=fsync`
+or use the write helper: `sudo ./tools/write-image.sh alpine-klipper -d /dev/mmcblk0`
 
 The installer includes sing-box TUN proxy (togglable via `singbox_on` / `singbox_off`), so you can rebuild behind a proxy from first boot.
 
@@ -141,7 +158,9 @@ The installer includes sing-box TUN proxy (togglable via `singbox_on` / `singbox
 <details>
 <summary>Klipper Pi features</summary>
 
-The `popcat19-klipper0` host runs a headless 3D printer appliance:
+Two deployment options for the `popcat19-klipper0` host:
+
+### NixOS (sd-popcat19-klipper0)
 
 - **Klipper** + **Moonraker** + **Mainsail** — full web-controlled printer stack
 - **WiFi client** — seeded once from agenix secret, then mutable at runtime
@@ -150,6 +169,24 @@ The `popcat19-klipper0` host runs a headless 3D printer appliance:
 - Toggle manually: `klipper_ap_on` / `klipper_ap_off`
 - SPI enabled for ADXL345 input shaper calibration
 - Journald capped at 200 MB / 7 day retention for SD card longevity
+
+### Alpine diskless (alpine-klipper-img)
+
+For Pi 4B only — immutable read-only root that runs from RAM. Fixes NixOS DB corruption
+on unclean poweroff. Built as a pure Nix derivation, output is a single dd-able image.
+
+- **Alpine Linux** — runs from RAM, rootfs never mounted r/w
+- **Persistent /home** on labelled ext4 partition (survives power loss)
+- **Klipper** + **Moonraker** + **Mainsail** — installed on first boot via OpenRC services
+- **Syncthing** — same device IDs and folders as NixOS config (keepass-vault, shared, pi-klipper)
+- **Starship prompt** — mirrors starship.nix config
+- **Fish shell** with `kupdate` alias for in-place stack updates
+- **WiFi client** + **AP fallback** via NetworkManager dispatcher
+- **In-place update**: `kupdate` (git pull klipper/moonraker, download latest mainsail, restart services)
+- **No secrets baked**: WiFi PSK must be set manually on first boot (`nmcli`) or via `lbu commit`
+
+Build: `nix build .#alpine-klipper-img`  
+Write: `sudo ./tools/write-image.sh alpine-klipper -d /dev/mmcblk0`
 
 See `configuration/system/modules/klipper/context.md` for module details.
 
