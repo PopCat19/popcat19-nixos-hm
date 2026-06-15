@@ -9,7 +9,7 @@
 # - Replaces static .orp profiles with dynamic theme-following color
 { config, ... }:
 let
-  ledColor = config.lib.stylix.colors.withHashtag.base04;
+  ledColor = config.lib.stylix.colors.withHashtag.base00;
 in
 {
   home.file.".config/openrgb/pmd-led-color".text = ledColor;
@@ -45,9 +45,12 @@ in
         sleep 1
       done
 
-      # Resize JRAINBOW1 to 48, JRAINBOW2 to 0
-      openrgb --device MSI --zone 2 --mode static --size 48 --color "$(sed 's/^#//' "$HOME/.config/openrgb/pmd-led-color")"
-      openrgb --device MSI --zone 3 --mode static --size 0  --color "$(sed 's/^#//' "$HOME/.config/openrgb/pmd-led-color")"
+      # Resize zones first (no color to avoid protocol glitches)
+      openrgb --device MSI --zone 2 --mode static --size 48
+      openrgb --device MSI --zone 3 --mode static --size 0
+
+      # Apply device-wide color after sizing
+      openrgb --device MSI --mode static --color "$(sed 's/^#//' "$HOME/.config/openrgb/pmd-led-color")" --brightness 100
     '';
   };
 }
