@@ -6,7 +6,7 @@
 # - Creates the main user account with shell and groups
 # - Configures tmpfiles rules for the user's home directories
 # - Grants passwordless sudo for common NixOS/automation commands
-# - Allows wheel group full NOPASSWD access (headless/appliance safety)
+# - Allows wheel group full sudo access (requires password)
 {
   pkgs,
   userConfig,
@@ -75,10 +75,7 @@
       commands = [
         {
           command = "ALL";
-          options = [
-            "NOPASSWD"
-            "SETENV"
-          ];
+          options = [ "SETENV" ];
         }
       ];
     }
