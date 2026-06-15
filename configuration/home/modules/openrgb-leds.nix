@@ -12,7 +12,7 @@ let
   ledColor = config.lib.stylix.colors.withHashtag.base0D;
 in
 {
-  home.file."openrgb/pmd-led-color".text = ledColor;
+  home.file.".config/openrgb/pmd-led-color".text = ledColor;
 
   systemd.user.services.openrgb-zone-size = {
     Unit = {
