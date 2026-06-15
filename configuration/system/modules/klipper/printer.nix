@@ -48,8 +48,14 @@ in
     settings = { };
   };
 
-  systemd.services.klipper.preStart = ''
+  # Symlink printer.cfg from syncthing pool so edits propagate across hosts
+  systemd.services.klipper.preStart = let
+    syncthingCfg = "${userConfig.directories.syncthing}/pi-klipper/printer_data/config/printer.cfg";
+  in ''
     mkdir -p ${printerCfgDir}
+    if [ -f "${syncthingCfg}" ]; then
+      ln -sf "${syncthingCfg}" ${printerCfgFile}
+    fi
     if [ ! -e ${printerCfgFile} ]; then
       cat > ${printerCfgFile} << 'SEED'
     # Klipper printer.cfg — seeded by NixOS on first boot

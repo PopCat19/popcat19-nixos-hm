@@ -26,7 +26,7 @@ let
 
   piDevices = [
     "nixos0"
-    # "klipper"  # TODO: add once Pi 4B is syncthing-enabled and device ID known
+    "klipper"
   ];
 in
 {
@@ -66,6 +66,11 @@ in
           addresses = [ "dynamic" ];
           id = "77NUF7I-XOXG3XA-LZDKCTC-ORPOQYO-4YBTFUW-RKIHOOZ-UYP7VOP-RBRUWQV";
           name = "thinkpad0";
+        };
+        "klipper" = {
+          addresses = [ "dynamic" ];
+          id = "QMYQRZC-LHTMXBZ-EDCPAYX-OZX2BFJ-BHOQ32K-DL4QDM4-VJF2CJ2-PDH3WQK";
+          name = "klipper";
         };
       };
       folders = {
