@@ -34,6 +34,9 @@
   # nixos-raspberrypi recommends this for new installations (github:nvmd/nixos-raspberrypi#60).
   boot.loader.raspberry-pi.bootloader = "kernel";
 
+  # Force fsck on every boot so unclean shutdowns don't leave
+  # /nix/store mounted read-only (which corrupts the nix DB).
+
   # WiFi — NetworkManager (PSK is injected from agenix by the klipper module)
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "wpa_supplicant";
