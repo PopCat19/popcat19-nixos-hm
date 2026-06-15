@@ -2,9 +2,9 @@
 #
 # Purpose: Mainsail web UI for Klipper/Moonraker on port 80 via nginx
 {
-  config,
   ...
-}: {
+}:
+{
   networking.firewall.allowedTCPPorts = [ 80 ];
 
   services.mainsail = {

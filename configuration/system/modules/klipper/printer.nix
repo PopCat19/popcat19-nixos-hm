@@ -49,36 +49,38 @@ in
   };
 
   # Symlink printer.cfg from syncthing pool so edits propagate across hosts
-  systemd.services.klipper.preStart = let
-    syncthingCfg = "${userConfig.directories.syncthing}/pi-klipper/printer_data/config/printer.cfg";
-  in ''
-    mkdir -p ${printerCfgDir}
-    if [ -f "${syncthingCfg}" ]; then
-      ln -sf "${syncthingCfg}" ${printerCfgFile}
-    fi
-    if [ ! -e ${printerCfgFile} ]; then
-      cat > ${printerCfgFile} << 'SEED'
-    # Klipper printer.cfg — seeded by NixOS on first boot
-    #
-    # Full config is in ~/syncthing-shared/pi-klipper/printer.cfg on nixos0.
-    # Copy it here or configure via Mainsail UI at http://klipper.local
+  systemd.services.klipper.preStart =
+    let
+      syncthingCfg = "${userConfig.directories.syncthing}/pi-klipper/printer_data/config/printer.cfg";
+    in
+    ''
+      mkdir -p ${printerCfgDir}
+      if [ -f "${syncthingCfg}" ]; then
+        ln -sf "${syncthingCfg}" ${printerCfgFile}
+      fi
+      if [ ! -e ${printerCfgFile} ]; then
+        cat > ${printerCfgFile} << 'SEED'
+      # Klipper printer.cfg — seeded by NixOS on first boot
+      #
+      # Full config is in ~/syncthing-shared/pi-klipper/printer.cfg on nixos0.
+      # Copy it here or configure via Mainsail UI at http://klipper.local
 
-    [mcu]
-    serial: /dev/serial/by-id/usb-Klipper_stm32g0b1xx*
+      [mcu]
+      serial: /dev/serial/by-id/usb-Klipper_stm32g0b1xx*
 
-    [virtual_sdcard]
-    path: /var/lib/moonraker/gcodes
-    on_error_gcode: CANCEL_PRINT
+      [virtual_sdcard]
+      path: /var/lib/moonraker/gcodes
+      on_error_gcode: CANCEL_PRINT
 
-    [printer]
-    kinematics: cartesian
-    max_velocity: 300
-    max_accel: 3000
-    max_z_velocity: 15
-    max_z_accel: 100
-    SEED
-      chown klipper:klipper ${printerCfgFile}
-      chmod 664 ${printerCfgFile}
-    fi
-  '';
+      [printer]
+      kinematics: cartesian
+      max_velocity: 300
+      max_accel: 3000
+      max_z_velocity: 15
+      max_z_accel: 100
+      SEED
+        chown klipper:klipper ${printerCfgFile}
+        chmod 664 ${printerCfgFile}
+      fi
+    '';
 }
