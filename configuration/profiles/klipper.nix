@@ -67,12 +67,16 @@
   # Fish is used as the interactive shell for the primary user
   programs.fish.enable = true;
 
-  # Nix — flakes enabled, auto GC every week
+  # Nix — flakes enabled, auto GC every week.
+  # keep-derivations + keep-outputs prevent GC from deleting the
+  # nixos-rebuild wrapper's embedded nix binary (avoids sqlite SIGABRT).
   nix.settings = {
     experimental-features = [
       "nix-command"
       "flakes"
     ];
+    keep-derivations = true;
+    keep-outputs = true;
   };
 
   nix.gc = {
