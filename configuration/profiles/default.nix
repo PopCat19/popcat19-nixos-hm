@@ -48,7 +48,6 @@ in
     ../system/modules/agents.nix
     ../system/modules/forgecode.nix
     inputs.nix-gaming.nixosModules.pipewireLowLatency
-
     # Centralized nix configuration
     ../nix-options.nix
     ../system/modules/nh.nix

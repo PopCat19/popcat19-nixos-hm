@@ -6,6 +6,7 @@
 # - Enables PipeWire with ALSA, PulseAudio, and JACK compatibility
 # - Configures HDMI audio sample rates
 # - Sets realtime + memlock limits for pro audio (PipeWire + EasyEffects)
+# - Forces quantum 512/48000 to avoid USB audio crackling
 # - Provides ALSA utilities for audio management
 { pkgs, ... }:
 {
@@ -47,12 +48,18 @@
       enable = true;
     };
     pulse.enable = true;
-    lowLatency = {
-      enable = true;
-      # 256/48000 = ~5.3ms. 64 (1.3ms) was too aggressive and caused buffer
-      # negotiation failures with the Razer Kraken V4 Pro + EasyEffects chain.
-      rate = 48000;
+    wireplumber.enable = true;
+
+    # Quantum 512/48000 = ~10.7ms. 64 (1.3ms) from pipewireLowLatency was
+    # too aggressive for USB audio + EasyEffects DSP, causing crackling.
+    extraConfig.pipewire."92-quantum" = {
+      "context.properties" = {
+        "default.clock.min-quantum" = 512;
+        "default.clock.quantum" = 512;
+        "default.clock.max-quantum" = 1024;
+      };
     };
+
     extraConfig.pipewire."91-hdmi-audio" = {
       "context.properties" = {
         "default.clock.allowed-rates" = [
