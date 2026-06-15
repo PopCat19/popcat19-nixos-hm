@@ -178,17 +178,15 @@ on unclean poweroff. Built as a pure Nix derivation, output is a single dd-able 
 - **Alpine Linux**: runs from RAM, rootfs never mounted r/w
 - **Persistent /home** on labelled ext4 partition (survives power loss)
 - **Klipper** + **Moonraker** + **Mainsail**: installed on first boot via OpenRC services
-- **Syncthing**: same device IDs and folders as NixOS config (keepass-vault, shared, pi-klipper)
+- **Syncthing**: pi-klipper folder only (nixos0 + klipper) — printer configs, no large shared pool
 - **Starship prompt**: mirrors starship.nix config
 - **Fish shell** with `kupdate` alias for in-place stack updates
-- **WiFi client** + **AP fallback** via NetworkManager dispatcher
-- **In-place update**: `kupdate` (git pull klipper/moonraker, download latest mainsail, restart services)
-- **No secrets baked**: WiFi PSK is empty in the NM profile. First-boot flow below.
-- **First boot**: AP `Klipper-Setup` appears within 60s if no client WiFi connects
-  (PSK `klipper-setup`, SSH at `192.168.50.1`). Connect, set the PSK:
-  `sudo nmcli connection modify Beave_Net_IoT wifi-sec.psk '<psk>'`
-  Then persist: `sudo lbu commit`, reboot, AP stops: client WiFi takes over.
-- **In-place update**: `kupdate` (git pull klipper/moonraker, download latest mainsail, restart services)
+- **GPIO fan**: DT overlay (gpio-fan, GPIO14, 55°C) — fan on above 55°C, off below
+- **WiFi client** + **AP fallback**: AP appears on every boot if client WiFi unreachable after 60s
+- **In-place update**: `kupdate` (git pull klipper/moonraker + download latest mainsail + restart)
+- **First boot flow**: AP `Klipper-Setup` broadcasts (PSK `klipper-setup`, `192.168.50.1`).
+  SSH in, set client PSK: `sudo nmcli connection modify Beave_Net_IoT wifi-sec.psk '<psk>'`,
+  persist: `sudo lbu commit`, reboot — AP stops, client WiFi takes over.
 
 See `configuration/system/modules/klipper/context.md` for module details.
 
