@@ -36,8 +36,6 @@ in
     # Full config is in ~/syncthing-shared/pi-klipper/printer.cfg on nixos0.
     # Copy it here or configure via Mainsail UI at http://klipper.local
 
-    [include mainsail.cfg]
-
     [mcu]
     serial: /dev/serial/by-id/usb-Klipper_stm32g0b1xx*
 

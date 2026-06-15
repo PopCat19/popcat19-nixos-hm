@@ -12,6 +12,7 @@
     moonraker = {
       isSystemUser = true;
       group = "moonraker";
+      extraGroups = [ "klipper" ];
       home = "/home/moonraker";
       createHome = true;
     };

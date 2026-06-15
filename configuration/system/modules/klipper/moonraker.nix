@@ -1,13 +1,19 @@
 # moonraker.nix
 #
 # Purpose: Moonraker API server for Klipper
-_: {
+{
+  config,
+  ...
+}: {
   services.moonraker = {
     enable = true;
     address = "0.0.0.0";
     port = 7125;
     allowSystemControl = true;
     settings = {
+      server = {
+        klippy_uds_address = config.services.klipper.apiSocket;
+      };
       authorization = {
         trusted_clients = [
           "127.0.0.0/8"
