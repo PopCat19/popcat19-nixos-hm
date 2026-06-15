@@ -983,11 +983,11 @@
         "odysseus-src": "odysseus-src"
       },
       "locked": {
-        "lastModified": 1781414275,
-        "narHash": "sha256-uxgQxVn5wH8yPT12gk5fno0YfLDKCKnBiyVREy7CwQQ=",
+        "lastModified": 1781558944,
+        "narHash": "sha256-PXmH6KXB6N0SFSlWrSbAqtmUrprh0ejXPPut6hhOGAs=",
         "owner": "PopCat19",
         "repo": "nix-odysseus",
-        "rev": "c69ed694cac1d0588e44b514c8f3a1c35d6660f6",
+        "rev": "005882f1d1323865f48842e6d4bc53041250e4c8",
         "type": "github"
       },
       "original": {
