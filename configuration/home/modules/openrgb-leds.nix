@@ -9,7 +9,7 @@
 # - Replaces static .orp profiles with dynamic theme-following color
 { config, ... }:
 let
-  ledColor = config.lib.stylix.colors.withHashtag.base05;
+  ledColor = config.lib.stylix.colors.withHashtag.base04;
 in
 {
   home.file.".config/openrgb/pmd-led-color".text = ledColor;
