@@ -216,8 +216,51 @@ let
   alpineKlipperApkovl =
     let
       builder = pkgs.callPackage ../lib/alpine-klipper-builder.nix { };
+      apkBundle = pkgs.callPackage ../lib/alpine-apk-bundle.nix { } {
+        packageList = [
+          "networkmanager"
+          "networkmanager-wifi"
+          "hostapd"
+          "fish"
+          "starship"
+          "syncthing"
+          "caddy"
+          "git"
+          "python3"
+          "py3-pip"
+          "py3-virtualenv"
+          "jq"
+          "curl"
+          "unzip"
+          "vim"
+          "eza"
+          "micro"
+          "wget"
+          "htop"
+          "tmux"
+          "coreutils"
+          "procps"
+          "build-base"
+          "python3-dev"
+          "libffi-dev"
+          "ncurses-dev"
+          "libsodium"
+          "curl-dev"
+          "freetype-dev"
+          "fribidi-dev"
+          "harfbuzz-dev"
+          "jpeg-dev"
+          "lcms2-dev"
+          "openjpeg-dev"
+          "tcl-dev"
+          "tiff-dev"
+          "tk-dev"
+          "zlib-dev"
+        ];
+      };
     in
     builder {
+      inherit apkBundle;
       sshAuthorizedKeys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILEuhhgzPbOykafkLpKtwh8LCTXy2AmLMl51ayL5+J/h popcat19@popcat19-thinkpad0"

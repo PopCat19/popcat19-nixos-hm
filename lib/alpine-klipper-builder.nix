@@ -54,6 +54,11 @@ in
   wifiPsk ? "",
   sshAuthorizedKeys ? [ ],
   fanGpio ? 14,
+
+  # Offline APK bundle for diskless Alpine. When set, the derivation copies
+  # all .apk files into the boot partition apks/aarch64/ so Alpine's initramfs
+  # can install packages without network access.
+  apkBundle ? null,
 }:
 let
   inherit (lib) concatStringsSep escapeShellArg;
@@ -726,6 +731,11 @@ let
 
         cp ${apkovl} "$out/headless.apkovl.tar.gz"
         cp ${usercfg} "$out/usercfg.txt"
+        if [ -n "${if apkBundle != null then "yes" else ""}" ]; then
+          mkdir -p "$out/apks"
+          cp -r ${apkBundle}/aarch64 "$out/apks/"
+          ls "$out/apks/aarch64/"*.apk | wc -l
+        fi
 
         ${gnused}/bin/sed -i 's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' "$out/cmdline.txt" 2>/dev/null || true
 
@@ -810,6 +820,10 @@ let
         tar xf ${alpineTarball} -C "$BOOT_CONTENT"
         cp ${apkovl} "$BOOT_CONTENT/headless.apkovl.tar.gz"
         cp ${usercfg} "$BOOT_CONTENT/usercfg.txt"
+        if [ -n "${if apkBundle != null then "yes" else ""}" ]; then
+          mkdir -p "$BOOT_CONTENT/apks"
+          cp -r ${apkBundle}/aarch64 "$BOOT_CONTENT/apks/"
+        fi
         ${gnused}/bin/sed -i \
           's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' \
           "$BOOT_CONTENT/cmdline.txt" 2>/dev/null || true
