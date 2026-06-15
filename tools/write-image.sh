@@ -17,7 +17,6 @@ set -Eeuo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# ---------- Colors ----------
 BOLD='\033[1m'
 DIM='\033[2m'
 RED='\033[31m'
@@ -35,7 +34,6 @@ bold() { echo -e "${BOLD}$*${CLEAR}"; }
 action() { echo -e "${MAGENTA}$*${CLEAR}"; }
 dim() { echo -e "${DIM}$*${CLEAR}"; }
 
-# ---------- Defaults ----------
 ARG_IMAGE=""
 ARG_DEV=""
 ARG_TYPE=""
@@ -44,7 +42,6 @@ ARG_COUNT=10
 ARG_DRY=false
 SYSTEM_PKNAMES=""
 
-# ---------- Help ----------
 usage() {
 	cat <<'EOF'
 write-image.sh [installer|klipper|alpine-klipper] [-d /dev/sdX] [-i image.zst] [-y] [-n]
@@ -65,7 +62,6 @@ Examples:
 EOF
 }
 
-# ---------- System disk detection ----------
 pk_of() {
 	local s
 	s="$(readlink -f "${1:-}" 2>/dev/null)" || s="$1"
@@ -94,7 +90,6 @@ collect_system_pknames() {
 
 is_system_pk() { [[ -n "${1:-}" && " ${SYSTEM_PKNAMES} " == *" $1 "* ]]; }
 
-# ---------- Candidate listing ----------
 list_candidates() {
 	bold "SAFE devices (removable, unmounted, non-system):"
 	printf "%-16s %-10s %-8s %-4s %s\n" "DEVICE" "SIZE" "TRAN" "RM" "MODEL"
@@ -113,7 +108,6 @@ list_candidates() {
       print n "|" p "|" s "|" m "|" t "|" rm "|" type }')
 }
 
-# ---------- UDisks helpers ----------
 udisks_running() {
 	pgrep -x udisksd &>/dev/null || systemctl is-active --quiet udisks2.service 2>/dev/null
 }
@@ -132,7 +126,6 @@ udisks_unmount() {
 	done < <(findmnt -rn -o SOURCE,TARGET | sed 's/  */|/')
 }
 
-# ---------- Validate ----------
 validate_device() {
 	local dev="$1" t pk
 	[[ -b "$dev" ]] || {
@@ -151,7 +144,6 @@ validate_device() {
 	}
 }
 
-# ---------- Build from flake ----------
 build_image() {
 	local type="$1" attr
 	case "$type" in
@@ -167,7 +159,6 @@ build_image() {
 	nix build "$REPO_DIR#$attr" --accept-flake-config --no-link --print-out-paths
 }
 
-# ---------- Onboarding ----------
 onboard() {
 	echo
 	bold "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -177,7 +168,6 @@ onboard() {
 	echo "This tool writes a flake-built NixOS image to a USB stick or SD card."
 	echo
 
-	# Step 1: image type
 	echo "1. What do you want to write?"
 	echo "   ${BOLD}[i]${CLEAR} installer        x86_64 minimal image (boots on PC, then rebuild via flake)"
 	echo "   ${BOLD}[k]${CLEAR} klipper          Pi 4B SD card (full NixOS printer appliance)"
@@ -195,7 +185,6 @@ onboard() {
 	esac
 	echo
 
-	# Step 2: build or pre-built
 	local img_in
 	echo "2. Build fresh or use pre-built image?"
 	echo "   ${BOLD}[b]${CLEAR} build   nix build .#$([[ "$ARG_TYPE" == installer ]] && echo 'installer-zst' || [[ "$ARG_TYPE" == alpine-klipper ]] && echo 'alpine-klipper-img' || echo 'packages.aarch64-linux.sd-popcat19-klipper0')"
@@ -217,7 +206,6 @@ onboard() {
 	esac
 	echo
 
-	# Step 3: device
 	list_candidates
 	echo
 	read -r -p "3. Target device path [e.g., /dev/sda]: " ARG_DEV
@@ -231,11 +219,9 @@ onboard() {
 	read -r -p "Press Enter to continue or Ctrl-C to abort." _
 }
 
-# ---------- Main ----------
 main() {
 	local img_bytes dev_bytes dev_human img_human model tran write_path out
 
-	# Parse positional + flags
 	while (($#)); do
 		case "$1" in
 		installer | klipper | alpine-klipper)
@@ -274,20 +260,17 @@ main() {
 
 	collect_system_pknames
 
-	# Onboarding when no image type or image path given via flags
 	if [[ -z "$ARG_IMAGE" ]]; then
 		if [[ -z "$ARG_TYPE" ]]; then
 			onboard
 		fi
 	fi
 
-	# If type still unset and no image path, fail
 	if [[ -z "$ARG_TYPE" && -z "$ARG_IMAGE" ]]; then
 		err "No image type specified."
 		exit 2
 	fi
 
-	# Resolve image
 	if [[ -n "$ARG_IMAGE" ]]; then
 		write_path="$ARG_IMAGE"
 	else
@@ -295,7 +278,6 @@ main() {
 		write_path="$out"
 	fi
 
-	# Resolve image: if path is a nix build output directory, find the .img.zst inside
 	if [[ -d "$write_path" ]]; then
 		img=$(echo "$write_path"/sd-image/*.img.zst "$write_path"/*.img.zst "$write_path"/*.img 2>/dev/null | head -n1)
 		[[ -n "$img" ]] || {
@@ -310,7 +292,6 @@ main() {
 		exit 3
 	}
 
-	# Decompress if needed
 	if [[ "$write_path" == *.zst ]]; then
 		action "Decompressing..."
 		local raw="${write_path%.zst}"
@@ -324,7 +305,6 @@ main() {
 	img_bytes="$(stat -Lc %s "$write_path")"
 	img_human="$(numfmt --to=iec --suffix=B --format='%.1f' "$img_bytes" 2>/dev/null || echo "$img_bytes bytes")"
 
-	# Device
 	if [[ -z "$ARG_DEV" ]]; then
 		echo
 		list_candidates
@@ -371,7 +351,6 @@ main() {
 		echo "               "
 	fi
 
-	# Unmount
 	if lsblk -nr "$ARG_DEV" -o MOUNTPOINT | grep -qE '\S'; then
 		warn "Device has mounted partitions. Unmounting..."
 		udisks_running && udisks_unmount "$ARG_DEV"

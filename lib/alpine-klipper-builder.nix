@@ -33,7 +33,6 @@
   util-linux,
 }:
 let
-  # ── Version pinning (reproducible) ───────────────────────────────
 
   alpineVersion = "3.24.0";
   alpineBranch = "v3.24";
@@ -42,7 +41,6 @@ let
     hash = "sha256-zInYxQTj2781KBgPBQKy8SUwZLNd7djKjvJ/nJdUFXY=";
   };
 
-  # ── Syncthing device IDs (mirrors configuration/system/modules/syncthing.nix) ──
 
   syncthingDevices = {
     nixos0 = "K6FLBMQ-5CJEX4X-VL4KETN-7AYJQW5-5VTXJWY-CLRMKBV-TGXIU26-WUY74QZ";
@@ -63,7 +61,6 @@ in
 let
   inherit (lib) concatStringsSep escapeShellArg;
 
-  # ── Packages to install via apk ──────────────────────────────────
 
   apkWorld = concatStringsSep "\n" [
     "fish"
@@ -109,54 +106,37 @@ let
     "zlib-dev"
   ];
 
-  # ── SSH authorized keys ──────────────────────────────────────────
 
   authorizedKeysFile = writeText "authorized_keys" (concatStringsSep "\n" sshAuthorizedKeys);
 
-  # ── Fish config ──────────────────────────────────────────────────
 
   fishConfig = writeText "config.fish" ''
-    # Fish config — Alpine diskless Klipper Pi
-    # Managed by Nix derivation: lib/alpine-klipper-builder.nix
-
     set -gx EDITOR micro
     set -gx VISUAL micro
 
     if status is-interactive
-        # Starship prompt
         starship init fish | source
-
-        # Aliases
         alias ll 'eza -la --icons --group-directories-first'
         alias lt 'eza -la --icons --group-directories-first --tree --level=2'
         alias .. 'cd ..'
         alias ... 'cd ../..'
 
-        # Update klipper stack
         alias kupdate 'update-klipper'
 
-        # System update
         alias sysupdate 'sudo apk update && sudo apk upgrade && sudo lbu commit'
 
-        # AP fallback toggles (mirrors NixOS klipper_ap_on / klipper_ap_off)
         alias ap-on 'sudo nmcli connection down ${escapeShellArg wifiSsid} 2>/dev/null; sudo nmcli connection up Klipper-Setup'
         alias ap-off 'sudo nmcli connection down Klipper-Setup 2>/dev/null; sudo nmcli connection up ${escapeShellArg wifiSsid}'
     end
 
-    # Greeting
     function fish_greeting
         echo (set_color cyan)"  Alpine Diskless Klipper Pi — $hostname"(set_color normal)
         echo ""
     end
   '';
 
-  # ── Starship config (mirrors configuration/home/modules/starship.nix) ──
 
   starshipConfig = writeText "starship.toml" ''
-    # Starship shell prompt — Catppuccin-inspired
-    # Managed by Nix derivation: lib/alpine-klipper-builder.nix
-    # Mirrors configuration/home/modules/starship.nix
-
     format = "$time$directory$git_branch$git_status$line_break$character"
 
     [character]
@@ -217,7 +197,6 @@ let
     style_user = "bold white"
   '';
 
-  # ── Syncthing config ─────────────────────────────────────────────
 
   syncthingConfig = writeText "config.xml" ''
     <configuration version="39">
@@ -263,7 +242,6 @@ let
     </configuration>
   '';
 
-  # ── WiFi client profile ──────────────────────────────────────────
 
   wifiProfile = writeText "${wifiSsid}.nmconnection" ''
     [connection]
@@ -291,7 +269,6 @@ let
     method=auto
   '';
 
-  # ── AP fallback profile ──────────────────────────────────────────
 
   apProfile = writeText "Klipper-Setup.nmconnection" ''
     [connection]
@@ -320,7 +297,6 @@ let
     method=disabled
   '';
 
-  # ── AP fallback dispatcher ───────────────────────────────────────
 
   apFallbackDispatcher = writeShellScript "90-klipper-ap-fallback" ''
     # NetworkManager dispatcher: auto-bring-up AP when client WiFi is unavailable
@@ -344,7 +320,6 @@ let
     fi
   '';
 
-  # ── Caddy reverse proxy ──────────────────────────────────────────
 
   caddyConfig = writeText "Caddyfile" ''
     :80
@@ -371,7 +346,6 @@ let
     }
   '';
 
-  # ── SSH config ───────────────────────────────────────────────────
 
   sshdConfig = writeText "sshd_config" ''
     Port 22
@@ -383,14 +357,11 @@ let
     Subsystem sftp internal-sftp
   '';
 
-  # ── fstab (persistent /home on ext4 SD partition) ────────────────
 
   fstab = writeText "fstab" ''
-    # Persistent data partition on SD card
     LABEL=ALPINE_DATA  /home  ext4  defaults,noatime  0  2
   '';
 
-  # ── Boot-time setup script (install klipper stack) ───────────────
 
   firstBootSetup = writeShellScript "first-boot-setup" ''
     set -euo pipefail
@@ -403,7 +374,6 @@ let
     HOME_DIR="/home/${username}"
     USER="${username}"
 
-    # ── Wait for persistent /home ──────────────────────────────────
     # The apkovl fstab mounts LABEL=ALPINE_DATA to /home.
     # Wait up to 30s for the mount to appear (first boot: partition may need fsck).
     for i in $(seq 1 30); do
@@ -419,7 +389,6 @@ let
       exit 1
     fi
 
-    # ── Create user directories ────────────────────────────────────
     mkdir -p "$HOME_DIR"/.ssh
     chmod 700 "$HOME_DIR"/.ssh
     cp /etc/ssh/authorized_keys "$HOME_DIR"/.ssh/authorized_keys 2>/dev/null || true
@@ -432,7 +401,6 @@ let
 
     chown -R "$USER:$USER" "$HOME_DIR"
 
-    # ── Install klipper ────────────────────────────────────────────
     echo "Installing klipper..."
     KLIPPER_PATH="$HOME_DIR/klipper"
     KLIPPY_VENV="$HOME_DIR/venv/klippy"
@@ -449,7 +417,6 @@ let
       su -s /bin/sh "$USER" -c "'$KLIPPY_VENV/bin/pip' install -r '$KLIPPER_PATH/scripts/klippy-requirements.txt'"
     fi
 
-    # ── Install moonraker ──────────────────────────────────────────
     echo "Installing moonraker..."
     MOONRAKER_PATH="$HOME_DIR/moonraker"
     MOONRAKER_VENV="$HOME_DIR/venv/moonraker"
@@ -466,7 +433,6 @@ let
       su -s /bin/sh "$USER" -c "'$MOONRAKER_VENV/bin/pip' install -r '$MOONRAKER_PATH/scripts/moonraker-requirements.txt'"
     fi
 
-    # ── Download mainsail ──────────────────────────────────────────
     echo "Downloading mainsail..."
     MAINDIR="$HOME_DIR/www"
     MAIN_RELEASE=$(curl -s https://api.github.com/repos/mainsail-crew/mainsail/releases | jq -r '.[0].assets[0].browser_download_url')
@@ -479,7 +445,6 @@ let
       echo "WARNING: Could not fetch mainsail release URL"
     fi
 
-    # ── Seed printer.cfg if absent ─────────────────────────────────
     PRINTER_CFG="$HOME_DIR/SyncthingShared/pi-klipper/printer_data/config/printer.cfg"
     if [ ! -f "$PRINTER_CFG" ]; then
       mkdir -p "$(dirname "$PRINTER_CFG")"
@@ -506,7 +471,6 @@ let
       chown "$USER:$USER" "$PRINTER_CFG"
     fi
 
-    # ── Moonraker config ───────────────────────────────────────────
     MOONRAKER_CFG="$HOME_DIR/printer_data/config/moonraker.conf"
     if [ ! -f "$MOONRAKER_CFG" ]; then
       mkdir -p "$(dirname "$MOONRAKER_CFG")"
@@ -544,11 +508,9 @@ let
       chown "$USER:$USER" "$MOONRAKER_CFG"
     fi
 
-    # ── Create klipper data directories ────────────────────────────
     mkdir -p "$HOME_DIR"/printer_data/{config,logs,gcodes,database}
     chown -R "$USER:$USER" "$HOME_DIR"/printer_data
 
-    # ── Symlink printer.cfg from syncthing pool into moonraker config ──
     SYNCTHING_CFG="$HOME_DIR/SyncthingShared/pi-klipper/printer_data/config/printer.cfg"
     MOONRAKER_PRINTER_CFG="$HOME_DIR/printer_data/config/printer.cfg"
     if [ -f "$SYNCTHING_CFG" ]; then
@@ -556,7 +518,6 @@ let
     fi
     chown -h "$USER:$USER" "$MOONRAKER_PRINTER_CFG" 2>/dev/null || true
 
-    # ── Write OpenRC init scripts ──────────────────────────────────
 
     # Klipper init script
     cat > /etc/init.d/klipper << OPENRC_KLIPPER
@@ -626,7 +587,6 @@ let
     OPENRC_CADDY
     chmod +x /etc/init.d/caddy
 
-    # ── Enable and start services ──────────────────────────────────
     rc-update add networkmanager default
     rc-update add syncthing default
     rc-update add caddy default
@@ -639,12 +599,10 @@ let
     rc-service moonraker start
     rc-service klipper start
 
-    # ── Mark setup complete ────────────────────────────────────────
     date > "$MARKER"
     echo "=== First-boot setup complete ==="
   '';
 
-  # ── Update script (git pull + pip install + restart) ─────────────
 
   updateScript = writeShellScript "update-klipper" ''
     set -euo pipefail
@@ -653,7 +611,6 @@ let
 
     echo "=== Updating Klipper stack ==="
 
-    # Klipper
     echo "[klipper] git pull + pip install..."
     sudo rc-service klipper stop 2>/dev/null || true
     cd "$HOME_DIR/klipper"
@@ -662,7 +619,6 @@ let
     "$HOME_DIR/venv/klippy/bin/pip" install -r "$HOME_DIR/klipper/scripts/klippy-requirements.txt"
     sudo rc-service klipper start
 
-    # Moonraker
     echo "[moonraker] git pull + pip install..."
     sudo rc-service moonraker stop 2>/dev/null || true
     cd "$HOME_DIR/moonraker"
@@ -671,7 +627,6 @@ let
     "$HOME_DIR/venv/moonraker/bin/pip" install -r "$HOME_DIR/moonraker/scripts/moonraker-requirements.txt"
     sudo rc-service moonraker start
 
-    # Mainsail
     echo "[mainsail] download latest release..."
     cd "$HOME_DIR/www"
     MAIN_RELEASE=$(curl -s https://api.github.com/repos/mainsail-crew/mainsail/releases | jq -r '.[0].assets[0].browser_download_url')
@@ -685,13 +640,11 @@ let
       echo "WARNING: Could not fetch mainsail release URL"
     fi
 
-    # Restart caddy
     sudo rc-service caddy restart 2>/dev/null || true
 
     echo "=== Update complete ==="
   '';
 
-  # ── assemble the apkovl tarball ──────────────────────────────────
 
   apkovl = runCommand "headless.apkovl.tar.gz"
     {
@@ -704,53 +657,40 @@ let
       mkdir -p rootfs/home/${username}/.ssh
       mkdir -p rootfs/usr/local/bin
 
-      # Packages
       cp ${writeText "world" apkWorld} rootfs/etc/apk/world
 
-      # SSH
       cp ${sshdConfig} rootfs/etc/ssh/sshd_config
       cp ${authorizedKeysFile} rootfs/etc/ssh/authorized_keys
       cp ${authorizedKeysFile} rootfs/home/${username}/.ssh/authorized_keys
 
-      # Fish
       cp ${fishConfig} rootfs/home/${username}/.config/fish/config.fish
 
-      # Starship
       cp ${starshipConfig} rootfs/home/${username}/.config/starship.toml
 
-      # Syncthing
       cp ${syncthingConfig} rootfs/home/${username}/.config/syncthing/config.xml
 
-      # NetworkManager WiFi profiles
       cp ${wifiProfile} "rootfs/etc/NetworkManager/system-connections/${wifiSsid}.nmconnection"
       chmod 600 "rootfs/etc/NetworkManager/system-connections/${wifiSsid}.nmconnection"
       cp ${apProfile} rootfs/etc/NetworkManager/system-connections/Klipper-Setup.nmconnection
       chmod 600 rootfs/etc/NetworkManager/system-connections/Klipper-Setup.nmconnection
 
-      # AP fallback dispatcher
       cp ${apFallbackDispatcher} rootfs/etc/NetworkManager/dispatcher.d/90-klipper-ap-fallback
       chmod +x rootfs/etc/NetworkManager/dispatcher.d/90-klipper-ap-fallback
 
-      # Caddy
       cp ${caddyConfig} rootfs/etc/caddy/Caddyfile
 
-      # fstab (persistent /home)
       cp ${fstab} rootfs/etc/fstab
 
-      # First-boot setup
       cp ${firstBootSetup} rootfs/etc/local.d/first-boot.start
       chmod +x rootfs/etc/local.d/first-boot.start
 
-      # Update script
       cp ${updateScript} rootfs/usr/local/bin/update-klipper
       chmod +x rootfs/usr/local/bin/update-klipper
 
-      # Package
       cd rootfs
       tar czf "$out" .
     '';
 
-  # ── Boot partition assembler (full SD card boot contents) ─────────
 
   bootPartitionDir = runCommand "klipper-alpine-boot"
     {
@@ -761,10 +701,8 @@ let
       mkdir -p "$out"
       tar xf ${alpineTarball} -C "$out"
 
-      # Copy apkovl to boot partition
       cp ${apkovl} "$out/headless.apkovl.tar.gz"
 
-      # Update cmdline.txt for persistent /home
       ${gnused}/bin/sed -i 's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' "$out/cmdline.txt" 2>/dev/null || true
 
       echo "Alpine Klipper boot partition ready at $out"
@@ -772,7 +710,6 @@ let
       echo "Create ext4 partition (label: ALPINE_DATA) for persistent /home."
     '';
 
-  # ── deploy script (writes a setup guide) ─────────────────────────
 
   deployScript = writeShellScript "deploy-klipper-alpine" ''
     set -euo pipefail
@@ -799,14 +736,12 @@ let
     read -p "Type YES to continue: " confirm
     [ "$confirm" = "YES" ] || exit 0
 
-    # Partition
     echo "Partitioning..."
     sudo parted -s "$SDCARD" mklabel msdos
     sudo parted -s "$SDCARD" mkpart primary fat32 1MiB 257MiB
     sudo parted -s "$SDCARD" mkpart primary ext4 257MiB 100%
     sudo parted -s "$SDCARD" set 1 boot on
 
-    # Format and label
     BOOT="''${SDCARD}p1"
     DATA="''${SDCARD}p2"
     [ -b "$BOOT" ] || BOOT="''${SDCARD}1"
@@ -816,7 +751,6 @@ let
     sudo mkfs.vfat -n ALPINE_BOOT "$BOOT"
     sudo mkfs.ext4 -F -L ALPINE_DATA "$DATA"
 
-    # Mount and copy
     BOOT_MNT=$(mktemp -d)
     sudo mount "$BOOT" "$BOOT_MNT"
 
@@ -832,7 +766,6 @@ let
     echo "First boot will install klipper/moonraker/mainsail (~5 min)."
     echo "SSH: ssh ${username}@${hostname}.local"
   '';
-  # ── Final dd-able disk image (like shimboot's assemble-image.nix) ──
 
   diskImage = runCommand "klipper-alpine.img"
     {
@@ -847,7 +780,6 @@ let
       meta.description = "Complete dd-able SD card image — Alpine diskless Klipper Pi 4B";
     }
     ''
-      # ── 1. Prepare boot partition content ────────────────────────
 
       BOOT_CONTENT="$PWD/boot-files"
       mkdir -p "$BOOT_CONTENT"
@@ -857,7 +789,6 @@ let
         's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' \
         "$BOOT_CONTENT/cmdline.txt" 2>/dev/null || true
 
-      # ── 2. Build FAT32 boot partition image ──────────────────
 
       BOOT_CONTENT_MB=$(du -sm "$BOOT_CONTENT" | cut -f1)
       BOOT_SIZE_MB=$(( BOOT_CONTENT_MB + BOOT_CONTENT_MB / 10 + 10 ))
@@ -873,13 +804,11 @@ let
         mcopy -s -n "$item" x:/
       done
 
-      # ── 3. Build empty ext4 data partition image ─────────────────
 
       DATA_SIZE_MB=128
       truncate -s "''${DATA_SIZE_MB}M" data.img
       mkfs.ext4 -F -L ALPINE_DATA data.img
 
-      # ── 4. Assemble the complete disk image ──────────────────────
 
       P1_END_MB=$(( 1 + BOOT_SIZE_MB ))
       P2_START_MB=$P1_END_MB
@@ -897,7 +826,6 @@ let
       parted -s disk.img mkpart primary ext4 ''${P2_START_MB}MiB ''${P2_END_MB}MiB
       parted -s disk.img set 1 boot on
 
-      # Query exact byte offsets from parted
       parted -m disk.img unit B print | tail -n +3 | while IFS=: read n start end size type rest; do
         case "$n" in
           1) P1_START_BYTES=''${start%B}; P1_END_BYTES=''${end%B} ;;
@@ -906,7 +834,6 @@ let
         echo "Partition $n: $start - $end ($type)"
       done
 
-      # Re-parse (subshell vars lost in pipeline)
       P1_START_BYTES=$(parted -m disk.img unit B print 2>/dev/null | awk -F: 'NR==3 {gsub(/B/,"",$2); print $2}')
       P2_START_BYTES=$(parted -m disk.img unit B print 2>/dev/null | awk -F: 'NR==4 {gsub(/B/,"",$2); print $2}')
 
