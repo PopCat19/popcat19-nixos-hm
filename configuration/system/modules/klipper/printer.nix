@@ -3,19 +3,40 @@
 # Purpose: Klipper firmware service with mutable printer.cfg
 #
 # This module:
-# - Enables Klipper with mutable config in /var/lib/klipper
+# - Enables Klipper with mutable config in /var/lib/moonraker/config
+#   (shared with Moonraker so Mainsail file editor works)
 # - Seeds a minimal printer.cfg on first boot
-# - Configures tmpfiles for printer data owned by the primary user
+# - Configures tmpfiles for printer data
+# - Grants Moonraker D-Bus access to systemd for shutdown/reboot
 {
   userConfig,
   ...
 }:
 let
-  printerCfgDir = "/var/lib/klipper";
+  printerCfgDir = "/var/lib/moonraker/config";
   printerCfgFile = "${printerCfgDir}/printer.cfg";
   printerDataHome = userConfig.directories.home;
 in
 {
+  systemd.tmpfiles.rules = [
+    "d ${printerCfgDir} 2775 moonraker klipper -"
+    "d /var/lib/moonraker/gcodes 0775 moonraker moonraker -"
+    "f /var/log/klipper.log 0644 klipper klipper -"
+    "f /var/log/moonraker.log 0644 moonraker moonraker -"
+    "d ${printerDataHome}/printer_data 0775 ${userConfig.username} klipper -"
+    "d ${printerDataHome}/printer_data/logs 0775 ${userConfig.username} klipper -"
+  ];
+
+  # Allow moonraker to call systemd over D-Bus for shutdown/reboot via Mainsail
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id == "org.freedesktop.systemd1.manage-units" &&
+          subject.user == "moonraker") {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
   services.klipper = {
     enable = true;
     user = "klipper";
@@ -54,13 +75,4 @@ in
       chmod 664 ${printerCfgFile}
     fi
   '';
-
-  systemd.tmpfiles.rules = [
-    "d ${printerCfgDir} 2775 klipper klipper -"
-    "f /var/log/klipper.log 0644 klipper klipper -"
-    "f /var/log/moonraker.log 0644 moonraker moonraker -"
-    "d /var/lib/moonraker/gcodes 0775 moonraker moonraker -"
-    "d ${printerDataHome}/printer_data 0775 ${userConfig.username} klipper -"
-    "d ${printerDataHome}/printer_data/logs 0775 ${userConfig.username} klipper -"
-  ];
 }
