@@ -34,8 +34,14 @@
   # nixos-raspberrypi recommends this for new installations (github:nvmd/nixos-raspberrypi#60).
   boot.loader.raspberry-pi.bootloader = "kernel";
 
-  # Force fsck on every boot so unclean shutdowns don't leave
-  # /nix/store mounted read-only (which corrupts the nix DB).
+  # systemd initrd is required for kernel cmdline fsck flags to take effect
+  # (fsck.repair=yes, fsck.mode=force). Without this, unclean shutdowns
+  # leave /nix/store mounted read-only, corrupting the nix DB.
+  boot.initrd.systemd.enable = true;
+  boot.kernelParams = [
+    "fsck.mode=force"
+    "fsck.repair=yes"
+  ];
 
   # WiFi — NetworkManager (PSK is injected from agenix by the klipper module)
   networking.networkmanager.enable = true;
