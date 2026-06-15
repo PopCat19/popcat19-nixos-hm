@@ -27,7 +27,7 @@
 - `screenshot.nix`: Screenshot capture using hyprshot and fish wrapper
 - `services.nix`: Configure user-level services for media, storage, and clipboard
 - `starship.nix`: Configure Starship cross-shell prompt with Catppuccin-inspired styling
-- `stylix.nix`: Configure comprehensive theming using Stylix framework
+- `stylix.nix`: Configure system theming using Stylix framework
 - `syncthing.nix`: Configure Syncthing directories and activation script
 - `systemd-services.nix`: Configure custom systemd user services
 - `tmux.nix`: Configure tmux terminal multiplexer
