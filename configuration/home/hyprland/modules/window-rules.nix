@@ -14,8 +14,8 @@
       "no_focus on, match:class ^$, match:title ^$, match:xwayland 1, match:float 1, match:fullscreen 0, match:pin 0"
       "min_size 1024 600, match:class ^(org.pulseaudio.pavucontrol)$"
 
-      "float on, match:class ^(org.kde.dolphin)$, match:title ^(Progress Dialog — Dolphin)$"
-      "float on, match:class ^(org.kde.dolphin)$, match:title ^(Copying — Dolphin)$"
+      "float on, match:class ^(org.kde.dolphin)$, match:title ^(Progress Dialog: Dolphin)$"
+      "float on, match:class ^(org.kde.dolphin)$, match:title ^(Copying: Dolphin)$"
 
       "float on, match:title ^(About Mozilla Firefox)$"
       "float on, match:class ^(firefox)$, match:title ^(Picture-in-Picture)$"

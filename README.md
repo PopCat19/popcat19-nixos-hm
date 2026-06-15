@@ -1,6 +1,6 @@
 # popcat19-nixos-hm
 
-NixOS + Home Manager multi-host configuration — Hyprland, PMD theming, profile presets, Klipper 3D printer appliance, one-shot installer images.
+NixOS + Home Manager multi-host configuration: Hyprland, PMD theming, profile presets, Klipper 3D printer appliance, one-shot installer images.
 
 ## Quick start
 
@@ -31,7 +31,7 @@ sudo nixos-rebuild switch --flake .#popcat19-nixos0
 
 ### Pi SD card image
 
-Two options — NixOS or Alpine diskless:
+Two options: NixOS or Alpine diskless:
 
 ```bash
 # NixOS printer appliance (full closure baked in)
@@ -100,12 +100,12 @@ sudo ./tools/write-image.sh alpine-klipper -d /dev/sdX  # Alpine
 
 Profiles compose system modules into deployable presets. Each host points to one profile via its `user-config.nix`.
 
-- **`default`** — Full desktop: Hyprland, PipeWire, virtualization, VPN, gaming, Syncthing, OpenRGB
-- **`laptop`** — Desktop minus desktop-specifics; adds TLP, zRAM
-- **`surface`** — Surface Pro: touch, thermal management, surface-control group
-- **`minimal`** — Headless/server: SSH, Docker, no display stack
-- **`shimboot`** — ChromeOS shimboot: pruned home modules, minimal services
-- **`klipper`** — Pi 4B printer appliance: Klipper, Moonraker, Mainsail, WiFi, AP fallback
+- **`default`**: Full desktop: Hyprland, PipeWire, virtualization, VPN, gaming, Syncthing, OpenRGB
+- **`laptop`**: Desktop minus desktop-specifics; adds TLP, zRAM
+- **`surface`**: Surface Pro: touch, thermal management, surface-control group
+- **`minimal`**: Headless/server: SSH, Docker, no display stack
+- **`shimboot`**: ChromeOS shimboot: pruned home modules, minimal services
+- **`klipper`**: Pi 4B printer appliance: Klipper, Moonraker, Mainsail, WiFi, AP fallback
 
 Manage profiles with `tools/profile-manager-tui.sh`.
 
@@ -162,9 +162,9 @@ Two deployment options for the `popcat19-klipper0` host:
 
 ### NixOS (sd-popcat19-klipper0)
 
-- **Klipper** + **Moonraker** + **Mainsail** — full web-controlled printer stack
-- **WiFi client** — seeded once from agenix secret, then mutable at runtime
-- **Fallback AP** — if home WiFi is unreachable, the Pi broadcasts its own `Klipper-Setup`
+- **Klipper** + **Moonraker** + **Mainsail**: full web-controlled printer stack
+- **WiFi client**: seeded once from agenix secret, then mutable at runtime
+- **Fallback AP**: if home WiFi is unreachable, the Pi broadcasts its own `Klipper-Setup`
   access point after 60s (password from agenix, `192.168.50.1/24`)
 - Toggle manually: `klipper_ap_on` / `klipper_ap_off`
 - SPI enabled for ADXL345 input shaper calibration
@@ -172,14 +172,14 @@ Two deployment options for the `popcat19-klipper0` host:
 
 ### Alpine diskless (alpine-klipper-img)
 
-For Pi 4B only — immutable read-only root that runs from RAM. Fixes NixOS DB corruption
+For Pi 4B only: immutable read-only root that runs from RAM. Fixes NixOS DB corruption
 on unclean poweroff. Built as a pure Nix derivation, output is a single dd-able image.
 
-- **Alpine Linux** — runs from RAM, rootfs never mounted r/w
+- **Alpine Linux**: runs from RAM, rootfs never mounted r/w
 - **Persistent /home** on labelled ext4 partition (survives power loss)
-- **Klipper** + **Moonraker** + **Mainsail** — installed on first boot via OpenRC services
-- **Syncthing** — same device IDs and folders as NixOS config (keepass-vault, shared, pi-klipper)
-- **Starship prompt** — mirrors starship.nix config
+- **Klipper** + **Moonraker** + **Mainsail**: installed on first boot via OpenRC services
+- **Syncthing**: same device IDs and folders as NixOS config (keepass-vault, shared, pi-klipper)
+- **Starship prompt**: mirrors starship.nix config
 - **Fish shell** with `kupdate` alias for in-place stack updates
 - **WiFi client** + **AP fallback** via NetworkManager dispatcher
 - **In-place update**: `kupdate` (git pull klipper/moonraker, download latest mainsail, restart services)
@@ -187,7 +187,7 @@ on unclean poweroff. Built as a pure Nix derivation, output is a single dd-able 
 - **First boot**: AP `Klipper-Setup` appears within 60s if no client WiFi connects
   (PSK `klipper-setup`, SSH at `192.168.50.1`). Connect, set the PSK:
   `sudo nmcli connection modify Beave_Net_IoT wifi-sec.psk '<psk>'`
-  Then persist: `sudo lbu commit`, reboot, AP stops — client WiFi takes over.
+  Then persist: `sudo lbu commit`, reboot, AP stops: client WiFi takes over.
 - **In-place update**: `kupdate` (git pull klipper/moonraker, download latest mainsail, restart services)
 
 See `configuration/system/modules/klipper/context.md` for module details.
@@ -215,11 +215,11 @@ See `configuration/system/modules/context.md` for the full inventory.
 <details>
 <summary>Tools</summary>
 
-- **`profile-manager-tui.sh`** — Interactive terminal UI for profile operations
-- **`profile-manager.sh`** — Profile management CLI (create, set/get host profiles)
-- **`debug-nix-config.sh`** — Diagnose Nix daemon config mismatches
-- **`push-to-cachix.sh`** — Push derivations to personal Cachix cache
-- **`test-profile-manager.sh`** — Profile manager test runner
+- **`profile-manager-tui.sh`**: Interactive terminal UI for profile operations
+- **`profile-manager.sh`**: Profile management CLI (create, set/get host profiles)
+- **`debug-nix-config.sh`**: Diagnose Nix daemon config mismatches
+- **`push-to-cachix.sh`**: Push derivations to personal Cachix cache
+- **`test-profile-manager.sh`**: Profile manager test runner
 
 </details>
 
@@ -240,4 +240,4 @@ See [`conventions/DEVELOPMENT.md`](conventions/DEVELOPMENT.md) for coding standa
 
 </details>
 
-> ⚠️ Personal dotfiles — breaking changes may occur without notice.
+> ⚠️ Personal dotfiles: breaking changes may occur without notice.

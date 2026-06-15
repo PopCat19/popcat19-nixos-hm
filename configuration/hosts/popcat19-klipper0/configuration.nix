@@ -21,7 +21,7 @@
 
   networking.hostName = userConfig.hostname;
 
-  # Filesystem stub — sd-image module provides the real one at build time
+  # Filesystem stub: sd-image module provides the real one at build time
   fileSystems."/" = {
     device = "/dev/disk/by-label/NIXOS_SD";
     fsType = "ext4";

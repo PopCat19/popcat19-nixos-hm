@@ -1,6 +1,6 @@
 # klipper.nix
 #
-# Purpose: Configuration preset for the Klipper Pi 4B — headless 3D printer appliance
+# Purpose: Configuration preset for the Klipper Pi 4B: headless 3D printer appliance
 #
 # This profile:
 # - Imports the base boot-critical configuration
@@ -23,13 +23,13 @@
     ../system/modules/klipper
   ];
 
-  # SPI — needed for ADXL345 input shaper calibration
+  # SPI: needed for ADXL345 input shaper calibration
   hardware.raspberry-pi.config.all.base-dt-params.spi = {
     enable = true;
     value = "on";
   };
 
-  # Use generational bootloader — supports nixos-rebuild switch without
+  # Use generational bootloader: supports nixos-rebuild switch without
   # corrupting firmware partition (unlike U-Boot, which rewrites on every switch).
   # nixos-raspberrypi recommends this for new installations (github:nvmd/nixos-raspberrypi#60).
   boot.loader.raspberry-pi.bootloader = "kernel";
@@ -43,13 +43,13 @@
     "fsck.repair=yes"
   ];
 
-  # WiFi — NetworkManager (PSK is injected from agenix by the klipper module)
+  # WiFi: NetworkManager (PSK is injected from agenix by the klipper module)
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "wpa_supplicant";
 
   hardware.enableRedistributableFirmware = true;
 
-  # SSH — OpenSSH server
+  # SSH: OpenSSH server
   services.openssh = {
     enable = true;
     settings = {
@@ -58,7 +58,7 @@
     };
   };
 
-  # Packages — git, system utilities
+  # Packages: git, system utilities
   environment.sessionVariables = {
     NIXOS_CONFIG_DIR = "/home/popcat19/popcat19-nixos-hm";
   };
@@ -76,7 +76,7 @@
   # Fish is used as the interactive shell for the primary user
   programs.fish.enable = true;
 
-  # Nix — flakes enabled, auto GC every week.
+  # Nix: flakes enabled, auto GC every week.
   # keep-derivations + keep-outputs prevent GC from deleting the
   # nixos-rebuild wrapper's embedded nix binary (avoids sqlite SIGABRT).
   nix.settings = {
@@ -96,7 +96,7 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  # Journald — keep logs small on 32GB SD
+  # Journald: keep logs small on 32GB SD
   services.journald.extraConfig = ''
     MaxRetentionSec=7day
     SystemMaxUse=200M

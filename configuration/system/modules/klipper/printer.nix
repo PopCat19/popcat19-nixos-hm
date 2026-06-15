@@ -60,7 +60,7 @@ in
       fi
       if [ ! -e ${printerCfgFile} ]; then
         cat > ${printerCfgFile} << 'SEED'
-      # Klipper printer.cfg — seeded by NixOS on first boot
+      # Klipper printer.cfg: seeded by NixOS on first boot
       #
       # Full config is in ~/syncthing-shared/pi-klipper/printer.cfg on nixos0.
       # Copy it here or configure via Mainsail UI at http://klipper.local

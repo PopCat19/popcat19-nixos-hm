@@ -12,7 +12,7 @@
 #   1. Delete stylix-palette.nix (manual bridge becomes redundant)
 #   2. Enable stylix.targets.noctalia.enable (or whatever the option is)
 #   3. Remove lib.recursiveUpdate override below that injects customPalettes
-#      into settings.theme — Stylix will set it directly
+#      into settings.theme: Stylix will set it directly
 #   4. Remove the customPalettes attr from programs.noctalia.settings
 {
   config,

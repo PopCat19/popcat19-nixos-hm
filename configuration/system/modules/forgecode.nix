@@ -1,6 +1,6 @@
 # forgecode.nix
 #
-# Purpose: Centralized ForgeCode configuration — binary, shell integration, auto-update
+# Purpose: Centralized ForgeCode configuration: binary, shell integration, auto-update
 #
 # This module:
 # - Installs forgecode binary from llm-agents flake (when userConfig.agents.forgecode is true)

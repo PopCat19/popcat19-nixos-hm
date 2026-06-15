@@ -35,7 +35,7 @@ ngit() { ( cd "$NIXOS_CONFIG_DIR" && git "$@" ); }
 # ── rg reminder wrappers ──────────────────────────────────────────
 grep() {
     if command -v rg &>/dev/null; then
-        echo -e "💡 rg is faster — try: rg $*" >&2
+        echo -e "💡 rg is faster; try: rg $*" >&2
     fi
     command grep --color=auto "$@"
 }

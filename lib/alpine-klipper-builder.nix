@@ -14,7 +14,7 @@
 #   - In-place update script: git pull + pip install + restart
 #   - Persistent /home on SD ext4 partition
 #
-# Output: headless.apkovl.tar.gz — place on boot partition of SD card
+# Output: headless.apkovl.tar.gz: place on boot partition of SD card
 {
   lib,
   writeText,
@@ -123,7 +123,7 @@ let
     end
 
     function fish_greeting
-        echo (set_color cyan)"  Alpine Diskless Klipper Pi — $hostname"(set_color normal)
+        echo (set_color cyan)"  Alpine Diskless Klipper Pi: $hostname"(set_color normal)
         echo ""
     end
   '';
@@ -431,7 +431,7 @@ let
     if [ ! -f "$PRINTER_CFG" ]; then
       mkdir -p "$(dirname "$PRINTER_CFG")"
       cat > "$PRINTER_CFG" << 'PRINTER_CFG_EOF'
-    # Klipper printer.cfg — seeded by alpine-klipper-apkovl
+    # Klipper printer.cfg: seeded by alpine-klipper-apkovl
     #
     # Full config is in ~/SyncthingShared/pi-klipper/printer.cfg on nixos0.
     # Copy it here or configure via Mainsail UI at http://klipper.local
@@ -786,7 +786,7 @@ let
           parted
           util-linux
         ];
-        meta.description = "Complete dd-able SD card image — Alpine diskless Klipper Pi 4B";
+        meta.description = "Complete dd-able SD card image: Alpine diskless Klipper Pi 4B";
       }
       ''
 

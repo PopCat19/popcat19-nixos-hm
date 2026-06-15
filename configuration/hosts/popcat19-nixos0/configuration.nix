@@ -44,7 +44,7 @@ in
     listen = true;
   };
 
-  # Remove the upstream tmpfiles entry for config.yaml — preStart handles it
+  # Remove the upstream tmpfiles entry for config.yaml: preStart handles it
   systemd.tmpfiles.settings.sillytavern."/var/lib/SillyTavern/config.yaml" = lib.mkForce { };
 
   # Fix: upstream generates --listen=1 which yargs parses as false for boolean flags.
@@ -52,7 +52,7 @@ in
   systemd.services.sillytavern.serviceConfig.ExecStart =
     lib.mkForce "${lib.getExe pkgs.sillytavern} --port=${toString cfg.port} --listen --basicAuthMode";
 
-  # Silence console.debug() spam — SillyTavern dumps full system prompts
+  # Silence console.debug() spam: SillyTavern dumps full system prompts
   # on every chat request via console.debug, generating ~36K log lines/hour
   systemd.services.sillytavern.environment.NODE_OPTIONS =
     "--require ${pkgs.writeText "st-no-debug.cjs" "console.debug = () => {};"}";

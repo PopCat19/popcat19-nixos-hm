@@ -15,9 +15,9 @@
 #   outbound traffic uses the system routing table which includes Mullvad's routes.
 #
 # Toggle:
-# - singbox-on [host] [port]  — start the TUN service
-# - singbox-off               — stop the TUN service
-# - proxify <cmd>             — launch app with explicit SOCKS5 proxy
+# - singbox-on [host] [port] : start the TUN service
+# - singbox-off              : stop the TUN service
+# - proxify <cmd>            : launch app with explicit SOCKS5 proxy
 {
   config,
   lib,
@@ -51,7 +51,7 @@ let
         echo -n "Starting sing-box TUN... "
         if sudo systemctl start sing-box
             set_color green; echo "[OK]"; set_color normal
-            echo "Proxy active — TUN interface routing via $_host:$_port"
+            echo "Proxy active: TUN interface routing via $_host:$_port"
         else
             set_color red; echo "[FAIL]"; set_color normal
             echo "Check: sudo systemctl status sing-box"
@@ -94,7 +94,7 @@ let
             set cmd_args $argv
         end
 
-        # If sing-box TUN is active, apps are already proxied — just launch
+        # If sing-box TUN is active, apps are already proxied: just launch
         if systemctl is-active --quiet sing-box 2>/dev/null
             set_color cyan; echo "[RUN] $cmd_args[1] (via sing-box TUN)"; set_color normal
             if command -q uwsm
@@ -190,7 +190,7 @@ in
             tag = "dns-local";
           }
           {
-            # Remote DNS via proxy — prevents DNS leaks (SOCKS5h equivalent)
+            # Remote DNS via proxy: prevents DNS leaks (SOCKS5h equivalent)
             type = "https";
             tag = "dns-proxy";
             server = "1.1.1.1";
@@ -220,7 +220,7 @@ in
             "0.0.0.0/0"
           ];
           route_exclude_address = [
-            # Only exclude link-local, multicast, and Docker bridge — never proxy these
+            # Only exclude link-local, multicast, and Docker bridge: never proxy these
             # 192.168.0.0/16 intentionally NOT excluded so DNS (192.168.49.1:53)
             # gets captured by TUN hijack; proxy loop prevented by fwmark bypass
             "169.254.0.0/16"
@@ -295,7 +295,7 @@ in
             protocol = "dns";
             action = "hijack-dns";
           }
-          # Bypass WireGuard UDP — never send through proxy
+          # Bypass WireGuard UDP: never send through proxy
           {
             protocol = "udp";
             port = [ 51820 ];
@@ -329,7 +329,7 @@ in
       wantedBy = lib.mkIf (!cfg.autoStart) (lib.mkForce [ ]);
 
       serviceConfig = {
-        # TUN device access — /dev/net/tun is world-rw (0666) on NixOS
+        # TUN device access: /dev/net/tun is world-rw (0666) on NixOS
         PrivateDevices = lib.mkForce false;
       };
     };

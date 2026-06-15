@@ -1,42 +1,42 @@
 # Context
 
-- `cdh.fish` — Change to NixOS config directory ($NIXOS_CONFIG_DIR)
-- `cnup.fish` — Format and validate Nix code with optional flake check
-- `dev-session.fish` — Launch tmux development session with predefined layout
-- `dev-to-main.fish` — Merges dev branch changes into main branch
-- `devs.fish` — Shortcut for dev-session
-- `dtm.fish` — Shortcut for dev-to-main
-- `find.fish` — Remind to use ripgrep instead of find -name when rg is installed
-- `fish-greeting.fish` — Displays customized shell greeting with system information
-- `fix-fish-history.fish` — Repair corrupted Fish shell history file
-- `fixhist.fish` — Shortcut for fix-fish-history
-- `flconf.fish` — Open flake.nix in editor
-- `flup.fish` — Shortcut for nix-flake-update
-- `forge-accept-line.fish` — Intercept Enter key to dispatch `:sentinel` commands to ForgeCode
-- `forge-init.fish` — Initialize ForgeCode Fish integration (globals, key bindings, FORGE_TERM context tracking)
-- `forge-rprompt.fish` — Display ForgeCode agent/conversation status in fish right prompt
-- `forge-tab.fish` — Intercept Tab key for ForgeCode command completion and `@file` tagging
-- `gac.fish` — Stage all and commit with message (git add . && git commit -m)
-- `grep.fish` — Remind to use ripgrep instead of grep when rg is installed
-- `greset.fish` — Hard reset working tree (git reset --hard && git clean -fd)
-- `gtime.fish` — Provide GNU time functionality in fish
-- `hconf.fish` — Open home.nix in editor
-- `list-fish-helpers.fish` — Display all available Fish functions and abbreviations
-- `lsa.fish` — Display git-tracked files as a tree structure
-- `nconf.fish` — Open configuration.nix in editor
-- `ngit.fish` — Run git commands from NixOS config directory
-- `nix-flake-update.fish` — Update Nix flake inputs with compatibility checks
-- `nix-shell-unfree.fish` — Enable Nix shell with unfree and insecure packages
-- `nixos-rebuild-auto.fish` — Non-interactive NixOS rebuild for LLM automation
-- `nixos-rebuild-basic.fish` — Unified NixOS rebuild with commit/push support
-- `nixos-status.fish` — Display NixOS system status and health information
-- `nrb.fish` — Shortcut for nixos-rebuild-basic
-- `nsp.fish` — Shortcut for nix-shell -p
-- `pkgs.fish` — Search nixpkgs (nix search nixpkgs)
-- `proxify.fish` — Fish completions for proxify command (sing-box TUN app launcher)
-- `scrc.fish` — scrcpy with audio playback
-- `scrch.fish` — scrcpy with audio playback, high bitrate
-- `scrcx.fish` — scrcpy without audio
-- `scrcxh.fish` — scrcpy without audio, high bitrate
-- `show-shortcuts.fish` — Displays Hyprland keybindings with descriptions and categories
-- `slp.fish` — Suspend system (systemctl sleep)
+- `cdh.fish`: Change to NixOS config directory ($NIXOS_CONFIG_DIR)
+- `cnup.fish`: Format and validate Nix code with optional flake check
+- `dev-session.fish`: Launch tmux development session with predefined layout
+- `dev-to-main.fish`: Merges dev branch changes into main branch
+- `devs.fish`: Shortcut for dev-session
+- `dtm.fish`: Shortcut for dev-to-main
+- `find.fish`: Remind to use ripgrep instead of find -name when rg is installed
+- `fish-greeting.fish`: Displays customized shell greeting with system information
+- `fix-fish-history.fish`: Repair corrupted Fish shell history file
+- `fixhist.fish`: Shortcut for fix-fish-history
+- `flconf.fish`: Open flake.nix in editor
+- `flup.fish`: Shortcut for nix-flake-update
+- `forge-accept-line.fish`: Intercept Enter key to dispatch `:sentinel` commands to ForgeCode
+- `forge-init.fish`: Initialize ForgeCode Fish integration (globals, key bindings, FORGE_TERM context tracking)
+- `forge-rprompt.fish`: Display ForgeCode agent/conversation status in fish right prompt
+- `forge-tab.fish`: Intercept Tab key for ForgeCode command completion and `@file` tagging
+- `gac.fish`: Stage all and commit with message (git add . && git commit -m)
+- `grep.fish`: Remind to use ripgrep instead of grep when rg is installed
+- `greset.fish`: Hard reset working tree (git reset --hard && git clean -fd)
+- `gtime.fish`: Provide GNU time functionality in fish
+- `hconf.fish`: Open home.nix in editor
+- `list-fish-helpers.fish`: Display all available Fish functions and abbreviations
+- `lsa.fish`: Display git-tracked files as a tree structure
+- `nconf.fish`: Open configuration.nix in editor
+- `ngit.fish`: Run git commands from NixOS config directory
+- `nix-flake-update.fish`: Update Nix flake inputs with compatibility checks
+- `nix-shell-unfree.fish`: Enable Nix shell with unfree and insecure packages
+- `nixos-rebuild-auto.fish`: Non-interactive NixOS rebuild for LLM automation
+- `nixos-rebuild-basic.fish`: Unified NixOS rebuild with commit/push support
+- `nixos-status.fish`: Display NixOS system status and health information
+- `nrb.fish`: Shortcut for nixos-rebuild-basic
+- `nsp.fish`: Shortcut for nix-shell -p
+- `pkgs.fish`: Search nixpkgs (nix search nixpkgs)
+- `proxify.fish`: Fish completions for proxify command (sing-box TUN app launcher)
+- `scrc.fish`: scrcpy with audio playback
+- `scrch.fish`: scrcpy with audio playback, high bitrate
+- `scrcx.fish`: scrcpy without audio
+- `scrcxh.fish`: scrcpy without audio, high bitrate
+- `show-shortcuts.fish`: Displays Hyprland keybindings with descriptions and categories
+- `slp.fish`: Suspend system (systemctl sleep)

@@ -40,7 +40,7 @@
     ../system/modules/nh.nix
   ];
 
-  # ChromeOS kernel lacks user_namespaces — sandbox must be disabled
+  # ChromeOS kernel lacks user_namespaces: sandbox must be disabled
   nix.settings.sandbox = false;
 
   # Re-export userConfig for shimboot modules

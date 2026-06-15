@@ -10,7 +10,7 @@
 #
 # Note: This is the HOME-MANAGER fish module, distinct from the system-level
 # fish-functions.nix that deploys to /etc/fish/functions/. Both are safe to
-# load simultaneously — user paths take precedence in fish_function_path.
+# load simultaneously: user paths take precedence in fish_function_path.
 { pkgs, userConfig, ... }:
 {
   programs.fish = {
