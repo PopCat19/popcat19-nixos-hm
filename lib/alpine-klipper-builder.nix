@@ -16,10 +16,8 @@
 #
 # Output: headless.apkovl.tar.gz — place on boot partition of SD card
 {
-  stdenv,
   lib,
   writeText,
-  writeTextFile,
   writeShellScript,
   runCommand,
   fetchurl,
@@ -41,7 +39,6 @@ let
     hash = "sha256-zInYxQTj2781KBgPBQKy8SUwZLNd7djKjvJ/nJdUFXY=";
   };
 
-
   syncthingDevices = {
     nixos0 = "K6FLBMQ-5CJEX4X-VL4KETN-7AYJQW5-5VTXJWY-CLRMKBV-TGXIU26-WUY74QZ";
     s23u = "QP7SCT2-7XQTOK3-WTTSZ5T-T6BH4EZ-IA7VEIQ-RUQO5UV-FWWRF5L-LDQXTAS";
@@ -56,11 +53,9 @@ in
   wifiSsid ? "Beave_Net_IoT",
   wifiPsk ? "",
   sshAuthorizedKeys ? [ ],
-  klipperDataDir ? "/home/${username}/printer_data",
 }:
 let
   inherit (lib) concatStringsSep escapeShellArg;
-
 
   apkWorld = concatStringsSep "\n" [
     "fish"
@@ -106,9 +101,7 @@ let
     "zlib-dev"
   ];
 
-
   authorizedKeysFile = writeText "authorized_keys" (concatStringsSep "\n" sshAuthorizedKeys);
-
 
   fishConfig = writeText "config.fish" ''
     set -gx EDITOR micro
@@ -134,7 +127,6 @@ let
         echo ""
     end
   '';
-
 
   starshipConfig = writeText "starship.toml" ''
     format = "$time$directory$git_branch$git_status$line_break$character"
@@ -197,7 +189,6 @@ let
     style_user = "bold white"
   '';
 
-
   syncthingConfig = writeText "config.xml" ''
     <configuration version="39">
         <folder id="pi-klipper" label="Pi Klipper" path="/home/${username}/SyncthingShared/pi-klipper" type="sendreceive" rescanIntervalS="30" ignorePerms="true">
@@ -218,7 +209,6 @@ let
         <gui enabled="false"/>
     </configuration>
   '';
-
 
   wifiProfile = writeText "${wifiSsid}.nmconnection" ''
     [connection]
@@ -246,7 +236,6 @@ let
     method=auto
   '';
 
-
   apProfile = writeText "Klipper-Setup.nmconnection" ''
     [connection]
     id=Klipper-Setup
@@ -273,7 +262,6 @@ let
     [ipv6]
     method=disabled
   '';
-
 
   apFallbackDispatcher = writeShellScript "90-klipper-ap-fallback" ''
     IFACE="$1"
@@ -319,7 +307,6 @@ let
     nmcli connection up "$AP" || true
   '';
 
-
   caddyConfig = writeText "Caddyfile" ''
     :80
 
@@ -345,7 +332,6 @@ let
     }
   '';
 
-
   sshdConfig = writeText "sshd_config" ''
     Port 22
     PasswordAuthentication yes
@@ -356,11 +342,9 @@ let
     Subsystem sftp internal-sftp
   '';
 
-
   fstab = writeText "fstab" ''
     LABEL=ALPINE_DATA  /home  ext4  defaults,noatime  0  2
   '';
-
 
   firstBootSetup = writeShellScript "first-boot-setup" ''
     set -euo pipefail
@@ -623,7 +607,6 @@ let
     echo "=== First-boot setup complete ==="
   '';
 
-
   updateScript = writeShellScript "update-klipper" ''
     set -euo pipefail
 
@@ -665,74 +648,76 @@ let
     echo "=== Update complete ==="
   '';
 
+  apkovl =
+    runCommand "headless.apkovl.tar.gz"
+      {
+        nativeBuildInputs = [
+          gnutar
+          gzip
+        ];
+        meta.description = "Alpine diskless apkovl for Klipper Pi 4B";
+      }
+      ''
+        mkdir -p rootfs/etc/{apk,NetworkManager/system-connections,NetworkManager/dispatcher.d,ssh,local.d,init.d,caddy}
+        mkdir -p rootfs/home/${username}/.config/{fish,syncthing}
+        mkdir -p rootfs/home/${username}/.ssh
+        mkdir -p rootfs/usr/local/bin
 
-  apkovl = runCommand "headless.apkovl.tar.gz"
-    {
-      nativeBuildInputs = [ gnutar gzip ];
-      meta.description = "Alpine diskless apkovl for Klipper Pi 4B";
-    }
-    ''
-      mkdir -p rootfs/etc/{apk,NetworkManager/system-connections,NetworkManager/dispatcher.d,ssh,local.d,init.d,caddy}
-      mkdir -p rootfs/home/${username}/.config/{fish,syncthing}
-      mkdir -p rootfs/home/${username}/.ssh
-      mkdir -p rootfs/usr/local/bin
+        cp ${writeText "world" apkWorld} rootfs/etc/apk/world
 
-      cp ${writeText "world" apkWorld} rootfs/etc/apk/world
+        cp ${sshdConfig} rootfs/etc/ssh/sshd_config
+        cp ${authorizedKeysFile} rootfs/etc/ssh/authorized_keys
+        cp ${authorizedKeysFile} rootfs/home/${username}/.ssh/authorized_keys
 
-      cp ${sshdConfig} rootfs/etc/ssh/sshd_config
-      cp ${authorizedKeysFile} rootfs/etc/ssh/authorized_keys
-      cp ${authorizedKeysFile} rootfs/home/${username}/.ssh/authorized_keys
+        cp ${fishConfig} rootfs/home/${username}/.config/fish/config.fish
 
-      cp ${fishConfig} rootfs/home/${username}/.config/fish/config.fish
+        cp ${starshipConfig} rootfs/home/${username}/.config/starship.toml
 
-      cp ${starshipConfig} rootfs/home/${username}/.config/starship.toml
+        cp ${syncthingConfig} rootfs/home/${username}/.config/syncthing/config.xml
 
-      cp ${syncthingConfig} rootfs/home/${username}/.config/syncthing/config.xml
+        cp ${wifiProfile} "rootfs/etc/NetworkManager/system-connections/${wifiSsid}.nmconnection"
+        chmod 600 "rootfs/etc/NetworkManager/system-connections/${wifiSsid}.nmconnection"
+        cp ${apProfile} rootfs/etc/NetworkManager/system-connections/Klipper-Setup.nmconnection
+        chmod 600 rootfs/etc/NetworkManager/system-connections/Klipper-Setup.nmconnection
 
-      cp ${wifiProfile} "rootfs/etc/NetworkManager/system-connections/${wifiSsid}.nmconnection"
-      chmod 600 "rootfs/etc/NetworkManager/system-connections/${wifiSsid}.nmconnection"
-      cp ${apProfile} rootfs/etc/NetworkManager/system-connections/Klipper-Setup.nmconnection
-      chmod 600 rootfs/etc/NetworkManager/system-connections/Klipper-Setup.nmconnection
+        cp ${apFallbackDispatcher} rootfs/etc/NetworkManager/dispatcher.d/90-klipper-ap-fallback
+        chmod +x rootfs/etc/NetworkManager/dispatcher.d/90-klipper-ap-fallback
 
-      cp ${apFallbackDispatcher} rootfs/etc/NetworkManager/dispatcher.d/90-klipper-ap-fallback
-      chmod +x rootfs/etc/NetworkManager/dispatcher.d/90-klipper-ap-fallback
+        cp ${apBootFallback} rootfs/etc/local.d/klipper-ap-boot.start
+        chmod +x rootfs/etc/local.d/klipper-ap-boot.start
 
-      cp ${apBootFallback} rootfs/etc/local.d/klipper-ap-boot.start
-      chmod +x rootfs/etc/local.d/klipper-ap-boot.start
+        cp ${caddyConfig} rootfs/etc/caddy/Caddyfile
 
-      cp ${caddyConfig} rootfs/etc/caddy/Caddyfile
+        cp ${fstab} rootfs/etc/fstab
 
-      cp ${fstab} rootfs/etc/fstab
+        cp ${firstBootSetup} rootfs/etc/local.d/first-boot.start
+        chmod +x rootfs/etc/local.d/first-boot.start
 
-      cp ${firstBootSetup} rootfs/etc/local.d/first-boot.start
-      chmod +x rootfs/etc/local.d/first-boot.start
+        cp ${updateScript} rootfs/usr/local/bin/update-klipper
+        chmod +x rootfs/usr/local/bin/update-klipper
 
-      cp ${updateScript} rootfs/usr/local/bin/update-klipper
-      chmod +x rootfs/usr/local/bin/update-klipper
+        cd rootfs
+        tar czf "$out" .
+      '';
 
-      cd rootfs
-      tar czf "$out" .
-    '';
+  bootPartitionDir =
+    runCommand "klipper-alpine-boot"
+      {
+        nativeBuildInputs = [ gnutar ];
+        meta.description = "Complete Alpine boot partition for Klipper Pi 4B SD card";
+      }
+      ''
+        mkdir -p "$out"
+        tar xf ${alpineTarball} -C "$out"
 
+        cp ${apkovl} "$out/headless.apkovl.tar.gz"
 
-  bootPartitionDir = runCommand "klipper-alpine-boot"
-    {
-      nativeBuildInputs = [ gnutar ];
-      meta.description = "Complete Alpine boot partition for Klipper Pi 4B SD card";
-    }
-    ''
-      mkdir -p "$out"
-      tar xf ${alpineTarball} -C "$out"
+        ${gnused}/bin/sed -i 's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' "$out/cmdline.txt" 2>/dev/null || true
 
-      cp ${apkovl} "$out/headless.apkovl.tar.gz"
-
-      ${gnused}/bin/sed -i 's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' "$out/cmdline.txt" 2>/dev/null || true
-
-      echo "Alpine Klipper boot partition ready at $out"
-      echo "Flash to SD card FAT32 partition (label: ALPINE_BOOT)."
-      echo "Create ext4 partition (label: ALPINE_DATA) for persistent /home."
-    '';
-
+        echo "Alpine Klipper boot partition ready at $out"
+        echo "Flash to SD card FAT32 partition (label: ALPINE_BOOT)."
+        echo "Create ext4 partition (label: ALPINE_DATA) for persistent /home."
+      '';
 
   deployScript = writeShellScript "deploy-klipper-alpine" ''
     set -euo pipefail
@@ -790,88 +775,94 @@ let
     echo "SSH: ssh ${username}@${hostname}.local"
   '';
 
-  diskImage = runCommand "klipper-alpine.img"
-    {
-      nativeBuildInputs = [
-        gnutar
-        dosfstools
-        mtools
-        e2fsprogs
-        parted
-        util-linux
-      ];
-      meta.description = "Complete dd-able SD card image — Alpine diskless Klipper Pi 4B";
-    }
-    ''
+  diskImage =
+    runCommand "klipper-alpine.img"
+      {
+        nativeBuildInputs = [
+          gnutar
+          dosfstools
+          mtools
+          e2fsprogs
+          parted
+          util-linux
+        ];
+        meta.description = "Complete dd-able SD card image — Alpine diskless Klipper Pi 4B";
+      }
+      ''
 
-      BOOT_CONTENT="$PWD/boot-files"
-      mkdir -p "$BOOT_CONTENT"
-      tar xf ${alpineTarball} -C "$BOOT_CONTENT"
-      cp ${apkovl} "$BOOT_CONTENT/headless.apkovl.tar.gz"
-      ${gnused}/bin/sed -i \
-        's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' \
-        "$BOOT_CONTENT/cmdline.txt" 2>/dev/null || true
-
-
-      BOOT_CONTENT_MB=$(du -sm "$BOOT_CONTENT" | cut -f1)
-      BOOT_SIZE_MB=$(( BOOT_CONTENT_MB + BOOT_CONTENT_MB / 10 + 10 ))
-      echo "Boot content: ''${BOOT_CONTENT_MB}M, partition: ''${BOOT_SIZE_MB}M"
-      truncate -s "''${BOOT_SIZE_MB}M" boot.img
-      mkfs.vfat -F 32 -n ALPINE_BOOT boot.img
-
-      MTOOLSRC="$PWD/mtoolsrc"
-      echo "drive x: file=\"$PWD/boot.img\"" > "$MTOOLSRC"
-      export MTOOLSRC
-
-      for item in "$BOOT_CONTENT"/*; do
-        mcopy -s -n "$item" x:/
-      done
+        BOOT_CONTENT="$PWD/boot-files"
+        mkdir -p "$BOOT_CONTENT"
+        tar xf ${alpineTarball} -C "$BOOT_CONTENT"
+        cp ${apkovl} "$BOOT_CONTENT/headless.apkovl.tar.gz"
+        ${gnused}/bin/sed -i \
+          's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' \
+          "$BOOT_CONTENT/cmdline.txt" 2>/dev/null || true
 
 
-      DATA_SIZE_MB=128
-      truncate -s "''${DATA_SIZE_MB}M" data.img
-      mkfs.ext4 -F -L ALPINE_DATA data.img
+        BOOT_CONTENT_MB=$(du -sm "$BOOT_CONTENT" | cut -f1)
+        BOOT_SIZE_MB=$(( BOOT_CONTENT_MB + BOOT_CONTENT_MB / 10 + 10 ))
+        echo "Boot content: ''${BOOT_CONTENT_MB}M, partition: ''${BOOT_SIZE_MB}M"
+        truncate -s "''${BOOT_SIZE_MB}M" boot.img
+        mkfs.vfat -F 32 -n ALPINE_BOOT boot.img
+
+        MTOOLSRC="$PWD/mtoolsrc"
+        echo "drive x: file=\"$PWD/boot.img\"" > "$MTOOLSRC"
+        export MTOOLSRC
+
+        for item in "$BOOT_CONTENT"/*; do
+          mcopy -s -n "$item" x:/
+        done
 
 
-      P1_END_MB=$(( 1 + BOOT_SIZE_MB ))
-      P2_START_MB=$P1_END_MB
-      P2_END_MB=$(( P2_START_MB + DATA_SIZE_MB ))
-      TOTAL_MB=$(( P2_END_MB + 1 ))
+        DATA_SIZE_MB=128
+        truncate -s "''${DATA_SIZE_MB}M" data.img
+        mkfs.ext4 -F -L ALPINE_DATA data.img
 
-      truncate -s "''${TOTAL_MB}M" disk.img
 
-      echo "=== Disk layout: ''${TOTAL_MB}M total ==="
-      echo "  p1: FAT32 ''${BOOT_SIZE_MB}M (Alpine boot + apkovl)"
-      echo "  p2: ext4  ''${DATA_SIZE_MB}M (persistent /home)"
+        P1_END_MB=$(( 1 + BOOT_SIZE_MB ))
+        P2_START_MB=$P1_END_MB
+        P2_END_MB=$(( P2_START_MB + DATA_SIZE_MB ))
+        TOTAL_MB=$(( P2_END_MB + 1 ))
 
-      parted -s disk.img mklabel msdos
-      parted -s disk.img mkpart primary fat32 1MiB ''${P1_END_MB}MiB
-      parted -s disk.img mkpart primary ext4 ''${P2_START_MB}MiB ''${P2_END_MB}MiB
-      parted -s disk.img set 1 boot on
+        truncate -s "''${TOTAL_MB}M" disk.img
 
-      parted -m disk.img unit B print | tail -n +3 | while IFS=: read n start end size type rest; do
-        case "$n" in
-          1) P1_START_BYTES=''${start%B}; P1_END_BYTES=''${end%B} ;;
-          2) P2_START_BYTES=''${start%B}; P2_END_BYTES=''${end%B} ;;
-        esac
-        echo "Partition $n: $start - $end ($type)"
-      done
+        echo "=== Disk layout: ''${TOTAL_MB}M total ==="
+        echo "  p1: FAT32 ''${BOOT_SIZE_MB}M (Alpine boot + apkovl)"
+        echo "  p2: ext4  ''${DATA_SIZE_MB}M (persistent /home)"
 
-      P1_START_BYTES=$(parted -m disk.img unit B print 2>/dev/null | awk -F: 'NR==3 {gsub(/B/,"",$2); print $2}')
-      P2_START_BYTES=$(parted -m disk.img unit B print 2>/dev/null | awk -F: 'NR==4 {gsub(/B/,"",$2); print $2}')
+        parted -s disk.img mklabel msdos
+        parted -s disk.img mkpart primary fat32 1MiB ''${P1_END_MB}MiB
+        parted -s disk.img mkpart primary ext4 ''${P2_START_MB}MiB ''${P2_END_MB}MiB
+        parted -s disk.img set 1 boot on
 
-      echo "Writing partition 1 (FAT32) at byte $P1_START_BYTES"
-      dd if=boot.img of=disk.img bs=1 seek=$P1_START_BYTES conv=notrunc status=none
+        parted -m disk.img unit B print | tail -n +3 | while IFS=: read n start end size type rest; do
+          case "$n" in
+            1) P1_START_BYTES=''${start%B}; P1_END_BYTES=''${end%B} ;;
+            2) P2_START_BYTES=''${start%B}; P2_END_BYTES=''${end%B} ;;
+          esac
+          echo "Partition $n: $start - $end ($type)"
+        done
 
-      echo "Writing partition 2 (ext4)  at byte $P2_START_BYTES"
-      dd if=data.img of=disk.img bs=1 seek=$P2_START_BYTES conv=notrunc status=none
+        P1_START_BYTES=$(parted -m disk.img unit B print 2>/dev/null | awk -F: 'NR==3 {gsub(/B/,"",$2); print $2}')
+        P2_START_BYTES=$(parted -m disk.img unit B print 2>/dev/null | awk -F: 'NR==4 {gsub(/B/,"",$2); print $2}')
 
-      echo "=== Final partition table ==="
-      parted -s disk.img unit MiB print
+        echo "Writing partition 1 (FAT32) at byte $P1_START_BYTES"
+        dd if=boot.img of=disk.img bs=1 seek=$P1_START_BYTES conv=notrunc status=none
 
-      cp disk.img "$out"
-    '';
+        echo "Writing partition 2 (ext4)  at byte $P2_START_BYTES"
+        dd if=data.img of=disk.img bs=1 seek=$P2_START_BYTES conv=notrunc status=none
+
+        echo "=== Final partition table ==="
+        parted -s disk.img unit MiB print
+
+        cp disk.img "$out"
+      '';
 in
 {
-  inherit apkovl bootPartitionDir deployScript diskImage;
+  inherit
+    apkovl
+    bootPartitionDir
+    deployScript
+    diskImage
+    ;
 }

@@ -7,7 +7,6 @@
 # - Runs a oneshot systemd user service to resize JRAINBOW1→48 after login
 # - Separates sizing from coloring to avoid MSI Mystic Light protocol glitches
 {
-  config,
   ...
 }:
 let

@@ -52,3 +52,4 @@
       ExecStart = "${pkgs.systemd}/bin/systemctl --user restart easyeffects.service";
     };
   };
+}
