@@ -299,7 +299,6 @@ let
 
 
   apFallbackDispatcher = writeShellScript "90-klipper-ap-fallback" ''
-    # NetworkManager dispatcher: auto-bring-up AP when client WiFi is unavailable
     IFACE="$1"
     ACTION="$2"
 
@@ -310,14 +309,37 @@ let
 
     if [ "$ACTION" = "down" ]; then
       nmcli connection show --active | grep -q "$CLIENT" && exit 0
-      # Client WiFi went down and isn't coming back — bring up AP
       nmcli connection up "$AP" 2>/dev/null || true
     elif [ "$ACTION" = "up" ]; then
-      # Client WiFi is back — stop AP if it's up
       if nmcli connection show --active | grep -q "$AP"; then
         nmcli connection down "$AP" 2>/dev/null || true
       fi
     fi
+  '';
+
+  # Boot-time AP fallback: if client WiFi isn't connected within 60s after
+  # NetworkManager starts, bring up the setup AP so the user can SSH in,
+  # set the PSK, and commit. Mirrors the NixOS klipper-ap-fallback timer.
+  apBootFallback = writeShellScript "klipper-ap-boot" ''
+    set -euo pipefail
+
+    CLIENT="${wifiSsid}"
+    AP="Klipper-Setup"
+
+    for i in $(seq 1 12); do
+      sleep 5
+      if nmcli -t -f NAME connection show --active 2>/dev/null | grep -qx "$CLIENT"; then
+        echo "klipper-ap-boot: client WiFi connected, exiting"
+        exit 0
+      fi
+      if nmcli -t -f NAME connection show --active 2>/dev/null | grep -qx "$AP"; then
+        echo "klipper-ap-boot: AP already up"
+        exit 0
+      fi
+    done
+
+    echo "klipper-ap-boot: client WiFi not connected after 60s, bringing up AP"
+    nmcli connection up "$AP" || true
   '';
 
 
@@ -594,6 +616,28 @@ let
     rc-update add klipper default
 
     rc-service networkmanager start
+
+    # Boot-time AP fallback: bring up AP after 60s if client WiFi isn't connected.
+    # Runs every boot, not just first boot.
+    cat > /etc/local.d/klipper-ap-boot.start << APBOOT
+    #!/bin/sh
+    CLIENT="${wifiSsid}"
+    AP="Klipper-Setup"
+
+    for i in \$(seq 1 12); do
+      sleep 5
+      if nmcli -t -f NAME connection show --active 2>/dev/null | grep -qx "\$CLIENT"; then
+        exit 0
+      fi
+      if nmcli -t -f NAME connection show --active 2>/dev/null | grep -qx "\$AP"; then
+        exit 0
+      fi
+    done
+
+    nmcli connection up "\$AP" || true
+    APBOOT
+    chmod +x /etc/local.d/klipper-ap-boot.start
+
     rc-service syncthing start
     rc-service caddy start
     rc-service moonraker start
@@ -676,6 +720,9 @@ let
 
       cp ${apFallbackDispatcher} rootfs/etc/NetworkManager/dispatcher.d/90-klipper-ap-fallback
       chmod +x rootfs/etc/NetworkManager/dispatcher.d/90-klipper-ap-fallback
+
+      cp ${apBootFallback} rootfs/etc/local.d/klipper-ap-boot.start
+      chmod +x rootfs/etc/local.d/klipper-ap-boot.start
 
       cp ${caddyConfig} rootfs/etc/caddy/Caddyfile
 
