@@ -1,3 +1,7 @@
+# default.nix
+#
+# Purpose: Expose default service via Zrok tunnel
+#
 {
   imports = [
     ./sillytavern.nix

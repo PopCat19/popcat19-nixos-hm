@@ -1,3 +1,7 @@
+# sillytavern.nix
+#
+# Purpose: Expose sillytavern service via Zrok tunnel
+#
 { pkgs, ... }:
 {
   systemd.services.zrok-share-sillytavern = {

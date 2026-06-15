@@ -1,3 +1,7 @@
+# features.nix
+#
+# Purpose: Configure features settings across all hosts
+#
 {
   zrok = {
     enable = false;

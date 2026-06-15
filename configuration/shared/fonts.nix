@@ -1,3 +1,7 @@
+# fonts.nix
+#
+# Purpose: Configure fonts settings across all hosts
+#
 {
   fonts = {
     monospace = {

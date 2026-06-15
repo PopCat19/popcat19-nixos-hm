@@ -1,3 +1,7 @@
+# searxng.nix
+#
+# Purpose: Expose searxng service via Zrok tunnel
+#
 { pkgs, ... }:
 {
   systemd.services.zrok-share-searxng = {

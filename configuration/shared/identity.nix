@@ -1,3 +1,7 @@
+# identity.nix
+#
+# Purpose: Configure identity settings across all hosts
+#
 {
   username = "popcat19";
   user = {

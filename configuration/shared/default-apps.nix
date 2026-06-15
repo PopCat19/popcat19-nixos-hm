@@ -1,3 +1,7 @@
+# default-apps.nix
+#
+# Purpose: Configure default-apps settings across all hosts
+#
 {
   defaultApps = {
     browser = {
