@@ -6,5 +6,6 @@
   imports = [
     ./sillytavern.nix
     ./searxng.nix
+    ./odysseus.nix
   ];
 }
