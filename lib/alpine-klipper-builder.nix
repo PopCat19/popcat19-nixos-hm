@@ -26,6 +26,11 @@
   gnused,
   gnutar,
   gzip,
+  dosfstools,
+  mtools,
+  e2fsprogs,
+  parted,
+  util-linux,
 }:
 let
   # ── Version pinning (reproducible) ───────────────────────────────
@@ -34,7 +39,7 @@ let
   alpineBranch = "v3.24";
   alpineTarball = fetchurl {
     url = "https://dl-cdn.alpinelinux.org/alpine/${alpineBranch}/releases/aarch64/alpine-rpi-${alpineVersion}-aarch64.tar.gz";
-    hash = "sha256-1gv39q5scqzhr613bsclf14rff70qlvlz1ij2db9f0d29lmrgg0b=";
+    hash = "sha256-zInYxQTj2781KBgPBQKy8SUwZLNd7djKjvJ/nJdUFXY=";
   };
 
   # ── Syncthing device IDs (mirrors configuration/system/modules/syncthing.nix) ──
@@ -827,7 +832,96 @@ let
     echo "First boot will install klipper/moonraker/mainsail (~5 min)."
     echo "SSH: ssh ${username}@${hostname}.local"
   '';
+  # ── Final dd-able disk image (like shimboot's assemble-image.nix) ──
+
+  diskImage = runCommand "klipper-alpine.img"
+    {
+      nativeBuildInputs = [
+        gnutar
+        dosfstools
+        mtools
+        e2fsprogs
+        parted
+        util-linux
+      ];
+      meta.description = "Complete dd-able SD card image — Alpine diskless Klipper Pi 4B";
+    }
+    ''
+      # ── 1. Prepare boot partition content ────────────────────────
+
+      BOOT_CONTENT="$PWD/boot-files"
+      mkdir -p "$BOOT_CONTENT"
+      tar xf ${alpineTarball} -C "$BOOT_CONTENT"
+      cp ${apkovl} "$BOOT_CONTENT/headless.apkovl.tar.gz"
+      ${gnused}/bin/sed -i \
+        's/modules=loop,squashfs,sd-mod,usb-storage quiet/modules=loop,squashfs,sd-mod,usb-storage console=tty1/' \
+        "$BOOT_CONTENT/cmdline.txt" 2>/dev/null || true
+
+      # ── 2. Build FAT32 boot partition image ──────────────────
+
+      BOOT_CONTENT_MB=$(du -sm "$BOOT_CONTENT" | cut -f1)
+      BOOT_SIZE_MB=$(( BOOT_CONTENT_MB + BOOT_CONTENT_MB / 10 + 10 ))
+      echo "Boot content: ''${BOOT_CONTENT_MB}M, partition: ''${BOOT_SIZE_MB}M"
+      truncate -s "''${BOOT_SIZE_MB}M" boot.img
+      mkfs.vfat -F 32 -n ALPINE_BOOT boot.img
+
+      MTOOLSRC="$PWD/mtoolsrc"
+      echo "drive x: file=\"$PWD/boot.img\"" > "$MTOOLSRC"
+      export MTOOLSRC
+
+      for item in "$BOOT_CONTENT"/*; do
+        mcopy -s -n "$item" x:/
+      done
+
+      # ── 3. Build empty ext4 data partition image ─────────────────
+
+      DATA_SIZE_MB=128
+      truncate -s "''${DATA_SIZE_MB}M" data.img
+      mkfs.ext4 -F -L ALPINE_DATA data.img
+
+      # ── 4. Assemble the complete disk image ──────────────────────
+
+      P1_END_MB=$(( 1 + BOOT_SIZE_MB ))
+      P2_START_MB=$P1_END_MB
+      P2_END_MB=$(( P2_START_MB + DATA_SIZE_MB ))
+      TOTAL_MB=$(( P2_END_MB + 1 ))
+
+      truncate -s "''${TOTAL_MB}M" disk.img
+
+      echo "=== Disk layout: ''${TOTAL_MB}M total ==="
+      echo "  p1: FAT32 ''${BOOT_SIZE_MB}M (Alpine boot + apkovl)"
+      echo "  p2: ext4  ''${DATA_SIZE_MB}M (persistent /home)"
+
+      parted -s disk.img mklabel msdos
+      parted -s disk.img mkpart primary fat32 1MiB ''${P1_END_MB}MiB
+      parted -s disk.img mkpart primary ext4 ''${P2_START_MB}MiB ''${P2_END_MB}MiB
+      parted -s disk.img set 1 boot on
+
+      # Query exact byte offsets from parted
+      parted -m disk.img unit B print | tail -n +3 | while IFS=: read n start end size type rest; do
+        case "$n" in
+          1) P1_START_BYTES=''${start%B}; P1_END_BYTES=''${end%B} ;;
+          2) P2_START_BYTES=''${start%B}; P2_END_BYTES=''${end%B} ;;
+        esac
+        echo "Partition $n: $start - $end ($type)"
+      done
+
+      # Re-parse (subshell vars lost in pipeline)
+      P1_START_BYTES=$(parted -m disk.img unit B print 2>/dev/null | awk -F: 'NR==3 {gsub(/B/,"",$2); print $2}')
+      P2_START_BYTES=$(parted -m disk.img unit B print 2>/dev/null | awk -F: 'NR==4 {gsub(/B/,"",$2); print $2}')
+
+      echo "Writing partition 1 (FAT32) at byte $P1_START_BYTES"
+      dd if=boot.img of=disk.img bs=1 seek=$P1_START_BYTES conv=notrunc status=none
+
+      echo "Writing partition 2 (ext4)  at byte $P2_START_BYTES"
+      dd if=data.img of=disk.img bs=1 seek=$P2_START_BYTES conv=notrunc status=none
+
+      echo "=== Final partition table ==="
+      parted -s disk.img unit MiB print
+
+      cp disk.img "$out"
+    '';
 in
 {
-  inherit apkovl bootPartitionDir deployScript;
+  inherit apkovl bootPartitionDir deployScript diskImage;
 }

@@ -229,6 +229,7 @@ in
     installer-raw = installerRaw;
     installer-zst = installerZst;
     alpine-klipper-apkovl = alpineKlipperApkovl.apkovl;
+    alpine-klipper-img = alpineKlipperApkovl.diskImage;
   };
 
   flake.packages.aarch64-linux = {

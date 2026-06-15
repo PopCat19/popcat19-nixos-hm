@@ -47,11 +47,11 @@ SYSTEM_PKNAMES=""
 # ---------- Help ----------
 usage() {
 	cat <<'EOF'
-write-image.sh [installer|klipper] [-d /dev/sdX] [-i image.zst] [-y] [-n]
+write-image.sh [installer|klipper|alpine-klipper] [-d /dev/sdX] [-i image.zst] [-y] [-n]
 
 Write a flake-built NixOS image to a target device.
 
-  installer | klipper    Image type (default: asks if not given)
+  installer | klipper | alpine-klipper    Image type (default: asks if not given)
   -d PATH                Target device (e.g., /dev/sda). Prompts if omitted.
   -i PATH                Pre-built image. Skips flake build if given.
   -y                     Skip countdown confirmation.
@@ -60,6 +60,7 @@ Write a flake-built NixOS image to a target device.
 Examples:
   sudo ./tools/write-image.sh installer -d /dev/sdd
   sudo ./tools/write-image.sh klipper -d /dev/mmcblk0
+  sudo ./tools/write-image.sh alpine-klipper -d /dev/mmcblk0
   sudo ./tools/write-image.sh -i /tmp/installer.img.zst -d /dev/sdc
 EOF
 }
@@ -156,6 +157,7 @@ build_image() {
 	case "$type" in
 	installer) attr="installer-zst" ;;
 	klipper) attr="packages.aarch64-linux.sd-popcat19-klipper0" ;;
+	alpine-klipper) attr="alpine-klipper-img" ;;
 	*)
 		err "Unknown type: $type"
 		return 1
@@ -177,13 +179,15 @@ onboard() {
 
 	# Step 1: image type
 	echo "1. What do you want to write?"
-	echo "   ${BOLD}[i]${CLEAR} installer   x86_64 minimal image (boots on PC, then rebuild via flake)"
-	echo "   ${BOLD}[k]${CLEAR} klipper     Pi 4B SD card (full printer appliance)"
+	echo "   ${BOLD}[i]${CLEAR} installer        x86_64 minimal image (boots on PC, then rebuild via flake)"
+	echo "   ${BOLD}[k]${CLEAR} klipper          Pi 4B SD card (full NixOS printer appliance)"
+	echo "   ${BOLD}[a]${CLEAR} alpine-klipper   Pi 4B SD card (Alpine diskless, immutable root)"
 	echo
-	read -r -p "   Choose [i/k]: " choice
+	read -r -p "   Choose [i/k/a]: " choice
 	case "${choice,,}" in
 	i | installer) ARG_TYPE="installer" ;;
 	k | klipper) ARG_TYPE="klipper" ;;
+	a | alpine-klipper) ARG_TYPE="alpine-klipper" ;;
 	*)
 		err "Invalid choice."
 		exit 1
@@ -194,7 +198,7 @@ onboard() {
 	# Step 2: build or pre-built
 	local img_in
 	echo "2. Build fresh or use pre-built image?"
-	echo "   ${BOLD}[b]${CLEAR} build   nix build .#$([[ "$ARG_TYPE" == installer ]] && echo 'installer-zst' || echo 'sd-popcat19-klipper0')"
+	echo "   ${BOLD}[b]${CLEAR} build   nix build .#$([[ "$ARG_TYPE" == installer ]] && echo 'installer-zst' || [[ "$ARG_TYPE" == alpine-klipper ]] && echo 'alpine-klipper-img' || echo 'packages.aarch64-linux.sd-popcat19-klipper0')"
 	echo "   ${BOLD}[p]${CLEAR} path    I already have a .img/.img.zst"
 	echo
 	read -r -p "   Choose [b/p]: " choice
@@ -234,7 +238,7 @@ main() {
 	# Parse positional + flags
 	while (($#)); do
 		case "$1" in
-		installer | klipper)
+		installer | klipper | alpine-klipper)
 			ARG_TYPE="$1"
 			shift
 			;;
