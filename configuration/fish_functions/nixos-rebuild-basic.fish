@@ -165,7 +165,7 @@ function nixos-rebuild-basic
     end
 
     # Rebuild phase
-    set -l flake_target (hostname)
+    set -l flake_target (cat /etc/hostname 2>/dev/null || hostname)
 
     # Build arguments
     set -l rebuild_cmd
