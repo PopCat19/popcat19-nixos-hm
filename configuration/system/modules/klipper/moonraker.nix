@@ -14,6 +14,11 @@
       server = {
         klippy_uds_address = config.services.klipper.apiSocket;
       };
+      file_manager = {
+        config_path = "/var/lib/klipper";
+        log_path = "/var/log";
+        enable_object_processing = true;
+      };
       authorization = {
         trusted_clients = [
           "127.0.0.0/8"
@@ -34,9 +39,6 @@
       };
       octoprint_compat = { };
       history = { };
-      file_manager = {
-        enable_object_processing = true;
-      };
     };
   };
 }

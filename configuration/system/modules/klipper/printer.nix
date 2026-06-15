@@ -40,7 +40,7 @@ in
     serial: /dev/serial/by-id/usb-Klipper_stm32g0b1xx*
 
     [virtual_sdcard]
-    path: ${printerDataHome}/printer_data/gcodes
+    path: /var/lib/moonraker/gcodes
     on_error_gcode: CANCEL_PRINT
 
     [printer]
@@ -58,8 +58,9 @@ in
   systemd.tmpfiles.rules = [
     "d ${printerCfgDir} 2775 klipper klipper -"
     "f /var/log/klipper.log 0644 klipper klipper -"
+    "f /var/log/moonraker.log 0644 moonraker moonraker -"
+    "d /var/lib/moonraker/gcodes 0775 moonraker moonraker -"
     "d ${printerDataHome}/printer_data 0775 ${userConfig.username} klipper -"
-    "d ${printerDataHome}/printer_data/gcodes 0775 ${userConfig.username} klipper -"
     "d ${printerDataHome}/printer_data/logs 0775 ${userConfig.username} klipper -"
   ];
 }
