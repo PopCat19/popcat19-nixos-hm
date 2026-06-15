@@ -46,8 +46,8 @@ in
       done
 
       # Resize JRAINBOW1 to 48, JRAINBOW2 to 0
-      openrgb --device MSI --zone 2 --mode static --size 48 --color "$(cat "$HOME/.config/openrgb/pmd-led-color")"
-      openrgb --device MSI --zone 3 --mode static --size 0  --color "$(cat "$HOME/.config/openrgb/pmd-led-color")"
+      openrgb --device MSI --zone 2 --mode static --size 48 --color "$(sed 's/^#//' "$HOME/.config/openrgb/pmd-led-color")"
+      openrgb --device MSI --zone 3 --mode static --size 0  --color "$(sed 's/^#//' "$HOME/.config/openrgb/pmd-led-color")"
     '';
   };
 }
