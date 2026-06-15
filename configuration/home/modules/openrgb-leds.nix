@@ -1,15 +1,17 @@
 # openrgb-leds.nix
 #
-# Purpose: Write PMD theme-derived LED color and apply zone sizes at login
+# Purpose: Write LED color and apply zone sizes at login
 #
 # This module:
-# - Reads config.lib.stylix.colors.withHashtag.base0D (PMD accent+30°)
-# - Writes hex color to ~/.config/openrgb/pmd-led-color
+# - Writes fixed orange hex to ~/.config/openrgb/pmd-led-color
 # - Runs a oneshot systemd user service to resize JRAINBOW1→48 after login
-# - Replaces static .orp profiles with dynamic theme-following color
-{ config, ... }:
+# - Separates sizing from coloring to avoid MSI Mystic Light protocol glitches
+{
+  config,
+  ...
+}:
 let
-  ledColor = config.lib.stylix.colors.withHashtag.base00;
+  ledColor = "#FF2200";
 in
 {
   home.file.".config/openrgb/pmd-led-color".text = ledColor;
