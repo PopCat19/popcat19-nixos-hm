@@ -352,6 +352,12 @@ let
     LABEL=ALPINE_DATA  /home  ext4  defaults,noatime  0  2
   '';
 
+  apkRepositories = writeText "repositories" ''
+    /media/mmcblk0p1/apks
+    https://dl-cdn.alpinelinux.org/alpine/edge/main
+    https://dl-cdn.alpinelinux.org/alpine/edge/community
+  '';
+
   usercfg = writeText "usercfg.txt" ''
     dtoverlay=gpio-fan,gpiopin=${toString fanGpio},temp=55000
   '';
@@ -708,6 +714,7 @@ let
         cp ${caddyConfig} rootfs/etc/caddy/Caddyfile
 
         cp ${fstab} rootfs/etc/fstab
+        cp ${apkRepositories} rootfs/etc/apk/repositories
 
         cp ${firstBootSetup} rootfs/etc/local.d/first-boot.start
         chmod +x rootfs/etc/local.d/first-boot.start
