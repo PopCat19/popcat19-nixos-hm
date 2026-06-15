@@ -8,6 +8,7 @@
 #   source pre-cloned at ~/popcat19-nixos-hm. From there you run
 #   `nixos-rebuild switch --flake .#<host>` to install the real config.
 # - Exposes the Klipper Pi SD card image (full closure, flake source baked in).
+# - Builds an Alpine Linux diskless apkovl for the Klipper Pi 4B.
 {
   inputs,
   ...
@@ -212,11 +213,22 @@ let
     mkdir -p "$out"
     zstd -T0 -19 < ${installerRaw}/popcat19-installer.img > "$out/popcat19-installer.img.zst"
   '';
+  alpineKlipperApkovl =
+    let
+      builder = pkgs.callPackage ../lib/alpine-klipper-builder.nix { };
+    in
+    builder {
+      sshAuthorizedKeys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILEuhhgzPbOykafkLpKtwh8LCTXy2AmLMl51ayL5+J/h popcat19@popcat19-thinkpad0"
+      ];
+    };
 in
 {
   flake.packages.x86_64-linux = {
     installer-raw = installerRaw;
     installer-zst = installerZst;
+    alpine-klipper-apkovl = alpineKlipperApkovl.apkovl;
   };
 
   flake.packages.aarch64-linux = {
@@ -257,5 +269,6 @@ in
           '';
         }
       ]).config.system.build.sdImage;
+    alpine-klipper-apkovl = alpineKlipperApkovl.apkovl;
   };
 }
