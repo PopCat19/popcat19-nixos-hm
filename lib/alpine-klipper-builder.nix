@@ -200,34 +200,11 @@ let
 
   syncthingConfig = writeText "config.xml" ''
     <configuration version="39">
-        <folder id="keepass-vault" label="KeePass Vault" path="/home/${username}/Passwords" type="sendreceive" rescanIntervalS="60" ignorePerms="true">
-            <device id="${syncthingDevices.nixos0}" name="nixos0"/>
-            <device id="${syncthingDevices.s23u}" name="s23u"/>
-            <device id="${syncthingDevices.surface0}" name="surface0"/>
-            <device id="${syncthingDevices.thinkpad0}" name="thinkpad0"/>
-            <device id="${syncthingDevices.klipper}" name="klipper"/>
-        </folder>
-        <folder id="syncthing-shared" label="Syncthing Shared" path="/home/${username}/SyncthingShared" type="sendreceive" rescanIntervalS="300" ignorePerms="true">
-            <device id="${syncthingDevices.nixos0}" name="nixos0"/>
-            <device id="${syncthingDevices.s23u}" name="s23u"/>
-            <device id="${syncthingDevices.surface0}" name="surface0"/>
-            <device id="${syncthingDevices.thinkpad0}" name="thinkpad0"/>
-            <device id="${syncthingDevices.klipper}" name="klipper"/>
-        </folder>
         <folder id="pi-klipper" label="Pi Klipper" path="/home/${username}/SyncthingShared/pi-klipper" type="sendreceive" rescanIntervalS="30" ignorePerms="true">
             <device id="${syncthingDevices.nixos0}" name="nixos0"/>
             <device id="${syncthingDevices.klipper}" name="klipper"/>
         </folder>
         <device id="${syncthingDevices.nixos0}" name="nixos0">
-            <address>dynamic</address>
-        </device>
-        <device id="${syncthingDevices.s23u}" name="s23u">
-            <address>dynamic</address>
-        </device>
-        <device id="${syncthingDevices.surface0}" name="surface0">
-            <address>dynamic</address>
-        </device>
-        <device id="${syncthingDevices.thinkpad0}" name="thinkpad0">
             <address>dynamic</address>
         </device>
         <device id="${syncthingDevices.klipper}" name="klipper">
@@ -417,7 +394,6 @@ let
     chmod 600 "$HOME_DIR"/.ssh/authorized_keys
     chown -R "$USER:$USER" "$HOME_DIR"/.ssh
 
-    mkdir -p "$HOME_DIR"/Passwords
     mkdir -p "$HOME_DIR"/SyncthingShared/pi-klipper
     mkdir -p "$HOME_DIR"/www
 
