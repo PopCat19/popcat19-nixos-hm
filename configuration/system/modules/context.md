@@ -22,6 +22,7 @@
 - `hyprland.nix`: Configure Hyprland Wayland compositor with UWSM integration
 - `networking.nix`: Manage firewall, IP forwarding, and NetworkManager configuration
 - `nh.nix`: Configure nh (nix-community/nh) CLI helper with env vars and GC timer
+- `nix-ld.nix`: Enable nix-ld with libraries for pre-built FHS binaries (CloakBrowser, AppImages)
 - `openrgb.nix`: Enable OpenRGB service for RGB lighting control
 - `power-management.nix`: Provide basic power management for desktop systems
 - `programs.nix`: Configure system-level programs and gaming support
