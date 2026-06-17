@@ -4,4 +4,3 @@
 - `helpers.nix`: Path existence checks, attrset merging, directory filtering
 - `mk-host.nix`: Auto-discovers hosts from `configuration/hosts/`, builds nixosConfigurations
 - `mk-home.nix`: Wraps home-manager config with standard defaults and user/platform config
-- `alpine-klipper-builder.nix`: Builds reproducible Alpine diskless images for Klipper Pi 4B (apkovl + dd-able .img)

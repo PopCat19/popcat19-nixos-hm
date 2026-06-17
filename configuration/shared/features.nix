@@ -14,10 +14,4 @@
     environmentFile = null;
     openFirewall = false;
   };
-  klipper = {
-    enable = false;
-    wifi = {
-      ssid = "Beave_Net_IoT";
-    };
-  };
 }

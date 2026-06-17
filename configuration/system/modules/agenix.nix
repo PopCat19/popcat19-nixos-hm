@@ -42,15 +42,6 @@
           mode = "400";
         };
       })
-
-      (lib.mkIf (userConfig.klipper.enable or false) {
-        klipper-wifi-psk = {
-          file = ../../secrets/klipper-wifi-psk.age;
-          owner = "root";
-          group = "root";
-          mode = "400";
-        };
-      })
     ];
   };
 }

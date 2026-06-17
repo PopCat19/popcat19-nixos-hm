@@ -2,10 +2,10 @@
 
 # write-image.sh
 #
-# Purpose: Safely write a flake-built installer or Pi SD image to a target device
+# Purpose: Safely write a flake-built installer image to a target device
 #
 # This module:
-# - Builds images from the flake (installer-zst, sd-popcat19-klipper0) or uses a pre-built path
+# - Builds the installer-zst image or uses a pre-built path
 # - Auto-detects removable USB/SD candidate devices (excludes system disks)
 # - Handles zstd decompression
 # - Interactive device selection with countdown confirmation
@@ -44,11 +44,11 @@ SYSTEM_PKNAMES=""
 
 usage() {
 	cat <<'EOF'
-write-image.sh [installer|klipper|alpine-klipper] [-d /dev/sdX] [-i image.zst] [-y] [-n]
+write-image.sh [installer] [-d /dev/sdX] [-i image.zst] [-y] [-n]
 
-Write a flake-built NixOS image to a target device.
+Write a flake-built NixOS installer image to a target device.
 
-  installer | klipper | alpine-klipper    Image type (default: asks if not given)
+  installer             Image type (default: asks if not given)
   -d PATH                Target device (e.g., /dev/sda). Prompts if omitted.
   -i PATH                Pre-built image. Skips flake build if given.
   -y                     Skip countdown confirmation.
@@ -56,8 +56,6 @@ Write a flake-built NixOS image to a target device.
 
 Examples:
   sudo ./tools/write-image.sh installer -d /dev/sdd
-  sudo ./tools/write-image.sh klipper -d /dev/mmcblk0
-  sudo ./tools/write-image.sh alpine-klipper -d /dev/mmcblk0
   sudo ./tools/write-image.sh -i /tmp/installer.img.zst -d /dev/sdc
 EOF
 }
@@ -148,8 +146,6 @@ build_image() {
 	local type="$1" attr
 	case "$type" in
 	installer) attr="installer-zst" ;;
-	klipper) attr="packages.aarch64-linux.sd-popcat19-klipper0" ;;
-	alpine-klipper) attr="alpine-klipper-img" ;;
 	*)
 		err "Unknown type: $type"
 		return 1
@@ -165,29 +161,13 @@ onboard() {
 	bold "  NixOS Image Writer"
 	bold "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 	echo
-	echo "This tool writes a flake-built NixOS image to a USB stick or SD card."
+	echo "This tool writes a flake-built NixOS installer image to a USB stick or SD card."
 	echo
 
-	echo "1. What do you want to write?"
-	echo "   ${BOLD}[i]${CLEAR} installer        x86_64 minimal image (boots on PC, then rebuild via flake)"
-	echo "   ${BOLD}[k]${CLEAR} klipper          Pi 4B SD card (full NixOS printer appliance)"
-	echo "   ${BOLD}[a]${CLEAR} alpine-klipper   Pi 4B SD card (Alpine diskless, immutable root)"
-	echo
-	read -r -p "   Choose [i/k/a]: " choice
-	case "${choice,,}" in
-	i | installer) ARG_TYPE="installer" ;;
-	k | klipper) ARG_TYPE="klipper" ;;
-	a | alpine-klipper) ARG_TYPE="alpine-klipper" ;;
-	*)
-		err "Invalid choice."
-		exit 1
-		;;
-	esac
-	echo
+	ARG_TYPE="installer"
 
-	local img_in
-	echo "2. Build fresh or use pre-built image?"
-	echo "   ${BOLD}[b]${CLEAR} build   nix build .#$([[ "$ARG_TYPE" == installer ]] && echo 'installer-zst' || [[ "$ARG_TYPE" == alpine-klipper ]] && echo 'alpine-klipper-img' || echo 'packages.aarch64-linux.sd-popcat19-klipper0')"
+	echo "1. Build fresh or use pre-built image?"
+	echo "   ${BOLD}[b]${CLEAR} build   nix build .#installer-zst"
 	echo "   ${BOLD}[p]${CLEAR} path    I already have a .img/.img.zst"
 	echo
 	read -r -p "   Choose [b/p]: " choice
@@ -208,14 +188,14 @@ onboard() {
 
 	list_candidates
 	echo
-	read -r -p "3. Target device path [e.g., /dev/sda]: " ARG_DEV
+	read -r -p "2. Target device path [e.g., /dev/sda]: " ARG_DEV
 	[[ -n "${ARG_DEV:-}" ]] || {
 		err "No device entered."
 		exit 4
 	}
 	echo
 
-	info "Ready to write $ARG_TYPE image to $ARG_DEV."
+	info "Ready to write installer image to $ARG_DEV."
 	read -r -p "Press Enter to continue or Ctrl-C to abort." _
 }
 
@@ -224,7 +204,7 @@ main() {
 
 	while (($#)); do
 		case "$1" in
-		installer | klipper | alpine-klipper)
+		installer)
 			ARG_TYPE="$1"
 			shift
 			;;

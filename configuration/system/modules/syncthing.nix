@@ -23,11 +23,6 @@ let
     "surface0"
     "thinkpad0"
   ];
-
-  piDevices = [
-    "nixos0"
-    "klipper"
-  ];
 in
 {
   networking.firewall = {
@@ -67,11 +62,6 @@ in
           id = "77NUF7I-XOXG3XA-LZDKCTC-ORPOQYO-4YBTFUW-RKIHOOZ-UYP7VOP-RBRUWQV";
           name = "thinkpad0";
         };
-        "klipper" = {
-          addresses = [ "dynamic" ];
-          id = "QMYQRZC-LHTMXBZ-EDCPAYX-OZX2BFJ-BHOQ32K-DL4QDM4-VJF2CJ2-PDH3WQK";
-          name = "klipper";
-        };
       };
       folders = {
         keepass-vault = {
@@ -90,15 +80,6 @@ in
           label = "Syncthing Shared";
           path = syncthingPaths.shared;
           rescanIntervalS = 300;
-          type = "sendreceive";
-        };
-        pi-klipper = {
-          devices = piDevices;
-          id = "pi-klipper";
-          ignorePerms = true;
-          label = "Pi Klipper";
-          path = "${"${syncthingPaths.shared}"}/pi-klipper";
-          rescanIntervalS = 30;
           type = "sendreceive";
         };
       };

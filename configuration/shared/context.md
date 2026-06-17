@@ -8,7 +8,7 @@
 - `agents.nix`: coding/LLM agent toggles
 - `gaming.nix`: gaming and ROCm feature toggles
 - `env.nix`: shared environment variables
-- `features.nix`: opt-in features (zrok, sillytavern, klipper)
+- `features.nix`: opt-in features (zrok, sillytavern)
 
 ## Notes
 

@@ -1,6 +1,6 @@
 # popcat19-nixos-hm
 
-NixOS + Home Manager multi-host configuration: Hyprland, PMD theming, profile presets, Klipper 3D printer appliance, one-shot installer images.
+NixOS + Home Manager multi-host configuration: Hyprland, PMD theming, profile presets, one-shot installer images.
 
 ## Quick start
 
@@ -29,24 +29,6 @@ cd ~/popcat19-nixos-hm
 sudo nixos-rebuild switch --flake .#popcat19-nixos0
 ```
 
-### Pi SD card image
-
-Two options: NixOS or Alpine diskless:
-
-```bash
-# NixOS printer appliance (full closure baked in)
-nix build .#sd-popcat19-klipper0
-
-# Alpine diskless (immutable read-only root, no DB corruption on power loss)
-nix build .#alpine-klipper-img
-
-# Write with helper
-sudo ./tools/write-image.sh klipper -d /dev/sdX          # NixOS
-sudo ./tools/write-image.sh alpine-klipper -d /dev/sdX  # Alpine
-```
-
-> ⚠️ The NixOS sd-image requires `--impure` for SSH key seeding. Alpine images are pure.
-
 <details open>
 <summary>Architecture</summary>
 
@@ -67,8 +49,7 @@ sudo ./tools/write-image.sh alpine-klipper -d /dev/sdX  # Alpine
 │   ├── services/                # Service configuration bundles (zrok, sillytavern)
 │   ├── shared/                  # Shared user-config kernel (identity, theme, fonts, features)
 │   ├── system/modules/          # System-level NixOS modules (~35 modules)
-│   │   └── klipper/             # Klipper 3D printer stack (printer, moonraker, mainsail, AP fallback)
-│   ├── nix-options.nix          # Nix daemon settings (features, GC, trusted users)
+│   └── nix-options.nix          # Nix daemon settings (features, GC, trusted users)
 │   └── stateversion.nix         # Single source of truth for state versions
 ├── flake-modules/               # Flake-parts modules (nixos, images, overlays, formatter, nix-on-droid)
 ├── lib/                         # Shared helper library (mkHost, mkHome, helpers)
@@ -90,8 +71,6 @@ sudo ./tools/write-image.sh alpine-klipper -d /dev/sdX  # Alpine
 | `popcat19-surface0` | Surface Pro (i5-8350U) | x86_64 | `surface` | Touch/pen input, thermal management, WiFi fixes |
 | `popcat19-thinkpad0` | ThinkPad laptop | x86_64 | `laptop` | External HDMI, TLP power management, zRAM |
 | `popcat19-dedede0` | ChromeOS (shimboot) | x86_64 | `shimboot` | Pruned config, pinned systemd for ChromeOS compat |
-| `popcat19-klipper0` | Raspberry Pi 4B | aarch64 | `klipper` | Headless printer appliance, setup AP fallback |
-| `popcat19-aarch640` | Generic aarch64 stub | aarch64 | `minimal` | Template for new aarch64 hosts |
 
 </details>
 
@@ -105,7 +84,6 @@ Profiles compose system modules into deployable presets. Each host points to one
 - **`surface`**: Surface Pro: touch, thermal management, surface-control group
 - **`minimal`**: Headless/server: SSH, Docker, no display stack
 - **`shimboot`**: ChromeOS shimboot: pruned home modules, minimal services
-- **`klipper`**: Pi 4B printer appliance: Klipper, Moonraker, Mainsail, WiFi, AP fallback
 
 Manage profiles with `tools/profile-manager-tui.sh`.
 
@@ -114,19 +92,12 @@ Manage profiles with `tools/profile-manager-tui.sh`.
 <details>
 <summary>Images</summary>
 
-The flake produces one-shot installer and device images with the flake source pre-cloned at `~/popcat19-nixos-hm`.
+The flake produces one-shot installer images with the flake source pre-cloned at `~/popcat19-nixos-hm`.
 
 | Package | System | Description |
 |---------|--------|-------------|
 | `installer-raw` | x86_64-linux | Minimal raw-EFI disk image (user, fish, SSH, sing-box, git) |
 | `installer-zst` | x86_64-linux | Same, zstd-compressed |
-| `sd-popcat19-klipper0` | aarch64-linux | Pi 4B SD card image (full Klipper closure, zstd-compressed) |
-| `alpine-klipper-apkovl` | x86_64-linux | Alpine diskless apkovl tarball for Klipper Pi 4B |
-| `alpine-klipper-img` | x86_64-linux | Alpine diskless dd-able SD image for Klipper Pi 4B (FAT32+ext4, MBR) |
-
-The alpine-klipper images are pure Nix derivations (no --impure, no mounts, no sudo).
-Flash alpine-klipper-img directly: `sudo dd if=result of=/dev/mmcblk0 bs=4M status=progress conv=fsync`
-or use the write helper: `sudo ./tools/write-image.sh alpine-klipper -d /dev/mmcblk0`
 
 The installer includes sing-box TUN proxy (togglable via `singbox_on` / `singbox_off`), so you can rebuild behind a proxy from first boot.
 
@@ -150,45 +121,7 @@ The installer includes sing-box TUN proxy (togglable via `singbox_on` / `singbox
 | `noctalia-shell` | Wayland bar/launcher |
 | `llm-agents` | LLM agent tooling |
 | `nix-on-droid` | Android Nix environment |
-| `nixos-raspberrypi` | Pi 4B hardware support (U-Boot, kernel, firmware) |
 | `shimboot` | ChromeOS NixOS bootstrapping |
-
-</details>
-
-<details>
-<summary>Klipper Pi features</summary>
-
-Two deployment options for the `popcat19-klipper0` host:
-
-### NixOS (sd-popcat19-klipper0)
-
-- **Klipper** + **Moonraker** + **Mainsail**: full web-controlled printer stack
-- **WiFi client**: seeded once from agenix secret, then mutable at runtime
-- **Fallback AP**: if home WiFi is unreachable, the Pi broadcasts its own `Klipper-Setup`
-  access point after 60s (password from agenix, `192.168.50.1/24`)
-- Toggle manually: `klipper_ap_on` / `klipper_ap_off`
-- SPI enabled for ADXL345 input shaper calibration
-- Journald capped at 200 MB / 7 day retention for SD card longevity
-
-### Alpine diskless (alpine-klipper-img)
-
-For Pi 4B only: immutable read-only root that runs from RAM. Fixes NixOS DB corruption
-on unclean poweroff. Built as a pure Nix derivation, output is a single dd-able image.
-
-- **Alpine Linux**: runs from RAM, rootfs never mounted r/w
-- **Persistent /home** on labelled ext4 partition (survives power loss)
-- **Klipper** + **Moonraker** + **Mainsail**: installed on first boot via OpenRC services
-- **Syncthing**: pi-klipper folder only (nixos0 + klipper), printer configs, no large shared pool
-- **Starship prompt**: mirrors starship.nix config
-- **Fish shell** with `kupdate` alias for in-place stack updates
-- **GPIO fan**: DT overlay (gpio-fan, GPIO14, 55°C), fan on above 55°C, off below
-- **WiFi client** + **AP fallback**: AP appears on every boot if client WiFi unreachable after 60s
-- **In-place update**: `kupdate` (git pull klipper/moonraker + download latest mainsail + restart)
-- **First boot flow**: AP `Klipper-Setup` broadcasts (PSK `klipper-setup`, `192.168.50.1`).
-  SSH in, set client PSK: `sudo nmcli connection modify Beave_Net_IoT wifi-sec.psk '<psk>'`,
-  persist: `sudo lbu commit`, reboot, AP stops, client WiFi takes over.
-
-See `configuration/system/modules/klipper/context.md` for module details.
 
 </details>
 

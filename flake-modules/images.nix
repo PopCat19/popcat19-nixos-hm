@@ -7,8 +7,6 @@
 #   into a bare NixOS with user, git, sing-box TUN, fish, SSH, and the flake
 #   source pre-cloned at ~/popcat19-nixos-hm. From there you run
 #   `nixos-rebuild switch --flake .#<host>` to install the real config.
-# - Exposes the Klipper Pi SD card image (full closure, flake source baked in).
-# - Builds an Alpine Linux diskless apkovl for the Klipper Pi 4B.
 {
   inputs,
   ...
@@ -213,106 +211,10 @@ let
     mkdir -p "$out"
     zstd -T0 -19 < ${installerRaw}/popcat19-installer.img > "$out/popcat19-installer.img.zst"
   '';
-  alpineKlipperApkovl =
-    let
-      builder = pkgs.callPackage ../lib/alpine-klipper-builder.nix { };
-      apkBundle = pkgs.callPackage ../lib/alpine-apk-bundle.nix { } {
-        packageList = [
-          "networkmanager"
-          "networkmanager-wifi"
-          "hostapd"
-          "fish"
-          "starship"
-          "syncthing"
-          "caddy"
-          "git"
-          "python3"
-          "py3-pip"
-          "py3-virtualenv"
-          "jq"
-          "curl"
-          "unzip"
-          "vim"
-          "eza"
-          "micro"
-          "wget"
-          "htop"
-          "tmux"
-          "coreutils"
-          "procps"
-          "build-base"
-          "python3-dev"
-          "libffi-dev"
-          "ncurses-dev"
-          "libsodium"
-          "curl-dev"
-          "freetype-dev"
-          "fribidi-dev"
-          "harfbuzz-dev"
-          "jpeg-dev"
-          "lcms2-dev"
-          "openjpeg-dev"
-          "tcl-dev"
-          "tiff-dev"
-          "tk-dev"
-          "zlib-dev"
-        ];
-      };
-    in
-    builder {
-      inherit apkBundle;
-      sshAuthorizedKeys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILEuhhgzPbOykafkLpKtwh8LCTXy2AmLMl51ayL5+J/h popcat19@popcat19-thinkpad0"
-      ];
-    };
 in
 {
   flake.packages.x86_64-linux = {
     installer-raw = installerRaw;
     installer-zst = installerZst;
-    alpine-klipper-apkovl = alpineKlipperApkovl.apkovl;
-    alpine-klipper-img = alpineKlipperApkovl.diskImage;
-  };
-
-  flake.packages.aarch64-linux = {
-    sd-popcat19-klipper0 =
-      (inputs.self.lib.mkKlipperConfig [
-        {
-          users.users.popcat19.uid = 1000;
-          users.groups.users.gid = lib.mkDefault 100;
-
-          sdImage.populateRootCommands = ''
-            dest=./files/home/popcat19/${repoName}
-            rm -rf "$dest"
-            mkdir -p "$dest"
-            cp -a "${flakeSource}/." "$dest/"
-            chown -R 1000:100 "$dest"
-            chmod -R u+rwX "$dest"
-
-            # Seed the user SSH key so agenix can decrypt secrets at first boot.
-            # The key is read from the flake source at build time (not the store).
-            ssh_dir=./files/home/popcat19/.ssh
-            mkdir -p "$ssh_dir"
-            cp ${
-              builtins.path {
-                path = /home/popcat19/.ssh/id_ed25519.pub;
-                name = "id_ed25519.pub";
-              }
-            } "$ssh_dir/id_ed25519.pub"
-            cp ${
-              builtins.path {
-                path = /home/popcat19/.ssh/id_ed25519;
-                name = "id_ed25519";
-              }
-            } "$ssh_dir/id_ed25519"
-            chown -R 1000:100 "$ssh_dir"
-            chmod 700 "$ssh_dir"
-            chmod 600 "$ssh_dir/id_ed25519"
-            chmod 644 "$ssh_dir/id_ed25519.pub"
-          '';
-        }
-      ]).config.system.build.sdImage;
-    alpine-klipper-apkovl = alpineKlipperApkovl.apkovl;
   };
 }
