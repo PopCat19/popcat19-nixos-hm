@@ -6,9 +6,7 @@
 # - Writes fixed orange hex to ~/.config/openrgb/pmd-led-color
 # - Runs a oneshot systemd user service to resize JRAINBOW1→48 after login
 # - Separates sizing from coloring to avoid MSI Mystic Light protocol glitches
-{
-  ...
-}:
+_:
 let
   ledColor = "#FF2200";
 in
