@@ -338,11 +338,10 @@ end
 
 # _cachix_push_if_configured
 #
-# Purpose: Push /run/current-system to writable cachix caches
+# Purpose: Push /run/current-system to configured cachix caches
 #
 # This helper:
-# - Reads ~/.config/cachix/cachix.dhall for caches with secretKey
-# - Falls back to popcat19-shared if authToken is present
+# - Reads ~/.config/cachix/cachix.dhall for explicitly listed binaryCaches
 # - Verifies network before pushing, times out after 30s per cache
 function _cachix_push_if_configured
     if not command -q cachix
@@ -356,18 +355,13 @@ function _cachix_push_if_configured
 
     set -l dhall_raw (cat "$dhall_config")
 
-    # Gather writable caches: dhall entries with secretKey, plus popcat19-shared if authed
+    # Gather writable caches from explicit binaryCaches entries only.
     set -l caches
     for entry in (string match -ra '\{[^}]+\}' -- "$dhall_raw")
         set -l name (string match -rg 'name\s*=\s*"([^"]+)"' -- "$entry")
-        set -l key  (string match -rg 'secretKey\s*=\s*"([^"]+)"' -- "$entry")
-        if test -n "$name" -a -n "$key"
+        if test -n "$name"
             set -a caches $name
         end
-    end
-
-    if string match -qr 'authToken' -- "$dhall_raw"; and not contains -- "popcat19-shared" $caches
-        set -a caches "popcat19-shared"
     end
 
     if test -z "$caches"
