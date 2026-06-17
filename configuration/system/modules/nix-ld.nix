@@ -23,6 +23,7 @@
       libxext
       libxfixes
       libxrandr
+      alsa-lib
       libgbm
       libdrm
       at-spi2-core
