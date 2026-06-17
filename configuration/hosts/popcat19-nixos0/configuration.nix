@@ -111,4 +111,9 @@ in
     opentabletdriver
     pavucontrol
   ];
+
+  services.sunshine.settings = {
+    capture = "wlr";
+    output_name = "HEADLESS-SUNSHINE";
+  };
 }

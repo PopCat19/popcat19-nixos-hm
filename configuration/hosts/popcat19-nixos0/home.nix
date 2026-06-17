@@ -6,6 +6,7 @@
 # - Sets up home configuration from userConfig
 # - Imports central home configuration
 # - Applies host-specific monitor settings
+# - Creates a headless FHD output for Sunshine streaming (scripts in configuration.nix toggle DPMS)
 { lib, userConfig, ... }:
 let
   stateVersion = import ../../stateversion.nix;
@@ -20,4 +21,11 @@ in
   ];
 
   home.file.".config/hypr/monitors.conf".source = ./hyprland/monitors.conf;
+
+  wayland.windowManager.hyprland.settings = {
+    "exec-once" = [
+      "hyprctl output create headless HEADLESS-SUNSHINE"
+      "hyprctl dispatch moveworkspacetomonitor 10 HEADLESS-SUNSHINE"
+    ];
+  };
 }
