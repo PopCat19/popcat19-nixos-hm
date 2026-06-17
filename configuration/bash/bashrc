@@ -522,15 +522,8 @@ _cachix_push_if_configured() {
     local caches=()
     while IFS= read -r entry; do
         local name; name=$(echo "$entry" | grep -oP 'name\s*=\s*"([^"]+)"' | sed 's/name\s*=\s*"//;s/"//')
-        local key;  key=$(echo "$entry" | grep -oP 'secretKey\s*=\s*"([^"]+)"' | sed 's/secretKey\s*=\s*"//;s/"//')
-        [[ -n "$name" && -n "$key" ]] && caches+=("$name")
+        [[ -n "$name" ]] && caches+=("$name")
     done < <(echo "$dhall_raw" | grep -oP '\{[^}]+\}')
-
-    if echo "$dhall_raw" | grep -q 'authToken'; then
-        local found=false
-        for c in "${caches[@]}"; do [[ "$c" == "popcat19-shared" ]] && found=true; done
-        ! $found && caches+=("popcat19-shared")
-    fi
 
     [[ ${#caches[@]} -eq 0 ]] && return 0
 
