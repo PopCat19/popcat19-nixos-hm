@@ -31,13 +31,11 @@ in
     ../../profiles/${userConfig.profile}.nix
     ../../system/modules/sunshine.nix
     ../../system/modules/searxng.nix
-    ../../system/modules/firecrawl.nix
     ../../system/modules/odysseus.nix
     ../../services/zrok
   ];
 
   services.searxng-local.enable = true;
-  services.firecrawl.enable = true;
   services.sillytavern = {
     enable = true;
     port = 8000;

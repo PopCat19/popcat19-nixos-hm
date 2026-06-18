@@ -10,7 +10,6 @@
 - `dconf.nix`: Enable dconf for GTK/Qt settings and desktop configuration
 - `display.nix`: Orchestrate display system configuration through separated modules
 - `environment.nix`: Configure system-level environment variables
-- `firecrawl.nix`: Declare Firecrawl web scraping API via OCI containers
 - `fish-functions.nix`: Configure Fish shell with custom functions and abbreviations
 - `fish.nix`: Configure Fish shell as the default system shell
 - `fonts.nix`: Configure system fonts using centralized userConfig
@@ -21,7 +20,6 @@
 - `hyprland.nix`: Configure Hyprland Wayland compositor with UWSM integration
 - `networking.nix`: Manage firewall, IP forwarding, and NetworkManager configuration
 - `nh.nix`: Configure nh (nix-community/nh) CLI helper with env vars and GC timer
-- `nix-ld.nix`: Enable nix-ld with libraries for pre-built FHS binaries (CloakBrowser, AppImages)
 - `openrgb.nix`: Enable OpenRGB service for RGB lighting control
 - `power-management.nix`: Provide basic power management for desktop systems
 - `programs.nix`: Configure system-level programs and gaming support

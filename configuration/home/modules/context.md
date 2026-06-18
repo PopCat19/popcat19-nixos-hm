@@ -20,7 +20,6 @@
 - `micro.nix`: Configures the Micro terminal text editor.
 - `obs.nix`: Configures OBS Studio with plugins for recording and streaming.
 - `packages.nix`: Re-exports consolidated home packages
-- `playwright.nix`: Configure Playwright browser testing environment for NixOS
 - `privacy.nix`: Configures privacy and security tools.
 - `qt-gtk-config.nix`: Configure XDG MIME defaults, GTK/Qt applications, bookmarks, and Dolphin places
 - `screenshot.fish`: Fish wrapper for hyprshot with window naming

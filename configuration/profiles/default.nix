@@ -52,7 +52,6 @@ in
     ../nix-options.nix
     ../system/modules/nh.nix
     ../system/modules/cachix.nix
-    ../system/modules/nix-ld.nix
   ];
 
   system.stateVersion = stateVersion.system;
