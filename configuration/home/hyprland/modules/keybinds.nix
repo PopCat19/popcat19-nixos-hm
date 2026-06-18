@@ -261,8 +261,8 @@
     bindl = [
       # === Laptop ===
       # cat: Laptop
-      # desc: Lid close -> DPMS off
-      ", switch:on:Lid Switch, exec, hyprctl dispatch dpms off"
+      # desc: Lid close -> DPMS off (physical monitors only, preserve headless for Sunshine)
+      ", switch:on:Lid Switch, exec, hyprctl dispatch dpms off DP-2 && hyprctl dispatch dpms off HDMI-A-1"
     ];
 
     bindm = [
