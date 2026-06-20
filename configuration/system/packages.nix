@@ -34,6 +34,7 @@ in
       kdePackages.qtstyleplugin-kvantum
 
       # Development
+      fjo
       gh
       python313Packages.pip
       unzip
