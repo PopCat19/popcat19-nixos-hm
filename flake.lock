@@ -539,11 +539,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1781228339,
-        "narHash": "sha256-gYIQvLpoGLH34tw3lZp11IrK82mkttLcw5sPErGe3+k=",
+        "lastModified": 1781991911,
+        "narHash": "sha256-eWwUJxxp9IohFU5Lzm5iGZlBlyfm3ujzTUCEOhufXr4=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "27d586e930f255a425ec2f9f238f078880333d09",
+        "rev": "29b8d509398a8561fa42e5b3bb3c81336f597566",
         "type": "github"
       },
       "original": {
@@ -926,18 +926,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1780713475,
-        "narHash": "sha256-Swn1WfnFK8vGJWDIXHphMs6JCYXBdv8Je0RV4Lqelhg=",
-        "owner": "popcat19",
-        "repo": "project-minimalist-design",
-        "rev": "477167a48f85f9109e8497a60593f067885342df",
-        "type": "github"
+        "lastModified": 1781951040,
+        "narHash": "sha256-l0HrbAkkUnU+3JjrQSHjj5XFkoxj9Kmup5E9wG/gA1A=",
+        "ref": "dev",
+        "rev": "20f0262f624d40c8c5fcb8046bb468c9b417227a",
+        "revCount": 229,
+        "type": "git",
+        "url": "https://dawn.wine/popcat19/project-minimalist-design.git"
       },
       "original": {
-        "owner": "popcat19",
         "ref": "dev",
-        "repo": "project-minimalist-design",
-        "type": "github"
+        "type": "git",
+        "url": "https://dawn.wine/popcat19/project-minimalist-design.git"
       }
     },
     "root": {
