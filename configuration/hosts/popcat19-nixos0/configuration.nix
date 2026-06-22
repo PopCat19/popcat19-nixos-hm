@@ -83,7 +83,10 @@ in
   # Fix Renesas xHCI "HC couldn't access mem fast enough" warning spam.
   # Disabling USB autosuspend prevents the controller from entering low-power
   # states where it can't respond to DMA requests in time.
-  boot.kernelParams = [ "usbcore.autosuspend=-1" ];
+  boot.kernelParams = [
+    "usbcore.autosuspend=-1"
+    "mt7921e.disable_aspm=Y"
+  ];
 
   networking.hostName = userConfig.hostname;
 
