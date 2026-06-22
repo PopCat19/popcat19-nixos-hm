@@ -1,10 +1,10 @@
 # screenshot.nix
 #
-# Purpose: Screenshot capture using hyprshot and fish wrapper
+# Purpose: Screenshot capture using grimblast and fuzzel menu
 #
 # This module:
-# - Installs hyprshot for Wayland screenshot capture
-# - Creates fish wrapper with window naming and hyprshade bypass
+# - Installs grimblast for Wayland screenshot capture
+# - Creates fish wrapper with fuzzel mode selection and hyprshade bypass
 { pkgs, ... }:
 
 {
@@ -16,8 +16,7 @@
   };
 
   home.packages = with pkgs; [
-    hyprshot
+    grimblast
     libnotify
-    jq
   ];
 }
