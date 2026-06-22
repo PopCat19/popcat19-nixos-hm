@@ -50,7 +50,6 @@ with pkgs;
   fuzzel
   hyprlock
   hyprshade
-  hyprsunset
   hyprutils
 
   # Development
