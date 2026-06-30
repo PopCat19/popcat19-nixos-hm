@@ -80,11 +80,13 @@ in
 
   hardware.enableRedistributableFirmware = true;
 
-  # Fix Renesas xHCI "HC couldn't access mem fast enough" warning spam.
-  # Disabling USB autosuspend prevents the controller from entering low-power
-  # states where it can't respond to DMA requests in time.
+  # Fix Renesas + AMD xHCI "HC couldn't access mem fast enough" warning spam.
+  # usbcore.autosuspend only disables USB device suspend, not PCIe link sleep.
+  # The real cause is PCIe ASPM L1: the link enters a deep power-save state and
+  # the xHCI controller can't wake up fast enough for DMA.  pcie_aspm policy
+  # fixes this by preventing L1 on all devices.
   boot.kernelParams = [
-    "usbcore.autosuspend=-1"
+    "pcie_aspm.policy=performance"
     "mt7921e.disable_aspm=Y"
   ];
 
