@@ -73,10 +73,20 @@ in
     # Ensure the kanata service restarts after every home-manager activation
     # so config changes from rebuilds always take effect. The reloadTriggers=
     # property on the service didn't wire up a path unit when tested, and
-    # the systemd.user.paths schema is fiddly. entryAfter writeBoundary runs
-    # this script after files (including the kbd symlink) have been written.
+    # the systemd.user.paths schema is fiddly.
     #
-    # Two failure modes are handled here:
+    # entryAfter "linkGeneration" (NOT "writeBoundary") is critical:
+    # writeBoundary only runs preflight checks; the actual file
+    # symlinks at ~/.config/kanata/kanata.kbd are placed later by
+    # linkGeneration. Depending on writeBoundary makes the restart
+    # race linkGeneration by ~1s — kanata starts, reads the OLD
+    # symlink, loads OLD config into memory, then linkGeneration
+    # swaps the symlink to the NEW store path and kanata never
+    # notices. Symptom: notify-send fires (the script ran),
+    # try-restart succeeds (new PID), but the running config is
+    # still stale until the next manual restart.
+    #
+    # Two failure modes are handled inside the script:
     # 1. XDG_RUNTIME_DIR may be unset in the activation environment even
     #    though the user bus exists at /run/user/<uid>/bus. Reconstruct
     #    it from `stat -c %u "$HOME"` (the home dir's owner uid, which is
@@ -94,7 +104,7 @@ in
     # the only signal is a journal entry, which is easy to miss during a
     # rebuild). notify-send failures are swallowed (`|| true`) so a broken
     # notification daemon does not abort the activation.
-    home.activation.kanataRestart = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    home.activation.kanataRestart = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
       if [ -L "$HOME/.config/kanata/kanata.kbd" ]; then
         uid="$(${pkgs.coreutils}/bin/stat -c %u "$HOME")"
         runtime_dir="''${XDG_RUNTIME_DIR:-/run/user/$uid}"
