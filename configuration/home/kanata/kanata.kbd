@@ -150,6 +150,13 @@
   m    mfwd
   i    @mwd
   o    @mwu
+  ;; z -> nop0: nop0 is a no-op output (kanata filters KEY_676) but still
+  ;; produces a NormalKey state with keycode KEY_676. Fork watches (z) so it
+  ;; detects the held state. If z were mapped to XX (via ___ XX or explicit),
+  ;; NoOp adds NOTHING to layout.states and fork can't see it -- the boost
+  ;; silently degrades to the accel default. nop0 is the cheapest way to make
+  ;; z trackable without typing a visible character.
+  z    nop0
   [    home
   ]    end
   ,    pgup
