@@ -116,7 +116,7 @@ let
                   (multi
                     (layer-while-held mouse)
                     (release-key lmet)
-                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  n/m back/fwd  |  i scroll-up  |  o scroll-down  |  z boost 3x (move) / 4x (scroll)  |  [ ] home/end  |  , . pgup/pgdn  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
+                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  n/m back/fwd  |  i scroll-down  |  o scroll-up  |  z boost 3x (move) / 4x (scroll)  |  [ ] home/end  |  , . pgup/pgdn  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
                   (lmet)))
 
     ;; Default layer uses deflayermap (input->action pairs) instead of
@@ -168,11 +168,11 @@ let
       n    mbck
       m    mfwd
       i    (switch
-             ((input real z)) @mwu-fast break
-             ()                  @mwu     break)
-      o    (switch
              ((input real z)) @mwd-fast break
              ()                  @mwd     break)
+      o    (switch
+             ((input real z)) @mwu-fast break
+             ()                  @mwu     break)
       z    (movemouse-speed 300)
       [    home
       ]    end
