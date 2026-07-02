@@ -24,21 +24,22 @@
 let
   cfg = config.programs.kanata;
 
-  # 8 ms tick, 600 ms to reach max speed, 1 px min, 12 px max per tick:
-  # a quick tap nudges the cursor, holding flies across the screen.
+  # 8 ms tick, 400 ms to reach max speed, 1 px min, 10 px max per tick:
+  # a quick tap nudges the cursor, holding reaches cruise speed fast.
   mouseAccel = {
     interval = "8";
-    accelTime = "600";
+    accelTime = "400";
     minDist = "1";
-    maxDist = "8";
+    maxDist = "10";
   };
 
   kanataConfig = ''
     ;; hjkl mouse-emulation layer.
     ;;
     ;; Entry: Super+C (chord). Tapping C alone still types a c.
-    ;; Exit:  Super+Esc (chord). Fires from any layer; lands in default.
-    ;;        Esc alone stays passthrough so vim/other apps keep working.
+    ;; Exit:  plain c or Esc from the mouse layer (ergonomic: same finger
+    ;;         as movement). Super+C from mouse mode falls through and
+    ;;         re-enters; noise but functional.
     ;; Each transition fires a desktop notification listing the active
     ;; keybinds as a reminder.
     ;;
@@ -88,7 +89,7 @@ let
     (defalias
       mse-on (multi
         (layer-switch mouse)
-        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  d M-click  |  u/i scroll  |  Super+C enter  |  Esc exit" -t 5000 -u normal))
+        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  d M-click  |  u scroll-up  |  i scroll-down  |  Super+C enter  |  x or Esc exit" -t 5000 -u normal))
       mse-off (multi
         (layer-switch default)
         (cmd notify-send "Kanata: mouse OFF" "Super+C to re-enter" -t 5000 -u low))
@@ -107,15 +108,14 @@ let
     )
 
     ;; Mouse layer: hjkl = move, space/f/d = buttons, u/i = scroll.
-    ;; esc directly exits to default (no fork: chord detection is unreliable
-    ;; in kanata; users who need plain Esc for vim can tap once after exiting).
-    ;; lmet/c/lctl/lalt/ralt/rmet/rctl are transparent so normal modifier
+    ;; x and esc directly exit to default (ergonomic, under the home row).
+    ;; lmet/lctl/lalt/ralt/rmet/rctl are transparent so normal modifier
     ;; chords keep working and Super+C fork on the default layer still fires.
     (deflayer mouse
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-      XX   XX   XX   XX   XX   XX   XX   @mwu XX   @mwd XX   XX   XX   XX   (layer-switch default)
+      XX   XX   XX   XX   XX   XX   XX   @mwu @mwd _    XX   XX   XX   XX   (layer-switch default)
       XX   XX   XX   mmid mrgt XX   @mml @mmd @mmu @mmr XX   XX   XX
-      XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+      XX   XX   @mse-off XX   XX   XX   XX   XX   XX   XX   XX   XX
       XX   _    _              mlft            _    _    _
     )
   '';
