@@ -55,4 +55,8 @@
     opentabletdriver
     protonplus
   ];
+
+  # Provide /dev/uinput and put the user in the uinput group so the kanata
+  # home-manager service (enabled in home.nix) can open the device without root.
+  services.kanataUdev.enable = true;
 }
