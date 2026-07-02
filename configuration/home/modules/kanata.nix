@@ -24,15 +24,6 @@
 let
   cfg = config.programs.kanata;
 
-  # 8 ms tick, 400 ms to reach max speed, 1 px min, 10 px max per tick:
-  # a quick tap nudges the cursor, holding reaches cruise speed fast.
-  mouseAccel = {
-    interval = "8";
-    accelTime = "400";
-    minDist = "1";
-    maxDist = "10";
-  };
-
   kanataConfig = ''
     ;; hjkl mouse-emulation layer.
     ;;
@@ -72,14 +63,23 @@ let
       lctl lmet lalt           spc            ralt rmet rctl
     )
 
-    ;; Mouse movement with acceleration: <interval_ms> <accel_time_ms> <min_px> <max_px>
+    ;; Mouse movement: fixed speed (no acceleration).
+    ;; Interval 8 ms (125 Hz). Distance 6 px per tick = 750 px/s.
+    ;; LShift on the mouse layer is bound to (movemouse-speed 150), which
+    ;; multiplies the distance by 1.5 while held (kanata docs: "expanding
+    ;; or shrinking min_distance and max_distance while the action key is
+    ;; pressed"). Effective boost: 9 px/tick = 1125 px/s.
+    ;; Scroll: LShift boost implemented via fork on (lsft), since
+    ;; movemouse-speed only affects movemouse/movemouse-accel, not mwheel.
     (defalias
-      mmu (movemouse-accel-up    ${mouseAccel.interval} ${mouseAccel.accelTime} ${mouseAccel.minDist} ${mouseAccel.maxDist})
-      mmd (movemouse-accel-down  ${mouseAccel.interval} ${mouseAccel.accelTime} ${mouseAccel.minDist} ${mouseAccel.maxDist})
-      mml (movemouse-accel-left  ${mouseAccel.interval} ${mouseAccel.accelTime} ${mouseAccel.minDist} ${mouseAccel.maxDist})
-      mmr (movemouse-accel-right ${mouseAccel.interval} ${mouseAccel.accelTime} ${mouseAccel.minDist} ${mouseAccel.maxDist})
-      mwu (mwheel-up   50 120)
-      mwd (mwheel-down 50 120)
+      mmu      (movemouse-up    8 6)
+      mmd      (movemouse-down  8 6)
+      mml      (movemouse-left  8 6)
+      mmr      (movemouse-right 8 6)
+      mwu      (mwheel-up   50 120)
+      mwd      (mwheel-down 50 120)
+      mwu-fast (mwheel-up   50 180)
+      mwd-fast (mwheel-down 50 180)
     )
 
     ;; Layer transitions: enter or exit mouse mode + post a notification.
@@ -128,7 +128,6 @@ let
     ;; @tog-c, so Super+C from mouse layer still works) implicitly use
     ;; their defsrc value via the _ wildcard (matches unmapped keys).
     (deflayermap (mouse)
-      _    _
       h    @mml
       j    @mmd
       k    @mmu
@@ -136,10 +135,14 @@ let
       spc  mlft
       f    mrgt
       g    mmid
-      u    @mwu
-      d    @mwd
+      u    (fork @mwu @mwu-fast (lsft))
+      d    (fork @mwd @mwd-fast (lsft))
       x    (layer-switch default)
       esc  (layer-switch default)
+      ;; lsft position: (movemouse-speed 150) boosts hjkl 1.5x while held.
+      ;; The fork on u/d above handles the 1.5x boost for scroll, since
+      ;; movemouse-speed does not affect mwheel.
+      lsft (movemouse-speed 150)
     )
   '';
 
