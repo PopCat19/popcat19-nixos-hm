@@ -19,6 +19,7 @@
 ;;   - =            - volume down / up
 ;;   0              - mute toggle
 ;;   7 8 9          - media prev / play-pause / next
+;;   ; ' /          - alt / ctrl / shift (held; for click combos)
 ;;
 ;; Force exit: hold left Ctrl + Space + Escape.
 
@@ -130,6 +131,7 @@
 ;;   - =      - volume down / up
 ;;   0        - mute toggle
 ;;   7 8 9    - media prev / play-pause / next
+;;   ; ' /    - hold lalt / lctl / lsft (right-hand mod for click combos)
 ;;
 ;; Release of Super+C exits mouse mode automatically (layer-while-held).
 ;;
@@ -168,6 +170,18 @@
   7    prev
   8    pp
   9    next
+
+  ;; Right-hand modifier passthrough. Without these, ; ' / would be
+  ;; swallowed by ___ XX. Plain key -> modifier is already momentary
+  ;; in Kanata: press-down -> modifier-down, release -> modifier-up,
+  ;; no action wrapper needed. Lets you hold ' + spc for Ctrl+click
+  ;; or ; + h/j/k/l for Alt+arrow-style bindings without leaving the
+  ;; mouse layer. mouse-pass already passes the physical modifiers
+  ;; through, so this is only needed here.
+  ;    lalt
+  '    lctl
+  /    lsft
+
   ___  XX
 )
 
