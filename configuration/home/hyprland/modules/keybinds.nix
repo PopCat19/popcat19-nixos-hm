@@ -90,20 +90,12 @@
       # === Focus Navigation ===
       # cat: Focus
       # desc: Focus left
-      "$mainMod, Left, movefocus, l"
-      # desc: Focus right
-      "$mainMod, Right, movefocus, r"
-      # desc: Focus up
-      "$mainMod, Up, movefocus, u"
-      # desc: Focus down
-      "$mainMod, Down, movefocus, d"
-      # desc: Focus left (vim)
       "$mainMod, h, movefocus, l"
-      # desc: Focus right (vim)
+      # desc: Focus right
       "$mainMod, l, movefocus, r"
-      # desc: Focus up (vim)
+      # desc: Focus up
       "$mainMod, k, movefocus, u"
-      # desc: Focus down (vim)
+      # desc: Focus down
       "$mainMod, j, movefocus, d"
       # desc: Cycle focus
       "Alt, Tab, movefocus, d"
@@ -133,11 +125,11 @@
       # desc: Go to workspace 10
       "$mainMod, 0, workspace, 10"
       # desc: Next workspace
-      "$mainMod+Ctrl, Right, workspace, r+1"
+      "$mainMod+Ctrl, l, workspace, r+1"
       # desc: Previous workspace
-      "$mainMod+Ctrl, Left, workspace, r-1"
+      "$mainMod+Ctrl, h, workspace, r-1"
       # desc: Empty workspace
-      "$mainMod+Ctrl, Down, workspace, empty"
+      "$mainMod+Ctrl, j, workspace, empty"
 
       # === Move to Workspace ===
       # cat: Move Window
@@ -162,9 +154,9 @@
       # desc: Move to workspace 10
       "$mainMod+Shift, 0, movetoworkspace, 10"
       # desc: Move to next workspace
-      "$mainMod+Ctrl+Alt, Right, movetoworkspace, r+1"
+      "$mainMod+Ctrl+Alt, l, movetoworkspace, r+1"
       # desc: Move to previous workspace
-      "$mainMod+Ctrl+Alt, Left, movetoworkspace, r-1"
+      "$mainMod+Ctrl+Alt, h, movetoworkspace, r-1"
 
       # === Silent Move (no switch) ===
       # cat: Move Silent
@@ -192,13 +184,13 @@
       # === Window Movement ===
       # cat: Move Position
       # desc: Move window left
-      "$mainMod+Shift+Ctrl, Left, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive -30 0; else hyprctl dispatch movewindow l; fi'"
+      "$mainMod+Shift+Ctrl, h, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive -30 0; else hyprctl dispatch movewindow l; fi'"
       # desc: Move window right
-      "$mainMod+Shift+Ctrl, Right, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 30 0; else hyprctl dispatch movewindow r; fi'"
+      "$mainMod+Shift+Ctrl, l, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 30 0; else hyprctl dispatch movewindow r; fi'"
       # desc: Move window up
-      "$mainMod+Shift+Ctrl, Up, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 0 -30; else hyprctl dispatch movewindow u; fi'"
+      "$mainMod+Shift+Ctrl, k, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 0 -30; else hyprctl dispatch movewindow u; fi'"
       # desc: Move window down
-      "$mainMod+Shift+Ctrl, Down, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 0 30; else hyprctl dispatch movewindow d; fi'"
+      "$mainMod+Shift+Ctrl, j, exec, bash -c 'if grep -q \"true\" <<< $(hyprctl activewindow -j | jq -r .floating); then hyprctl dispatch moveactive 0 30; else hyprctl dispatch movewindow d; fi'"
 
       # === Mouse Workspace ===
       # cat: Mouse
@@ -223,13 +215,13 @@
       # === Window Resize ===
       # cat: Resize
       # desc: Grow width
-      "$mainMod+Shift, Right, resizeactive, 30 0"
+      "$mainMod+Shift, l, resizeactive, 30 0"
       # desc: Shrink width
-      "$mainMod+Shift, Left, resizeactive, -30 0"
+      "$mainMod+Shift, h, resizeactive, -30 0"
       # desc: Shrink height
-      "$mainMod+Shift, Up, resizeactive, 0 -30"
+      "$mainMod+Shift, k, resizeactive, 0 -30"
       # desc: Grow height
-      "$mainMod+Shift, Down, resizeactive, 0 30"
+      "$mainMod+Shift, j, resizeactive, 0 30"
     ];
 
     bindel = [
