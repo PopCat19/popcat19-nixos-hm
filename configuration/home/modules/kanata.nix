@@ -64,22 +64,22 @@ let
     )
 
     ;; Mouse movement: fixed speed (no acceleration).
-    ;; Interval 8 ms (125 Hz). Distance 12 px per tick = 1500 px/s.
-    ;; LShift on the mouse layer is bound to (movemouse-speed 150), which
-    ;; multiplies the distance by 1.5 while held (kanata docs: "expanding
+    ;; Interval 8 ms (125 Hz). Distance 6 px per tick = 750 px/s.
+    ;; LShift on the mouse layer is bound to (movemouse-speed 200), which
+    ;; multiplies the distance by 2x while held (kanata docs: "expanding
     ;; or shrinking min_distance and max_distance while the action key is
-    ;; pressed"). Effective boost: 18 px/tick = 2250 px/s.
+    ;; pressed"). Effective boost: 12 px/tick = 1500 px/s.
     ;; Scroll: LShift boost implemented via fork on (lsft), since
     ;; movemouse-speed only affects movemouse/movemouse-accel, not mwheel.
     (defalias
-      mmu      (movemouse-up    8 12)
-      mmd      (movemouse-down  8 12)
-      mml      (movemouse-left  8 12)
-      mmr      (movemouse-right 8 12)
+      mmu      (movemouse-up    8 6)
+      mmd      (movemouse-down  8 6)
+      mml      (movemouse-left  8 6)
+      mmr      (movemouse-right 8 6)
       mwu      (mwheel-up   50 120)
       mwd      (mwheel-down 50 120)
-      mwu-fast (mwheel-up   50 180)
-      mwd-fast (mwheel-down 50 180)
+      mwu-fast (mwheel-up   50 240)
+      mwd-fast (mwheel-down 50 240)
     )
 
     ;; Layer transitions: enter or exit mouse mode + post a notification.
@@ -139,10 +139,10 @@ let
       d    (fork @mwd @mwd-fast (lsft))
       x    (layer-switch default)
       esc  (layer-switch default)
-      ;; lsft position: (movemouse-speed 150) boosts hjkl 1.5x while held.
-      ;; The fork on u/d above handles the 1.5x boost for scroll, since
+      ;; lsft position: (movemouse-speed 200) boosts hjkl 2x while held.
+      ;; The fork on u/d above handles the 2x boost for scroll, since
       ;; movemouse-speed does not affect mwheel.
-      lsft (movemouse-speed 150)
+      lsft (movemouse-speed 200)
     )
   '';
 
