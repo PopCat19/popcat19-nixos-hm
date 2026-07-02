@@ -89,13 +89,33 @@ let
     (defalias
       mse-on (multi
         (layer-switch mouse)
-        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  d M-click  |  u scroll-up  |  i scroll-down  |  Super+C enter  |  x or Esc exit" -t 5000 -u normal))
+        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  d M-click  |  u scroll-up  |  i scroll-down  |  Super+C enter  |  x or Esc exit  |  z pause 3s" -t 5000 -u normal))
+      ;; mse-off retained for Super+C re-entry from mouse layer (the fork
+      ;; on default layer's c position falls through to default's @tog-c
+      ;; when pressed from mouse mode, which fires mse-on; mse-off unused
+      ;; at the moment).
       mse-off (multi
         (layer-switch default)
         (cmd notify-send "Kanata: mouse OFF" "Super+C to re-enter" -t 5000 -u low))
       ;; Super+C: enter mouse mode. fork with lmet as trigger so plain C still
       ;; types a c.
       tog-c (fork c @mse-on (lmet)))
+
+    ;; Virtual key: re-enter mouse layer. Used by z's pause sequence.
+    (defvirtualkeys
+      vk-mouse-on (layer-switch mouse)
+    )
+
+    ;; z: pause mouse emulation for 3s, then re-enter. Exits to default
+    ;; immediately (direct layer-switch, not in multi, to avoid the
+    ;; multi+layer-switch ordering bug). Schedules re-entry via
+    ;; on-physical-idle, which fires after 3000ms of physical-key idle.
+    ;; on-physical-idle parses tap-vkey as its inner argument, so we
+    ;; don't need a multi wrapper.
+    (defalias
+      z (multi
+        (layer-switch default)
+        (on-physical-idle 3000 tap-vkey vk-mouse-on)))
 
     ;; Default layer: c and esc are remapped (to the Super+ chords).
     ;; lmet position stays as the literal lmet action so the forks detect it.
@@ -108,18 +128,21 @@ let
     )
 
     ;; Mouse layer: hjkl = move, space/f/d = buttons, u/i = scroll.
-    ;; x and esc exit to default. Esc uses @mse-off (multi with notification),
-    ;; x uses a direct layer-switch because multi(layer-switch, cmd) has
-    ;; documented ordering bugs that swallow the layer change in some paths
-    ;; (cmd may fire after the keypress completes, leaving the layer switch
-    ;; no-op). No exit notification on x as a result.
+    ;; x and esc exit to default via direct (layer-switch default). Both
+    ;; bypass mse-off (multi with notify-send) because:
+    ;;   - multi has documented ordering bugs that swallow the layer switch
+    ;;     when (layer-switch) is paired with (cmd notify-send)
+    ;;   - on layer-switch, the key release is processed on the new layer,
+    ;;     which would leak an Escape to the focused app otherwise
+    ;; Trade-off: no OFF notification on exit. Entry ON notification still fires.
+    ;; z pauses mouse emulation for 3s (macro + virtual keys), then re-enters.
     ;; lmet/lctl/lalt/ralt/rmet/rctl are transparent so normal modifier
     ;; chords keep working and Super+C fork on the default layer still fires.
     (deflayer mouse
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-      XX   XX   XX   XX   XX   XX   XX   @mwu @mwd _    XX   XX   XX   XX   @mse-off
+      XX   XX   XX   XX   XX   XX   XX   @mwu @mwd _    XX   XX   XX   XX   (layer-switch default)
       XX   XX   XX   mmid mrgt XX   @mml @mmd @mmu @mmr XX   XX   XX
-      XX   XX   (layer-switch default) XX   XX   XX   XX   XX   XX   XX   XX   XX
+      XX   @z     (layer-switch default) XX   XX   XX   XX   XX   XX   XX   XX   XX
       XX   _    _              mlft            _    _    _
     )
   '';
