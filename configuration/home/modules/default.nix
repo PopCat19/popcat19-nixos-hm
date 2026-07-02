@@ -53,7 +53,7 @@
     ./home.nix
     ./openrgb-leds.nix
     ./wallpaper-sync.nix
-    ./kanata.nix
+    ../kanata/kanata.nix
   ];
 
   # Use the centralized packages list from packages.nix

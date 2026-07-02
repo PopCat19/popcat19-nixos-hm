@@ -12,7 +12,6 @@
 - `git.nix`: Configure Git version control settings
 - `glance.nix`: Configures Glance self-hosted dashboard.
 - `helix.nix`: Configure Helix editor with home-manager and stylix theming
-- `kanata.nix`: Run kanata hjkl mouse-emulation layer as a user systemd service
 - `home-files.nix`: Manage home directory file symlinks and configuration
 - `home.nix`: Configure home activation scripts for directory creation
 - `kitty.nix`: Configure Kitty terminal emulator settings
