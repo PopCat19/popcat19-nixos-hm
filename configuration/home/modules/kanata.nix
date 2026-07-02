@@ -64,21 +64,22 @@ let
     )
 
     ;; Mouse movement: light acceleration.
-    ;; Interval 8 ms (125 Hz). Min 4 px/tick -> Max 8 px/tick over 200 ms.
-    ;; - Tap (single tick): 4 px = 500 px/s, good for fine positioning.
-    ;; - Hold 200ms+: 8 px/tick = 1000 px/s, fast enough for crossing screens.
-    ;; - Ramp duration 200ms is short enough that the accel feels snappy
-    ;;   rather than rng.
+    ;; Interval 8 ms (125 Hz). Min 3 px/tick -> Max 5 px/tick over 300 ms.
+    ;; - Tap (single tick): 3 px = 375 px/s, fine for delicate positioning.
+    ;; - Hold 300 ms+: 5 px/tick = 625 px/s (close to the 600 px/s target).
+    ;; - Ramp duration 300 ms gives more time at the slow speed before
+    ;;   ramping up; combined with the lower max this makes the movement
+    ;;   feel lighter overall (was 4->8 over 200 ms, perceived as 1000 px/s).
     ;; Boost: ; position bound to (movemouse-speed 200) multiplies the
-    ;; accel range by 2x while held: 8 -> 16 px/tick = 2000 px/s.
+    ;; accel range by 2x while held: 6 -> 10 px/tick = 750 -> 1250 px/s.
     ;; Scroll: ; boost via switch with (input real ;) — movemouse-speed
     ;; doesn't affect mwheel, so a fork/select on (input real ;) selects
     ;; the dedicated fast aliases (240 vs 120 per 50ms).
     (defalias
-      mmu      (movemouse-accel-up    8 200 4 8)
-      mmd      (movemouse-accel-down  8 200 4 8)
-      mml      (movemouse-accel-left  8 200 4 8)
-      mmr      (movemouse-accel-right 8 200 4 8)
+      mmu      (movemouse-accel-up    8 300 3 5)
+      mmd      (movemouse-accel-down  8 300 3 5)
+      mml      (movemouse-accel-left  8 300 3 5)
+      mmr      (movemouse-accel-right 8 300 3 5)
       mwu      (mwheel-up   50 120)
       mwd      (mwheel-down 50 120)
       mwu-fast (mwheel-up   50 240)
