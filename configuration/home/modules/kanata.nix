@@ -84,20 +84,17 @@ let
     ;; Layer transitions: enter or exit mouse mode + post a notification.
     ;; Calling mse-on while already on mouse is a no-op (layer-switch to
     ;; current layer). Calling mse-off from default is also a no-op, so the
-    ;; Super+Esc exit is safe to fire from anywhere.
+    ;; plain-Esc exit on the mouse layer is safe to fire from anywhere.
     (defalias
       mse-on (multi
         (layer-switch mouse)
-        (cmd notify-send "Kanata: mouse layer ON" "h/j/k/l move  |  space L-click  |  f R-click  |  d M-click  |  u/i scroll  |  Super+C enter  |  Super+Esc exit" -t 2500 -u normal))
+        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  d M-click  |  u/i scroll  |  Super+C enter  |  Esc exit" -t 5000 -u normal))
       mse-off (multi
         (layer-switch default)
-        (cmd notify-send "Kanata: mouse layer OFF" -t 1500 -u low))
+        (cmd notify-send "Kanata: mouse OFF" "Super+C to re-enter" -t 5000 -u low))
       ;; Super+C: enter mouse mode. fork with lmet as trigger so plain C still
       ;; types a c.
-      tog-c (fork c @mse-on (lmet))
-      ;; Super+Esc: exit to default from any layer. fork with lmet as trigger
-      ;; so plain Esc still emits Escape.
-      esc-exit (fork esc @mse-off (lmet)))
+      tog-c (fork c @mse-on (lmet)))
 
     ;; Default layer: c and esc are remapped (to the Super+ chords).
     ;; lmet position stays as the literal lmet action so the forks detect it.
