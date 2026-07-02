@@ -33,3 +33,9 @@ node_modules
 # Command Code agent local data (taste, session logs)
 .commandcode/
 /pi-session-*.html
+
+# pi-lens review tooling output (cache, reviews, sessions)
+.pi-lens/
+
+# flake-auto-update tool state (flake.lock backups)
+tools/flake-auto-update/
