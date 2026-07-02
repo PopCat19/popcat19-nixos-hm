@@ -89,7 +89,7 @@
               (multi
                 (layer-while-held mouse)
                 (release-key lmet)
-                (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  n/m back/fwd  |  i scroll-down  |  o scroll-up  |  z move-boost 3x  |  [ ] end/home  |  , . pgdn/pgup  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
+                (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  spc L-click  u R-click  s M-click  n/m back/fwd  i scroll-down  o scroll-up  z move-boost 3x  [ ] end/home  , . pgdn/pgup  - = vol dn/up  0 mute  7 8 9 media prev/play/next  ; ' / lalt/lctl/lsft  hold Super+C" -t 3000 -u normal))
               (lmet))
 
   ;; Super+B: switch to mouse-pass (persists until explicit exit).
@@ -99,7 +99,7 @@
   tog-b (fork b
               (multi
                 (layer-switch mouse-pass)
-                (cmd notify-send "Kanata: mouse passthrough ON" "h/j/k/l move  |  spc L-click/drag  |  u R-click  |  s M-click  |  i/o scroll  |  Ctrl/Shift/Alt/Super pass through  |  b or Esc exits" -t 5000 -u normal))
+                (cmd notify-send "Kanata: mouse passthrough ON" "h/j/k/l move  spc L-click/drag  u R-click  s M-click  i/o scroll  Ctrl/Shift/Alt/Super pass through  b or Esc exits" -t 3000 -u normal))
               (lmet))
 )
 
@@ -239,8 +239,8 @@
   ;; the action is unconditional on entry state and independent of any
   ;; fork hold semantics. The notify-send fires the OFF notification
   ;; in the same multi.
-  b    (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 1500 -u low))
-  esc  (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 1500 -u low))
+  b    (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
+  esc  (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
 
   ___  XX
 )
