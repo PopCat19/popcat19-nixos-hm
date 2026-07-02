@@ -135,13 +135,21 @@ let
       spc  mlft
       f    mrgt
       g    mmid
-      u    (fork @mwu @mwu-fast (lsft))
-      d    (fork @mwd @mwd-fast (lsft))
+      ;; u/d scroll: switch checks the physical lsft input, not the
+      ;; output. fork with (lsft) trigger wouldn't work here because
+      ;; lsft is mapped to (movemouse-speed 200) below, so the lsft
+      ;; OUTPUT is never active — fork's check would always fail.
+      ;; (input real lsft) reads the physical key state directly.
+      u    (switch
+             ((input real lsft)) @mwu-fast break
+             ()                  @mwu     break)
+      d    (switch
+             ((input real lsft)) @mwd-fast break
+             ()                  @mwd     break)
       x    (layer-switch default)
       esc  (layer-switch default)
       ;; lsft position: (movemouse-speed 200) boosts hjkl 2x while held.
-      ;; The fork on u/d above handles the 2x boost for scroll, since
-      ;; movemouse-speed does not affect mwheel.
+      ;; This doesn't affect mwheel, hence the switch above for u/d.
       lsft (movemouse-speed 200)
     )
   '';
