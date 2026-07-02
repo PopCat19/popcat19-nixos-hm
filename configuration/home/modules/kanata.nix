@@ -106,12 +106,13 @@ let
     )
 
     ;; Mouse layer: hjkl = move, space/f/d = buttons, u/i = scroll.
-    ;; esc = Super+Esc exit fork. lmet/c/lctl/lalt/ralt/rmet/rctl are
-    ;; transparent so the default-layer forks still see their triggers and
-    ;; normal modifier chords keep working.
+    ;; esc directly exits to default (no fork: chord detection is unreliable
+    ;; in kanata; users who need plain Esc for vim can tap once after exiting).
+    ;; lmet/c/lctl/lalt/ralt/rmet/rctl are transparent so normal modifier
+    ;; chords keep working and Super+C fork on the default layer still fires.
     (deflayer mouse
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-      XX   XX   XX   XX   XX   XX   XX   @mwu XX   @mwd XX   XX   XX   XX   @esc-exit
+      XX   XX   XX   XX   XX   XX   XX   @mwu XX   @mwd XX   XX   XX   XX   (layer-switch default)
       XX   XX   XX   mmid mrgt XX   @mml @mmd @mmu @mmr XX   XX   XX
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
       XX   _    _              mlft            _    _    _
