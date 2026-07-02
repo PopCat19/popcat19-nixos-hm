@@ -30,7 +30,7 @@ let
     interval = "8";
     accelTime = "600";
     minDist = "1";
-    maxDist = "12";
+    maxDist = "8";
   };
 
   kanataConfig = ''
@@ -54,7 +54,11 @@ let
     (defcfg
       process-unmapped-keys yes
       danger-enable-cmd yes
-      movemouse-inherit-accel-state yes
+      ;; movemouse-inherit-accel-state yes: qmk-like, new directions jump to max
+      ;;   speed instantly. Feels like adding a direction doubles speed.
+      ;; movemouse-inherit-accel-state no : new directions ramp from min, so
+      ;;   diagonals grow gradually over accelTime. Smoother feel.
+      movemouse-inherit-accel-state no
       movemouse-smooth-diagonals yes
       linux-continue-if-no-devs-found yes
     )
