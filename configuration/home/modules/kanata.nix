@@ -78,15 +78,12 @@ let
     ;; Boost: z position bound to (movemouse-speed 300) scales the accel
     ;; range 3x while held: 9 -> 30 px/tick over 300 ms (1125 -> 3750 px/s).
     ;; Higher multiplier = steeper slope on the same 300 ms ramp.
-    ;; Scroll: z boost via switch with (input real z) — mwheel doesn't honor
-    ;; movemouse-speed, so a switch on (input real z) selects the dedicated
-    ;; fast aliases (480 vs 120 per 50 ms = exactly 4x).
-    ;; Scroll boost timing: the (input real z) check fires once at i/o press
-    ;; time. z must be held WHEN i/o is pressed for fast scroll. Pressing z
-    ;; mid-scroll does not re-evaluate the switch — kanata binds the resolved
-    ;; alias for the duration of the hold. Mid-scroll dynamic boost would
-    ;; require a layer-switch on z, which conflicts with this layer's use of
-    ;; z for movemouse-speed.
+    ;; Scroll: x position activates layer-while-held scroll-boost, where
+    ;; i/o map to the fast-scroll aliases (480 vs 120 per 50 ms = 4x).
+    ;; The layer approach gives a dedicated, discoverable boost key separate
+    ;; from move boost (z). Trade-off: x must be held when i/o is pressed
+    ;; for fast scroll — same press-time constraint as the old switch, but
+    ;; the key is dedicated so it's easier to remember.
     (defalias
       mmu      (movemouse-accel-up    8 300 3 10)
       mmd      (movemouse-accel-down  8 300 3 10)
@@ -116,7 +113,7 @@ let
                   (multi
                     (layer-while-held mouse)
                     (release-key lmet)
-                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  n/m back/fwd  |  i scroll-down  |  o scroll-up  |  z boost 3x (move) / 4x (scroll)  |  [ ] home/end  |  , . pgup/pgdn  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
+                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  n/m back/fwd  |  i scroll-down  |  o scroll-up  |  z move-boost 3x  |  x scroll-boost 4x (hold)  |  [ ] home/end  |  , . pgup/pgdn  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
                   (lmet)))
 
     ;; Default layer uses deflayermap (input->action pairs) instead of
@@ -133,21 +130,25 @@ let
     ;;   spc      - mlft (hold to drag) -- left thumb
     ;;   u        - mrgt (right click)
     ;;   s        - mmid (middle click)
-    ;;   i        - mwheel-up; z held = 2x boost (right index)
-    ;;   o        - mwheel-down; z held = 2x boost (right ring)
-    ;;   z        - movemouse-speed 200 -- hjkl 2x boost (left pinky, below a)
-    ;;   [ ]      - pgup / pgdn (right index, top row)
-    ;;   , .      - home / end (right ring, bottom row)
-    ;;   - =      - volume down / up (right index, top row)
-    ;;   0        - mute toggle (right pinky, top row)
-    ;;   7 8 9    - media prev / play-pause / next (right pinky/ring, top row)
+    ;;   n m      - mouse back / forward
+    ;;   i o      - scroll down / up (boost via x layer, see below)
+    ;;   z        - movemouse-speed 300 -- hjkl 3x boost (left pinky, below a)
+    ;;   x        - layer-while-held scroll-boost -- i/o 4x while held
+    ;;   [ ]      - home / end
+    ;;   , .      - pgup / pgdn
+    ;;   - =      - volume down / up
+    ;;   0        - mute toggle
+    ;;   7 8 9    - media prev / play-pause / next
     ;;
     ;; Release of Super+C exits mouse mode automatically (layer-while-held).
-    ;; x/esc removed; they were redundant exits with hold-based mode.
     ;;
-    ;; i/o scroll boost uses (input real z) via switch, because the z
-    ;; OUTPUT (movemouse-speed) isn't 'active' as a key output — fork's
-    ;; (lsft-style) trigger check would miss it.
+    ;; Why two separate boost keys (z for move, x for scroll):
+    ;;   movemouse-speed is a stateful setting that persists after release,
+    ;;   so z cleanly boosts all subsequent hjkl movement. mwheel-* has no
+    ;;   equivalent stateful setting, so x uses layer-while-held to swap
+    ;;   i/o to fast-scroll aliases while held. Hold x BEFORE pressing i/o;
+    ;;   layer change does not retroactively re-bind a scroll already in
+    ;;   progress (same press-time constraint as the old switch).
     ;;
     ;; ___ XX: wildcard mapping every unmapped key to no-op. Nothing
     ;; else leaks to Hyprland during mouse mode (prevents phantom
@@ -167,13 +168,10 @@ let
       s    mmid
       n    mbck
       m    mfwd
-      i    (switch
-             ((input real z)) @mwd-fast break
-             ()                  @mwd     break)
-      o    (switch
-             ((input real z)) @mwu-fast break
-             ()                  @mwu     break)
+      i    mwd
+      o    mwu
       z    (movemouse-speed 300)
+      x    (layer-while-held scroll-boost)
       [    home
       ]    end
       ,    pgup
@@ -185,6 +183,17 @@ let
       8    pp
       9    next
       ___  XX
+    )
+
+    ;; Scroll-boost layer: active while x is held in mouse layer.
+    ;; Only i/o are overridden (to fast-scroll aliases); all other keys
+    ;; fall through transparently to the mouse layer below, so hjkl still
+    ;; moves the mouse, z still boosts move, etc. unmapped-key wildcards
+    ;; are NOT used here — deflayermap makes unmapped keys implicitly
+    ;; transparent, which is what we want (fall-through, not swallow).
+    (deflayermap (scroll-boost)
+      i    @mwd-fast
+      o    @mwu-fast
     )
   '';
 
