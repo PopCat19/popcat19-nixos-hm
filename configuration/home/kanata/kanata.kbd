@@ -139,10 +139,13 @@
 ;; Force-exit (lctl+spc+esc) still works: it is handled before any
 ;; layer/kanata remapping.
 (deflayermap (mouse)
-  h    (fork @mml @mml-fast (z))
-  j    (fork @mmd @mmd-fast (z))
-  k    (fork @mmu @mmu-fast (z))
-  l    (fork @mmr @mmr-fast (z))
+  ;; right_triggers is (nop0) because z is mapped to nop0 below.
+  ;; nop0 produces NormalKey(KEY_676) in layout.states; fork checks against
+  ;; the keycode produced by the trigger key, not the trigger key's name.
+  h    (fork @mml @mml-fast (nop0))
+  j    (fork @mmd @mmd-fast (nop0))
+  k    (fork @mmu @mmu-fast (nop0))
+  l    (fork @mmr @mmr-fast (nop0))
   spc  mlft
   u    mrgt
   s    mmid
