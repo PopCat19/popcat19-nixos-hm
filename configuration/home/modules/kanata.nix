@@ -64,18 +64,18 @@ let
     )
 
     ;; Mouse movement: fixed speed (no acceleration).
-    ;; Interval 8 ms (125 Hz). Distance 6 px per tick = 750 px/s.
+    ;; Interval 8 ms (125 Hz). Distance 12 px per tick = 1500 px/s.
     ;; LShift on the mouse layer is bound to (movemouse-speed 150), which
     ;; multiplies the distance by 1.5 while held (kanata docs: "expanding
     ;; or shrinking min_distance and max_distance while the action key is
-    ;; pressed"). Effective boost: 9 px/tick = 1125 px/s.
+    ;; pressed"). Effective boost: 18 px/tick = 2250 px/s.
     ;; Scroll: LShift boost implemented via fork on (lsft), since
     ;; movemouse-speed only affects movemouse/movemouse-accel, not mwheel.
     (defalias
-      mmu      (movemouse-up    8 6)
-      mmd      (movemouse-down  8 6)
-      mml      (movemouse-left  8 6)
-      mmr      (movemouse-right 8 6)
+      mmu      (movemouse-up    8 12)
+      mmd      (movemouse-down  8 12)
+      mml      (movemouse-left  8 12)
+      mmr      (movemouse-right 8 12)
       mwu      (mwheel-up   50 120)
       mwd      (mwheel-down 50 120)
       mwu-fast (mwheel-up   50 180)
@@ -173,11 +173,17 @@ in
       };
       Service = {
         ExecStart = "${lib.getExe pkgs.kanata-with-cmd} --cfg %h/.config/kanata/kanata.kbd";
-        ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR1 $MAINPID";
-        Restart = "on-failure";
+        # ExecReload sends SIGTERM which triggers the Restart=always below.
+        # Kanata does not live-reload on SIGUSR1 (only on the lrld action
+        # via TCP), so we do a full restart when the kbd file changes.
+        ExecReload = "${pkgs.coreutils}/bin/kill -TERM $MAINPID";
+        Restart = "always";
         RestartSec = "5s";
-        # XDG_RUNTIME_DIR and DBUS_SESSION_BUS_ADDRESS are inherited from the
-        # user session so notify-send reaches the notification daemon.
+        # When the kbd file changes (after rebuild, even if the service
+        # definition is unchanged), trigger a reload -> TERM -> restart.
+        # XDG_RUNTIME_DIR and DBUS_SESSION_BUS_ADDRESS are inherited from
+        # the user session so notify-send reaches the notification daemon.
+        reloadTriggers = [ "%h/.config/kanata/kanata.kbd" ];
       };
       Install = {
         WantedBy = [ "graphical-session.target" ];
