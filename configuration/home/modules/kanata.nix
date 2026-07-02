@@ -34,11 +34,13 @@ let
   };
 
   kanataConfig = ''
-    ;; hjkl mouse-emulation layer toggled by Super+C.
+    ;; hjkl mouse-emulation layer.
     ;;
-    ;; Toggle chord: tap C while Super is held. Tapping C alone still types a c.
-    ;; Toggling fires a desktop notification listing the active keybinds as a
-    ;; reminder.
+    ;; Entry: Super+C (chord). Tapping C alone still types a c.
+    ;; Exit:  Super+Esc (chord). Fires from any layer; lands in default.
+    ;;        Esc alone stays passthrough so vim/other apps keep working.
+    ;; Each transition fires a desktop notification listing the active
+    ;; keybinds as a reminder.
     ;;
     ;; Mouse layer keys:
     ;;   h / j / k / l  - cursor movement (accelerates while held)
@@ -59,7 +61,7 @@ let
 
     (defsrc
       grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-      tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+      tab  q    w    e    r    t    y    u    i    o    p    [    ]    \    esc
       caps a    s    d    f    g    h    j    k    l    ;    '    ret
       lsft z    x    c    v    b    n    m    ,    .    /    rsft
       lctl lmet lalt           spc            ralt rmet rctl
@@ -75,38 +77,41 @@ let
       mwd (mwheel-down 30 1)
     )
 
-    ;; Toggle aliases: switch layer and post a desktop notification.
-    ;; fork with lmet as the right-trigger means tog-c only fires when Super is
-    ;; held while c is tapped; pressing c alone still types a c.
+    ;; Layer transitions: enter or exit mouse mode + post a notification.
+    ;; Calling mse-on while already on mouse is a no-op (layer-switch to
+    ;; current layer). Calling mse-off from default is also a no-op, so the
+    ;; Super+Esc exit is safe to fire from anywhere.
     (defalias
       mse-on (multi
         (layer-switch mouse)
-        (cmd notify-send "Kanata: mouse layer ON" "h/j/k/l move  |  space L-click  |  f R-click  |  d M-click  |  u/i scroll  |  Super+C to exit" -t 2500 -u normal))
+        (cmd notify-send "Kanata: mouse layer ON" "h/j/k/l move  |  space L-click  |  f R-click  |  d M-click  |  u/i scroll  |  Super+C enter  |  Super+Esc exit" -t 2500 -u normal))
       mse-off (multi
         (layer-switch default)
         (cmd notify-send "Kanata: mouse layer OFF" -t 1500 -u low))
-      tog-mse (switch
-        ((base-layer mouse)) @mse-off break
-        ()                  @mse-on  break)
-      tog-c (fork c @tog-mse (lmet))
-    )
+      ;; Super+C: enter mouse mode. fork with lmet as trigger so plain C still
+      ;; types a c.
+      tog-c (fork c @mse-on (lmet))
+      ;; Super+Esc: exit to default from any layer. fork with lmet as trigger
+      ;; so plain Esc still emits Escape.
+      esc-exit (fork esc @mse-off (lmet)))
 
-    ;; Default layer: only c is remapped (to the Super+C toggle).
+    ;; Default layer: c and esc are remapped (to the Super+ chords).
+    ;; lmet position stays as the literal lmet action so the forks detect it.
     (deflayer default
       grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-      tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+      tab  q    w    e    r    t    y    u    i    o    p    [    ]    \    esc
       caps a    s    d    f    g    h    j    k    l    ;    '    ret
       lsft z    x    @tog-c v    b    n    m    ,    .    /    rsft
       lctl lmet lalt           spc            ralt rmet rctl
     )
 
     ;; Mouse layer: hjkl = move, space/f/d = buttons, u/i = scroll.
-    ;; lmet and c stay transparent so Super+C still toggles off; the other
-    ;; modifiers (lctl, lalt, ralt, rmet, rctl) are transparent too so they
-    ;; can compose with hjkl for Ctrl/Alt chords in the future.
+    ;; esc = Super+Esc exit fork. lmet/c/lctl/lalt/ralt/rmet/rctl are
+    ;; transparent so the default-layer forks still see their triggers and
+    ;; normal modifier chords keep working.
     (deflayer mouse
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-      XX   XX   XX   XX   XX   XX   XX   @mwu XX   @mwd XX   XX   XX   XX
+      XX   XX   XX   XX   XX   XX   XX   @mwu XX   @mwd XX   XX   XX   XX   @esc-exit
       XX   XX   XX   mmid mrgt XX   @mml @mmd @mmu @mmr XX   XX   XX
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
       XX   _    _              mlft            _    _    _
