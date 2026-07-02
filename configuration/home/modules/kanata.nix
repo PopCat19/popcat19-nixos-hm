@@ -173,15 +173,24 @@ in
         ExecReload = "${pkgs.coreutils}/bin/kill -TERM $MAINPID";
         Restart = "always";
         RestartSec = "5s";
-        # When the kbd file changes (after rebuild, even if the service
-        # definition is unchanged), trigger a reload -> TERM -> restart.
-        # XDG_RUNTIME_DIR and DBUS_SESSION_BUS_ADDRESS are inherited from
-        # the user session so notify-send reaches the notification daemon.
-        reloadTriggers = [ "%h/.config/kanata/kanata.kbd" ];
+        # XDG_RUNTIME_DIR and DBUS_SESSION_BUS_ADDRESS are inherited from the
+        # user session so notify-send reaches the notification daemon.
       };
       Install = {
         WantedBy = [ "graphical-session.target" ];
       };
     };
+
+    # Ensure the kanata service restarts after every home-manager activation
+    # so config changes from rebuilds always take effect. The reloadTriggers=
+    # property on the service didn't wire up a path unit when tested, and
+    # the systemd.user.paths schema is fiddly. entryAfter writeBoundary runs
+    # this script after files (including the kbd symlink) have been written.
+    # Cheap (a few seconds for kanata to start) and unambiguous.
+    home.activation.kanataRestart = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if [ -L "$HOME/.config/kanata/kanata.kbd" ]; then
+        systemctl --user restart kanata.service 2>/dev/null || true
+      fi
+    '';
   };
 }
