@@ -104,7 +104,7 @@ let
                   (multi
                     (layer-while-held mouse)
                     (release-key lmet)
-                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  i scroll-up  |  o scroll-down  |  z boost 2x  |  [ ] pgup/pgdn  |  , . home/end  |  hold Super+C" -t 5000 -u normal))
+                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  i scroll-up  |  o scroll-down  |  z boost 2x  |  [ ] pgup/pgdn  |  , . home/end  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
                   (lmet)))
 
     ;; Default layer uses deflayermap (input->action pairs) instead of
@@ -126,6 +126,9 @@ let
     ;;   z        - movemouse-speed 200 -- hjkl 2x boost (left pinky, below a)
     ;;   [ ]      - pgup / pgdn (right index, top row)
     ;;   , .      - home / end (right ring, bottom row)
+    ;;   - =      - volume down / up (right index, top row)
+    ;;   0        - mute toggle (right pinky, top row)
+    ;;   7 8 9    - media prev / play-pause / next (right pinky/ring, top row)
     ;;
     ;; Release of Super+C exits mouse mode automatically (layer-while-held).
     ;; x/esc removed; they were redundant exits with hold-based mode.
@@ -161,6 +164,12 @@ let
       ]    pgdn
       ,    home
       .    end
+      -    vold
+      =    volu
+      0    mute
+      7    prev
+      8    pp
+      9    next
       ___  XX
     )
   '';
