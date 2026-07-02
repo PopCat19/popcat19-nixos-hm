@@ -78,8 +78,8 @@ let
       mmd (movemouse-accel-down  ${mouseAccel.interval} ${mouseAccel.accelTime} ${mouseAccel.minDist} ${mouseAccel.maxDist})
       mml (movemouse-accel-left  ${mouseAccel.interval} ${mouseAccel.accelTime} ${mouseAccel.minDist} ${mouseAccel.maxDist})
       mmr (movemouse-accel-right ${mouseAccel.interval} ${mouseAccel.accelTime} ${mouseAccel.minDist} ${mouseAccel.maxDist})
-      mwu (mwheel-up   30 1)
-      mwd (mwheel-down 30 1)
+      mwu (mwheel-up   50 120)
+      mwd (mwheel-down 50 120)
     )
 
     ;; Layer transitions: enter or exit mouse mode + post a notification.
@@ -108,14 +108,18 @@ let
     )
 
     ;; Mouse layer: hjkl = move, space/f/d = buttons, u/i = scroll.
-    ;; x and esc directly exit to default (ergonomic, under the home row).
+    ;; x and esc exit to default. Esc uses @mse-off (multi with notification),
+    ;; x uses a direct layer-switch because multi(layer-switch, cmd) has
+    ;; documented ordering bugs that swallow the layer change in some paths
+    ;; (cmd may fire after the keypress completes, leaving the layer switch
+    ;; no-op). No exit notification on x as a result.
     ;; lmet/lctl/lalt/ralt/rmet/rctl are transparent so normal modifier
     ;; chords keep working and Super+C fork on the default layer still fires.
     (deflayer mouse
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-      XX   XX   XX   XX   XX   XX   XX   @mwu @mwd _    XX   XX   XX   XX   (layer-switch default)
+      XX   XX   XX   XX   XX   XX   XX   @mwu @mwd _    XX   XX   XX   XX   @mse-off
       XX   XX   XX   mmid mrgt XX   @mml @mmd @mmu @mmr XX   XX   XX
-      XX   XX   @mse-off XX   XX   XX   XX   XX   XX   XX   XX   XX
+      XX   XX   (layer-switch default) XX   XX   XX   XX   XX   XX   XX   XX   XX
       XX   _    _              mlft            _    _    _
     )
   '';
