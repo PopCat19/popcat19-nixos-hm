@@ -80,7 +80,7 @@ let
     ;; Higher multiplier = steeper slope on the same 300 ms ramp.
     ;; Scroll: z boost via switch with (input real z) — mwheel doesn't honor
     ;; movemouse-speed, so a switch on (input real z) selects the dedicated
-    ;; fast aliases (240 vs 120 per 50 ms = exactly 2x).
+    ;; fast aliases (480 vs 120 per 50 ms = exactly 4x).
     ;; Scroll boost timing: the (input real z) check fires once at i/o press
     ;; time. z must be held WHEN i/o is pressed for fast scroll. Pressing z
     ;; mid-scroll does not re-evaluate the switch — kanata binds the resolved
@@ -94,8 +94,8 @@ let
       mmr      (movemouse-accel-right 8 300 3 10)
       mwu      (mwheel-up   50 120)
       mwd      (mwheel-down 50 120)
-      mwu-fast (mwheel-up   50 240)
-      mwd-fast (mwheel-down 50 240)
+      mwu-fast (mwheel-up   50 480)
+      mwd-fast (mwheel-down 50 480)
     )
 
     ;; Super+C: hold to activate mouse layer (no toggle).
@@ -116,7 +116,7 @@ let
                   (multi
                     (layer-while-held mouse)
                     (release-key lmet)
-                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  m/n back/fwd  |  i scroll-up  |  o scroll-down  |  z boost 3x (move) / 2x (scroll)  |  [ ] pgup/pgdn  |  , . home/end  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
+                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  m/n back/fwd  |  i scroll-up  |  o scroll-down  |  z boost 3x (move) / 4x (scroll)  |  [ ] pgup/pgdn  |  , . home/end  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
                   (lmet)))
 
     ;; Default layer uses deflayermap (input->action pairs) instead of
