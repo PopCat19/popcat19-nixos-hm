@@ -88,6 +88,12 @@ in
     #    not include systemctl or stat, so reference them by absolute path.
     # A failure to restart is logged but never fatal — the service will
     # pick up the new kbd symlink on its next start.
+    #
+    # On success, fire a desktop notification via notify-send so the user
+    # gets visible confirmation that the reload actually fired (without it,
+    # the only signal is a journal entry, which is easy to miss during a
+    # rebuild). notify-send failures are swallowed (`|| true`) so a broken
+    # notification daemon does not abort the activation.
     home.activation.kanataRestart = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ -L "$HOME/.config/kanata/kanata.kbd" ]; then
         uid="$(${pkgs.coreutils}/bin/stat -c %u "$HOME")"
@@ -98,9 +104,12 @@ in
 
         if [ -S "$runtime_dir/bus" ] && ${pkgs.systemd}/bin/systemctl --user status >/dev/null 2>&1; then
           echo "kanata: restarting user service..."
-          ${pkgs.systemd}/bin/systemctl --user try-restart kanata.service \
-            || echo "kanata: restart failed (will pick up on next start)"
-          echo "kanata: restart complete"
+          if ${pkgs.systemd}/bin/systemctl --user try-restart kanata.service; then
+            ${lib.getExe pkgs.libnotify} "kanata" "reloaded after rebuild" -t 2000 -u low || true
+            echo "kanata: restart complete"
+          else
+            echo "kanata: restart failed (will pick up on next start)"
+          fi
         else
           echo "kanata: user systemd session not reachable (uid=$uid); skipping restart"
         fi
