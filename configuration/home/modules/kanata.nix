@@ -231,15 +231,24 @@ in
     # property on the service didn't wire up a path unit when tested, and
     # the systemd.user.paths schema is fiddly. entryAfter writeBoundary runs
     # this script after files (including the kbd symlink) have been written.
-    # Home-manager activation invoked via sudo nixos-rebuild switch already
-    # runs in the user's session (via runuser), so systemctl --user reaches
-    # the right systemd instance. Errors are surfaced to the activation log
-    # instead of swallowed.
+    #
+    # When invoked via sudo nixos-rebuild switch (or nh os switch), the
+    # home-manager activation runs as the user but the user systemd session
+    # may not be reachable from this context (no $XDG_RUNTIME_DIR or the
+    # bus socket isn't mounted). Detect that case and skip the restart
+    # rather than failing the whole activation. A failure to restart is
+    # logged but never fatal — the service will pick up the new kbd symlink
+    # on its next start.
     home.activation.kanataRestart = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ -L "$HOME/.config/kanata/kanata.kbd" ]; then
-        echo "kanata: restarting user service..."
-        systemctl --user restart kanata.service
-        echo "kanata: restart complete"
+        if [ -n "$XDG_RUNTIME_DIR" ] && systemctl --user status >/dev/null 2>&1; then
+          echo "kanata: restarting user service..."
+          systemctl --user try-restart kanata.service \
+            || echo "kanata: restart failed (will pick up on next start)"
+          echo "kanata: restart complete"
+        else
+          echo "kanata: user systemd session not reachable; skipping restart"
+        fi
       fi
     '';
   };
