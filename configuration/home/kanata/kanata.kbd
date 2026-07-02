@@ -42,15 +42,16 @@
   lctl lmet lalt           spc            ralt rmet rctl
 )
 
-;; Mouse movement: pronounced acceleration.
-;; Interval 8 ms (125 Hz). Min 3 px/tick -> Max 10 px/tick over 300 ms.
-;; - Tap (single tick): 3 px = 375 px/s, fine for delicate positioning.
-;; - Hold 300 ms+: 10 px/tick = 1250 px/s for general movement.
-;; The 3->10 range is intentionally wide so the accel is actually
-;; perceptible; previous 3->5 (+2 px/tick over 300 ms) felt flat.
+;; Mouse movement: elongated acceleration for finer nudges.
+;; Interval 8 ms (125 Hz). Min 1 px/tick -> Max 10 px/tick over 500 ms.
+;; - Tap (single tick): 1 px = 125 px/s, sub-pixel nudge precision.
+;; - Hold 500 ms+: 10 px/tick = 1250 px/s for general movement.
+;; The 1->10 range over 500 ms makes single-tick nudges much finer
+;; (was 3 px = 375 px/s over 300 ms). Long ramp gives time at slow
+;; speed before speeding up; the user controls commitment by hold
+;; duration. Boost unchanged (3x multiplier scales whole curve).
 ;; Boost: z position bound to (movemouse-speed 300) scales the accel
-;; range 3x while held: 9 -> 30 px/tick over 300 ms (1125 -> 3750 px/s).
-;; Higher multiplier = steeper slope on the same 300 ms ramp.
+;; range 3x while held: 3 -> 30 px/tick over 500 ms (375 -> 3750 px/s).
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
 ;; initial 10 -> max 800, acceleration_multiplier 1.04 (each tick
 ;; multiplies velocity by 1.04 -> gentle exponential; takes ~88 ticks
@@ -58,10 +59,10 @@
 ;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
 (defalias
-  mmu      (movemouse-accel-up    8 300 3 10)
-  mmd      (movemouse-accel-down  8 300 3 10)
-  mml      (movemouse-accel-left  8 300 3 10)
-  mmr      (movemouse-accel-right 8 300 3 10)
+  mmu      (movemouse-accel-up    8 500 1 10)
+  mmd      (movemouse-accel-down  8 500 1 10)
+  mml      (movemouse-accel-left  8 500 1 10)
+  mmr      (movemouse-accel-right 8 500 1 10)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
