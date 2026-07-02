@@ -44,6 +44,7 @@ in
     ../system/modules/syncthing.nix
     ../system/modules/dconf.nix
     ../system/modules/openrgb.nix
+    ../system/modules/kanata.nix
     ../system/modules/stylix-lightdm.nix
     ../system/modules/agents.nix
     ../system/modules/forgecode.nix

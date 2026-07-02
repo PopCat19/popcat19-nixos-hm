@@ -19,6 +19,7 @@
 - `hardware.nix`: Configure hardware support for Bluetooth and I2C
 - `hyprland.nix`: Configure Hyprland Wayland compositor with UWSM integration
 - `networking.nix`: Manage firewall, IP forwarding, and NetworkManager configuration
+- `kanata.nix`: Provide /dev/uinput access for the kanata home-manager service
 - `nh.nix`: Configure nh (nix-community/nh) CLI helper with env vars and GC timer
 - `openrgb.nix`: Enable OpenRGB service for RGB lighting control
 - `power-management.nix`: Provide basic power management for desktop systems

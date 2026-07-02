@@ -28,4 +28,8 @@ in
       "hyprctl dispatch moveworkspacetomonitor 10 HEADLESS-SUNSHINE"
     ];
   };
+
+  # Toggle Super+C for hjkl mouse emulation. Requires services.kanataUdev.enable
+  # in configuration.nix so /dev/uinput is accessible to the user service.
+  programs.kanata.enable = true;
 }
