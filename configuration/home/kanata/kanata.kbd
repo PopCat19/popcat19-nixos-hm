@@ -50,11 +50,11 @@
 ;; (was 3 px = 375 px/s over 300 ms). Long ramp gives time at slow
 ;; speed before speeding up; the user controls commitment by hold
 ;; duration.
-;; Boost: hjkl use fork on z. When z is held, hjkl switch to constant
-;;   fast aliases (30 px/tick = 3750 px/s) instead of accel. No ramp,
-;;   no slow start -- "press z to go across area" feels immediate.
-;;   The fork's decision is made at hjkl press time, so hold z BEFORE
-;;   pressing h/j/k/l. (Same press-time constraint as scroll boost.)
+;; Boost: z bound to (movemouse-speed 300) scales the accel range 3x
+;; while held AND persists after release until the mouse layer exits.
+;; Boosted curve: 3 -> 30 px/tick over 500 ms (375 -> 3750 px/s).
+;; Trade-off: ramped start still applies under boost (no instant
+;; constant-speed boost); user can wait for ramp or accept slower start.
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
 ;; initial 10 -> max 800, acceleration_multiplier 1.04 (each tick
 ;; multiplies velocity by 1.04 -> gentle exponential; takes ~88 ticks
@@ -66,10 +66,6 @@
   mmd      (movemouse-accel-down  8 500 1 10)
   mml      (movemouse-accel-left  8 500 1 10)
   mmr      (movemouse-accel-right 8 500 1 10)
-  mmu-fast (movemouse-up    8 30)
-  mmd-fast (movemouse-down  8 30)
-  mml-fast (movemouse-left  8 30)
-  mmr-fast (movemouse-right 8 30)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
@@ -92,7 +88,7 @@
               (multi
                 (layer-while-held mouse)
                 (release-key lmet)
-                (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  n/m back/fwd  |  i scroll-down  |  o scroll-up  |  z move-boost (constant 30 px/tick)  |  [ ] home/end  |  , . pgup/pgdn  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
+                (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  n/m back/fwd  |  i scroll-down  |  o scroll-up  |  z move-boost 3x  |  [ ] home/end  |  , . pgup/pgdn  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
               (lmet)))
 
 ;; Default layer uses deflayermap (input->action pairs) instead of
@@ -111,7 +107,7 @@
 ;;   s        - mmid (middle click)
 ;;   n m      - mouse back / forward
 ;;   i o      - scroll down / up (exponential mwheel-accel, see defalias)
-;;   z        - hold while h/j/k/l for constant-fast movement (30 px/tick)
+;;   z        - movemouse-speed 300 -- hjkl 3x boost (left pinky, below a)
 ;;   [ ]      - home / end
 ;;   , .      - pgup / pgdn
 ;;   - =      - volume down / up
@@ -119,12 +115,6 @@
 ;;   7 8 9    - media prev / play-pause / next
 ;;
 ;; Release of Super+C exits mouse mode automatically (layer-while-held).
-;;
-;; hjkl fork on z: when z is held at hjkl press time, hjkl use the
-;; fast constant-speed aliases (30 px/tick) instead of the accel ramp.
-;; z itself is unmapped in this layer (caught by ___ XX) -- the fork
-;; watches z's held state, z doesn't need its own action. To boost,
-;; hold z THEN press h/j/k/l.
 ;;
 ;; Why no scroll-boost key: mwheel-accel's slow-start ramp (initial=10)
 ;; already covers precision scrolling, and ramps to fast (max=800) for
@@ -139,13 +129,10 @@
 ;; Force-exit (lctl+spc+esc) still works: it is handled before any
 ;; layer/kanata remapping.
 (deflayermap (mouse)
-  ;; right_triggers is (nop0) because z is mapped to nop0 below.
-  ;; nop0 produces NormalKey(KEY_676) in layout.states; fork checks against
-  ;; the keycode produced by the trigger key, not the trigger key's name.
-  h    (fork @mml @mml-fast (nop0))
-  j    (fork @mmd @mmd-fast (nop0))
-  k    (fork @mmu @mmu-fast (nop0))
-  l    (fork @mmr @mmr-fast (nop0))
+  h    @mml
+  j    @mmd
+  k    @mmu
+  l    @mmr
   spc  mlft
   u    mrgt
   s    mmid
@@ -153,13 +140,7 @@
   m    mfwd
   i    @mwd
   o    @mwu
-  ;; z -> nop0: nop0 is a no-op output (kanata filters KEY_676) but still
-  ;; produces a NormalKey state with keycode KEY_676. Fork watches (z) so it
-  ;; detects the held state. If z were mapped to XX (via ___ XX or explicit),
-  ;; NoOp adds NOTHING to layout.states and fork can't see it -- the boost
-  ;; silently degrades to the accel default. nop0 is the cheapest way to make
-  ;; z trackable without typing a visible character.
-  z    nop0
+  z    (movemouse-speed 300)
   [    home
   ]    end
   ,    pgup
