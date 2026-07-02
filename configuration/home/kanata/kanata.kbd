@@ -242,5 +242,17 @@
   b    (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
   esc  (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
 
-  ___  XX
+  ;; Transparent fallback: any unmapped key outputs its defsrc value,
+  ;; so q w e r t y a d f g etc. type normally while in mouse-pass.
+  ;; Makes the layer usable for browser workflows: move the mouse
+  ;; with hjkl AND keep typing in the address bar / search box /
+  ;; quick-find without leaving the layer.
+  ;;
+  ;; ___ is the input wildcard ("all unmapped keys in this layer"),
+  ;; use-defsrc is the action ("output the corresponding defsrc key").
+  ;; These are distinct concepts; ___ XX would mean "block all
+  ;; unmapped keys" (the previous behavior). The mouse layer keeps
+  ;; ___ XX so it stays fully isolated -- different design intent
+  ;; (no leaks during quick mouse-mode flashes).
+  ___  use-defsrc
 )
