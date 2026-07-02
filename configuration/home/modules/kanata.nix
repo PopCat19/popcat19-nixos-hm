@@ -104,7 +104,7 @@ let
                   (multi
                     (layer-while-held mouse)
                     (release-key lmet)
-                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  y M-click  |  i scroll-up  |  o scroll-down  |  ; boost 2x  |  hold Super+C" -t 5000 -u normal))
+                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  i scroll-up  |  o scroll-down  |  z boost 2x  |  hold Super+C" -t 5000 -u normal))
                   (lmet)))
 
     ;; Default layer uses deflayermap (input->action pairs) instead of
@@ -120,15 +120,15 @@ let
     ;;   h j k l  - movement (right hand home row)
     ;;   spc      - mlft (hold to drag) -- left thumb
     ;;   u        - mrgt (right click)
-    ;;   y        - mmid (middle click)
-    ;;   i        - mwheel-up; ; held = 2x boost (right index)
-    ;;   o        - mwheel-down; ; held = 2x boost (right ring)
-    ;;   ;        - movemouse-speed 200 -- hjkl 2x boost (right pinky)
+    ;;   s        - mmid (middle click)
+    ;;   i        - mwheel-up; z held = 2x boost (right index)
+    ;;   o        - mwheel-down; z held = 2x boost (right ring)
+    ;;   z        - movemouse-speed 200 -- hjkl 2x boost (left pinky, below a)
     ;;
     ;; Release of Super+C exits mouse mode automatically (layer-while-held).
     ;; x/esc removed; they were redundant exits with hold-based mode.
     ;;
-    ;; i/o scroll boost uses (input real ;) via switch, because the ;
+    ;; i/o scroll boost uses (input real z) via switch, because the z
     ;; OUTPUT (movemouse-speed) isn't 'active' as a key output — fork's
     ;; (lsft-style) trigger check would miss it.
     ;;
@@ -147,14 +147,14 @@ let
       l    @mmr
       spc  mlft
       u    mrgt
-      y    mmid
+      s    mmid
       i    (switch
-             ((input real ;)) @mwu-fast break
+             ((input real z)) @mwu-fast break
              ()                  @mwu     break)
       o    (switch
-             ((input real ;)) @mwd-fast break
+             ((input real z)) @mwd-fast break
              ()                  @mwd     break)
-      ;    (movemouse-speed 200)
+      z    (movemouse-speed 200)
       ___  XX
     )
   '';
