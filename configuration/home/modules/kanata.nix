@@ -82,75 +82,61 @@ let
       mwd-fast (mwheel-down 50 240)
     )
 
-    ;; Layer transitions: enter or exit mouse mode + post a notification.
-    ;; Calling mse-on while already on mouse is a no-op (layer-switch to
-    ;; current layer). Calling mse-off from default is also a no-op, so the
-    ;; plain-Esc exit on the mouse layer is safe to fire from anywhere.
+    ;; Super+C: hold to activate mouse layer (no toggle).
+    ;; fork with lmet as trigger so plain C still types c.
+    ;; (layer-while-held mouse) activates mouse mode only while c is held;
+    ;; release exits automatically.
+    ;; (multi ...) also fires the ON notification on activation.
     (defalias
-      mse-on (multi
-        (layer-switch mouse)
-        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  g M-click  |  u scroll-up  |  d scroll-down  |  x or Esc exit" -t 5000 -u normal))
-      ;; mse-off retained for Super+C re-entry from mouse layer (the fork
-      ;; on default layer's c position falls through to default's @tog-c
-      ;; when pressed from mouse mode, which fires mse-on; mse-off unused
-      ;; at the moment).
-      mse-off (multi
-        (layer-switch default)
-        (cmd notify-send "Kanata: mouse OFF" "Super+C to re-enter" -t 5000 -u low))
-      ;; Super+C: enter mouse mode. fork with lmet as trigger so plain C still
-      ;; types a c.
-      tog-c (fork c @mse-on (lmet)))
+      tog-c (fork c
+                  (multi
+                    (layer-while-held mouse)
+                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  y M-click  |  i scroll-up  |  o scroll-down  |  ; boost 2x  |  hold Super+C" -t 5000 -u normal))
+                  (lmet)))
 
     ;; Default layer uses deflayermap (input->action pairs) instead of
     ;; positional deflayer columns. Only the c position is overridden;
     ;; all other keys implicitly use their defsrc value (the literal key).
-    ;; c is bound to a fork so plain C still types c, but Super+C triggers
-    ;; mse-on (the mouse layer's entry).
+    ;; c is bound to a fork so plain C still types c, but Super+C holds
+    ;; the mouse layer while both are pressed.
     (deflayermap (default)
-      c @tog-c
+      c (fork c
+              (multi
+                (layer-while-held mouse)
+                (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  y M-click  |  i scroll-up  |  o scroll-down  |  ; boost 2x  |  hold Super+C" -t 5000 -u normal))
+              (lmet))
     )
 
-    ;; Mouse layer overrides:
-    ;;   h j k l  - movemouse-accel-{left,down,up,right}
-    ;;   spc      - mlft (hold to drag)
-    ;;   f        - mrgt
-    ;;   g        - mmid
-    ;;   u        - mwheel-up  (50ms/120 units per activation)
-    ;;   d        - mwheel-down
-    ;;   x        - (layer-switch default) -- exit
-    ;;   esc      - (layer-switch default) -- exit
+    ;; Mouse layer: right-handable while Super+C is held (left hand).
+    ;;   h j k l  - movement (right hand home row)
+    ;;   spc      - mlft (hold to drag) -- left thumb
+    ;;   u        - mrgt (right click)
+    ;;   y        - mmid (middle click)
+    ;;   i        - mwheel-up; ; held = 2x boost (right index)
+    ;;   o        - mwheel-down; ; held = 2x boost (right ring)
+    ;;   ;        - movemouse-speed 200 -- hjkl 2x boost (right pinky)
     ;;
-    ;; x and esc use direct layer-switch (not the mse-off multi) because
-    ;; multi(layer-switch, cmd) has documented ordering bugs that swallow
-    ;; the layer change. Trade-off: no OFF notification on exit.
+    ;; Release of Super+C exits mouse mode automatically (layer-while-held).
+    ;; x/esc removed; they were redundant exits with hold-based mode.
     ;;
-    ;; All other keys (including c, which falls through to default's
-    ;; @tog-c, so Super+C from mouse layer still works) implicitly use
-    ;; their defsrc value via the _ wildcard (matches unmapped keys).
+    ;; i/o scroll boost uses (input real ;) via switch, because the ;
+    ;; OUTPUT (movemouse-speed) isn't 'active' as a key output — fork's
+    ;; (lsft-style) trigger check would miss it.
     (deflayermap (mouse)
       h    @mml
       j    @mmd
       k    @mmu
       l    @mmr
       spc  mlft
-      f    mrgt
-      g    mmid
-      ;; u/d scroll: switch checks the physical lsft input, not the
-      ;; output. fork with (lsft) trigger wouldn't work here because
-      ;; lsft is mapped to (movemouse-speed 200) below, so the lsft
-      ;; OUTPUT is never active — fork's check would always fail.
-      ;; (input real lsft) reads the physical key state directly.
-      u    (switch
-             ((input real lsft)) @mwu-fast break
+      u    mrgt
+      y    mmid
+      i    (switch
+             ((input real ;)) @mwu-fast break
              ()                  @mwu     break)
-      d    (switch
-             ((input real lsft)) @mwd-fast break
+      o    (switch
+             ((input real ;)) @mwd-fast break
              ()                  @mwd     break)
-      x    (layer-switch default)
-      esc  (layer-switch default)
-      ;; lsft position: (movemouse-speed 200) boosts hjkl 2x while held.
-      ;; This doesn't affect mwheel, hence the switch above for u/d.
-      lsft (movemouse-speed 200)
+      ;    (movemouse-speed 200)
     )
   '';
 
