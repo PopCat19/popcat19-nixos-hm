@@ -101,13 +101,15 @@ let
     )
 
     ;; Mouse layer: hjkl = move, space/f/d = buttons, u/i = scroll.
-    ;; lmet and c stay transparent so Super+C still toggles off.
+    ;; lmet and c stay transparent so Super+C still toggles off; the other
+    ;; modifiers (lctl, lalt, ralt, rmet, rctl) are transparent too so they
+    ;; can compose with hjkl for Ctrl/Alt chords in the future.
     (deflayer mouse
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
       XX   XX   XX   XX   XX   XX   XX   @mwu XX   @mwd XX   XX   XX   XX
       XX   XX   XX   mmid mrgt XX   @mml @mmd @mmu @mmr XX   XX   XX
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-      XX   XX   _              mlft            _    _    _
+      XX   _    _              mlft            _    _    _
     )
   '';
 
