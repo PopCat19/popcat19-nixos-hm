@@ -41,8 +41,8 @@ let
     ;;   m / n          - mouse back / forward
     ;;   i / o          - scroll up / down
     ;;   z              - 3x boost (movement); 2x for scroll when held at i/o press
-    ;;   [ ]            - page up / page down
-    ;;   , .            - home / end
+    ;;   [ ]            - home / end
+    ;;   , .            - page up / page down
     ;;   - =            - volume down / up
     ;;   0              - mute toggle
     ;;   7 8 9          - media prev / play-pause / next
@@ -116,7 +116,7 @@ let
                   (multi
                     (layer-while-held mouse)
                     (release-key lmet)
-                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  m/n back/fwd  |  i scroll-up  |  o scroll-down  |  z boost 3x (move) / 4x (scroll)  |  [ ] pgup/pgdn  |  , . home/end  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
+                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  n/m back/fwd  |  i scroll-up  |  o scroll-down  |  z boost 3x (move) / 4x (scroll)  |  [ ] home/end  |  , . pgup/pgdn  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
                   (lmet)))
 
     ;; Default layer uses deflayermap (input->action pairs) instead of
@@ -165,8 +165,8 @@ let
       spc  mlft
       u    mrgt
       s    mmid
-      m    mbck
-      n    mfwd
+      n    mbck
+      m    mfwd
       i    (switch
              ((input real z)) @mwu-fast break
              ()                  @mwu     break)
@@ -174,10 +174,10 @@ let
              ((input real z)) @mwd-fast break
              ()                  @mwd     break)
       z    (movemouse-speed 300)
-      [    pgup
-      ]    pgdn
-      ,    home
-      .    end
+      [    home
+      ]    end
+      ,    pgup
+      .    pgdn
       -    vold
       =    volu
       0    mute
