@@ -76,31 +76,33 @@ in
     # the systemd.user.paths schema is fiddly. entryAfter writeBoundary runs
     # this script after files (including the kbd symlink) have been written.
     #
-    # When invoked via sudo nixos-rebuild switch (or nh os switch), the
-    # home-manager activation runs as the user but the user systemd session
-    # may not be reachable from this context. XDG_RUNTIME_DIR is often
-    # unset in the activation environment even though the user bus exists
-    # at /run/user/<uid>/bus, so reconstruct it from `id -u` before
-    # talking to systemctl. Also default DBUS_SESSION_BUS_ADDRESS to the
-    # matching socket so notify-send (called by the kanata kbd via
-    # cmd-action) can reach the notification daemon after a restart.
+    # Two failure modes are handled here:
+    # 1. XDG_RUNTIME_DIR may be unset in the activation environment even
+    #    though the user bus exists at /run/user/<uid>/bus. Reconstruct
+    #    it from `stat -c %u "$HOME"` (the home dir's owner uid, which is
+    #    the real user uid even when sudo runs the activation as root).
+    #    Also default DBUS_SESSION_BUS_ADDRESS to the matching socket so
+    #    notify-send (called by the kanata kbd via cmd-action) can reach
+    #    the notification daemon after a restart.
+    # 2. Activation runs through `sudo` may have a stripped PATH that does
+    #    not include systemctl or stat, so reference them by absolute path.
     # A failure to restart is logged but never fatal — the service will
     # pick up the new kbd symlink on its next start.
     home.activation.kanataRestart = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ -L "$HOME/.config/kanata/kanata.kbd" ]; then
-        uid="$(id -u)"
+        uid="$(${pkgs.coreutils}/bin/stat -c %u "$HOME")"
         runtime_dir="''${XDG_RUNTIME_DIR:-/run/user/$uid}"
 
         export XDG_RUNTIME_DIR="$runtime_dir"
         export DBUS_SESSION_BUS_ADDRESS="''${DBUS_SESSION_BUS_ADDRESS:-unix:path=$runtime_dir/bus}"
 
-        if [ -S "$runtime_dir/bus" ] && systemctl --user status >/dev/null 2>&1; then
+        if [ -S "$runtime_dir/bus" ] && ${pkgs.systemd}/bin/systemctl --user status >/dev/null 2>&1; then
           echo "kanata: restarting user service..."
-          systemctl --user try-restart kanata.service \
+          ${pkgs.systemd}/bin/systemctl --user try-restart kanata.service \
             || echo "kanata: restart failed (will pick up on next start)"
           echo "kanata: restart complete"
         else
-          echo "kanata: user systemd session not reachable; skipping restart"
+          echo "kanata: user systemd session not reachable (uid=$uid); skipping restart"
         fi
       fi
     '';

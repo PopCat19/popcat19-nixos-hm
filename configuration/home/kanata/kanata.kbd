@@ -35,7 +35,7 @@
 )
 
 (defsrc
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc nlck
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \    esc
   caps a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
@@ -91,40 +91,30 @@
                 (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  n/m back/fwd  |  i scroll-down  |  o scroll-up  |  z move-boost 3x  |  [ ] end/home  |  , . pgdn/pgup  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
               (lmet))
 
-  ;; Super+B: toggle mouse mode with modifier passthrough.
-  ;; fork with lmet as trigger so plain B still types b. Toggling means
-  ;; re-pressing Super+B (or pressing b / Esc on the layer) exits the
-  ;; mode without needing to keep holding anything.
-  ;; Unlike tog-c, this does NOT (release-key lmet): the whole point is
-  ;; to let lmet through so Super+spc works as Super+left-click for
-  ;; Hyprland bindm drag, and Super+right-click can resize. Trade-off:
-  ;; Hyprland sees Super held while you're using the mouse, so any
-  ;; Super+key combos that fire on tap will fire as usual. Already-held
-  ;; keys are unaffected: kanata only emits the modifier pass-through
-  ;; when the physical key is held on the mouse-pass layer.
-  ;; (cmd notify-send) fires the ON notification on entry.
+  ;; Super+B: switch to mouse-pass (persists until explicit exit).
+  ;; Uses layer-switch (not layer-toggle) so the layer change is
+  ;; unconditional and not tied to the b key's hold/release lifecycle.
+  ;; plain B still types b.
   tog-b (fork b
               (multi
-                (layer-toggle mouse-pass)
+                (layer-switch mouse-pass)
                 (cmd notify-send "Kanata: mouse passthrough ON" "h/j/k/l move  |  spc L-click/drag  |  u R-click  |  s M-click  |  i/o scroll  |  Ctrl/Shift/Alt/Super pass through  |  b or Esc exits" -t 5000 -u normal))
               (lmet))
-
-  ;; Exit action for the toggled mouse-pass layer. b and Esc on the
-  ;; mouse-pass layer both invoke this alias, which toggles back to
-  ;; default and fires an OFF notification.
-  mouse-pass-off (multi
-                   (layer-toggle mouse-pass)
-                   (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 1500 -u low))
 )
 
 ;; Default layer uses deflayermap (input->action pairs) instead of
-;; positional deflayer columns. Only the c position is overridden;
-;; all other keys implicitly use their defsrc value (the literal key).
-;; c is bound to @tog-c so plain C still types c, but Super+C holds
-;; the mouse layer (and masks Super via release-key) while both held.
+;; positional deflayer columns. Only the c and b positions are
+;; overridden; all other keys implicitly use their defsrc value (the
+;; literal key). c is bound to @tog-c so plain C still types c, but
+;; Super+C holds the mouse layer (and masks Super via release-key)
+;; while both held. b is bound to @tog-b so plain B still types b,
+;; but Super+B switches into mouse-pass until b or Esc switches back.
+;; nlck XX swallows the physical NumLock so it cannot fight Hyprland's
+;; numlock_by_default = true (which sets the software state on connect).
 (deflayermap (default)
-  c @tog-c
-  b @tog-b
+  c    @tog-c
+  b    @tog-b
+  nlck XX
 )
 
 ;; Mouse layer: right-handable while Super+C is held (left hand).
@@ -183,14 +173,18 @@
 
 ;; Toggled mouse layer with modifier passthrough.
 ;;
-;; Entry: Super+B
-;; Exit:  b or Esc (both invoke @mouse-pass-off, which toggles back)
+;; Entry: Super+B (via @tog-b, layer-switch)
+;; Exit:  b or Esc (both switch back to default directly)
 ;;
 ;; Unlike the Super+C held layer above, this layer lets modifier keys
 ;; pass through to Hyprland/apps:
 ;;   Shift+click / Ctrl+click -> GUI multi-select works.
 ;;   Super+spc -> Super+left-click, so Hyprland bindm can move windows.
 ;;   Super+right-click -> Super+right-click for resize if bound.
+;;   Plain Alt alone (or Ctrl/Shift/Super) also passes through, so you
+;;   can hold a modifier for an app-specific binding while staying in
+;;   mouse-pass. The key -> key mapping is independent of the layer's
+;;   own activation state.
 ;;
 ;; Non-mapped normal keys are still swallowed by ___ XX so random
 ;; letters do not leak while using mouse mode. The release-key in
@@ -227,9 +221,12 @@
   lmet lmet
   rmet rmet
 
-  ;; Exit passthrough mouse mode.
-  b    @mouse-pass-off
-  esc  @mouse-pass-off
+  ;; Exit passthrough mouse mode. Direct layer-switch (not toggle) so
+  ;; the action is unconditional on entry state and independent of any
+  ;; fork hold semantics. The notify-send fires the OFF notification
+  ;; in the same multi.
+  b    (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 1500 -u low))
+  esc  (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 1500 -u low))
 
   ___  XX
 )
