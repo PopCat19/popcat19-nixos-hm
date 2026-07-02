@@ -331,6 +331,8 @@ in
       serviceConfig = {
         # TUN device access: /dev/net/tun is world-rw (0666) on NixOS
         PrivateDevices = lib.mkForce false;
+        # Holds the mullvad-state file written by preStart/postStop/recover
+        StateDirectory = "sing-box";
       };
     };
 
@@ -379,7 +381,19 @@ in
           requires = [ "mullvad-daemon.service" ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig.Type = "oneshot";
+          serviceConfig.StateDirectory = "sing-box";
           script = ''
+            # mullvad-daemon is Type=simple, so After= only guarantees the
+            # process was forked, not that its management RPC socket is ready.
+            # Wait for the socket before issuing any mullvad CLI command.
+            _n=0
+            while [ ! -S /var/run/mullvad-vpn ] && [ "$_n" -lt 30 ]; do
+              ${pkgs.coreutils}/bin/sleep 0.5
+              _n=$((_n + 1))
+            done
+            # Daemon never came up: nothing to recover, don't fail the boot.
+            [ -S /var/run/mullvad-vpn ] || exit 0
+
             if [ -f /var/lib/sing-box/mullvad-state ] && \
                command -v ${pkgs.mullvad-vpn}/bin/mullvad >/dev/null && \
                ! ${config.systemd.package}/bin/systemctl is-active --quiet sing-box 2>/dev/null; then
