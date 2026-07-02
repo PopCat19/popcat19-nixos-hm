@@ -101,32 +101,45 @@ let
       ;; types a c.
       tog-c (fork c @mse-on (lmet)))
 
-    ;; Default layer: c and esc are remapped (to the Super+ chords).
-    ;; lmet position stays as the literal lmet action so the forks detect it.
-    (deflayer default
-      grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-      tab  q    w    e    r    t    y    u    i    o    p    [    ]    \    esc
-      caps a    s    d    f    g    h    j    k    l    ;    '    ret
-      lsft z    x    @tog-c v    b    n    m    ,    .    /    rsft
-      lctl lmet lalt           spc            ralt rmet rctl
+    ;; Default layer uses deflayermap (input->action pairs) instead of
+    ;; positional deflayer columns. Only the c position is overridden;
+    ;; all other keys implicitly use their defsrc value (the literal key).
+    ;; c is bound to a fork so plain C still types c, but Super+C triggers
+    ;; mse-on (the mouse layer's entry).
+    (deflayermap (default)
+      c @tog-c
     )
 
-    ;; Mouse layer: hjkl = move, spc/f/g = buttons, u/d = scroll.
-    ;; x and esc exit to default via direct (layer-switch default). Both
-    ;; bypass mse-off (multi with notify-send) because:
-    ;;   - multi has documented ordering bugs that swallow the layer switch
-    ;;     when (layer-switch) is paired with (cmd notify-send)
-    ;;   - on layer-switch, the key release is processed on the new layer,
-    ;;     which would leak an Escape to the focused app otherwise
-    ;; Trade-off: no OFF notification on exit. Entry ON notification still fires.
-    ;; lmet/lctl/lalt/ralt/rmet/rctl are transparent so normal modifier
-    ;; chords keep working and Super+C fork on the default layer still fires.
-    (deflayer mouse
-      XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-      XX   XX   XX   XX   XX   XX   XX   @mwu _    _    XX   XX   XX   XX   (layer-switch default)
-      XX   XX   XX   @mwd mrgt mmid @mml @mmd @mmu @mmr XX   XX   XX
-      XX   XX   (layer-switch default) XX   XX   XX   XX   XX   XX   XX   XX   XX
-      XX   _    _              mlft            _    _    _
+    ;; Mouse layer overrides:
+    ;;   h j k l  - movemouse-accel-{left,down,up,right}
+    ;;   spc      - mlft (hold to drag)
+    ;;   f        - mrgt
+    ;;   g        - mmid
+    ;;   u        - mwheel-up  (50ms/120 units per activation)
+    ;;   d        - mwheel-down
+    ;;   x        - (layer-switch default) -- exit
+    ;;   esc      - (layer-switch default) -- exit
+    ;;
+    ;; x and esc use direct layer-switch (not the mse-off multi) because
+    ;; multi(layer-switch, cmd) has documented ordering bugs that swallow
+    ;; the layer change. Trade-off: no OFF notification on exit.
+    ;;
+    ;; All other keys (including c, which falls through to default's
+    ;; @tog-c, so Super+C from mouse layer still works) implicitly use
+    ;; their defsrc value via the _ wildcard (matches unmapped keys).
+    (deflayermap (mouse)
+      _    _
+      h    @mml
+      j    @mmd
+      k    @mmu
+      l    @mmr
+      spc  mlft
+      f    mrgt
+      g    mmid
+      u    @mwu
+      d    @mwd
+      x    (layer-switch default)
+      esc  (layer-switch default)
     )
   '';
 
