@@ -131,6 +131,15 @@ let
     ;; i/o scroll boost uses (input real ;) via switch, because the ;
     ;; OUTPUT (movemouse-speed) isn't 'active' as a key output — fork's
     ;; (lsft-style) trigger check would miss it.
+    ;;
+    ;; ___ XX: wildcard mapping every unmapped key to no-op. Nothing
+    ;; else leaks to Hyprland during mouse mode (prevents phantom
+    ;; Super+key or plain-key multi-actions). The explicitly mapped keys
+    ;; above still work. Already-held keys (c, lmet) are unaffected —
+    ;; layer change does not re-trigger held keys, and their release is
+    ;; driven by the press-time action (layer-while-held / lmet output).
+    ;; Force-exit (lctl+spc+esc) still works: it is handled before any
+    ;; layer/kanata remapping.
     (deflayermap (mouse)
       h    @mml
       j    @mmd
@@ -146,6 +155,7 @@ let
              ((input real ;)) @mwd-fast break
              ()                  @mwd     break)
       ;    (movemouse-speed 200)
+      ___  XX
     )
   '';
 
