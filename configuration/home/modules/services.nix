@@ -12,10 +12,12 @@ _: {
     easyeffects.enable = true;
     hyprsunset = {
       enable = true;
-      settings.profile = [{
-        time = "00:00";
-        temperature = 3200;
-      }];
+      settings.profile = [
+        {
+          time = "00:00";
+          temperature = 3200;
+        }
+      ];
     };
     mpris-proxy.enable = true;
     playerctld.enable = true;
