@@ -40,7 +40,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.kanata-with-cmd ];
+    home.packages = [
+      pkgs.kanata-with-cmd
+      pkgs.libnotify
+    ];
 
     home.file.".config/kanata/kanata.kbd".source = "${kanataConfigChecked}/kanata.kbd";
 
@@ -75,14 +78,23 @@ in
     #
     # When invoked via sudo nixos-rebuild switch (or nh os switch), the
     # home-manager activation runs as the user but the user systemd session
-    # may not be reachable from this context (no $XDG_RUNTIME_DIR or the
-    # bus socket isn't mounted). Detect that case and skip the restart
-    # rather than failing the whole activation. A failure to restart is
-    # logged but never fatal — the service will pick up the new kbd symlink
-    # on its next start.
+    # may not be reachable from this context. XDG_RUNTIME_DIR is often
+    # unset in the activation environment even though the user bus exists
+    # at /run/user/<uid>/bus, so reconstruct it from `id -u` before
+    # talking to systemctl. Also default DBUS_SESSION_BUS_ADDRESS to the
+    # matching socket so notify-send (called by the kanata kbd via
+    # cmd-action) can reach the notification daemon after a restart.
+    # A failure to restart is logged but never fatal — the service will
+    # pick up the new kbd symlink on its next start.
     home.activation.kanataRestart = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ -L "$HOME/.config/kanata/kanata.kbd" ]; then
-        if [ -n "$XDG_RUNTIME_DIR" ] && systemctl --user status >/dev/null 2>&1; then
+        uid="$(id -u)"
+        runtime_dir="''${XDG_RUNTIME_DIR:-/run/user/$uid}"
+
+        export XDG_RUNTIME_DIR="$runtime_dir"
+        export DBUS_SESSION_BUS_ADDRESS="''${DBUS_SESSION_BUS_ADDRESS:-unix:path=$runtime_dir/bus}"
+
+        if [ -S "$runtime_dir/bus" ] && systemctl --user status >/dev/null 2>&1; then
           echo "kanata: restarting user service..."
           systemctl --user try-restart kanata.service \
             || echo "kanata: restart failed (will pick up on next start)"
