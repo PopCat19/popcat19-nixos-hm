@@ -89,7 +89,7 @@ let
     (defalias
       mse-on (multi
         (layer-switch mouse)
-        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  d M-click  |  u scroll-up  |  i scroll-down  |  Super+C enter  |  x or Esc exit  |  z pause 3s" -t 5000 -u normal))
+        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  g M-click  |  u scroll-up  |  d scroll-down  |  Super+C enter  |  x or Esc exit  |  z pause 3s" -t 5000 -u normal))
       ;; mse-off retained for Super+C re-entry from mouse layer (the fork
       ;; on default layer's c position falls through to default's @tog-c
       ;; when pressed from mouse mode, which fires mse-on; mse-off unused
@@ -140,8 +140,8 @@ let
     ;; chords keep working and Super+C fork on the default layer still fires.
     (deflayer mouse
       XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-      XX   XX   XX   XX   XX   XX   XX   @mwu @mwd _    XX   XX   XX   XX   (layer-switch default)
-      XX   XX   XX   mmid mrgt XX   @mml @mmd @mmu @mmr XX   XX   XX
+      XX   XX   XX   XX   XX   XX   XX   @mwu _    _    XX   XX   XX   XX   (layer-switch default)
+      XX   XX   XX   @mwd mrgt mmid @mml @mmd @mmu @mmr XX   XX   XX
       XX   @z     (layer-switch default) XX   XX   XX   XX   XX   XX   XX   XX   XX
       XX   _    _              mlft            _    _    _
     )
