@@ -63,19 +63,22 @@ let
       lctl lmet lalt           spc            ralt rmet rctl
     )
 
-    ;; Mouse movement: fixed speed (no acceleration).
-    ;; Interval 8 ms (125 Hz). Distance 6 px per tick = 750 px/s.
-    ;; LShift on the mouse layer is bound to (movemouse-speed 200), which
-    ;; multiplies the distance by 2x while held (kanata docs: "expanding
-    ;; or shrinking min_distance and max_distance while the action key is
-    ;; pressed"). Effective boost: 12 px/tick = 1500 px/s.
-    ;; Scroll: LShift boost implemented via fork on (lsft), since
-    ;; movemouse-speed only affects movemouse/movemouse-accel, not mwheel.
+    ;; Mouse movement: light acceleration.
+    ;; Interval 8 ms (125 Hz). Min 4 px/tick -> Max 8 px/tick over 200 ms.
+    ;; - Tap (single tick): 4 px = 500 px/s, good for fine positioning.
+    ;; - Hold 200ms+: 8 px/tick = 1000 px/s, fast enough for crossing screens.
+    ;; - Ramp duration 200ms is short enough that the accel feels snappy
+    ;;   rather than rng.
+    ;; Boost: ; position bound to (movemouse-speed 200) multiplies the
+    ;; accel range by 2x while held: 8 -> 16 px/tick = 2000 px/s.
+    ;; Scroll: ; boost via switch with (input real ;) — movemouse-speed
+    ;; doesn't affect mwheel, so a fork/select on (input real ;) selects
+    ;; the dedicated fast aliases (240 vs 120 per 50ms).
     (defalias
-      mmu      (movemouse-up    8 6)
-      mmd      (movemouse-down  8 6)
-      mml      (movemouse-left  8 6)
-      mmr      (movemouse-right 8 6)
+      mmu      (movemouse-accel-up    8 200 4 8)
+      mmd      (movemouse-accel-down  8 200 4 8)
+      mml      (movemouse-accel-left  8 200 4 8)
+      mmr      (movemouse-accel-right 8 200 4 8)
       mwu      (mwheel-up   50 120)
       mwd      (mwheel-down 50 120)
       mwu-fast (mwheel-up   50 240)
