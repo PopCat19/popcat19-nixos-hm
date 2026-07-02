@@ -89,7 +89,7 @@ let
     (defalias
       mse-on (multi
         (layer-switch mouse)
-        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  g M-click  |  u scroll-up  |  d scroll-down  |  Super+C enter  |  x or Esc exit  |  z pause 3s" -t 5000 -u normal))
+        (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  f R-click  |  g M-click  |  u scroll-up  |  d scroll-down  |  Super+C enter  |  x or Esc exit  |  z pause 5s" -t 5000 -u normal))
       ;; mse-off retained for Super+C re-entry from mouse layer (the fork
       ;; on default layer's c position falls through to default's @tog-c
       ;; when pressed from mouse mode, which fires mse-on; mse-off unused
@@ -106,16 +106,19 @@ let
       vk-mouse-on (layer-switch mouse)
     )
 
-    ;; z: pause mouse emulation for 3s, then re-enter. Exits to default
+    ;; z: pause mouse emulation for 5s, then re-enter. Exits to default
     ;; immediately (direct layer-switch, not in multi, to avoid the
     ;; multi+layer-switch ordering bug). Schedules re-entry via
-    ;; on-physical-idle, which fires after 3000ms of physical-key idle.
+    ;; on-physical-idle, which fires after 5000ms of physical-key idle.
+    ;; Note: on-physical-idle resets if any physical key is pressed during
+    ;; the pause, so the actual wall-clock time before re-entry can exceed
+    ;; 5s if you're typing hjkl/etc during the pause.
     ;; on-physical-idle parses tap-vkey as its inner argument, so we
     ;; don't need a multi wrapper.
     (defalias
       z (multi
         (layer-switch default)
-        (on-physical-idle 3000 tap-vkey vk-mouse-on)))
+        (on-physical-idle 5000 tap-vkey vk-mouse-on)))
 
     ;; Default layer: c and esc are remapped (to the Super+ chords).
     ;; lmet position stays as the literal lmet action so the forks detect it.
