@@ -23,15 +23,16 @@ let
   # Validate the layered kbd config at build time, then expose the
   # validated file as a derivation. Source passes through directly so
   # kanata-with-cmd reads the canonical path; only --check wraps it.
-  kanataConfigChecked = pkgs.runCommand "kanata-validated.kbd"
-    {
-      nativeBuildInputs = [ pkgs.kanata-with-cmd ];
-    }
-    ''
-      mkdir -p $out
-      cp ${./kanata.kbd} $out/kanata.kbd
-      ${lib.getExe pkgs.kanata-with-cmd} --cfg $out/kanata.kbd --check
-    '';
+  kanataConfigChecked =
+    pkgs.runCommand "kanata-validated.kbd"
+      {
+        nativeBuildInputs = [ pkgs.kanata-with-cmd ];
+      }
+      ''
+        mkdir -p $out
+        cp ${./kanata.kbd} $out/kanata.kbd
+        ${lib.getExe pkgs.kanata-with-cmd} --cfg $out/kanata.kbd --check
+      '';
 in
 {
   options.programs.kanata = {
