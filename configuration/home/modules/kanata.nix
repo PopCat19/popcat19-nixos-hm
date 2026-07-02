@@ -79,11 +79,13 @@ let
     ;; range 3x while held: 9 -> 30 px/tick over 300 ms (1125 -> 3750 px/s).
     ;; Higher multiplier = steeper slope on the same 300 ms ramp.
     ;; Scroll: x position activates layer-while-held scroll-boost, where
-    ;; i/o map to the fast-scroll aliases (480 vs 120 per 50 ms = 4x).
-    ;; The layer approach gives a dedicated, discoverable boost key separate
-    ;; from move boost (z). Trade-off: x must be held when i/o is pressed
-    ;; for fast scroll — same press-time constraint as the old switch, but
-    ;; the key is dedicated so it's easier to remember.
+    ;; i/o map to mwheel-accel aliases with exponential ramp:
+    ;; initial 10 -> max 800, acceleration_multiplier 1.12 (each tick
+    ;; multiplies velocity by 1.12 -> exponential), deceleration 0.6.
+    ;; Compare constant 480/tick (was 4x flat) — accel gives a slow start
+    ;; for fine scroll, ramps quickly to fast for long pages. The layer
+    ;; approach gives a dedicated, discoverable boost key separate from
+    ;; move boost (z). x must be held when i/o is pressed for fast scroll.
     (defalias
       mmu      (movemouse-accel-up    8 300 3 10)
       mmd      (movemouse-accel-down  8 300 3 10)
@@ -91,8 +93,8 @@ let
       mmr      (movemouse-accel-right 8 300 3 10)
       mwu      (mwheel-up   50 120)
       mwd      (mwheel-down 50 120)
-      mwu-fast (mwheel-up   50 480)
-      mwd-fast (mwheel-down 50 480)
+      mwu-fast (mwheel-accel-up   10.0 800.0 1.12 0.6)
+      mwd-fast (mwheel-accel-down 10.0 800.0 1.12 0.6)
     )
 
     ;; Super+C: hold to activate mouse layer (no toggle).
