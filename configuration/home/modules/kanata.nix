@@ -89,26 +89,31 @@ let
     ;; Super+C: hold to activate mouse layer (no toggle).
     ;; fork with lmet as trigger so plain C still types c.
     ;; (layer-while-held mouse) activates mouse mode only while c is held;
-    ;; release exits automatically.
-    ;; (multi ...) also fires the ON notification on activation.
+    ;; release of c exits automatically.
+    ;; (release-key lmet) synthetically releases Super to the OS on entry so
+    ;;   Hyprland does not see Super held during mouse mode (avoids Super
+    ;;   overlay / Super+key conflicts). kanata still tracks the physical
+    ;;   lmet hold for the fork trigger; the layer-while-held is tied to the
+    ;;   c key hold, so releasing the lmet output does not end the layer.
+    ;;   Trade-off: Hyprland sees a brief Super down->up (phantom tap) on
+    ;;   entry; same already happens on exit today. No delay on plain Super
+    ;;   for normal Hyprland binds (unlike a defchordsv2 approach).
+    ;; (cmd notify-send) fires the ON notification on activation.
     (defalias
       tog-c (fork c
                   (multi
                     (layer-while-held mouse)
+                    (release-key lmet)
                     (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  y M-click  |  i scroll-up  |  o scroll-down  |  ; boost 2x  |  hold Super+C" -t 5000 -u normal))
                   (lmet)))
 
     ;; Default layer uses deflayermap (input->action pairs) instead of
     ;; positional deflayer columns. Only the c position is overridden;
     ;; all other keys implicitly use their defsrc value (the literal key).
-    ;; c is bound to a fork so plain C still types c, but Super+C holds
-    ;; the mouse layer while both are pressed.
+    ;; c is bound to @tog-c so plain C still types c, but Super+C holds
+    ;; the mouse layer (and masks Super via release-key) while both held.
     (deflayermap (default)
-      c (fork c
-              (multi
-                (layer-while-held mouse)
-                (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  y M-click  |  i scroll-up  |  o scroll-down  |  ; boost 2x  |  hold Super+C" -t 5000 -u normal))
-              (lmet))
+      c @tog-c
     )
 
     ;; Mouse layer: right-handable while Super+C is held (left hand).
