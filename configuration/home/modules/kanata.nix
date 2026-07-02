@@ -33,13 +33,18 @@ let
     ;;         re-enters; noise but functional.
     ;; Each transition fires a desktop notification listing the active
     ;; keybinds as a reminder.
-    ;;
     ;; Mouse layer keys:
     ;;   h / j / k / l  - cursor movement (accelerates while held)
-    ;;   space          - left click (hold to drag)
-    ;;   f              - right click
-    ;;   d              - middle click
-    ;;   u / i          - scroll up / down
+    ;;   spc            - left click (hold to drag)
+    ;;   u              - right click
+    ;;   s              - middle click
+    ;;   i / o          - scroll up / down
+    ;;   z              - 3x boost (movement); 2x for scroll when held at i/o press
+    ;;   [ ]            - page up / page down
+    ;;   , .            - home / end
+    ;;   - =            - volume down / up
+    ;;   0              - mute toggle
+    ;;   7 8 9          - media prev / play-pause / next
     ;;
     ;; Force exit: hold left Ctrl + Space + Escape.
 
@@ -63,23 +68,29 @@ let
       lctl lmet lalt           spc            ralt rmet rctl
     )
 
-    ;; Mouse movement: light acceleration.
-    ;; Interval 8 ms (125 Hz). Min 3 px/tick -> Max 5 px/tick over 300 ms.
+    ;; Mouse movement: pronounced acceleration.
+    ;; Interval 8 ms (125 Hz). Min 3 px/tick -> Max 10 px/tick over 300 ms.
     ;; - Tap (single tick): 3 px = 375 px/s, fine for delicate positioning.
-    ;; - Hold 300 ms+: 5 px/tick = 625 px/s (close to the 600 px/s target).
-    ;; - Ramp duration 300 ms gives more time at the slow speed before
-    ;;   ramping up; combined with the lower max this makes the movement
-    ;;   feel lighter overall (was 4->8 over 200 ms, perceived as 1000 px/s).
-    ;; Boost: ; position bound to (movemouse-speed 200) multiplies the
-    ;; accel range by 2x while held: 6 -> 10 px/tick = 750 -> 1250 px/s.
-    ;; Scroll: ; boost via switch with (input real ;) — movemouse-speed
-    ;; doesn't affect mwheel, so a fork/select on (input real ;) selects
-    ;; the dedicated fast aliases (240 vs 120 per 50ms).
+    ;; - Hold 300 ms+: 10 px/tick = 1250 px/s for general movement.
+    ;; The 3->10 range is intentionally wide so the accel is actually
+    ;; perceptible; previous 3->5 (+2 px/tick over 300 ms) felt flat.
+    ;; Boost: z position bound to (movemouse-speed 300) scales the accel
+    ;; range 3x while held: 9 -> 30 px/tick over 300 ms (1125 -> 3750 px/s).
+    ;; Higher multiplier = steeper slope on the same 300 ms ramp.
+    ;; Scroll: z boost via switch with (input real z) — mwheel doesn't honor
+    ;; movemouse-speed, so a switch on (input real z) selects the dedicated
+    ;; fast aliases (240 vs 120 per 50 ms = exactly 2x).
+    ;; Scroll boost timing: the (input real z) check fires once at i/o press
+    ;; time. z must be held WHEN i/o is pressed for fast scroll. Pressing z
+    ;; mid-scroll does not re-evaluate the switch — kanata binds the resolved
+    ;; alias for the duration of the hold. Mid-scroll dynamic boost would
+    ;; require a layer-switch on z, which conflicts with this layer's use of
+    ;; z for movemouse-speed.
     (defalias
-      mmu      (movemouse-accel-up    8 300 3 5)
-      mmd      (movemouse-accel-down  8 300 3 5)
-      mml      (movemouse-accel-left  8 300 3 5)
-      mmr      (movemouse-accel-right 8 300 3 5)
+      mmu      (movemouse-accel-up    8 300 3 10)
+      mmd      (movemouse-accel-down  8 300 3 10)
+      mml      (movemouse-accel-left  8 300 3 10)
+      mmr      (movemouse-accel-right 8 300 3 10)
       mwu      (mwheel-up   50 120)
       mwd      (mwheel-down 50 120)
       mwu-fast (mwheel-up   50 240)
@@ -104,7 +115,7 @@ let
                   (multi
                     (layer-while-held mouse)
                     (release-key lmet)
-                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  i scroll-up  |  o scroll-down  |  z boost 2x  |  [ ] pgup/pgdn  |  , . home/end  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
+                    (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  |  spc L-click  |  u R-click  |  s M-click  |  i scroll-up  |  o scroll-down  |  z boost 3x (move) / 2x (scroll)  |  [ ] pgup/pgdn  |  , . home/end  |  - = vol dn/up  |  0 mute  |  7 8 9 media prev/play/next  |  hold Super+C" -t 5000 -u normal))
                   (lmet)))
 
     ;; Default layer uses deflayermap (input->action pairs) instead of
@@ -159,7 +170,7 @@ let
       o    (switch
              ((input real z)) @mwd-fast break
              ()                  @mwd     break)
-      z    (movemouse-speed 200)
+      z    (movemouse-speed 300)
       [    pgup
       ]    pgdn
       ,    home
@@ -220,10 +231,15 @@ in
     # property on the service didn't wire up a path unit when tested, and
     # the systemd.user.paths schema is fiddly. entryAfter writeBoundary runs
     # this script after files (including the kbd symlink) have been written.
-    # Cheap (a few seconds for kanata to start) and unambiguous.
+    # Home-manager activation invoked via sudo nixos-rebuild switch already
+    # runs in the user's session (via runuser), so systemctl --user reaches
+    # the right systemd instance. Errors are surfaced to the activation log
+    # instead of swallowed.
     home.activation.kanataRestart = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ -L "$HOME/.config/kanata/kanata.kbd" ]; then
-        systemctl --user restart kanata.service 2>/dev/null || true
+        echo "kanata: restarting user service..."
+        systemctl --user restart kanata.service
+        echo "kanata: restart complete"
       fi
     '';
   };
