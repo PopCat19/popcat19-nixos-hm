@@ -324,8 +324,8 @@
 ;; Entry: Super+D held.
 ;; Exit:  release D (layer-while-held).
 ;; hjkl -> arrow keys, i -> S-tab, o -> tab, u -> enter.
-;; All other keys pass through (use-defsrc) so modifiers, numbers,
-;; punctuation, etc. remain usable while navigating.
+;; Space types normally; all other unmapped keys are blocked (XX)
+;; to prevent phantom Super+key combos while navigating.
 (deflayermap (nav)
   h    left
   j    down
@@ -334,6 +334,7 @@
   i    S-tab
   o    tab
   u    ret
+  spc  spc
 
-  ___  use-defsrc
+  ___  XX
 )
