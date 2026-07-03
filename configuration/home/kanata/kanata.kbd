@@ -44,7 +44,7 @@
 )
 
 ;; Mouse movement: constant speed, no acceleration.
-;; Default 10 pixels per tick. Focus mode (hold z): 5 px/tick.
+;; Default 10 pixels per tick. Focus mode (hold z): 3 px/tick.
 ;; Instant, predictable response; speed controlled by selection
 ;; (default vs focus) rather than hold duration.
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
@@ -58,10 +58,10 @@
   mmd      (movemouse-down  8 10)
   mml      (movemouse-left  8 10)
   mmr      (movemouse-right 8 10)
-  mmu-foc  (movemouse-up    8 5)
-  mmd-foc  (movemouse-down  8 5)
-  mml-foc  (movemouse-left  8 5)
-  mmr-foc  (movemouse-right 8 5)
+  mmu-foc  (movemouse-up    8 3)
+  mmd-foc  (movemouse-down  8 3)
+  mml-foc  (movemouse-left  8 3)
+  mmr-foc  (movemouse-right 8 3)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
@@ -181,7 +181,7 @@
 )
 
 ;; Focus sub-layer of mouse. Hold z while in mouse mode to drop to
-;; precision speed (5 px/tick). Releasing z returns to mouse
+;; precision speed (3 px/tick). Releasing z returns to mouse
 ;; automatically (layer-while-held). All other keys identical.
 (deflayermap (mouse-focus)
   i    @mmu-foc
@@ -287,7 +287,7 @@
 )
 
 ;; Focus sub-layer of mouse-pass. Hold z while in mouse-pass to drop
-;; to precision speed (5 px/tick). Releasing z returns to
+;; to precision speed (3 px/tick). Releasing z returns to
 ;; mouse-pass automatically (layer-while-held).
 (deflayermap (mouse-pass-focus)
   i    @mmu-foc
