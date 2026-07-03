@@ -13,7 +13,7 @@
 ;;   s              - middle click
 ;;   m / n          - mouse back / forward
 ;;   u / o          - scroll down / up
-;;   z              - focus (precision movement; hold)
+;;   z              - focus (precision movement; press/hold)
 ;;   [ ]            - home / end
 ;;   , .            - page up / page down
 ;;   - =            - volume down / up
@@ -43,10 +43,18 @@
   lctl lmet lalt           spc            ralt rmet rctl
 )
 
-;; Mouse movement: constant speed, no acceleration.
-;; Default 10 pixels per tick. Focus mode (hold z): 3 px/tick.
-;; Instant, predictable response; speed controlled by selection
-;; (default vs focus) rather than hold duration.
+;; Mouse movement: zero-range acceleration for constant speed
+;; with live speed scaling.
+;; movemouse-accel with min=max=10 and accelTime=1 ms yields
+;; constant 10 px/tick (1250 px/s at 125 Hz). The 1 ms accelTime
+;; means the "ramp" completes instantly, producing no perceptible
+;; acceleration while keeping the action compatible with
+;; movemouse-speed.
+;; z is bound to (movemouse-speed 30), which multiplies active
+;; movemouse-accel actions to 30% (3 px/tick). Because it targets
+;; the underlying movemouse-accel state, holding z slows movement
+;; even if i/j/k/l were already held. The 30% multiplier persists
+;; after releasing z until the mouse layer exits.
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
 ;; initial 10 -> max 800, acceleration_multiplier 1.04 (each tick
 ;; multiplies velocity by 1.04 -> gentle exponential; takes ~88 ticks
@@ -54,14 +62,10 @@
 ;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
 (defalias
-  mmu      (movemouse-up    8 10)
-  mmd      (movemouse-down  8 10)
-  mml      (movemouse-left  8 10)
-  mmr      (movemouse-right 8 10)
-  mmu-foc  (movemouse-up    8 3)
-  mmd-foc  (movemouse-down  8 3)
-  mml-foc  (movemouse-left  8 3)
-  mmr-foc  (movemouse-right 8 3)
+  mmu      (movemouse-accel-up    8 1 10 10)
+  mmd      (movemouse-accel-down  8 1 10 10)
+  mml      (movemouse-accel-left  8 1 10 10)
+  mmr      (movemouse-accel-right 8 1 10 10)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
@@ -84,7 +88,7 @@
               (multi
                 (layer-while-held mouse)
                 (release-key lmet)
-                (cmd notify-send "Kanata: mouse ON" "i/j/k/l move  spc L-click  h R-click  s M-click  n/m back/fwd  u scroll-down  o scroll-up  z focus (slow)  [ ] end/home  , . pgdn/pgup  - = vol dn/up  0 mute  7 8 9 media prev/play/next  ; ' / lalt/lctl/lsft  hold Super+C" -t 3000 -u normal))
+                (cmd notify-send "Kanata: mouse ON" "i/j/k/l move  spc L-click  h R-click  s M-click  n/m back/fwd  u scroll-down  o scroll-up  z focus 30%  [ ] end/home  , . pgdn/pgup  - = vol dn/up  0 mute  7 8 9 media prev/play/next  ; ' / lalt/lctl/lsft  hold Super+C" -t 3000 -u normal))
               (lmet))
 
   ;; Super+B: switch to mouse-pass (persists until explicit exit).
@@ -94,7 +98,7 @@
   tog-b (fork b
               (multi
                 (layer-switch mouse-pass)
-                (cmd notify-send "Kanata: mouse passthrough ON" "i/j/k/l move  spc L-click/drag  h R-click  s M-click  u/o scroll  z focus (slow)  Ctrl/Shift/Alt/Super pass through  b or Esc exits" -t 3000 -u normal))
+                (cmd notify-send "Kanata: mouse passthrough ON" "i/j/k/l move  spc L-click/drag  h R-click  s M-click  u/o scroll  z focus 30%  Ctrl/Shift/Alt/Super pass through  b or Esc exits" -t 3000 -u normal))
               (lmet))
 )
 
@@ -120,7 +124,7 @@
 ;;   s        - mmid (middle click)
 ;;   n m      - mouse back / forward
 ;;   u o      - scroll down / up (exponential mwheel-accel, see defalias)
-;;   z        - focus mode (precision speed, hold; like Touhou shift)
+;;   z        - movemouse-speed 30% (slows active movement to 3 px/tick)
 ;;   [ ]      - home / end
 ;;   , .      - pgup / pgdn
 ;;   - =      - volume down / up
@@ -154,7 +158,7 @@
   m    mfwd
   u    @mwd
   o    @mwu
-  z    (layer-while-held mouse-focus)
+  z    (movemouse-speed 30)
   [    end
   ]    home
   ,    pgdn
@@ -173,40 +177,6 @@
   ;; or ; + i/j/k/l for Alt+arrow-style bindings without leaving the
   ;; mouse layer. mouse-pass already passes the physical modifiers
   ;; through, so this is only needed here.
-  ;    lalt
-  '    lctl
-  /    lsft
-
-  ___  XX
-)
-
-;; Focus sub-layer of mouse. Hold z while in mouse mode to drop to
-;; precision speed (3 px/tick). Releasing z returns to mouse
-;; automatically (layer-while-held). All other keys identical.
-(deflayermap (mouse-focus)
-  i    @mmu-foc
-  j    @mml-foc
-  k    @mmd-foc
-  l    @mmr-foc
-  spc  mlft
-  h    mrgt
-  s    mmid
-  n    mbck
-  m    mfwd
-  u    @mwd
-  o    @mwu
-  [    end
-  ]    home
-  ,    pgdn
-  .    pgup
-  -    vold
-  =    volu
-  0    mute
-  7    prev
-  8    pp
-  9    next
-
-  ;; Right-hand modifier passthrough.
   ;    lalt
   '    lctl
   /    lsft
@@ -252,7 +222,7 @@
   u    @mwd
   o    @mwu
 
-  z    (layer-while-held mouse-pass-focus)
+  z    (movemouse-speed 30)
 
   ;; Let modifiers pass through to Hyprland/apps.
   lctl lctl
@@ -283,39 +253,5 @@
   ;; unmapped keys" (the previous behavior). The mouse layer keeps
   ;; ___ XX so it stays fully isolated -- different design intent
   ;; (no leaks during quick mouse-mode flashes).
-  ___  use-defsrc
-)
-
-;; Focus sub-layer of mouse-pass. Hold z while in mouse-pass to drop
-;; to precision speed (3 px/tick). Releasing z returns to
-;; mouse-pass automatically (layer-while-held).
-(deflayermap (mouse-pass-focus)
-  i    @mmu-foc
-  j    @mml-foc
-  k    @mmd-foc
-  l    @mmr-foc
-  spc  mlft
-  h    mrgt
-  s    mmid
-  n    mbck
-  m    mfwd
-  u    @mwd
-  o    @mwu
-
-  ;; Let modifiers pass through to Hyprland/apps.
-  lctl lctl
-  rctl rctl
-  lsft lsft
-  rsft rsft
-  lalt lalt
-  ralt ralt
-  lmet lmet
-  rmet rmet
-
-  z    XX
-
-  b    (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
-  esc  (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
-
   ___  use-defsrc
 )
