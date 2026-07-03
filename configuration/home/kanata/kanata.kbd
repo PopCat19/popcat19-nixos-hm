@@ -12,7 +12,7 @@
 ;;   s              - middle click
 ;;   m / n          - mouse back / forward
 ;;   i / o          - scroll down / up
-;;   z              - focus (precision movement; hold)
+;;   z              - boost (fast movement; hold; default is focus)
 ;;   [ ]            - home / end
 ;;   , .            - page up / page down
 ;;   - =            - volume down / up
@@ -43,9 +43,9 @@
 )
 
 ;; Mouse movement: constant speed, no acceleration.
-;; Default 10 pixels per tick. Focus mode (hold z): 3 px/tick.
+;; Default 3 pixels per tick (focus). Boost (hold z): 10 px/tick.
 ;; Instant, predictable response; speed controlled by selection
-;; (default vs focus) rather than hold duration.
+;; (focus vs boost) rather than hold duration.
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
 ;; initial 10 -> max 800, acceleration_multiplier 1.04 (each tick
 ;; multiplies velocity by 1.04 -> gentle exponential; takes ~88 ticks
@@ -119,7 +119,7 @@
 ;;   s        - mmid (middle click)
 ;;   n m      - mouse back / forward
 ;;   i o      - scroll down / up (exponential mwheel-accel, see defalias)
-;;   z        - focus mode (precision speed, hold; like Touhou shift)
+;;   z        - boost (fast speed, hold; default is focus/precision)
 ;;   [ ]      - home / end
 ;;   , .      - pgup / pgdn
 ;;   - =      - volume down / up
@@ -142,10 +142,10 @@
 ;; Force-exit (lctl+spc+esc) still works: it is handled before any
 ;; layer/kanata remapping.
 (deflayermap (mouse)
-  k    @mmu
-  h    @mml
-  j    @mmd
-  l    @mmr
+  k    @mmu-foc
+  h    @mml-foc
+  j    @mmd-foc
+  l    @mmr-foc
   spc  mlft
   u    mrgt
   s    mmid
@@ -153,7 +153,7 @@
   m    mfwd
   i    @mwd
   o    @mwu
-  z    (layer-while-held mouse-focus)
+  z    (layer-while-held mouse-boost)
   [    end
   ]    home
   ,    pgdn
@@ -179,14 +179,14 @@
   ___  XX
 )
 
-;; Focus sub-layer of mouse. Hold z while in mouse mode to drop to
-;; precision speed (3 px/tick). Releasing z returns to mouse
-;; automatically (layer-while-held). All other keys identical.
-(deflayermap (mouse-focus)
-  k    @mmu-foc
-  h    @mml-foc
-  j    @mmd-foc
-  l    @mmr-foc
+;; Boost sub-layer of mouse. Hold z while in mouse mode to jump to
+;; fast speed (10 px/tick). Releasing z returns to mouse (focus,
+;; 3 px/tick) automatically (layer-while-held). All other keys identical.
+(deflayermap (mouse-boost)
+  k    @mmu
+  h    @mml
+  j    @mmd
+  l    @mmr
   spc  mlft
   u    mrgt
   s    mmid
@@ -236,10 +236,10 @@
 ;; is not bound; if needed, add a parallel fork with (rmet) as the
 ;; second trigger (kanata fork triggers are OR'd when listed).
 (deflayermap (mouse-pass)
-  k    @mmu
-  h    @mml
-  j    @mmd
-  l    @mmr
+  k    @mmu-foc
+  h    @mml-foc
+  j    @mmd-foc
+  l    @mmr-foc
 
   spc  mlft
   u    mrgt
@@ -251,7 +251,7 @@
   i    @mwd
   o    @mwu
 
-  z    (layer-while-held mouse-pass-focus)
+  z    (layer-while-held mouse-pass-boost)
 
   ;; Let modifiers pass through to Hyprland/apps.
   lctl lctl
@@ -285,14 +285,14 @@
   ___  use-defsrc
 )
 
-;; Focus sub-layer of mouse-pass. Hold z while in mouse-pass to drop
-;; to precision speed (3 px/tick). Releasing z returns to
-;; mouse-pass automatically (layer-while-held).
-(deflayermap (mouse-pass-focus)
-  k    @mmu-foc
-  h    @mml-foc
-  j    @mmd-foc
-  l    @mmr-foc
+;; Boost sub-layer of mouse-pass. Hold z while in mouse-pass to jump
+;; to fast speed (10 px/tick). Releasing z returns to mouse-pass
+;; (focus, 3 px/tick) automatically (layer-while-held).
+(deflayermap (mouse-pass-boost)
+  k    @mmu
+  h    @mml
+  j    @mmd
+  l    @mmr
   spc  mlft
   u    mrgt
   s    mmid
