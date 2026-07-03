@@ -13,7 +13,7 @@
 ;;   s              - middle click
 ;;   m / n          - mouse back / forward
 ;;   u / o          - scroll down / up
-;;   z              - 2x boost (movement); scroll unaffected
+;;   z              - focus (precision movement; hold)
 ;;   [ ]            - home / end
 ;;   , .            - page up / page down
 ;;   - =            - volume down / up
@@ -43,19 +43,13 @@
   lctl lmet lalt           spc            ralt rmet rctl
 )
 
-;; Mouse movement: elongated acceleration for finer nudges.
-;; Interval 8 ms (125 Hz). Min 1 px/tick -> Max 10 px/tick over 500 ms.
-;; - Tap (single tick): 1 px = 125 px/s, sub-pixel nudge precision.
-;; - Hold 500 ms+: 10 px/tick = 1250 px/s for general movement.
-;; The 1->10 range over 500 ms makes single-tick nudges much finer
-;; (was 3 px = 375 px/s over 300 ms). Long ramp gives time at slow
-;; speed before speeding up; the user controls commitment by hold
-;; duration.
-;; Boost: z bound to (movemouse-speed 200) scales the accel range 2x
-;; while held AND persists after release until the mouse layer exits.
-;; Boosted curve: 2 -> 20 px/tick over 500 ms (250 -> 2500 px/s).
-;; Trade-off: ramped start still applies under boost (no instant
-;; constant-speed boost); user can wait for ramp or accept slower start.
+;; Mouse movement: elongated acceleration.
+;; Interval 8 ms (125 Hz). Default 2 px/tick -> Max 20 px/tick over 500 ms.
+;; - Tap (single tick): 2 px = 250 px/s.
+;; - Hold 500 ms+: 20 px/tick = 2500 px/s for general movement.
+;; Focus mode (hold z): drops to 1 -> 10 px/tick for precision nudging.
+;; The 2->20 default covers general movement; holding z temporarily
+;; halves speed for sub-pixel feel. Ramped start applies to both.
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
 ;; initial 10 -> max 800, acceleration_multiplier 1.04 (each tick
 ;; multiplies velocity by 1.04 -> gentle exponential; takes ~88 ticks
@@ -63,10 +57,14 @@
 ;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
 (defalias
-  mmu      (movemouse-accel-up    8 500 1 10)
-  mmd      (movemouse-accel-down  8 500 1 10)
-  mml      (movemouse-accel-left  8 500 1 10)
-  mmr      (movemouse-accel-right 8 500 1 10)
+  mmu      (movemouse-accel-up    8 500 2 20)
+  mmd      (movemouse-accel-down  8 500 2 20)
+  mml      (movemouse-accel-left  8 500 2 20)
+  mmr      (movemouse-accel-right 8 500 2 20)
+  mmu-foc  (movemouse-accel-up    8 500 1 10)
+  mmd-foc  (movemouse-accel-down  8 500 1 10)
+  mml-foc  (movemouse-accel-left  8 500 1 10)
+  mmr-foc  (movemouse-accel-right 8 500 1 10)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
@@ -89,7 +87,7 @@
               (multi
                 (layer-while-held mouse)
                 (release-key lmet)
-                (cmd notify-send "Kanata: mouse ON" "i/j/k/l move  spc L-click  h R-click  s M-click  n/m back/fwd  u scroll-down  o scroll-up  z move-boost 2x  [ ] end/home  , . pgdn/pgup  - = vol dn/up  0 mute  7 8 9 media prev/play/next  ; ' / lalt/lctl/lsft  hold Super+C" -t 3000 -u normal))
+                (cmd notify-send "Kanata: mouse ON" "i/j/k/l move  spc L-click  h R-click  s M-click  n/m back/fwd  u scroll-down  o scroll-up  z focus (slow)  [ ] end/home  , . pgdn/pgup  - = vol dn/up  0 mute  7 8 9 media prev/play/next  ; ' / lalt/lctl/lsft  hold Super+C" -t 3000 -u normal))
               (lmet))
 
   ;; Super+B: switch to mouse-pass (persists until explicit exit).
@@ -99,7 +97,7 @@
   tog-b (fork b
               (multi
                 (layer-switch mouse-pass)
-                (cmd notify-send "Kanata: mouse passthrough ON" "i/j/k/l move  spc L-click/drag  h R-click  s M-click  u/o scroll  Ctrl/Shift/Alt/Super pass through  b or Esc exits" -t 3000 -u normal))
+                (cmd notify-send "Kanata: mouse passthrough ON" "i/j/k/l move  spc L-click/drag  h R-click  s M-click  u/o scroll  z focus (slow)  Ctrl/Shift/Alt/Super pass through  b or Esc exits" -t 3000 -u normal))
               (lmet))
 )
 
@@ -125,7 +123,7 @@
 ;;   s        - mmid (middle click)
 ;;   n m      - mouse back / forward
 ;;   u o      - scroll down / up (exponential mwheel-accel, see defalias)
-;;   z        - movemouse-speed 200 -- ijkl 2x boost (left pinky, below a)
+;;   z        - focus mode (precision speed, hold; like Touhou shift)
 ;;   [ ]      - home / end
 ;;   , .      - pgup / pgdn
 ;;   - =      - volume down / up
@@ -159,7 +157,7 @@
   m    mfwd
   u    @mwd
   o    @mwu
-  z    (movemouse-speed 200)
+  z    (layer-while-held mouse-focus)
   [    end
   ]    home
   ,    pgdn
@@ -178,6 +176,40 @@
   ;; or ; + i/j/k/l for Alt+arrow-style bindings without leaving the
   ;; mouse layer. mouse-pass already passes the physical modifiers
   ;; through, so this is only needed here.
+  ;    lalt
+  '    lctl
+  /    lsft
+
+  ___  XX
+)
+
+;; Focus sub-layer of mouse. Hold z while in mouse mode to drop to
+;; precision speed (1->10 px/tick). Releasing z returns to mouse
+;; automatically (layer-while-held). All other keys identical.
+(deflayermap (mouse-focus)
+  i    @mmu-foc
+  j    @mml-foc
+  k    @mmd-foc
+  l    @mmr-foc
+  spc  mlft
+  h    mrgt
+  s    mmid
+  n    mbck
+  m    mfwd
+  u    @mwd
+  o    @mwu
+  [    end
+  ]    home
+  ,    pgdn
+  .    pgup
+  -    vold
+  =    volu
+  0    mute
+  7    prev
+  8    pp
+  9    next
+
+  ;; Right-hand modifier passthrough.
   ;    lalt
   '    lctl
   /    lsft
@@ -223,7 +255,7 @@
   u    @mwd
   o    @mwu
 
-  z    (movemouse-speed 200)
+  z    (layer-while-held mouse-pass-focus)
 
   ;; Let modifiers pass through to Hyprland/apps.
   lctl lctl
@@ -254,5 +286,39 @@
   ;; unmapped keys" (the previous behavior). The mouse layer keeps
   ;; ___ XX so it stays fully isolated -- different design intent
   ;; (no leaks during quick mouse-mode flashes).
+  ___  use-defsrc
+)
+
+;; Focus sub-layer of mouse-pass. Hold z while in mouse-pass to drop
+;; to precision speed (1->10 px/tick). Releasing z returns to
+;; mouse-pass automatically (layer-while-held).
+(deflayermap (mouse-pass-focus)
+  i    @mmu-foc
+  j    @mml-foc
+  k    @mmd-foc
+  l    @mmr-foc
+  spc  mlft
+  h    mrgt
+  s    mmid
+  n    mbck
+  m    mfwd
+  u    @mwd
+  o    @mwu
+
+  ;; Let modifiers pass through to Hyprland/apps.
+  lctl lctl
+  rctl rctl
+  lsft lsft
+  rsft rsft
+  lalt lalt
+  ralt ralt
+  lmet lmet
+  rmet rmet
+
+  z    XX
+
+  b    (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
+  esc  (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
+
   ___  use-defsrc
 )
