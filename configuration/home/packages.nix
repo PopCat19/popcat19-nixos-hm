@@ -54,6 +54,7 @@ with pkgs;
 
   # Development
   android-tools
+  ast-grep
   black
   bun
   clang-tools
