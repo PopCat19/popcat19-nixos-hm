@@ -43,13 +43,10 @@
   lctl lmet lalt           spc            ralt rmet rctl
 )
 
-;; Mouse movement: shortened acceleration ramp.
-;; Interval 8 ms (125 Hz). Default 2 px/tick -> Max 20 px/tick over 250 ms.
-;; - Tap (single tick): 2 px = 250 px/s.
-;; - Hold 250 ms+: 20 px/tick = 2500 px/s for general movement.
-;; Focus mode (hold z): drops to 1 -> 10 px/tick for precision nudging.
-;; The 2->20 default covers general movement; holding z temporarily
-;; halves speed for sub-pixel feel. Ramped start applies to both.
+;; Mouse movement: constant speed, no acceleration.
+;; Default 10 pixels per tick. Focus mode (hold z): 5 px/tick.
+;; Instant, predictable response; speed controlled by selection
+;; (default vs focus) rather than hold duration.
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
 ;; initial 10 -> max 800, acceleration_multiplier 1.04 (each tick
 ;; multiplies velocity by 1.04 -> gentle exponential; takes ~88 ticks
@@ -57,14 +54,14 @@
 ;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
 (defalias
-  mmu      (movemouse-accel-up    8 250 2 20)
-  mmd      (movemouse-accel-down  8 250 2 20)
-  mml      (movemouse-accel-left  8 250 2 20)
-  mmr      (movemouse-accel-right 8 250 2 20)
-  mmu-foc  (movemouse-accel-up    8 250 1 10)
-  mmd-foc  (movemouse-accel-down  8 250 1 10)
-  mml-foc  (movemouse-accel-left  8 250 1 10)
-  mmr-foc  (movemouse-accel-right 8 250 1 10)
+  mmu      (movemouse-up    10)
+  mmd      (movemouse-down  10)
+  mml      (movemouse-left  10)
+  mmr      (movemouse-right 10)
+  mmu-foc  (movemouse-up    5)
+  mmd-foc  (movemouse-down  5)
+  mml-foc  (movemouse-left  5)
+  mmr-foc  (movemouse-right 5)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
@@ -184,7 +181,7 @@
 )
 
 ;; Focus sub-layer of mouse. Hold z while in mouse mode to drop to
-;; precision speed (1->10 px/tick). Releasing z returns to mouse
+;; precision speed (5 px/tick). Releasing z returns to mouse
 ;; automatically (layer-while-held). All other keys identical.
 (deflayermap (mouse-focus)
   i    @mmu-foc
@@ -290,7 +287,7 @@
 )
 
 ;; Focus sub-layer of mouse-pass. Hold z while in mouse-pass to drop
-;; to precision speed (1->10 px/tick). Releasing z returns to
+;; to precision speed (5 px/tick). Releasing z returns to
 ;; mouse-pass automatically (layer-while-held).
 (deflayermap (mouse-pass-focus)
   i    @mmu-foc
