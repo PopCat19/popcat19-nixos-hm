@@ -4,8 +4,7 @@
 ;; Exit:  plain c or Esc from the mouse layer (ergonomic: same finger
 ;;         as movement). Super+C from mouse mode falls through and
 ;;         re-enters; noise but functional.
-;; Each transition fires a desktop notification listing the active
-;; keybinds as a reminder.
+;; Each transition fires a short on/off desktop notification.
 ;; Mouse layer keys:
 ;;   h / j / k / l  - cursor movement (accelerates while held)
 ;;   spc            - left click (hold to drag)
@@ -84,7 +83,7 @@
               (multi
                 (layer-while-held mouse)
                 (release-key lmet)
-                (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  spc L-click  u R-click  s M-click  n/m back/fwd  i scroll-down  o scroll-up  z focus (slow)  [ ] end/home  , . pgdn/pgup  - = vol dn/up  0 mute  7 8 9 media prev/play/next  ; ' / lalt/lctl/lsft  hold Super+C" -t 3000 -u normal))
+                (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
               (lmet))
 
   ;; Super+B: switch to mouse-pass (persists until explicit exit).
@@ -94,7 +93,7 @@
   tog-b (fork b
               (multi
                 (layer-switch mouse-pass)
-                (cmd notify-send "Kanata: mouse passthrough ON" "h/j/k/l move  spc L-click/drag  u R-click  s M-click  i/o scroll  z focus (slow)  Ctrl/Shift/Alt/Super pass through  b or Esc exits" -t 3000 -u normal))
+                (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
               (lmet))
 )
 
@@ -268,8 +267,8 @@
   ;; the action is unconditional on entry state and independent of any
   ;; fork hold semantics. The notify-send fires the OFF notification
   ;; in the same multi.
-  b    (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
-  esc  (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
+  b    (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
+  esc  (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
 
   ;; Transparent fallback: any unmapped key outputs its defsrc value,
   ;; so q w e r t y a d f g etc. type normally while in mouse-pass.
@@ -314,8 +313,8 @@
 
   z    XX
 
-  b    (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
-  esc  (multi (layer-switch default) (cmd notify-send "Kanata: mouse passthrough OFF" "" -t 3000 -u low))
+  b    (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
+  esc  (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
 
   ___  use-defsrc
 )
