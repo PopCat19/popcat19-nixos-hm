@@ -319,3 +319,21 @@
 
   ___  use-defsrc
 )
+
+;; Navigation layer.
+;; Entry: Super+D held.
+;; Exit:  release D (layer-while-held).
+;; hjkl -> arrow keys, i -> S-tab, o -> tab, u -> enter.
+;; All other keys pass through (use-defsrc) so modifiers, numbers,
+;; punctuation, etc. remain usable while navigating.
+(deflayermap (nav)
+  h    left
+  j    down
+  k    up
+  l    rght
+  i    S-tab
+  o    tab
+  u    ret
+
+  ___  use-defsrc
+)
