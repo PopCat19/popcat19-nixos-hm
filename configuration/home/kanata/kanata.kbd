@@ -1,4 +1,4 @@
-;; ijkl mouse-emulation layer.
+;; hjkl mouse-emulation layer.
 ;;
 ;; Entry: Super+C (chord). Tapping C alone still types a c.
 ;; Exit:  plain c or Esc from the mouse layer (ergonomic: same finger
@@ -7,12 +7,12 @@
 ;; Each transition fires a desktop notification listing the active
 ;; keybinds as a reminder.
 ;; Mouse layer keys:
-;;   i / j / k / l  - cursor movement (accelerates while held)
+;;   h / j / k / l  - cursor movement (accelerates while held)
 ;;   spc            - left click (hold to drag)
-;;   h              - right click
+;;   u              - right click
 ;;   s              - middle click
 ;;   m / n          - mouse back / forward
-;;   u / o          - scroll down / up
+;;   i / o          - scroll down / up
 ;;   z              - focus (precision movement; hold)
 ;;   [ ]            - home / end
 ;;   , .            - page up / page down
@@ -84,7 +84,7 @@
               (multi
                 (layer-while-held mouse)
                 (release-key lmet)
-                (cmd notify-send "Kanata: mouse ON" "i/j/k/l move  spc L-click  h R-click  s M-click  n/m back/fwd  u scroll-down  o scroll-up  z focus (slow)  [ ] end/home  , . pgdn/pgup  - = vol dn/up  0 mute  7 8 9 media prev/play/next  ; ' / lalt/lctl/lsft  hold Super+C" -t 3000 -u normal))
+                (cmd notify-send "Kanata: mouse ON" "h/j/k/l move  spc L-click  u R-click  s M-click  n/m back/fwd  i scroll-down  o scroll-up  z focus (slow)  [ ] end/home  , . pgdn/pgup  - = vol dn/up  0 mute  7 8 9 media prev/play/next  ; ' / lalt/lctl/lsft  hold Super+C" -t 3000 -u normal))
               (lmet))
 
   ;; Super+B: switch to mouse-pass (persists until explicit exit).
@@ -94,7 +94,7 @@
   tog-b (fork b
               (multi
                 (layer-switch mouse-pass)
-                (cmd notify-send "Kanata: mouse passthrough ON" "i/j/k/l move  spc L-click/drag  h R-click  s M-click  u/o scroll  z focus (slow)  Ctrl/Shift/Alt/Super pass through  b or Esc exits" -t 3000 -u normal))
+                (cmd notify-send "Kanata: mouse passthrough ON" "h/j/k/l move  spc L-click/drag  u R-click  s M-click  i/o scroll  z focus (slow)  Ctrl/Shift/Alt/Super pass through  b or Esc exits" -t 3000 -u normal))
               (lmet))
 )
 
@@ -114,12 +114,12 @@
 )
 
 ;; Mouse layer: right-handable while Super+C is held (left hand).
-;;   i j k l  - movement (right hand home row)
+;;   h j k l  - movement (right hand home row)
 ;;   spc      - mlft (hold to drag) -- left thumb
-;;   h        - mrgt (right click)
+;;   u        - mrgt (right click)
 ;;   s        - mmid (middle click)
 ;;   n m      - mouse back / forward
-;;   u o      - scroll down / up (exponential mwheel-accel, see defalias)
+;;   i o      - scroll down / up (exponential mwheel-accel, see defalias)
 ;;   z        - focus mode (precision speed, hold; like Touhou shift)
 ;;   [ ]      - home / end
 ;;   , .      - pgup / pgdn
@@ -143,16 +143,16 @@
 ;; Force-exit (lctl+spc+esc) still works: it is handled before any
 ;; layer/kanata remapping.
 (deflayermap (mouse)
-  i    @mmu
-  j    @mml
-  k    @mmd
+  k    @mmu
+  h    @mml
+  j    @mmd
   l    @mmr
   spc  mlft
-  h    mrgt
+  u    mrgt
   s    mmid
   n    mbck
   m    mfwd
-  u    @mwd
+  i    @mwd
   o    @mwu
   z    (layer-while-held mouse-focus)
   [    end
@@ -170,7 +170,7 @@
   ;; swallowed by ___ XX. Plain key -> modifier is already momentary
   ;; in Kanata: press-down -> modifier-down, release -> modifier-up,
   ;; no action wrapper needed. Lets you hold ' + spc for Ctrl+click
-  ;; or ; + i/j/k/l for Alt+arrow-style bindings without leaving the
+  ;; or ; + h/j/k/l for Alt+arrow-style bindings without leaving the
   ;; mouse layer. mouse-pass already passes the physical modifiers
   ;; through, so this is only needed here.
   ;    lalt
@@ -184,16 +184,16 @@
 ;; precision speed (3 px/tick). Releasing z returns to mouse
 ;; automatically (layer-while-held). All other keys identical.
 (deflayermap (mouse-focus)
-  i    @mmu-foc
-  j    @mml-foc
-  k    @mmd-foc
+  k    @mmu-foc
+  h    @mml-foc
+  j    @mmd-foc
   l    @mmr-foc
   spc  mlft
-  h    mrgt
+  u    mrgt
   s    mmid
   n    mbck
   m    mfwd
-  u    @mwd
+  i    @mwd
   o    @mwu
   [    end
   ]    home
@@ -237,19 +237,19 @@
 ;; is not bound; if needed, add a parallel fork with (rmet) as the
 ;; second trigger (kanata fork triggers are OR'd when listed).
 (deflayermap (mouse-pass)
-  i    @mmu
-  j    @mml
-  k    @mmd
+  k    @mmu
+  h    @mml
+  j    @mmd
   l    @mmr
 
   spc  mlft
-  h    mrgt
+  u    mrgt
   s    mmid
 
   n    mbck
   m    mfwd
 
-  u    @mwd
+  i    @mwd
   o    @mwu
 
   z    (layer-while-held mouse-pass-focus)
@@ -274,7 +274,7 @@
   ;; Transparent fallback: any unmapped key outputs its defsrc value,
   ;; so q w e r t y a d f g etc. type normally while in mouse-pass.
   ;; Makes the layer usable for browser workflows: move the mouse
-  ;; with ijkl AND keep typing in the address bar / search box /
+  ;; with hjkl AND keep typing in the address bar / search box /
   ;; quick-find without leaving the layer.
   ;;
   ;; ___ is the input wildcard ("all unmapped keys in this layer"),
@@ -290,16 +290,16 @@
 ;; to precision speed (3 px/tick). Releasing z returns to
 ;; mouse-pass automatically (layer-while-held).
 (deflayermap (mouse-pass-focus)
-  i    @mmu-foc
-  j    @mml-foc
-  k    @mmd-foc
+  k    @mmu-foc
+  h    @mml-foc
+  j    @mmd-foc
   l    @mmr-foc
   spc  mlft
-  h    mrgt
+  u    mrgt
   s    mmid
   n    mbck
   m    mfwd
-  u    @mwd
+  i    @mwd
   o    @mwu
 
   ;; Let modifiers pass through to Hyprland/apps.
