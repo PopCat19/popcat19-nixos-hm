@@ -43,10 +43,10 @@
   lctl lmet lalt           spc            ralt rmet rctl
 )
 
-;; Mouse movement: elongated acceleration.
-;; Interval 8 ms (125 Hz). Default 2 px/tick -> Max 20 px/tick over 500 ms.
+;; Mouse movement: shortened acceleration ramp.
+;; Interval 8 ms (125 Hz). Default 2 px/tick -> Max 20 px/tick over 250 ms.
 ;; - Tap (single tick): 2 px = 250 px/s.
-;; - Hold 500 ms+: 20 px/tick = 2500 px/s for general movement.
+;; - Hold 250 ms+: 20 px/tick = 2500 px/s for general movement.
 ;; Focus mode (hold z): drops to 1 -> 10 px/tick for precision nudging.
 ;; The 2->20 default covers general movement; holding z temporarily
 ;; halves speed for sub-pixel feel. Ramped start applies to both.
@@ -57,14 +57,14 @@
 ;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
 (defalias
-  mmu      (movemouse-accel-up    8 500 2 20)
-  mmd      (movemouse-accel-down  8 500 2 20)
-  mml      (movemouse-accel-left  8 500 2 20)
-  mmr      (movemouse-accel-right 8 500 2 20)
-  mmu-foc  (movemouse-accel-up    8 500 1 10)
-  mmd-foc  (movemouse-accel-down  8 500 1 10)
-  mml-foc  (movemouse-accel-left  8 500 1 10)
-  mmr-foc  (movemouse-accel-right 8 500 1 10)
+  mmu      (movemouse-accel-up    8 250 2 20)
+  mmd      (movemouse-accel-down  8 250 2 20)
+  mml      (movemouse-accel-left  8 250 2 20)
+  mmr      (movemouse-accel-right 8 250 2 20)
+  mmu-foc  (movemouse-accel-up    8 250 1 10)
+  mmd-foc  (movemouse-accel-down  8 250 1 10)
+  mml-foc  (movemouse-accel-left  8 250 1 10)
+  mmr-foc  (movemouse-accel-right 8 250 1 10)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
