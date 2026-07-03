@@ -43,7 +43,7 @@
 )
 
 ;; Mouse movement: constant speed, no acceleration.
-;; Default 3 pixels per tick (focus). Boost (hold z): 10 px/tick.
+;; Default 3 pixels per tick (focus). Boost (hold z): 6 px/tick.
 ;; Instant, predictable response; speed controlled by selection
 ;; (focus vs boost) rather than hold duration.
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
@@ -53,10 +53,10 @@
 ;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
 (defalias
-  mmu      (movemouse-up    8 10)
-  mmd      (movemouse-down  8 10)
-  mml      (movemouse-left  8 10)
-  mmr      (movemouse-right 8 10)
+  mmu      (movemouse-up    8 6)
+  mmd      (movemouse-down  8 6)
+  mml      (movemouse-left  8 6)
+  mmr      (movemouse-right 8 6)
   mmu-foc  (movemouse-up    8 3)
   mmd-foc  (movemouse-down  8 3)
   mml-foc  (movemouse-left  8 3)
@@ -180,7 +180,7 @@
 )
 
 ;; Boost sub-layer of mouse. Hold z while in mouse mode to jump to
-;; fast speed (10 px/tick). Releasing z returns to mouse (focus,
+;; fast speed (6 px/tick). Releasing z returns to mouse (focus,
 ;; 3 px/tick) automatically (layer-while-held). All other keys identical.
 (deflayermap (mouse-boost)
   k    @mmu
@@ -286,7 +286,7 @@
 )
 
 ;; Boost sub-layer of mouse-pass. Hold z while in mouse-pass to jump
-;; to fast speed (10 px/tick). Releasing z returns to mouse-pass
+;; to fast speed (6 px/tick). Releasing z returns to mouse-pass
 ;; (focus, 3 px/tick) automatically (layer-while-held).
 (deflayermap (mouse-pass-boost)
   k    @mmu
