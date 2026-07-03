@@ -54,14 +54,14 @@
 ;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
 (defalias
-  mmu      (movemouse-up    10)
-  mmd      (movemouse-down  10)
-  mml      (movemouse-left  10)
-  mmr      (movemouse-right 10)
-  mmu-foc  (movemouse-up    5)
-  mmd-foc  (movemouse-down  5)
-  mml-foc  (movemouse-left  5)
-  mmr-foc  (movemouse-right 5)
+  mmu      (movemouse-up    8 10)
+  mmd      (movemouse-down  8 10)
+  mml      (movemouse-left  8 10)
+  mmr      (movemouse-right 8 10)
+  mmu-foc  (movemouse-up    8 5)
+  mmd-foc  (movemouse-down  8 5)
+  mml-foc  (movemouse-left  8 5)
+  mmr-foc  (movemouse-right 8 5)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
