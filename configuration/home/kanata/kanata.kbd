@@ -42,7 +42,7 @@
 )
 
 ;; Mouse movement: constant speed, no acceleration.
-;; Default 6 pixels per tick (boost). Focus (hold z): 3 px/tick.
+;; Default 8 pixels per tick (boost). Focus (hold z): 2 px/tick.
 ;; Instant, predictable response; speed controlled by selection
 ;; (focus vs boost) rather than hold duration.
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
@@ -52,14 +52,14 @@
 ;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
 (defalias
-  mmu      (movemouse-up    8 6)
-  mmd      (movemouse-down  8 6)
-  mml      (movemouse-left  8 6)
-  mmr      (movemouse-right 8 6)
-  mmu-foc  (movemouse-up    8 3)
-  mmd-foc  (movemouse-down  8 3)
-  mml-foc  (movemouse-left  8 3)
-  mmr-foc  (movemouse-right 8 3)
+  mmu      (movemouse-up    8 8)
+  mmd      (movemouse-down  8 8)
+  mml      (movemouse-left  8 8)
+  mmr      (movemouse-right 8 8)
+  mmu-foc  (movemouse-up    8 2)
+  mmd-foc  (movemouse-down  8 2)
+  mml-foc  (movemouse-left  8 2)
+  mmr-foc  (movemouse-right 8 2)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
@@ -189,8 +189,8 @@
 )
 
 ;; Focus sub-layer of mouse-pass. Hold z while in mouse-pass to drop
-;; to precision speed (3 px/tick). Releasing z returns to mouse-pass
-;; (boost, 6 px/tick) automatically (layer-while-held).
+;; to precision speed (2 px/tick). Releasing z returns to mouse-pass
+;; (boost, 8 px/tick) automatically (layer-while-held).
 (deflayermap (mouse-pass-focus)
   k    @mmu-foc
   h    @mml-foc
