@@ -11,8 +11,8 @@
 ;; Common mouse keys (both layers):
 ;;   h / j / k / l  - cursor movement (movemouse-accel 2->8px)
 ;;   spc            - left click (hold to drag)
-;;   ;              - middle click (double-tap: literal ;)
-;;   '              - right click (double-tap: literal ')
+;;   ;              - middle click
+;;   '              - right click
 ;;   , / .          - mouse back / forward
 ;;   i / o          - scroll down / up
 ;;
@@ -148,8 +148,8 @@
   l    @mmr
 
   spc  mlft
-  ;    (tap-dance 200 (mmid ;))
-  '    (tap-dance 200 (mrgt '))
+  ;    mmid
+  '    mrgt
   ,    mbck
   .    mfwd
   i    @mwd
@@ -199,8 +199,8 @@
 ;; Mouse:
 ;;   h j k l  - movement (movemouse-accel: 2px -> 8px over 300ms)
 ;;   spc      - left click (hold to drag)
-;;   ;        - middle click (double-tap: literal ;)
-;;   '        - right click (double-tap: literal ')
+;;   ;        - middle click
+;;   '        - right click
 ;;   , .      - mouse back / forward
 ;;   i o      - scroll down / up
 ;;
@@ -226,8 +226,8 @@
   k    @mmu
   l    @mmr
   spc  mlft
-  ;    (tap-dance 200 (mmid ;))
-  '    (tap-dance 200 (mrgt '))
+  ;    mmid
+  '    mrgt
   ,    mbck
   .    mfwd
   i    @mwd
