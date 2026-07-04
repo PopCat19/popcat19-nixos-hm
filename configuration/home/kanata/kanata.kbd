@@ -1,15 +1,11 @@
 ;; hjkl mouse-emulation layers.
 ;;
-;; Three entry points:
-;;   Super+C held       -> mouse-c: hjkl mouse + F-key nav/media/brightness
-;;                        macros (see mouse-c). Release C exits.
-;;   Rshift tap         -> mouse-pass: hjkl mouse + full typing passthrough
-;;                        (use-defsrc). Rshift tap or b exits.
-;;   Super dbl-tap-hold -> super-focus: Super held + passthrough, so hjkl
-;;                        pass as Super+h/j/k/l for Hyprland window focus.
-;;                        Release Super exits.
-;; Plain C still types c; Rshift held >=120ms still acts as Shift;
-;; single Super tap passes Super to the OS.
+;; Two entry points, two layers:
+;;   Super+C held -> mouse-c: hjkl mouse + F-key nav/media/brightness
+;;                  macros (see mouse-c). Release C exits.
+;;   Rshift tap   -> mouse-pass: hjkl mouse + full typing passthrough
+;;                  (use-defsrc). Rshift tap or b exits.
+;; Plain C still types c; Rshift held >=120ms still acts as Shift.
 ;; Each transition fires a short on/off desktop notification.
 ;;
 ;; Common mouse keys (both layers):
@@ -102,19 +98,6 @@
   exit-rsft (multi
              (layer-switch default)
              (cmd notify-send "Kanata: off" "" -t 3000 -u low))
-
-  ;; Double-tap Left Super (two taps within 200ms) then HOLD the second
-  ;; press -> super-focus layer. Single Super tap passes Super to the OS
-  ;; normally (~200ms latency to detect a possible 2nd tap).
-  ;; super-focus holds lmet (Super down) + use-defsrc passthrough, so
-  ;; h/j/k/l reach the OS as Super+h/j/k/l (Hyprland window-focus binds)
-  ;; and Super+other keys still work (move/resize). UNVERIFIED: nested
-  ;; tap-dance+tap-hold hold-state semantics, and interaction with the
-  ;; @tog-c fork (which uses lmet as its trigger).
-  sup-meta (tap-dance 200 (
-    lmet
-    (tap-hold 200 200 lmet (multi (layer-while-held super-focus) lmet))
-  ))
 )
 
 ;; Default layer uses deflayermap (input->action pairs) instead of
@@ -130,7 +113,6 @@
   c    @tog-c
   rsft (tap-hold 120 120 @tog-rsft rsft)
   caps (tap-hold 200 200 esc caps)
-  lmet @sup-meta
   nlck XX
 )
 
@@ -286,14 +268,4 @@
   spc  spc
 
   ___  XX
-)
-
-;; Super-focus layer: entered by double-tap-hold Left Super (@sup-meta).
-;; lmet is held (Super down) + use-defsrc passthrough, so h/j/k/l pass
-;; as literal letters and the OS sees Super+h/j/k/l for Hyprland window
-;; focus; Super+other keys (move/resize) also pass through. Release of
-;; lmet exits (layer-while-held).
-(deflayermap (super-focus)
-  lmet lmet
-  ___  use-defsrc
 )
