@@ -5,7 +5,7 @@
 ;;                  macros (see mouse-c). Release C exits.
 ;;   Rshift tap   -> mouse-pass: hjkl mouse + full typing passthrough
 ;;                  (use-defsrc). Rshift tap or b exits.
-;; Plain C still types c; Rshift held >=100ms still acts as Shift.
+;; Plain C still types c; Rshift held >=120ms still acts as Shift.
 ;; Each transition fires a short on/off desktop notification.
 ;;
 ;; Common mouse keys (both layers):
@@ -87,8 +87,8 @@
                 (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
               (lmet))
 
-  ;; Rshift: tap (released within 100ms) toggles mouse-pass on
-  ;; (semi-passthrough). Held >= 100ms it acts as plain Right Shift
+  ;; Rshift: tap (released within 120ms) toggles mouse-pass on
+  ;; (semi-passthrough). Held >= 120ms it acts as plain Right Shift
   ;; (tap-hold). The exit direction is bound in mouse-pass (rsft there
   ;; is the same tap-hold, tap = back to default). Ralt passes through
   ;; normally again.
@@ -105,13 +105,13 @@
 ;; overridden; all other keys implicitly use their defsrc value (the
 ;; literal key). c is bound to @tog-c so plain C still types c, but
 ;; Super+C holds mouse-pass (and masks Super via release-key) while
-;; both held. rsft is a tap-hold: tap (released within 100ms) toggles
-;; mouse-pass on via @tog-rsft; held >= 100ms acts as Right Shift.
+;; both held. rsft is a tap-hold: tap (released within 120ms) toggles
+;; mouse-pass on via @tog-rsft; held >= 120ms acts as Right Shift.
 ;; nlck XX swallows the physical NumLock so it cannot fight Hyprland's
 ;; numlock_by_default = true (which sets the software state on connect).
 (deflayermap (default)
   c    @tog-c
-  rsft (tap-hold 100 100 @tog-rsft rsft)
+  rsft (tap-hold 120 120 @tog-rsft rsft)
   caps (tap-hold 200 200 esc caps)
   nlck XX
 )
@@ -132,7 +132,7 @@
 ;;   own activation state.
 ;;
 ;; Rshift is the entry/exit toggle via tap-hold (see @tog-rsft and the
-;;   rsft binding below): tap = toggle mouse-pass, held >= 100ms =
+;;   rsft binding below): tap = toggle mouse-pass, held >= 120ms =
 ;;   Right Shift pass-through. Ralt passes through normally.
 ;;
 ;; Unmapped normal keys output their defsrc value (use-defsrc below) so
@@ -159,11 +159,11 @@
 
   ;; Let modifiers pass through to Hyprland/apps. rsft is a tap-hold:
   ;; tap (released within 100ms) exits mouse-pass via @exit-rsft; held
-  ;; >= 100ms acts as Right Shift.
+  ;; >= 120ms acts as Right Shift.
   lctl lctl
   rctl rctl
   lsft lsft
-  rsft (tap-hold 100 100 @exit-rsft rsft)
+  rsft (tap-hold 120 120 @exit-rsft rsft)
   lalt lalt
   ralt ralt
   lmet lmet
