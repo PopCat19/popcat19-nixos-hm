@@ -1,9 +1,8 @@
 ;; hjkl mouse-emulation layer.
 ;;
-;; Entry: Super+C (chord). Tapping C alone still types a c.
-;; Exit:  plain c or Esc from the mouse layer (ergonomic: same finger
-;;         as movement). Super+C from mouse mode falls through and
-;;         re-enters; noise but functional.
+;; Entry: Ralt (tap toggles the semi-passthrough mouse-pass layer),
+;;        or Super+C held (release C exits). Plain C still types c.
+;; Exit:  Ralt tap, b, or Esc from mouse-pass.
 ;; Each transition fires a short on/off desktop notification.
 ;; Mouse layer keys:
 ;;   h / j / k / l  - cursor movement (accelerates while held)
@@ -65,10 +64,10 @@
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
 
-;; Super+C: hold to activate mouse layer (no toggle).
-;; fork with lmet as trigger so plain C still types c.
-;; (layer-while-held mouse) activates mouse mode only while c is held;
-;; release of c exits automatically.
+;; Super+C: hold to activate the semi-passthrough mouse-pass layer
+;; (no toggle). fork with lmet as trigger so plain C still types c.
+;; (layer-while-held mouse-pass) activates mouse mode only while c is
+;;   held; release of c exits automatically.
 ;; (release-key lmet) synthetically releases Super to the OS on entry so
 ;;   Hyprland does not see Super held during mouse mode (avoids Super
 ;;   overlay / Super+key conflicts). kanata still tracks the physical
@@ -77,170 +76,67 @@
 ;;   Trade-off: Hyprland sees a brief Super down->up (phantom tap) on
 ;;   entry; same already happens on exit today. No delay on plain Super
 ;;   for normal Hyprland binds (unlike a defchordsv2 approach).
+;;   Also means Super+spc (Hyprland window move) does not work while
+;;   Super+C is held; use the Ralt-toggled mode for that.
 ;; (cmd notify-send) fires the ON notification on activation.
 (defalias
   tog-c (fork c
               (multi
-                (layer-while-held mouse)
+                (layer-while-held mouse-pass)
                 (release-key lmet)
                 (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
               (lmet))
 
-  ;; Super+B: switch to mouse-pass (persists until explicit exit).
-  ;; Uses layer-switch (not layer-toggle) so the layer change is
-  ;; unconditional and not tied to the b key's hold/release lifecycle.
-  ;; plain B still types b.
-  tog-b (fork b
-              (multi
-                (layer-switch mouse-pass)
-                (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
-              (lmet))
+  ;; Ralt: tap to toggle mouse-pass on (semi-passthrough). The exit
+  ;; direction is bound directly in mouse-pass (ralt there switches
+  ;; back to default). Ralt no longer reaches the OS as a modifier
+  ;; from the default layer; use lalt for Alt.
+  tog-ralt (multi
+             (layer-switch mouse-pass)
+             (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
 )
 
 ;; Default layer uses deflayermap (input->action pairs) instead of
-;; positional deflayer columns. Only the c and b positions are
+;; positional deflayer columns. Only the c and ralt positions are
 ;; overridden; all other keys implicitly use their defsrc value (the
 ;; literal key). c is bound to @tog-c so plain C still types c, but
-;; Super+C holds the mouse layer (and masks Super via release-key)
-;; while both held. b is bound to @tog-b so plain B still types b,
-;; but Super+B switches into mouse-pass until b or Esc switches back.
+;; Super+C holds mouse-pass (and masks Super via release-key) while
+;; both held. ralt is bound to @tog-ralt so tapping Ralt toggles
+;; mouse-pass on; the off direction is bound inside mouse-pass.
 ;; nlck XX swallows the physical NumLock so it cannot fight Hyprland's
 ;; numlock_by_default = true (which sets the software state on connect).
 (deflayermap (default)
   c    @tog-c
-  b    @tog-b
+  ralt @tog-ralt
   nlck XX
 )
 
-;; Mouse layer: right-handable while Super+C is held (left hand).
-;;   h j k l  - movement (right hand home row)
-;;   spc      - mlft (hold to drag) -- left thumb
-;;   u        - mrgt (right click)
-;;   s        - mmid (middle click)
-;;   n m      - mouse back / forward
-;;   i o      - scroll down / up (exponential mwheel-accel, see defalias)
-;;   z        - focus (precision speed, hold; default is boost/fast)
-;;   [ ]      - home / end
-;;   , .      - pgup / pgdn
-;;   - =      - volume down / up
-;;   0        - mute toggle
-;;   7 8 9    - media prev / play-pause / next
-;;   ; ' /    - hold lalt / lctl / lsft (right-hand mod for click combos)
+;; Semi-passthrough mouse layer.
 ;;
-;; Release of Super+C exits mouse mode automatically (layer-while-held).
+;; Entry: Ralt tap (toggle, via @tog-ralt) or Super+C held (via @tog-c).
+;; Exit:  Ralt tap, b, or Esc (all switch back to default directly).
 ;;
-;; Why no scroll-boost key: mwheel-accel's slow-start ramp (initial=10)
-;; already covers precision scrolling, and ramps to fast (max=800) for
-;; long pages. A separate boost key would add complexity for no gain.
-;;
-;; ___ XX: wildcard mapping every unmapped key to no-op. Nothing
-;; else leaks to Hyprland during mouse mode (prevents phantom
-;; Super+key or plain-key multi-actions). The explicitly mapped keys
-;; above still work. Already-held keys (c, lmet) are unaffected —
-;; layer change does not re-trigger held keys, and their release is
-;; driven by the press-time action (layer-while-held / lmet output).
-;; Force-exit (lctl+spc+esc) still works: it is handled before any
-;; layer/kanata remapping.
-(deflayermap (mouse)
-  k    @mmu
-  h    @mml
-  j    @mmd
-  l    @mmr
-  spc  mlft
-  u    mrgt
-  s    mmid
-  n    mbck
-  m    mfwd
-  i    @mwd
-  o    @mwu
-  z    (layer-while-held mouse-focus)
-  [    end
-  ]    home
-  ,    pgdn
-  .    pgup
-  -    vold
-  =    volu
-  0    mute
-  7    prev
-  8    pp
-  9    next
-
-  ;; Right-hand modifier passthrough. Without these, ; ' / would be
-  ;; swallowed by ___ XX. Plain key -> modifier is already momentary
-  ;; in Kanata: press-down -> modifier-down, release -> modifier-up,
-  ;; no action wrapper needed. Lets you hold ' + spc for Ctrl+click
-  ;; or ; + h/j/k/l for Alt+arrow-style bindings without leaving the
-  ;; mouse layer. mouse-pass already passes the physical modifiers
-  ;; through, so this is only needed here.
-  ;    lalt
-  '    lctl
-  /    lsft
-
-  ___  XX
-)
-
-;; Focus sub-layer of mouse. Hold z while in mouse mode to drop to
-;; precision speed (3 px/tick). Releasing z returns to mouse (boost,
-;; 6 px/tick) automatically (layer-while-held). All other keys identical.
-(deflayermap (mouse-focus)
-  k    @mmu-foc
-  h    @mml-foc
-  j    @mmd-foc
-  l    @mmr-foc
-  spc  mlft
-  u    mrgt
-  s    mmid
-  n    mbck
-  m    mfwd
-  i    @mwd
-  o    @mwu
-  [    end
-  ]    home
-  ,    pgdn
-  .    pgup
-  -    vold
-  =    volu
-  0    mute
-  7    prev
-  8    pp
-  9    next
-
-  ;; Right-hand modifier passthrough.
-  ;    lalt
-  '    lctl
-  /    lsft
-
-  ___  XX
-)
-
-;; Toggled mouse layer with modifier passthrough.
-;;
-;; Entry: Super+B (via @tog-b, layer-switch)
-;; Exit:  b or Esc (both switch back to default directly)
-;;
-;; Unlike the Super+C held layer above, this layer lets modifier keys
-;; pass through to Hyprland/apps:
+;; Modifier keys pass through to Hyprland/apps:
 ;;   Shift+click / Ctrl+click -> GUI multi-select works.
-;;   Super+spc -> Super+left-click, so Hyprland bindm can move windows.
+;;   Super+spc -> Super+left-click, so Hyprland bindm can move windows
+;;     (only in the Ralt-toggled mode; Super+C held masks Super).
 ;;   Super+right-click -> Super+right-click for resize if bound.
 ;;   Plain Alt alone (or Ctrl/Shift/Super) also passes through, so you
 ;;   can hold a modifier for an app-specific binding while staying in
 ;;   mouse-pass. The key -> key mapping is independent of the layer's
 ;;   own activation state.
 ;;
-;; Ralt toggle: tapping Ralt switches to mouse-pass-full, where every
-;;   key (hjkl, spc, b, esc, ...) outputs its defsrc value -- pure OS
-;;   passthrough. Tap Ralt again to return to mouse-pass. Ralt itself
-;;   is the toggle, so it no longer reaches the OS as a modifier from
-;;   mouse-pass; use lalt for Alt while mouse actions are active.
+;; Ralt is the entry/exit toggle (see @tog-ralt and the ralt binding
+;;   below); it no longer reaches the OS as a modifier from either
+;;   default or mouse-pass. Use lalt for Alt.
 ;;
-;; Non-mapped normal keys are still swallowed by ___ XX so random
-;; letters do not leak while using mouse mode. The release-key in
-;; tog-c was dropped here on purpose (see tog-b comment).
+;; Unmapped normal keys output their defsrc value (use-defsrc below) so
+;;   q w e r t y a d f g etc. type normally -- usable for browser
+;;   workflows (move the mouse with hjkl AND keep typing).
 ;;
-;; Note: this only uses lmet as the fork trigger. rmet (right Super)
-;; is not bound; if needed, add a parallel fork with (rmet) as the
-;; second trigger (kanata fork triggers are OR'd when listed).
+;; Note: tog-c (Super+C) uses lmet as the fork trigger. rmet (right
+;;   Super) is not bound; if needed, add a parallel fork with (rmet)
+;;   as the second trigger (kanata fork triggers are OR'd when listed).
 (deflayermap (mouse-pass)
   k    @mmu
   h    @mml
@@ -259,14 +155,14 @@
 
   z    (layer-while-held mouse-pass-focus)
 
-  ;; Let modifiers pass through to Hyprland/apps. Ralt is reserved as
-  ;; the full-passthrough toggle (see mouse-pass-full below).
+  ;; Let modifiers pass through to Hyprland/apps. Ralt is the exit
+  ;; toggle (tap to return to default).
   lctl lctl
   rctl rctl
   lsft lsft
   rsft rsft
   lalt lalt
-  ralt (multi (layer-switch mouse-pass-full) (cmd notify-send "Kanata: full pass ON" "" -t 2000 -u low))
+  ralt (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
   lmet lmet
   rmet rmet
 
@@ -289,19 +185,6 @@
   ;; unmapped keys" (the previous behavior). The mouse layer keeps
   ;; ___ XX so it stays fully isolated -- different design intent
   ;; (no leaks during quick mouse-mode flashes).
-  ___  use-defsrc
-)
-
-;; Full-passthrough sub-layer of mouse-pass. Tapping Ralt from
-;; mouse-pass switches here via layer-switch; every key (including
-;; hjkl, spc, u, s, i, o, b, esc) outputs its defsrc value, so the
-;; whole keyboard reaches Hyprland/apps unchanged. Tap Ralt again to
-;; layer-switch back to mouse-pass. b/esc do NOT exit from here (they
-;; pass through); only Ralt returns to mouse-pass, and the global
-;; force-exit (lctl+spc+esc) still applies.
-(deflayermap (mouse-pass-full)
-  ralt (multi (layer-switch mouse-pass) (cmd notify-send "Kanata: full pass OFF" "" -t 2000 -u low))
-
   ___  use-defsrc
 )
 
