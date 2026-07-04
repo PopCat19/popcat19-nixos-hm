@@ -12,7 +12,7 @@
 ;;   h / j / k / l  - cursor movement (movemouse-accel 2->8px)
 ;;   spc            - left click (hold to drag)
 ;;   ;              - middle click
-;;   '              - right click
+;;   m              - right click
 ;;   , / .          - mouse back / forward
 ;;   i / o          - scroll down / up
 ;;
@@ -149,7 +149,7 @@
 
   spc  mlft
   ;    mmid
-  '    mrgt
+  m    mrgt
   ,    mbck
   .    mfwd
   i    @mwd
@@ -200,7 +200,7 @@
 ;;   h j k l  - movement (movemouse-accel: 2px -> 8px over 300ms)
 ;;   spc      - left click (hold to drag)
 ;;   ;        - middle click
-;;   '        - right click
+;;   m        - right click
 ;;   , .      - mouse back / forward
 ;;   i o      - scroll down / up
 ;;
@@ -227,7 +227,7 @@
   l    @mmr
   spc  mlft
   ;    mmid
-  '    mrgt
+  m    mrgt
   ,    mbck
   .    mfwd
   i    @mwd
