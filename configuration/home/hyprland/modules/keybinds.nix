@@ -99,8 +99,10 @@
       "$mainMod, j, movefocus, d"
       # desc: Cycle focus
       "Alt, Tab, movefocus, d"
-      # desc: Cycle group active
-      "$mainMod+Ctrl, L, changegroupactive, f"
+      # desc: Cycle group active forward
+      "$mainMod+Alt, L, changegroupactive, f"
+      # desc: Cycle group active backward
+      "$mainMod+Alt, H, changegroupactive, b"
 
       # === Workspace Switch ===
       # cat: Workspaces
