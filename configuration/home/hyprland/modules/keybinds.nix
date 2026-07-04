@@ -103,6 +103,16 @@
       "$mainMod+Alt, L, changegroupactive, f"
       # desc: Cycle group active backward
       "$mainMod+Alt, H, changegroupactive, b"
+      # desc: Move active window into group (left)
+      "$mainMod+Shift, H, moveintogroup, l"
+      # desc: Move active window into group (down)
+      "$mainMod+Shift, J, moveintogroup, d"
+      # desc: Move active window into group (up)
+      "$mainMod+Shift, K, moveintogroup, u"
+      # desc: Move active window into group (right)
+      "$mainMod+Shift, L, moveintogroup, r"
+      # desc: Move active window out of group
+      "$mainMod+Shift, G, moveoutofgroup,"
 
       # === Workspace Switch ===
       # cat: Workspaces
