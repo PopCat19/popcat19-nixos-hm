@@ -11,9 +11,9 @@
 ;; Common mouse keys (both layers):
 ;;   h / j / k / l  - cursor movement (movemouse-accel 2->8px)
 ;;   spc            - left click (hold to drag)
-;;   u              - right click
+;;   m              - right click
 ;;   s              - middle click
-;;   m / n          - mouse back / forward
+;;   , / .          - mouse back / forward
 ;;   i / o          - scroll down / up
 ;;
 ;; mouse-c only (F-key macros):
@@ -148,12 +148,10 @@
   l    @mmr
 
   spc  mlft
-  u    mrgt
   s    mmid
-
-  n    mbck
-  m    mfwd
-
+  m    mrgt
+  ,    mbck
+  .    mfwd
   i    @mwd
   o    @mwu
 
@@ -201,9 +199,9 @@
 ;; Mouse:
 ;;   h j k l  - movement (movemouse-accel: 2px -> 8px over 300ms)
 ;;   spc      - left click (hold to drag)
-;;   u        - right click
+;;   m        - right click
 ;;   s        - middle click
-;;   n m      - mouse back / forward
+;;   , .      - mouse back / forward
 ;;   i o      - scroll down / up
 ;;
 ;; Function-key macros (the c layer's retained nav/media cluster):
@@ -228,10 +226,10 @@
   k    @mmu
   l    @mmr
   spc  mlft
-  u    mrgt
   s    mmid
-  n    mbck
-  m    mfwd
+  m    mrgt
+  ,    mbck
+  .    mfwd
   i    @mwd
   o    @mwu
 
