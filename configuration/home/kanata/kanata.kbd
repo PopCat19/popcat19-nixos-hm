@@ -148,8 +148,8 @@
   l    @mmr
 
   spc  mlft
-  ;    (tap-dance 100 (mmid ;))
-  '    (tap-dance 100 (mrgt '))
+  ;    (tap-dance 200 (mmid ;))
+  '    (tap-dance 200 (mrgt '))
   ,    mbck
   .    mfwd
   i    @mwd
@@ -216,8 +216,8 @@
 ;;
 ;; Latency notes (--check is syntax-only, not runtime-verified):
 ;;   - f9/f10 single-tap (pp/mute) fires on the next keypress or after
-;;     the 100ms tap-dance timeout; an isolated single tap waits up to
-;;     100ms before firing.
+;;     the 200ms tap-dance timeout; an isolated single tap waits up to
+;;     200ms before firing.
 ;;   - f7/f8 hold (end/home) needs a 200ms hold; a quick tap gives
 ;;     pgdn/pgup.
 (deflayermap (mouse-c)
@@ -226,8 +226,8 @@
   k    @mmu
   l    @mmr
   spc  mlft
-  ;    (tap-dance 100 (mmid ;))
-  '    (tap-dance 100 (mrgt '))
+  ;    (tap-dance 200 (mmid ;))
+  '    (tap-dance 200 (mrgt '))
   ,    mbck
   .    mfwd
   i    @mwd
@@ -237,8 +237,8 @@
   f6   (cmd "brightnessctl s 10%+")
   f7   (tap-hold 100 200 pgdn end)
   f8   (tap-hold 100 200 pgup home)
-  f9   (tap-dance 100 (pp prev))
-  f10  (tap-dance 100 (mute next))
+  f9   (tap-dance 200 (pp prev))
+  f10  (tap-dance 200 (mute next))
   f11  vold
   f12  volu
 
