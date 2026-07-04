@@ -16,7 +16,7 @@
 ;;   , / .          - mouse back / forward
 ;;   i / o          - scroll down / up
 ;;
-;; mouse-c only (F-key macros):
+;; Shared F-key macros (both mouse-c and mouse-pass, via @f5..@f12):
 ;;   f5 / f6    - brightness down / up 10%
 ;;   f7 / f8    - tap pgdn/pgup, hold end/home
 ;;   f9 / f10   - tap play-pause/mute, double-tap prev/next
@@ -61,6 +61,21 @@
   mmr      (movemouse-accel-right 8 300 2 8)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
+
+  ;; Shared function-key nav/media/brightness cluster, used by both
+  ;; mouse-c and mouse-pass so the bindings live in one place.
+  ;;   f5/f6  - brightness down/up 10%   (cmd brightnessctl)
+  ;;   f7/f8  - tap pgdn/pgup, hold 200ms end/home
+  ;;   f9/f10 - tap play-pause/mute, double-tap prev/next
+  ;;   f11/f12- volume down/up
+  f5   (cmd "brightnessctl s 10%-")
+  f6   (cmd "brightnessctl s 10%+")
+  f7   (tap-hold 100 200 pgdn end)
+  f8   (tap-hold 100 200 pgup home)
+  f9   (tap-dance 200 (pp prev))
+  f10  (tap-dance 200 (mute next))
+  f11  vold
+  f12  volu
 )
 
 ;; Super+C: hold to activate the dedicated mouse-c layer (no toggle).
@@ -174,6 +189,15 @@
   ;; fork hold semantics. esc and b both pass through via ___ use-defsrc
   ;; below (use rsft-tap to leave mouse-pass).
 
+  f5   @f5
+  f6   @f6
+  f7   @f7
+  f8   @f8
+  f9   @f9
+  f10  @f10
+  f11  @f11
+  f12  @f12
+
   ;; Transparent fallback: any unmapped key outputs its defsrc value,
   ;; so q w e r t y a d f g etc. type normally while in mouse-pass.
   ;; Makes the layer usable for browser workflows: move the mouse
@@ -190,7 +214,8 @@
 )
 
 ;; Super+C held layer: hjkl mouse + function-key nav/media/brightness
-;; macros, with use-defsrc semi-passthrough for everything else.
+;; macros (@f5..@f12, shared with mouse-pass), with use-defsrc
+;; semi-passthrough for everything else.
 ;;
 ;; Entry: Super+C held (via @tog-c, layer-while-held). Release C exits.
 ;;   Super is masked on entry (release-key lmet), so Super+spc window
@@ -203,12 +228,6 @@
 ;;   m        - right click
 ;;   , .      - mouse back / forward
 ;;   i o      - scroll down / up
-;;
-;; Function-key macros (the c layer's retained nav/media cluster):
-;;   f5 / f6    - brightness down / up 10%   (cmd brightnessctl)
-;;   f7 / f8    - tap: pgdn / pgup; hold 200ms: end / home
-;;   f9 / f10   - tap: play-pause / mute; double-tap: prev / next
-;;   f11 / f12  - volume down / up
 ;;
 ;; Everything else (letters, modifiers, etc.) outputs its defsrc value
 ;;   via ___ use-defsrc, so typing works while the layer is held. c is
@@ -234,14 +253,14 @@
   i    @mwd
   o    @mwu
 
-  f5   (cmd "brightnessctl s 10%-")
-  f6   (cmd "brightnessctl s 10%+")
-  f7   (tap-hold 100 200 pgdn end)
-  f8   (tap-hold 100 200 pgup home)
-  f9   (tap-dance 200 (pp prev))
-  f10  (tap-dance 200 (mute next))
-  f11  vold
-  f12  volu
+  f5   @f5
+  f6   @f6
+  f7   @f7
+  f8   @f8
+  f9   @f9
+  f10  @f10
+  f11  @f11
+  f12  @f12
 
   c    XX
 
