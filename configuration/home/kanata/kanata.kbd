@@ -112,7 +112,7 @@
 (deflayermap (default)
   c    @tog-c
   rsft (tap-hold 100 100 @tog-rsft rsft)
-  caps (tap-hold 100 200 esc caps)
+  caps (tap-hold 200 200 esc caps)
   nlck XX
 )
 
@@ -143,7 +143,7 @@
 ;;   Super) is not bound; if needed, add a parallel fork with (rmet)
 ;;   as the second trigger (kanata fork triggers are OR'd when listed).
 (deflayermap (mouse-pass)
-  caps (tap-hold 100 200 esc caps)
+  caps (tap-hold 200 200 esc caps)
   k    @mmu
   h    @mml
   j    @mmd
@@ -223,7 +223,7 @@
 ;;   - f7/f8 hold (end/home) needs a 200ms hold; a quick tap gives
 ;;     pgdn/pgup.
 (deflayermap (mouse-c)
-  caps (tap-hold 100 200 esc caps)
+  caps (tap-hold 200 200 esc caps)
   h    @mml
   j    @mmd
   k    @mmu
@@ -257,7 +257,7 @@
 ;; Space types normally; all other unmapped keys are blocked (XX)
 ;; to prevent phantom Super+key combos while navigating.
 (deflayermap (nav)
-  caps (tap-hold 100 200 esc caps)
+  caps (tap-hold 200 200 esc caps)
   h    left
   j    down
   k    up
