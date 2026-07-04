@@ -32,4 +32,14 @@ in
   # Toggle Super+C for hjkl mouse emulation. Requires services.kanataUdev.enable
   # in configuration.nix so /dev/uinput is accessible to the user service.
   programs.kanata.enable = true;
+
+  # Seed-once OBS profile: Advanced mode, AMD VAAPI H.264 stream (CBR 8000)
+  # and AV1 record (CQP 22). Files are seeded only if absent, so UI edits in
+  # OBS persist across rebuilds. Re-seed by deleting the profile files.
+  programs.obs-studio.streamingProfile = {
+    enable = true;
+    vaapiDevice = "/dev/dri/by-path/pci-0000:12:00.0-render";
+    streamBitrate = 8000;
+    recordQp = 22;
+  };
 }
