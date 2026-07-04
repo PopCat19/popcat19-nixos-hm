@@ -228,6 +228,12 @@
 ;;   mouse-pass. The key -> key mapping is independent of the layer's
 ;;   own activation state.
 ;;
+;; Ralt toggle: tapping Ralt switches to mouse-pass-full, where every
+;;   key (hjkl, spc, b, esc, ...) outputs its defsrc value -- pure OS
+;;   passthrough. Tap Ralt again to return to mouse-pass. Ralt itself
+;;   is the toggle, so it no longer reaches the OS as a modifier from
+;;   mouse-pass; use lalt for Alt while mouse actions are active.
+;;
 ;; Non-mapped normal keys are still swallowed by ___ XX so random
 ;; letters do not leak while using mouse mode. The release-key in
 ;; tog-c was dropped here on purpose (see tog-b comment).
@@ -253,13 +259,14 @@
 
   z    (layer-while-held mouse-pass-focus)
 
-  ;; Let modifiers pass through to Hyprland/apps.
+  ;; Let modifiers pass through to Hyprland/apps. Ralt is reserved as
+  ;; the full-passthrough toggle (see mouse-pass-full below).
   lctl lctl
   rctl rctl
   lsft lsft
   rsft rsft
   lalt lalt
-  ralt ralt
+  ralt (multi (layer-switch mouse-pass-full) (cmd notify-send "Kanata: full pass ON" "" -t 2000 -u low))
   lmet lmet
   rmet rmet
 
@@ -282,6 +289,19 @@
   ;; unmapped keys" (the previous behavior). The mouse layer keeps
   ;; ___ XX so it stays fully isolated -- different design intent
   ;; (no leaks during quick mouse-mode flashes).
+  ___  use-defsrc
+)
+
+;; Full-passthrough sub-layer of mouse-pass. Tapping Ralt from
+;; mouse-pass switches here via layer-switch; every key (including
+;; hjkl, spc, u, s, i, o, b, esc) outputs its defsrc value, so the
+;; whole keyboard reaches Hyprland/apps unchanged. Tap Ralt again to
+;; layer-switch back to mouse-pass. b/esc do NOT exit from here (they
+;; pass through); only Ralt returns to mouse-pass, and the global
+;; force-exit (lctl+spc+esc) still applies.
+(deflayermap (mouse-pass-full)
+  ralt (multi (layer-switch mouse-pass) (cmd notify-send "Kanata: full pass OFF" "" -t 2000 -u low))
+
   ___  use-defsrc
 )
 
