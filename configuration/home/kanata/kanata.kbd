@@ -11,7 +11,7 @@
 ;;   s              - middle click
 ;;   m / n          - mouse back / forward
 ;;   i / o          - scroll down / up
-;;   z              - focus (precision movement; hold; default is boost)
+;;   z              - (unused; passes through)
 ;;   [ ]            - home / end
 ;;   , .            - page up / page down
 ;;   - =            - volume down / up
@@ -41,10 +41,10 @@
   lctl lmet lalt           spc            ralt rmet rctl
 )
 
-;; Mouse movement: constant speed, no acceleration.
-;; Default 8 pixels per tick (boost). Focus (hold z): 2 px/tick.
-;; Instant, predictable response; speed controlled by selection
-;; (focus vs boost) rather than hold duration.
+;; Mouse movement: linear acceleration (movemouse-accel).
+;; hjkl starts at 2 px/tick and ramps to 8 px/tick over 300ms. A quick
+;; tap moves slowly (precision); a held key reaches 8 px. Replaces the
+;; old z focus/boost split -- no dedicated focus key needed.
 ;; Scroll: mwheel-accel with exponential ramp, used as default:
 ;; initial 10 -> max 800, acceleration_multiplier 1.04 (each tick
 ;; multiplies velocity by 1.04 -> gentle exponential; takes ~88 ticks
@@ -52,14 +52,10 @@
 ;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
 (defalias
-  mmu      (movemouse-up    8 8)
-  mmd      (movemouse-down  8 8)
-  mml      (movemouse-left  8 8)
-  mmr      (movemouse-right 8 8)
-  mmu-foc  (movemouse-up    8 2)
-  mmd-foc  (movemouse-down  8 2)
-  mml-foc  (movemouse-left  8 2)
-  mmr-foc  (movemouse-right 8 2)
+  mmu      (movemouse-accel-up    8 300 2 8)
+  mmd      (movemouse-accel-down  8 300 2 8)
+  mml      (movemouse-accel-left  8 300 2 8)
+  mmr      (movemouse-accel-right 8 300 2 8)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
@@ -153,8 +149,6 @@
   i    @mwd
   o    @mwu
 
-  z    (layer-while-held mouse-pass-focus)
-
   ;; Let modifiers pass through to Hyprland/apps. Ralt is the exit
   ;; toggle (tap to return to default).
   lctl lctl
@@ -185,40 +179,6 @@
   ;; unmapped keys" (the previous behavior). The mouse layer keeps
   ;; ___ XX so it stays fully isolated -- different design intent
   ;; (no leaks during quick mouse-mode flashes).
-  ___  use-defsrc
-)
-
-;; Focus sub-layer of mouse-pass. Hold z while in mouse-pass to drop
-;; to precision speed (2 px/tick). Releasing z returns to mouse-pass
-;; (boost, 8 px/tick) automatically (layer-while-held).
-(deflayermap (mouse-pass-focus)
-  k    @mmu-foc
-  h    @mml-foc
-  j    @mmd-foc
-  l    @mmr-foc
-  spc  mlft
-  u    mrgt
-  s    mmid
-  n    mbck
-  m    mfwd
-  i    @mwd
-  o    @mwu
-
-  ;; Let modifiers pass through to Hyprland/apps.
-  lctl lctl
-  rctl rctl
-  lsft lsft
-  rsft rsft
-  lalt lalt
-  ralt ralt
-  lmet lmet
-  rmet rmet
-
-  z    XX
-
-  b    (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
-  esc  (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
-
   ___  use-defsrc
 )
 
