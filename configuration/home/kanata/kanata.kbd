@@ -83,48 +83,52 @@
                 (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
               (lmet))
 
-  ;; Ralt: tap to toggle mouse-pass on (semi-passthrough). The exit
-  ;; direction is bound directly in mouse-pass (ralt there switches
-  ;; back to default). Ralt no longer reaches the OS as a modifier
-  ;; from the default layer; use lalt for Alt.
-  tog-ralt (multi
+  ;; Rshift: tap (released within 100ms) toggles mouse-pass on
+  ;; (semi-passthrough). Held >= 100ms it acts as plain Right Shift
+  ;; (tap-hold). The exit direction is bound in mouse-pass (rsft there
+  ;; is the same tap-hold, tap = back to default). Ralt passes through
+  ;; normally again.
+  tog-rsft (multi
              (layer-switch mouse-pass)
              (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
+  exit-rsft (multi
+             (layer-switch default)
+             (cmd notify-send "Kanata: off" "" -t 3000 -u low))
 )
 
 ;; Default layer uses deflayermap (input->action pairs) instead of
-;; positional deflayer columns. Only the c and ralt positions are
+;; positional deflayer columns. Only the c and rsft positions are
 ;; overridden; all other keys implicitly use their defsrc value (the
 ;; literal key). c is bound to @tog-c so plain C still types c, but
 ;; Super+C holds mouse-pass (and masks Super via release-key) while
-;; both held. ralt is bound to @tog-ralt so tapping Ralt toggles
-;; mouse-pass on; the off direction is bound inside mouse-pass.
+;; both held. rsft is a tap-hold: tap (released within 100ms) toggles
+;; mouse-pass on via @tog-rsft; held >= 100ms acts as Right Shift.
 ;; nlck XX swallows the physical NumLock so it cannot fight Hyprland's
 ;; numlock_by_default = true (which sets the software state on connect).
 (deflayermap (default)
   c    @tog-c
-  ralt @tog-ralt
+  rsft (tap-hold 100 100 @tog-rsft rsft)
   nlck XX
 )
 
 ;; Semi-passthrough mouse layer.
 ;;
-;; Entry: Ralt tap (toggle, via @tog-ralt) or Super+C held (via @tog-c).
-;; Exit:  Ralt tap, b, or Esc (all switch back to default directly).
+;; Entry: Rshift tap (toggle, via @tog-rsft) or Super+C held (via @tog-c).
+;; Exit:  Rshift tap, or b (both switch back to default directly).
 ;;
 ;; Modifier keys pass through to Hyprland/apps:
 ;;   Shift+click / Ctrl+click -> GUI multi-select works.
 ;;   Super+spc -> Super+left-click, so Hyprland bindm can move windows
-;;     (only in the Ralt-toggled mode; Super+C held masks Super).
+;;     (only in the Rshift-toggled mode; Super+C held masks Super).
 ;;   Super+right-click -> Super+right-click for resize if bound.
 ;;   Plain Alt alone (or Ctrl/Shift/Super) also passes through, so you
 ;;   can hold a modifier for an app-specific binding while staying in
 ;;   mouse-pass. The key -> key mapping is independent of the layer's
 ;;   own activation state.
 ;;
-;; Ralt is the entry/exit toggle (see @tog-ralt and the ralt binding
-;;   below); it no longer reaches the OS as a modifier from either
-;;   default or mouse-pass. Use lalt for Alt.
+;; Rshift is the entry/exit toggle via tap-hold (see @tog-rsft and the
+;;   rsft binding below): tap = toggle mouse-pass, held >= 100ms =
+;;   Right Shift pass-through. Ralt passes through normally.
 ;;
 ;; Unmapped normal keys output their defsrc value (use-defsrc below) so
 ;;   q w e r t y a d f g etc. type normally -- usable for browser
@@ -149,14 +153,15 @@
   i    @mwd
   o    @mwu
 
-  ;; Let modifiers pass through to Hyprland/apps. Ralt is the exit
-  ;; toggle (tap to return to default).
+  ;; Let modifiers pass through to Hyprland/apps. rsft is a tap-hold:
+  ;; tap (released within 100ms) exits mouse-pass via @exit-rsft; held
+  ;; >= 100ms acts as Right Shift.
   lctl lctl
   rctl rctl
   lsft lsft
-  rsft rsft
+  rsft (tap-hold 100 100 @exit-rsft rsft)
   lalt lalt
-  ralt (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
+  ralt ralt
   lmet lmet
   rmet rmet
 
@@ -164,7 +169,7 @@
   ;; the action is unconditional on entry state and independent of any
   ;; fork hold semantics. The notify-send fires the OFF notification
   ;; in the same multi. esc is NOT an exit here: it passes through via
-  ;; ___ use-defsrc below (use b or ralt to leave mouse-pass).
+  ;; ___ use-defsrc below (use b or rsft-tap to leave mouse-pass).
   b    (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
 
   ;; Transparent fallback: any unmapped key outputs its defsrc value,
