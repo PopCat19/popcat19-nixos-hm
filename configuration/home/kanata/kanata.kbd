@@ -171,10 +171,8 @@
 
   ;; Exit passthrough mouse mode. Direct layer-switch (not toggle) so
   ;; the action is unconditional on entry state and independent of any
-  ;; fork hold semantics. The notify-send fires the OFF notification
-  ;; in the same multi. esc is NOT an exit here: it passes through via
-  ;; ___ use-defsrc below (use b or rsft-tap to leave mouse-pass).
-  b    (multi (layer-switch default) (cmd notify-send "Kanata: off" "" -t 3000 -u low))
+  ;; fork hold semantics. esc and b both pass through via ___ use-defsrc
+  ;; below (use rsft-tap to leave mouse-pass).
 
   ;; Transparent fallback: any unmapped key outputs its defsrc value,
   ;; so q w e r t y a d f g etc. type normally while in mouse-pass.
