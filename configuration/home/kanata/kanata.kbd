@@ -1,23 +1,26 @@
-;; hjkl mouse-emulation layer.
+;; hjkl mouse-emulation layers.
 ;;
-;; Entry: Ralt (tap toggles the semi-passthrough mouse-pass layer),
-;;        or Super+C held (release C exits). Plain C still types c.
-;; Exit:  Ralt tap, b, or Esc from mouse-pass.
+;; Two entry points, two layers:
+;;   Super+C held -> mouse-c: hjkl mouse + F-key nav/media/brightness
+;;                  macros (see mouse-c). Release C exits.
+;;   Rshift tap   -> mouse-pass: hjkl mouse + full typing passthrough
+;;                  (use-defsrc). Rshift tap or b exits.
+;; Plain C still types c; Rshift held >=100ms still acts as Shift.
 ;; Each transition fires a short on/off desktop notification.
-;; Mouse layer keys:
-;;   h / j / k / l  - cursor movement (accelerates while held)
+;;
+;; Common mouse keys (both layers):
+;;   h / j / k / l  - cursor movement (movemouse-accel 2->8px)
 ;;   spc            - left click (hold to drag)
 ;;   u              - right click
 ;;   s              - middle click
 ;;   m / n          - mouse back / forward
 ;;   i / o          - scroll down / up
-;;   z              - (unused; passes through)
-;;   [ ]            - home / end
-;;   , .            - page up / page down
-;;   - =            - volume down / up
-;;   0              - mute toggle
-;;   7 8 9          - media prev / play-pause / next
-;;   ; ' /          - alt / ctrl / shift (held; for click combos)
+;;
+;; mouse-c only (F-key macros):
+;;   f5 / f6    - brightness down / up 10%
+;;   f7 / f8    - tap pgdn/pgup, hold end/home
+;;   f9 / f10   - tap play-pause/mute, double-tap prev/next
+;;   f11 / f12  - volume down / up
 ;;
 ;; Force exit: hold left Ctrl + Space + Escape.
 
@@ -60,10 +63,11 @@
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 )
 
-;; Super+C: hold to activate the semi-passthrough mouse-pass layer
-;; (no toggle). fork with lmet as trigger so plain C still types c.
-;; (layer-while-held mouse-pass) activates mouse mode only while c is
-;;   held; release of c exits automatically.
+;; Super+C: hold to activate the dedicated mouse-c layer (no toggle).
+;; fork with lmet as trigger so plain C still types c.
+;; (layer-while-held mouse-c) activates mouse mode only while c is
+;;   held; release of c exits automatically. mouse-c has the hjkl mouse
+;;   actions plus function-key nav/media/brightness macros (see below).
 ;; (release-key lmet) synthetically releases Super to the OS on entry so
 ;;   Hyprland does not see Super held during mouse mode (avoids Super
 ;;   overlay / Super+key conflicts). kanata still tracks the physical
@@ -73,12 +77,12 @@
 ;;   entry; same already happens on exit today. No delay on plain Super
 ;;   for normal Hyprland binds (unlike a defchordsv2 approach).
 ;;   Also means Super+spc (Hyprland window move) does not work while
-;;   Super+C is held; use the Ralt-toggled mode for that.
+;;   Super+C is held; use the Rshift-toggled mouse-pass for that.
 ;; (cmd notify-send) fires the ON notification on activation.
 (defalias
   tog-c (fork c
               (multi
-                (layer-while-held mouse-pass)
+                (layer-while-held mouse-c)
                 (release-key lmet)
                 (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
               (lmet))
@@ -184,6 +188,64 @@
   ;; unmapped keys" (the previous behavior). The mouse layer keeps
   ;; ___ XX so it stays fully isolated -- different design intent
   ;; (no leaks during quick mouse-mode flashes).
+  ___  use-defsrc
+)
+
+;; Super+C held layer: hjkl mouse + function-key nav/media/brightness
+;; macros, with use-defsrc semi-passthrough for everything else.
+;;
+;; Entry: Super+C held (via @tog-c, layer-while-held). Release C exits.
+;;   Super is masked on entry (release-key lmet), so Super+spc window
+;;   move does NOT work here -- use the Rshift-toggled mouse-pass.
+;;
+;; Mouse:
+;;   h j k l  - movement (movemouse-accel: 2px -> 8px over 300ms)
+;;   spc      - left click (hold to drag)
+;;   u        - right click
+;;   s        - middle click
+;;   n m      - mouse back / forward
+;;   i o      - scroll down / up
+;;
+;; Function-key macros (the c layer's retained nav/media cluster):
+;;   f5 / f6    - brightness down / up 10%   (cmd brightnessctl)
+;;   f7 / f8    - tap: pgdn / pgup; hold 200ms: end / home
+;;   f9 / f10   - tap: play-pause / mute; double-tap: prev / next
+;;   f11 / f12  - volume down / up
+;;
+;; Everything else (letters, modifiers, etc.) outputs its defsrc value
+;;   via ___ use-defsrc, so typing works while the layer is held. c is
+;;   mapped XX so the held trigger key never repeats 'c'.
+;;
+;; Latency notes (--check is syntax-only, not runtime-verified):
+;;   - f9/f10 single-tap (pp/mute) fires on the next keypress or after
+;;     the 200ms tap-dance timeout; an isolated single tap waits up to
+;;     200ms before firing.
+;;   - f7/f8 hold (end/home) needs a 200ms hold; a quick tap gives
+;;     pgdn/pgup.
+(deflayermap (mouse-c)
+  h    @mml
+  j    @mmd
+  k    @mmu
+  l    @mmr
+  spc  mlft
+  u    mrgt
+  s    mmid
+  n    mbck
+  m    mfwd
+  i    @mwd
+  o    @mwu
+
+  f5   (cmd "brightnessctl s 10%-")
+  f6   (cmd "brightnessctl s 10%+")
+  f7   (tap-hold 100 200 pgdn end)
+  f8   (tap-hold 100 200 pgup home)
+  f9   (tap-dance 200 (pp prev))
+  f10  (tap-dance 200 (mute next))
+  f11  vold
+  f12  volu
+
+  c    XX
+
   ___  use-defsrc
 )
 
