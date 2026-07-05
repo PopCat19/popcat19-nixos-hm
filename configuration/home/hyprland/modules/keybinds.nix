@@ -221,6 +221,19 @@
       # === Debug ===
       # desc: Debug layers output
       "$mainMod+Shift, N, exec, sh -c 'hyprctl layers > ~/hyprctl-layer-out.txt && $term $editor ~/hyprctl-layer-out.txt'"
+
+      # === OBS Push-to-Mute ===
+      # cat: OBS
+      # desc: Push-to-mute mic (hold Super+D). Requires obs-websocket server
+      # enabled in OBS and the obs-set-mute helper on PATH.
+      "$mainMod, D, exec, obs-set-mute mute"
+    ];
+
+    bindr = [
+      # === OBS Push-to-Mute (release) ===
+      # cat: OBS
+      # desc: Unmute mic on Super+D release
+      "$mainMod, D, exec, obs-set-mute unmute"
     ];
 
     binde = [

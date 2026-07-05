@@ -31,6 +31,99 @@ let
   cfg = config.programs.obs-studio;
   profileCfg = cfg.streamingProfile;
 
+  # Push-to-mute helper: sends an explicit SetInputMute (true/false) to OBS
+  # via obs-websocket v5. Reads the password from OBS's own config so no
+  # secret enters the Nix store. Fails gracefully when OBS is offline or the
+  # websocket server is disabled.
+  obsSetMute =
+    pkgs.writers.writePython3Bin "obs-set-mute"
+      {
+        libraries = [ pkgs.python3Packages.websocket-client ];
+        flakeIgnore = [ "E501" ];
+      }
+      ''
+        import sys
+        import os
+        import json
+        import hashlib
+        import base64
+        from websocket import create_connection
+
+        CONFIG = os.path.expanduser("~/.config/obs-studio/plugin_config/obs-websocket/config.json")
+        SOURCE = "Mic/Aux"
+
+
+        def main():
+            if len(sys.argv) != 2 or sys.argv[1] not in ("mute", "unmute"):
+                sys.stderr.write("usage: obs-set-mute {mute|unmute}\n")
+                sys.exit(1)
+            muted = sys.argv[1] == "mute"
+
+            try:
+                with open(CONFIG) as f:
+                    cfg = json.load(f)
+            except (OSError, ValueError) as e:
+                sys.stderr.write(f"obs-set-mute: cannot read websocket config: {e}\n")
+                sys.exit(1)
+
+            if not cfg.get("server_enabled", False):
+                sys.stderr.write("obs-set-mute: websocket server not enabled in OBS\n")
+                sys.exit(1)
+
+            password = cfg.get("server_password", "")
+            port = cfg.get("server_port", 4455)
+
+            try:
+                ws = create_connection(f"ws://localhost:{port}", timeout=3)
+            except Exception as e:
+                sys.stderr.write(f"obs-set-mute: cannot connect (is OBS running?): {e}\n")
+                sys.exit(1)
+
+            try:
+                hello = json.loads(ws.recv())
+                auth_data = hello["d"].get("authentication", {})
+                salt = auth_data["salt"]
+                challenge = auth_data["challenge"]
+
+                secret = base64.b64encode(
+                    hashlib.sha256((password + salt).encode()).digest()
+                ).decode()
+                auth = base64.b64encode(
+                    hashlib.sha256((secret + challenge).encode()).digest()
+                ).decode()
+
+                ws.send(json.dumps({
+                    "op": 1,
+                    "d": {"rpcVersion": 1, "authentication": auth}
+                }))
+
+                resp = json.loads(ws.recv())
+                if resp.get("op") != 2:
+                    sys.stderr.write(f"obs-set-mute: auth failed: {resp}\n")
+                    sys.exit(1)
+
+                ws.send(json.dumps({
+                    "op": 6,
+                    "d": {
+                        "requestType": "SetInputMute",
+                        "requestId": "mute-req",
+                        "requestData": {"inputName": SOURCE, "inputMuted": muted}
+                    }
+                }))
+
+                resp = json.loads(ws.recv())
+                while resp.get("op") == 5:
+                    resp = json.loads(ws.recv())
+                if resp.get("op") != 7:
+                    sys.stderr.write(f"obs-set-mute: request failed: {resp}\n")
+                    sys.exit(1)
+            finally:
+                ws.close()
+
+
+        main()
+      '';
+
   # VAAPI stream encoder config (H.264, CBR). Keys mirror the schema OBS
   # logs under "[FFmpeg VAAPI encoder: ...] settings:".
   streamEncoderJson = pkgs.writeText "streamEncoder.json" (
@@ -220,6 +313,8 @@ in
       enable = true;
       plugins = obs-plugins;
     };
+
+    home.packages = [ obsSetMute ];
 
     # Seed the profile files on first activation only. Copies (not symlinks)
     # so OBS can keep writing them. Existing files are never touched, which
