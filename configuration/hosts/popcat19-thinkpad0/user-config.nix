@@ -12,6 +12,7 @@ import ../../shared {
     agents = {
       enable = true;
       pi = true;
+      t3code = true;
     };
   };
 }
