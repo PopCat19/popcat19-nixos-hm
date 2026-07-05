@@ -12,7 +12,7 @@
 ;;   h / j / k / l  - cursor movement (movemouse-accel 2->8px)
 ;;   spc            - left click (hold to drag)
 ;;   ;              - middle click
-;;   m              - right click
+;;   n              - right click
 ;;   , / .          - mouse back / forward
 ;;   i / o          - scroll down / up
 ;;
@@ -166,7 +166,7 @@
 
   spc  mlft
   ;    mmid
-  m    mrgt
+  n    mrgt
   ,    mbck
   .    mfwd
   i    @mwd
@@ -247,7 +247,7 @@
   l    @mmr
   spc  mlft
   ;    mmid
-  m    mrgt
+  n    mrgt
   ,    mbck
   .    mfwd
   i    @mwd
