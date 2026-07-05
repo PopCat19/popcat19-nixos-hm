@@ -60,6 +60,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    t3code-flake = {
+      url = "github:omarcresp/t3code-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     nix-gaming.url = "github:fufexan/nix-gaming";

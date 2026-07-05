@@ -8,5 +8,6 @@
     forgecode = false;
     opencode = false;
     pi = false;
+    t3code = false;
   };
 }

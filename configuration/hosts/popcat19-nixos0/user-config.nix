@@ -19,6 +19,7 @@ import ../../shared {
       forgecode = true;
       opencode = true;
       pi = true;
+      t3code = true;
     };
 
     zrok = {

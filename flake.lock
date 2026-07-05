@@ -956,6 +956,7 @@
         "pmd": "pmd",
         "shimboot": "shimboot",
         "stylix": "stylix",
+        "t3code-flake": "t3code-flake",
         "zen-browser": "zen-browser"
       }
     },
@@ -1124,6 +1125,26 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "t3code-flake": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1783118407,
+        "narHash": "sha256-ruXzg1VGUO3UXay4fNMGq0Ow/qvDbvsLiz6fn54rHaw=",
+        "owner": "omarcresp",
+        "repo": "t3code-flake",
+        "rev": "2eb9f51df4c4c078b60639d662ceb09a7e69bfb0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "omarcresp",
+        "repo": "t3code-flake",
         "type": "github"
       }
     },
