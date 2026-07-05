@@ -48,6 +48,7 @@
     ./privacy.nix
     ./obs.nix
     ./easyeffects.nix
+    ./t3code-web.nix
     ./syncthing.nix
     ./audio-control.nix
     ./git.nix

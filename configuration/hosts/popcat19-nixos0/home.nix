@@ -42,4 +42,8 @@ in
     streamBitrate = 8000;
     recordQp = 22;
   };
+
+  # T3 Code web server: browser UI on localhost:9098, no Electron shell.
+  # Pair URL printed to `journalctl --user -u t3code-web` on each start.
+  services.t3code-web.enable = true;
 }

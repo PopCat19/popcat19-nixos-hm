@@ -24,4 +24,8 @@ in
   # Toggle Super+C for hjkl mouse emulation. Requires services.kanataUdev.enable
   # in configuration.nix so /dev/uinput is accessible to the user service.
   programs.kanata.enable = true;
+
+  # T3 Code web server: browser UI on localhost:9098, no Electron shell.
+  # Pair URL printed to `journalctl --user -u t3code-web` on each start.
+  services.t3code-web.enable = true;
 }
