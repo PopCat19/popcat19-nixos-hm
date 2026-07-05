@@ -99,7 +99,7 @@
               (multi
                 (layer-while-held mouse-c)
                 (release-key lmet)
-                (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
+                (cmd notify-send "Kanata: on" "" -t 500 -u normal))
               (lmet))
 
   ;; Rshift: tap (released within 120ms) toggles mouse-pass on
@@ -109,10 +109,10 @@
   ;; normally again.
   tog-rsft (multi
              (layer-switch mouse-pass)
-             (cmd notify-send "Kanata: on" "" -t 3000 -u normal))
+             (cmd notify-send "Kanata: on" "" -t 500 -u normal))
   exit-rsft (multi
              (layer-switch default)
-             (cmd notify-send "Kanata: off" "" -t 3000 -u low))
+             (cmd notify-send "Kanata: off" "" -t 500 -u low))
 )
 
 ;; Default layer uses deflayermap (input->action pairs) instead of
