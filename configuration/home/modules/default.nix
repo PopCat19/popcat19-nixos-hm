@@ -47,6 +47,7 @@
     ./mangohud.nix
     ./privacy.nix
     ./obs.nix
+    ./easyeffects.nix
     ./syncthing.nix
     ./audio-control.nix
     ./git.nix
