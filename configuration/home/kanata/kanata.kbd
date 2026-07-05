@@ -44,18 +44,21 @@
   lctl lmet lalt           spc            ralt rmet rctl
 )
 
-;; Mouse movement: exponential acceleration (movemouse-accel).
-;; hjkl starts at 2 px/tick and ramps exponentially to 16 px/tick.
-;; Each tick multiplies velocity by 1.04 (same curve as scroll).
-;; Slow start (2) covers precision; long ramp to fast (16) for sweeps.
+;; Mouse movement: linear acceleration (movemouse-accel).
+;; hjkl starts at 2 px/tick and ramps to 8 px/tick over 300ms. A quick
+;; tap moves slowly (precision); a held key reaches 8 px. Replaces the
+;; old z focus/boost split -- no dedicated focus key needed.
+;; Scroll: mwheel-accel with exponential ramp, used as default:
+;; initial 10 -> max 800, acceleration_multiplier 1.04 (each tick
+;; multiplies velocity by 1.04 -> gentle exponential; takes ~88 ticks
+;; to hit the 800 cap vs ~22 ticks at 1.12). Slow start (10) covers
+;; precision scrolling; long gentle ramp to fast (800) for pages.
 ;; deceleration 0.6. No dedicated boost key needed.
-;; Scroll: mwheel-accel with same exponential ramp:
-;; initial 10 -> max 800, acceleration_multiplier 1.04.
 (defalias
-  mmu      (movemouse-accel-up    2.0 16.0 1.04 0.6)
-  mmd      (movemouse-accel-down  2.0 16.0 1.04 0.6)
-  mml      (movemouse-accel-left  2.0 16.0 1.04 0.6)
-  mmr      (movemouse-accel-right 2.0 16.0 1.04 0.6)
+  mmu      (movemouse-accel-up    8 300 2 8)
+  mmd      (movemouse-accel-down  8 300 2 8)
+  mml      (movemouse-accel-left  8 300 2 8)
+  mmr      (movemouse-accel-right 8 300 2 8)
   mwu      (mwheel-accel-up   10.0 800.0 1.04 0.6)
   mwd      (mwheel-accel-down 10.0 800.0 1.04 0.6)
 
