@@ -36,7 +36,6 @@
     ./fuzzel-config.nix
     ./kitty.nix
     ./nixcord.nix
-    ./starship.nix
     ./micro.nix
     ./helix.nix
     ./broot.nix

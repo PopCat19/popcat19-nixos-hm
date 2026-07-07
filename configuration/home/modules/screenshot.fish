@@ -1,9 +1,10 @@
 #!/usr/bin/env fish
+# Purpose: Take screenshots with grimblast (region, monitor, or window)
 
 function run_with_hyprshade_workaround --description 'Temporarily disable hyprshade while running a command'
     if type -q hyprshade
         set -l shader (hyprshade current 2>/dev/null; or echo "")
-        if test -n "$shader" -a "$shader" != "Off"
+        if test -n "$shader" -a "$shader" != Off
             hyprshade off >/dev/null 2>&1
             $argv
             set -l ret $status

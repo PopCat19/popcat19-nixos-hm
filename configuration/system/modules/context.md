@@ -5,6 +5,7 @@
 - `builders.nix`: Configure remote Nix builder hosts for distributed builds
 - `audio.nix`: Configure PipeWire audio system with JACK and ALSA support
 - `boot.nix`: Manage bootloader configuration and kernel settings
+- `cachix.nix`: Configure Cachix binary cache support
 - `catch-22-rebuild.sh`: Rebuild NixOS through proxy with nh os switch
 - `core-packages.nix`: Install essential system utilities and tools
 - `dconf.nix`: Enable dconf for GTK/Qt settings and desktop configuration
@@ -21,6 +22,7 @@
 - `networking.nix`: Manage firewall, IP forwarding, and NetworkManager configuration
 - `kanata.nix`: Provide /dev/uinput access for the kanata home-manager service
 - `nh.nix`: Configure nh (nix-community/nh) CLI helper with env vars and GC timer
+- `odysseus.nix`: Configure Odysseus service
 - `openrgb.nix`: Enable OpenRGB service for RGB lighting control
 - `power-management.nix`: Provide basic power management for desktop systems
 - `programs.nix`: Configure system-level programs and gaming support
@@ -28,6 +30,7 @@
 - `sing-box.nix`: Togglable sing-box TUN proxy with fish toggle functions
 - `ssh.nix`: Enable and configure OpenSSH server for remote system access
 - `stylix-lightdm.nix`: Configure LightDM theming using Stylix framework
+- `searxng.nix`: Configure SearXNG metasearch engine via OCI container
 - `sunshine.nix`: Configure Sunshine game streaming server
 - `syncthing.nix`: Configure Syncthing file synchronization service
 - `tablet.nix`: Configure OpenTabletDriver for graphics tablet support

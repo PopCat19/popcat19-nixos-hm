@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 # Purpose: Toggle between split layout orientations
 current=$(hyprctl getoption general:layout | sed -n 's/.*: //p')
 case "$current" in

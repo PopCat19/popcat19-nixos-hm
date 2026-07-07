@@ -9,6 +9,7 @@ let
   popcat19 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGiKOcLWZpZToQ3rlBy439vkBMfT+E/JuK1BywvsgiqT popcat19@popcat19-nixos0";
 in
 {
-  "zrok-share-token.age".publicKeys = [ popcat19 ];
+  "user-password-hash.age".publicKeys = [ popcat19 ];
+  "searxng-secret-key.age".publicKeys = [ popcat19 ];
   "sillytavern-password.age".publicKeys = [ popcat19 ];
 }

@@ -25,14 +25,21 @@
     ];
 
     secrets = lib.mkMerge [
-      (lib.mkIf (userConfig.zrok.enable or false) {
-        zrok-share-token = {
-          file = ../../secrets/zrok-share-token.age;
-          owner = userConfig.username;
-          group = "users";
+      {
+        user-password-hash = {
+          file = ../../secrets/user-password-hash.age;
+          owner = "root";
+          group = "root";
           mode = "400";
         };
-      })
+
+        searxng-secret-key = {
+          file = ../../secrets/searxng-secret-key.age;
+          owner = "root";
+          group = "root";
+          mode = "400";
+        };
+      }
 
       (lib.mkIf (userConfig.sillytavern.enable or false) {
         sillytavern-password = {

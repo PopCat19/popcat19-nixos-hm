@@ -4,14 +4,15 @@
 #
 # This module:
 # - Enables OpenSSH server service
-# - Configures password authentication for user access
-# - Permits root login for administrative access
+# - Disables password authentication (key-only SSH)
+# - Permits root login with key only (prohibit-password)
 _: {
   services.openssh = {
     enable = true;
     settings = {
-      PasswordAuthentication = true;
-      PermitRootLogin = "yes";
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      PermitRootLogin = "prohibit-password";
     };
   };
 }

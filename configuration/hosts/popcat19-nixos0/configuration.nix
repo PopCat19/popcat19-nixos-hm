@@ -55,24 +55,22 @@ in
   systemd.services.sillytavern.environment.NODE_OPTIONS =
     "--require ${pkgs.writeText "st-no-debug.cjs" "console.debug = () => {};"}";
 
-  # Generate config.yaml at runtime. Replaces the upstream read-only symlink.
-  # Password uses agenix secret if available, else falls back to template default.
+  # Generate config.yaml at runtime from the agenix secret.
+  # Uses python3 for literal-safe replacement (handles any password chars).
+  # Fails hard if the agenix secret is missing — no fallback.
   systemd.services.sillytavern.preStart = ''
-    SECRET="${
-      lib.optionalString (
-        config.age.secrets ? sillytavern-password
-      ) config.age.secrets.sillytavern-password.path
-    }"
-    if [ -n "$SECRET" ] && [ -f "$SECRET" ]; then
-      PASSWORD=$(cat "$SECRET")
-    else
-      PASSWORD=REDACTED
-    fi
-    sed "s/__PASSWORD_PLACEHOLDER__/$PASSWORD/g" \
-      ${sillytavernConfigTemplate} \
-      > /var/lib/SillyTavern/config.yaml
-    chown sillytavern:sillytavern /var/lib/SillyTavern/config.yaml
-    chmod 600 /var/lib/SillyTavern/config.yaml
+        ${pkgs.python3}/bin/python3 -c "
+    import sys, os
+    pw_path = '${config.age.secrets.sillytavern-password.path}'
+    if not os.path.exists(pw_path):
+        print('FATAL: sillytavern-password secret not found at', pw_path, file=sys.stderr)
+        sys.exit(1)
+    pw = open(pw_path).read().strip()
+    tmpl = open('${sillytavernConfigTemplate}').read()
+    sys.stdout.write(tmpl.replace('__PASSWORD_PLACEHOLDER__', pw))
+    " > /var/lib/SillyTavern/config.yaml
+        chown sillytavern:sillytavern /var/lib/SillyTavern/config.yaml
+        chmod 600 /var/lib/SillyTavern/config.yaml
   '';
 
   # Cross-compile aarch64 closures for the Klipper Pi 4B

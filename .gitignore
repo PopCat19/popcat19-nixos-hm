@@ -39,3 +39,9 @@ node_modules
 
 # flake-auto-update tool state (flake.lock backups)
 tools/flake-auto-update/
+
+# pi-subagents artifacts
+.pi-subagents/
+
+# dev-conventions sync cache
+.dev-conventions-sync-cache/

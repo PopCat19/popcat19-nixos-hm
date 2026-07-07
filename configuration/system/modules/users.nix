@@ -9,6 +9,7 @@
 # - Allows wheel group full sudo access (requires password)
 {
   pkgs,
+  config,
   userConfig,
   ...
 }:
@@ -21,7 +22,8 @@
 
   users.users.${userConfig.username} = {
     isNormalUser = true;
-    inherit (userConfig.user) extraGroups initialPassword;
+    inherit (userConfig.user) extraGroups;
+    hashedPasswordFile = config.age.secrets.user-password-hash.path;
     shell = pkgs.fish;
   };
 

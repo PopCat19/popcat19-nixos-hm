@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 # catch-22-rebuild.sh
 #
 # Purpose: Rebuild NixOS through proxy to bypass sandbox restrictions
